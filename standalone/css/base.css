@@ -1,0 +1,167 @@
+/* base.css -- resets, base typography, generic layout, utility classes, extracted from index.html inline <style> */
+
+@font-face {
+    font-family: Lato;
+    font-style: normal;
+    font-weight: 400;
+    font-display: fallback;
+    src: url('https://bucht-der-traeumer.de/wp-content/uploads/fonts/Lato-Regular.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: Lato;
+    font-style: normal;
+    font-weight: 700;
+    font-display: fallback;
+    src: url('https://bucht-der-traeumer.de/wp-content/uploads/fonts/Lato-Bold.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: "Megan Display";
+    font-style: normal;
+    font-weight: 400;
+    font-display: fallback;
+    src: url('https://bucht-der-traeumer.de/wp-content/uploads/fonts/Megan-Display.otf') format('opentype');
+}
+
+@font-face {
+    font-family: 'eplus-icon';
+    src: url('https://bucht-der-traeumer.de/wp-content/plugins/editorplus/extensions/icon-inserter/fonts/eplus-icon.eot?xs1351');
+    src: url('https://bucht-der-traeumer.de/wp-content/plugins/editorplus/extensions/icon-inserter/fonts/eplus-icon.eot?xs1351#iefix') format('embedded-opentype'),
+        url('https://bucht-der-traeumer.de/wp-content/plugins/editorplus/extensions/icon-inserter/fonts/eplus-icon.ttf?xs1351') format('truetype'),
+        url('https://bucht-der-traeumer.de/wp-content/plugins/editorplus/extensions/icon-inserter/fonts/eplus-icon.woff?xs1351') format('woff'),
+        url('https://bucht-der-traeumer.de/wp-content/plugins/editorplus/extensions/icon-inserter/fonts/eplus-icon.svg?xs1351#eplus-icon') format('svg');
+    font-weight: normal;
+    font-style: normal;
+    font-display: block;
+}
+
+/*# sourceURL=editor_plus-plugin-frontend-style-inline-css */
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: var(--font-body);
+    background: var(--bg) url('images/bg.jpg') center top / cover fixed no-repeat;
+    color: var(--text);
+    min-height: 100vh;
+
+    line-height: 1.5;
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: calc(72px + env(safe-area-inset-bottom));
+}
+
+main {
+    max-width: 650px;
+    margin: 0 auto;
+    border: 1px solid #080943;
+    height: 100vh;
+    box-shadow: #080943 -1px 0px 5px 0px;
+    background: linear-gradient(to bottom, #08094378 70%, transparent);
+    position: relative;
+    padding-bottom: 250px;
+}
+
+video {
+    object-fit: cover;
+    width: 100%;
+    vertical-align: middle;
+    width: 100%;
+    height: 100vh !important;
+}
+
+/* Content */
+
+.content {
+    padding: 0 16px 24px;
+    max-width: 720px;
+    margin: 0 auto;
+
+    /* */
+
+    padding: 0 16px 24px;
+    max-width: 720px;
+    margin: 0 auto;
+    position: relative;
+    display: inline-block;
+    height: 100%;
+    width: 100%;
+}
+
+.loading,
+.empty {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text-muted);
+}
+
+h1,
+h2 {
+    letter-spacing: 2px !important;
+}
+
+h1 {
+    font-family: var(--wp--preset--font-family--megan-display);
+    font-size: var(--wp--preset--font-size--x-large);
+}
+
+h3 {
+    font-size: var(--wp--preset--font-size--large);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    color: var(--wp--preset--color--base);
+    font-family: var(--wp--preset--font-family--megan-display);
+    font-style: normal;
+    font-weight: 700;
+    letter-spacing: -0.1px;
+    line-height: 1.125;
+    text-transform: uppercase;
+}
+
+h1 {
+    display: block;
+    font-size: 2em;
+    margin-block-start: 0.67em;
+    margin-block-end: 0.67em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    font-weight: bold;
+    unicode-bidi: isolate;
+}
+
+/* Highlight animation */
+
+.highlight {
+    animation: highlightPulse 2s ease-out;
+}
+
+@keyframes highlightPulse {
+    0% {
+        box-shadow: 0 0 0 4px rgba(176, 50, 122, 0.6);
+    }
+
+    100% {
+        box-shadow: 0 0 0 0 transparent;
+    }
+}
+
+/* Scrollbar */
+
+::-webkit-scrollbar {
+    width: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--accent-pink);
+    border-radius: 4px;
+}
