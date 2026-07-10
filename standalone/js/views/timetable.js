@@ -182,28 +182,9 @@ export function resetFilters() {
 
 function scrollToCurrentTime(selectedDay) {
     const now = new Date();
-    const yy = now.getFullYear();
-    const mm = String(now.getMonth() + 1).padStart(2, '0');
-    const dd = String(now.getDate()).padStart(2, '0');
-    const todayStr = `${yy}-${mm}-${dd}`;
-    const festivalDates = ['2026-08-13', '2026-08-14', '2026-08-15', '2026-08-16'];
-
-    // Determine which festival day corresponds to "today" for scroll purposes.
-    // If we're literally during the festival, use the real date.
-    // Otherwise map today's weekday to the matching festival weekday.
-    const weekdayMap = {
-        0: '2026-08-16', // Sunday   → festival Sunday
-        4: '2026-08-13', // Thursday → festival Thursday
-        5: '2026-08-14', // Friday   → festival Friday
-        6: '2026-08-15'  // Saturday → festival Saturday
-    };
-    const weekday = now.getDay();
-    const effectiveDay = festivalDates.includes(todayStr)
-        ? todayStr
-        : (weekdayMap[weekday] || '2026-08-13');
 
     // Only auto-scroll when the user is viewing today's mapped day
-    if (selectedDay !== effectiveDay) return;
+    if (selectedDay !== getEffectiveFestivalDay()) return;
 
     const currentHour = now.getHours();
     const currentHourStr = String(currentHour).padStart(2, '0') + ':00';
