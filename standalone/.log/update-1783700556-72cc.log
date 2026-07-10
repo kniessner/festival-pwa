@@ -1,0 +1,50 @@
+[2026-07-10T18:22:37+02:00] [1783700556-72cc] [INFO] Starting update — Trace: 1783700556-72cc, Mode: source, URL: https://bucht-der-traeumer.de
+[2026-07-10T18:22:37+02:00] [1783700556-72cc] [INFO] Dependencies OK: curl ✅, python3 ✅
+[2026-07-10T18:22:37+02:00] [1783700556-72cc] [INFO] Expected pages: cashless faqs programm-2026 performances workshops 
+[2026-07-10T18:22:37+02:00] [1783700556-72cc] [INFO] Fetching /cashless/ from https://bucht-der-traeumer.de/cashless/
+[2026-07-10T18:22:37+02:00] [1783700556-72cc] [INFO] /cashless/ fetched (  170050 bytes, HTTP 200)
+[2026-07-10T18:22:37+02:00] [1783700556-72cc] [INFO] Using FAQ extractor for cashless
+Fetching https://bucht-der-traeumer.de/cashless/...
+✅ Extracted 15 FAQ items
+   Saved to: /Users/darius.kniessner/Dev/VaultOS/30-projects-active/2026-festival-pwa/standalone/data/cashless.json
+
+   Sample:
+   Q: Bargeldlos: was heißt das?...
+   A: Bargeldlos heißt, dass weder Bargeld noch Kartenzahlung beim Bezahlen an Bars und Ständen auf dem Fe...
+[2026-07-10T18:22:38+02:00] [1783700556-72cc] [OK] /cashless/ FAQ extracted (   11144 bytes)
+[2026-07-10T18:22:38+02:00] [1783700556-72cc] [INFO] Fetching /faqs/ from https://bucht-der-traeumer.de/faqs/
+[2026-07-10T18:22:39+02:00] [1783700556-72cc] [INFO] /faqs/ fetched (  222302 bytes, HTTP 200)
+[2026-07-10T18:22:39+02:00] [1783700556-72cc] [INFO] Using FAQ extractor for faqs
+Fetching https://bucht-der-traeumer.de/faqs/...
+✅ Extracted 24 FAQ items
+   Saved to: /Users/darius.kniessner/Dev/VaultOS/30-projects-active/2026-festival-pwa/standalone/data/faqs.json
+
+   Sample:
+   Q: Achtung: Ticket Betrüger!...
+   A: Alle Online Tickets sind personalisiert. Nur wenn der Name auf dem Ticket mit eurem übereinstimmt, e...
+[2026-07-10T18:22:39+02:00] [1783700556-72cc] [OK] /faqs/ FAQ extracted (   10388 bytes)
+[2026-07-10T18:22:39+02:00] [1783700556-72cc] [INFO] Fetching /programm-2026/ from https://bucht-der-traeumer.de/programm-2026/
+[2026-07-10T18:22:40+02:00] [1783700556-72cc] [INFO] /programm-2026/ fetched ( 1116648 bytes, HTTP 200)
+[2026-07-10T18:22:40+02:00] [1783700556-72cc] [INFO] Using Program extractor for programm-2026
+Fetching https://bucht-der-traeumer.de/programm-2026/...
+✅ Extracted 149 events
+   Days: 7, Stages: 11, Types: 4
+   Saved to: /Users/darius.kniessner/Dev/VaultOS/30-projects-active/2026-festival-pwa/standalone/data/programm-2026.json
+
+   Sample:
+    | Schweissperle | Schweissperle | Space
+   Es wird sweaty und zwar nicht nur auf dem Dancefloor. Unser Saunaspace sorgt mit...
+[2026-07-10T18:22:40+02:00] [1783700556-72cc] [OK] /programm-2026/ program extracted (  164262 bytes)
+[2026-07-10T18:22:40+02:00] [1783700556-72cc] [INFO] Fetching /performances/ from https://bucht-der-traeumer.de/performances/
+[2026-07-10T18:22:41+02:00] [1783700556-72cc] [INFO] /performances/ fetched (  198318 bytes, HTTP 200)
+[2026-07-10T18:22:41+02:00] [1783700556-72cc] [INFO] Using HTML parser for performances
+[2026-07-10T18:22:41+02:00] [1783700556-72cc] [OK] /performances/ parsed (    1515 bytes)
+[2026-07-10T18:22:41+02:00] [1783700556-72cc] [INFO] Fetching /workshops/ from https://bucht-der-traeumer.de/workshops/
+[2026-07-10T18:22:41+02:00] [1783700556-72cc] [INFO] /workshops/ fetched (  256995 bytes, HTTP 200)
+[2026-07-10T18:22:41+02:00] [1783700556-72cc] [INFO] Using HTML parser for workshops
+[2026-07-10T18:22:41+02:00] [1783700556-72cc] [OK] /workshops/ parsed (    4519 bytes)
+[2026-07-10T18:22:42+02:00] [1783700556-72cc] [INFO] Regenerating manifest
+   ✅ Manifest updated: 5 content pages
+[2026-07-10T18:22:42+02:00] [1783700556-72cc] [INFO] Updating standalone.json
+[2026-07-10T18:22:42+02:00] [1783700556-72cc] [INFO] Busting Service Worker cache
+[2026-07-10T18:22:42+02:00] [1783700556-72cc] [OK] Cache renamed to bucht-standalone-v1783700562

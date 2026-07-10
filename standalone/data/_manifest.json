@@ -16,13 +16,18 @@
       "icon": "📄"
     },
     {
-      "slug": "events",
-      "label": "Events",
+      "slug": "faqs",
+      "label": "FAQs – Bucht der Träumer*",
       "icon": "📄"
     },
     {
       "slug": "performances",
       "label": "Performances – Bucht der Träumer*",
+      "icon": "📄"
+    },
+    {
+      "slug": "programm-2026",
+      "label": "Kulturprogramm",
       "icon": "📄"
     },
     {
@@ -32,5 +37,5 @@
     }
   ],
   "app_name": "Bucht der Träumer*",
-  "synced_at": 1783695536
+  "synced_at": 1783700874
 }

@@ -174,21 +174,9 @@ else
     echo "📄 Scraping HTML pages directly from source..."
     echo ""
     
-    CURRENT_PAGES=$(python3 -c "
-import json, re
-try:
-    with open('$DATA_DIR/_manifest.json') as f:
-        d = json.load(f)
-        for p in d.get('pages',[]):
-            s = p.get('slug','')
-            if s and s not in ('home','favorites',None,'') and re.match(r'^[a-z0-9-]+$', s):
-                print(s)
-except: pass
-")
-    
-    if [ -z "$CURRENT_PAGES" ]; then
-        CURRENT_PAGES="cashless performances workshops"
-    fi
+    # Hardcoded list of pages to fetch in source mode.
+    # The manifest is regenerated AFTER fetching, so we can't rely on it here.
+    CURRENT_PAGES="cashless faqs programm-2026 performances workshops"
     
     info "Expected pages: $(echo $CURRENT_PAGES | tr '\n' ' ')"
     
@@ -207,7 +195,7 @@ except: pass
         if [ "$HTTP_CODE" = "200" ] && [ "$SIZE" -gt 100 ]; then
             info "/$slug/ fetched ($SIZE bytes, HTTP 200)"
             
-            if [ "$slug" = "cashless" ] || [ "$slug" = "faq" ]; then
+            if [ "$slug" = "cashless" ] || [ "$slug" = "faqs" ]; then
                 info "Using FAQ extractor for $slug"
                 if python3 "$SCRIPTS_DIR/_extract_faq.py" "$PAGE_URL" "$DEST" >> "$LOG_FILE" 2>&1; then
                     DEST_SIZE=$(wc -c < "$DEST" 2>/dev/null || echo 0)
@@ -218,6 +206,18 @@ except: pass
                     error "/$slug/ FAQ extraction failed (see log)"
                     echo "      ❌ FAQ extraction failed"
                     echo "{\"slug\":\"$slug\",\"status\":\"failed\",\"detail\":\"FAQ extraction failed\",\"http_code\":\"$HTTP_CODE\",\"bytes\":$SIZE}" >> "$TMP_PAGES"
+                fi
+            elif [ "$slug" = "programm-2026" ]; then
+                info "Using Program extractor for $slug"
+                if python3 "$SCRIPTS_DIR/_extract_program.py" "$PAGE_URL" "$DEST" >> "$LOG_FILE" 2>&1; then
+                    DEST_SIZE=$(wc -c < "$DEST" 2>/dev/null || echo 0)
+                    ok "/$slug/ program extracted ($DEST_SIZE bytes)"
+                    echo "      ✅ Program extracted ($DEST_SIZE bytes)"
+                    echo "{\"slug\":\"$slug\",\"status\":\"success\",\"detail\":\"Program extracted\",\"http_code\":\"$HTTP_CODE\",\"bytes\":$DEST_SIZE}" >> "$TMP_PAGES"
+                else
+                    error "/$slug/ program extraction failed (see log)"
+                    echo "      ❌ Program extraction failed"
+                    echo "{\"slug\":\"$slug\",\"status\":\"failed\",\"detail\":\"Program extraction failed\",\"http_code\":\"$HTTP_CODE\",\"bytes\":$SIZE}" >> "$TMP_PAGES"
                 fi
             else
                 info "Using HTML parser for $slug"

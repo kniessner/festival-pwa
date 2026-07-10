@@ -7,12 +7,16 @@ const PAGES = [
     { slug: 'home', label: 'Home', icon: '🏠' },
     { slug: 'favorites', label: 'Mein Plan', icon: '⭐' },
     { slug: 'cashless', label: 'Cashless', icon: '💳' },
+    { slug: 'faqs', label: 'FAQs', icon: '❓' },
+    { slug: 'programm-2026', label: 'Programm', icon: '📅' },
     { slug: 'performances', label: 'Acts', icon: '🎭' },
     { slug: 'workshops', label: 'Workshops', icon: '🛠️' }
 ];
 
 const DATA_FILES = {
     cashless: 'cashless.json',
+    faqs: 'faqs.json',
+    'programm-2026': 'programm-2026.json',
     performances: 'performances.json',
     workshops: 'workshops.json'
 };
@@ -108,14 +112,28 @@ function setupSearch() {
 function doSearch(query) {
     const results = [];
     for (const [slug, data] of Object.entries(pageData)) {
-        if (!data || !data.items) continue;
+        if (!data) continue;
         const pageLabel = PAGES.find(p => p.slug === slug)?.label || slug;
-        data.items.forEach((item, i) => {
-            const text = `${item.question || ''} ${item.title || ''} ${item.desc || ''}`.toLowerCase();
-            if (text.includes(query)) {
-                results.push({ page: slug, pageLabel, index: i, item });
-            }
-        });
+        
+        // Search items (FAQ, grid)
+        if (data.items) {
+            data.items.forEach((item, i) => {
+                const text = `${item.question || ''} ${item.title || ''} ${item.desc || ''}`.toLowerCase();
+                if (text.includes(query)) {
+                    results.push({ page: slug, pageLabel, index: i, item });
+                }
+            });
+        }
+        
+        // Search events (program)
+        if (data.events) {
+            data.events.forEach((ev, i) => {
+                const text = `${ev.title || ''} ${ev.excerpt || ''} ${ev.description || ''} ${ev.stage_label || ''} ${ev.type_label || ''} ${ev.hosts?.join(' ') || ''}`.toLowerCase();
+                if (text.includes(query)) {
+                    results.push({ page: slug, pageLabel, index: i, item: ev, isEvent: true });
+                }
+            });
+        }
     }
     renderSearchResults(results, query);
 }
@@ -129,11 +147,11 @@ function renderSearchResults(results, query) {
     }
     container.innerHTML = results.map(r => {
         const title = r.item.title || r.item.question || 'Item';
-        const desc = r.item.desc || r.item.answer || '';
+        const desc = r.item.desc || r.item.answer || r.item.excerpt || '';
         const pageIdx = PAGES.findIndex(p => p.slug === r.page);
         return `
         <div class="grid-card search-card" onclick="loadPage(${pageIdx}); setTimeout(()=>scrollToItem('${r.page}',${r.index}), 300)">
-            <div class="search-meta">${escapeHtml(r.pageLabel)}</div>
+            <div class="search-meta">${escapeHtml(r.pageLabel)}${r.item.time ? ' · ' + escapeHtml(r.item.time) : ''}${r.item.stage_label ? ' · ' + escapeHtml(r.item.stage_label) : ''}</div>
             <h3>${escapeHtml(title)}</h3>
             ${desc ? `<p>${escapeHtml(desc.substring(0, 120))}${desc.length > 120 ? '...' : ''}</p>` : ''}
         </div>`;
@@ -169,6 +187,7 @@ function loadPage(index) {
         const data = pageData[page.slug];
         if (data) {
             if (data.type === 'faq') renderFAQ(container, data, page.slug);
+            else if (data.type === 'program') renderProgram(container, data, page.slug);
             else if (data.type === 'grid') renderGrid(container, data, page.slug);
         } else {
             container.innerHTML = '<div class="empty">Keine Inhalte verfügbar</div>';
@@ -180,6 +199,7 @@ function loadPage(index) {
 
 function renderHome(container) {
     const favCount = getFavorites().length;
+    const pageIdx = (slug) => PAGES.findIndex(p => p.slug === slug);
     container.innerHTML = `
         <div class="hero">
             <div class="hero-logo">🌊</div>
@@ -188,32 +208,34 @@ function renderHome(container) {
             <div class="countdown">33</div>
             <div class="countdown-label">Tage bis zum Festival</div>
             <div class="quick-nav">
-                <button class="quick-btn" onclick="loadPage(2)">💳 Cashless</button>
-                <button class="quick-btn" onclick="loadPage(3)">🎭 Acts</button>
-                <button class="quick-btn" onclick="loadPage(4)">🛠️ Workshops</button>
-                ${favCount > 0 ? `<button class="quick-btn quick-btn-accent" onclick="loadPage(1)">⭐ Mein Plan (${favCount})</button>` : ''}
+                <button class="quick-btn" onclick="loadPage(${pageIdx('cashless')})">💳 Cashless</button>
+                <button class="quick-btn" onclick="loadPage(${pageIdx('programm-2026')})">📅 Programm</button>
+                <button class="quick-btn" onclick="loadPage(${pageIdx('faqs')})">❓ FAQs</button>
+                <button class="quick-btn" onclick="loadPage(${pageIdx('performances')})">🎭 Acts</button>
+                <button class="quick-btn" onclick="loadPage(${pageIdx('workshops')})">🛠️ Workshops</button>
+                ${favCount > 0 ? `<button class="quick-btn quick-btn-accent" onclick="loadPage(${pageIdx('favorites')})">⭐ Mein Plan (${favCount})</button>` : ''}
             </div>
         </div>
 
         <div class="info-section">
             <h3>📍 Wichtige Infos</h3>
             <div class="info-grid">
-                <div class="info-card" onclick="loadPage(2)">
+                <div class="info-card" onclick="loadPage(${pageIdx('cashless')})">
                     <span class="icon">💳</span>
                     <div class="label">100% Cashless</div>
                     <div class="desc">Lade dein Bändchen vor dem Festival auf</div>
                 </div>
-                <div class="info-card" onclick="loadPage(3)">
-                    <span class="icon">🎭</span>
-                    <div class="label">22+ Acts</div>
-                    <div class="desc">Performances über das Wochenende</div>
+                <div class="info-card" onclick="loadPage(${pageIdx('programm-2026')})">
+                    <span class="icon">📅</span>
+                    <div class="label">Programm</div>
+                    <div class="desc">Kulturprogramm mit Bühnen & Zeiten</div>
                 </div>
-                <div class="info-card" onclick="loadPage(4)">
-                    <span class="icon">🛠️</span>
-                    <div class="label">38+ Workshops</div>
-                    <div class="desc">Interaktive Workshops & Talks</div>
+                <div class="info-card" onclick="loadPage(${pageIdx('faqs')})">
+                    <span class="icon">❓</span>
+                    <div class="label">FAQs</div>
+                    <div class="desc">Häufige Fragen & Antworten</div>
                 </div>
-                <div class="info-card" onclick="loadPage(1)">
+                <div class="info-card" onclick="loadPage(${pageIdx('favorites')})">
                     <span class="icon">⭐</span>
                     <div class="label">Mein Plan</div>
                     <div class="desc">${favCount > 0 ? favCount + ' gespeichert' : 'Favoriten hinzufügen'}</div>
@@ -225,15 +247,17 @@ function renderHome(container) {
 
 function renderFavorites(container) {
     const favs = getFavorites();
+    const pageIdx = (slug) => PAGES.findIndex(p => p.slug === slug);
     if (favs.length === 0) {
         container.innerHTML = `
             <div class="page-intro">
                 <h3>⭐ Mein Plan</h3>
-                <p style="margin-top:12px;">Noch keine Favoriten. Tippe auf den Stern ⭐ bei Acts oder Workshops, um sie hier zu speichern.</p>
+                <p style="margin-top:12px;">Noch keine Favoriten. Tippe auf den Stern ⭐ bei einem Programm-Eintrag, um ihn hier zu speichern.</p>
             </div>
             <div class="quick-nav">
-                <button class="quick-btn" onclick="loadPage(3)">🎭 Acts</button>
-                <button class="quick-btn" onclick="loadPage(4)">🛠️ Workshops</button>
+                <button class="quick-btn" onclick="loadPage(${pageIdx('programm-2026')})">📅 Programm</button>
+                <button class="quick-btn" onclick="loadPage(${pageIdx('performances')})">🎭 Acts</button>
+                <button class="quick-btn" onclick="loadPage(${pageIdx('workshops')})">🛠️ Workshops</button>
             </div>
         `;
         return;
@@ -246,6 +270,9 @@ function renderFavorites(container) {
         const data = pageData[f.page];
         if (data && data.items && data.items[f.index]) {
             grouped[f.page].push({ ...data.items[f.index], index: f.index, page: f.page });
+        } else if (data && data.events && data.events[f.index]) {
+            // Programm-2026 uses events, not items
+            grouped[f.page].push({ ...data.events[f.index], index: f.index, page: f.page });
         }
     }
 
@@ -255,7 +282,8 @@ function renderFavorites(container) {
         html += `<div class="fav-group"><div class="fav-group-title">${escapeHtml(label)}</div>`;
         html += items.map((item, i) => {
             const title = item.title || item.question;
-            const desc = item.desc || item.answer || '';
+            const desc = item.desc || item.answer || item.excerpt || '';
+            const meta = item.time ? `<span class="event-meta">${escapeHtml(item.time)} · ${escapeHtml(item.stage_label || '')}</span>` : '';
             const isFav = isFavorite(item.page, item.index);
             return `
             <div class="grid-card" data-item-index="${item.index}">
@@ -263,6 +291,7 @@ function renderFavorites(container) {
                     <h3>${escapeHtml(title)}</h3>
                     <button class="fav-btn ${isFav ? 'active' : ''}" onclick="event.stopPropagation(); toggleFavFromCard(this, '${item.page}', ${item.index})" title="Favorit">⭐</button>
                 </div>
+                ${meta}
                 ${desc ? `<p>${escapeHtml(desc.substring(0, 200))}${desc.length > 200 ? '...' : ''}</p>` : ''}
             </div>`;
         }).join('');
@@ -341,6 +370,131 @@ function renderGrid(container, data, pageSlug) {
         </div>
     `;
 }
+
+function renderProgram(container, data, pageSlug) {
+    const favs = getFavorites();
+    const activeFilters = { day: 'all', stage: 'all', type: 'all' };
+
+    function buildFilterUI() {
+        const days = data.filters.days || [];
+        const stages = data.filters.stages || [];
+        const types = data.filters.types || [];
+        return `
+        <div class="filter-bar">
+            <div class="filter-group">
+                <label>Tag</label>
+                <select id="filter-day">
+                    ${days.map(d => `<option value="${escapeHtml(d.value)}">${escapeHtml(d.label)}</option>`).join('')}
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Bühne</label>
+                <select id="filter-stage">
+                    ${stages.map(s => `<option value="${escapeHtml(s.value)}">${escapeHtml(s.label)}</option>`).join('')}
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Typ</label>
+                <select id="filter-type">
+                    ${types.map(t => `<option value="${escapeHtml(t.value)}">${escapeHtml(t.label)}</option>`).join('')}
+                </select>
+            </div>
+        </div>`;
+    }
+
+    function renderEvents() {
+        const dayVal = document.getElementById('filter-day')?.value || 'all';
+        const stageVal = document.getElementById('filter-stage')?.value || 'all';
+        const typeVal = document.getElementById('filter-type')?.value || 'all';
+
+        const filtered = data.events.filter(ev => {
+            if (dayVal !== 'all' && ev.day !== dayVal) return false;
+            if (stageVal !== 'all' && ev.stage !== stageVal) return false;
+            if (typeVal !== 'all' && ev.type !== typeVal) return false;
+            return true;
+        });
+
+        const listEl = document.getElementById('program-list');
+        if (!listEl) return;
+
+        if (filtered.length === 0) {
+            listEl.innerHTML = '<div class="empty" style="padding:40px 20px;">Keine Events für diese Filter</div>';
+            document.getElementById('program-count').textContent = '0 Events';
+            return;
+        }
+
+        listEl.innerHTML = filtered.map((ev, i) => {
+            const idx = data.events.indexOf(ev);
+            const isFav = isFavorite(pageSlug, idx);
+            const hasDetail = ev.description && ev.description.trim().length > 0 && ev.description !== ev.excerpt;
+            const hosts = ev.hosts && ev.hosts.length ? `<span class="event-hosts">${escapeHtml(ev.hosts.join(', '))}</span>` : '';
+            const langBadges = ev.langs && ev.langs.length ? ev.langs.map(l => `<span class="lang-badge">${escapeHtml(l.toUpperCase())}</span>`).join('') : '';
+
+            return `
+            <div class="program-item ${hasDetail ? 'has-detail' : ''}" data-item-index="${idx}">
+                <div class="program-header" onclick="toggleProgramDetail(this)">
+                    <div class="program-meta">
+                        ${ev.time ? `<span class="event-time">${escapeHtml(ev.time)}</span>` : ''}
+                        ${ev.type_label ? `<span class="event-type">${escapeHtml(ev.type_label)}</span>` : ''}
+                        ${langBadges}
+                    </div>
+                    <div class="program-title-row">
+                        <h3>${escapeHtml(ev.title)}</h3>
+                        <div class="program-actions">
+                            <button class="fav-btn ${isFav ? 'active' : ''}" onclick="event.stopPropagation(); toggleFavFromCard(this, '${pageSlug}', ${idx})" title="Favorit">⭐</button>
+                            ${hasDetail ? '<span class="program-toggle">+</span>' : ''}
+                        </div>
+                    </div>
+                    ${ev.stage_label ? `<span class="event-stage">${escapeHtml(ev.stage_label)}</span>` : ''}
+                    ${hosts}
+                    ${ev.excerpt ? `<p class="event-excerpt">${escapeHtml(ev.excerpt.substring(0, 140))}${ev.excerpt.length > 140 ? '...' : ''}</p>` : ''}
+                </div>
+                ${hasDetail ? `
+                <div class="program-detail">
+                    <div class="program-detail-inner">
+                        ${escapeHtml(ev.description)}
+                    </div>
+                </div>
+                ` : ''}
+            </div>`;
+        }).join('');
+
+        document.getElementById('program-count').textContent = `${filtered.length} Event${filtered.length !== 1 ? 's' : ''}`;
+    }
+
+    container.innerHTML = `
+        <div class="page-intro">${textToHtml(data.intro)}</div>
+        ${buildFilterUI()}
+        <div class="program-status"><span id="program-count">${data.events.length} Events</span></div>
+        <div class="program-list" id="program-list"></div>
+    `;
+
+    // Wire up filter change listeners
+    requestAnimationFrame(() => {
+        ['filter-day', 'filter-stage', 'filter-type'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.addEventListener('change', renderEvents);
+        });
+        renderEvents();
+    });
+}
+
+window.toggleProgramDetail = function(header) {
+    const item = header.closest('.program-item');
+    const detail = item.querySelector('.program-detail');
+    const toggle = header.querySelector('.program-toggle');
+    if (!detail) return;
+    const isOpen = item.classList.contains('open');
+    if (isOpen) {
+        item.classList.remove('open');
+        detail.style.display = 'none';
+        if (toggle) toggle.textContent = '+';
+    } else {
+        item.classList.add('open');
+        detail.style.display = 'block';
+        if (toggle) toggle.textContent = '−';
+    }
+};
 
 // ===== UTILS =====
 function textToHtml(str) {

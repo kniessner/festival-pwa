@@ -79,7 +79,7 @@
             background: var(--bg) url('images/bg.jpg') center top / cover fixed no-repeat;
             color: var(--text);
             min-height: 100vh;
-           
+
             line-height: 1.5;
             padding-top: env(safe-area-inset-top);
             padding-bottom: calc(72px + env(safe-area-inset-bottom));
@@ -89,11 +89,11 @@
             max-width: 650px;
             margin: 0 auto;
             border: 1px solid #080943;
-            height: 100vh;
+            height: 100%;
             box-shadow: #080943 -1px 0px 5px 0px;
             background: linear-gradient(to bottom, #08094378 70%, transparent);
-          
             position: relative;
+            padding-bottom: 250px;
         }
 
         /* Offline badge */
@@ -194,7 +194,7 @@
         .hero {
             text-align: center;
             padding: 20px 0 32px;
-          
+
         }
 
         .hero-logo {
@@ -693,6 +693,198 @@
         .install-prompt .close-btn:active {
             background: rgba(255, 255, 255, 0.35);
         }
+
+        /* Program filters */
+        .filter-bar {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+        }
+
+        .filter-group {
+            flex: 1;
+            min-width: 90px;
+        }
+
+        .filter-group label {
+            display: block;
+            font-size: 0.65rem;
+            color: var(--accent-pink);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .filter-group select {
+            width: 100%;
+            padding: 10px 12px;
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            background: var(--bg-card);
+            color: var(--text);
+            font-family: var(--font-body);
+            font-size: 0.85rem;
+            outline: none;
+            backdrop-filter: blur(8px);
+        }
+
+        .filter-group select:focus {
+            border-color: var(--accent-pink);
+        }
+
+        /* Program list */
+        .program-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .program-status {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+            text-align: right;
+        }
+
+        .program-item {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            overflow: hidden;
+            transition: all 0.2s;
+            backdrop-filter: blur(8px);
+        }
+
+        .program-item:hover,
+        .program-item.open {
+            border-color: var(--accent-pink);
+            background: var(--bg-card-hover);
+        }
+
+        .program-header {
+            padding: 16px;
+            cursor: pointer;
+        }
+
+        .program-meta {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            margin-bottom: 6px;
+            flex-wrap: wrap;
+        }
+
+        .event-time {
+            font-size: 0.75rem;
+            color: var(--accent-orange);
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .event-type {
+            font-size: 0.65rem;
+            background: var(--accent-purple);
+            color: var(--text);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .lang-badge {
+            font-size: 0.6rem;
+            background: var(--bg-card-hover);
+            color: var(--text-muted);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .program-title-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .program-title-row h3 {
+            font-family: var(--font-head);
+            font-size: 1.05rem;
+            color: var(--text);
+            margin-bottom: 0;
+            flex: 1;
+        }
+
+        .program-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+
+        .program-toggle {
+            font-size: 1.4rem;
+            color: var(--accent-pink);
+            font-weight: 400;
+            min-width: 24px;
+            text-align: center;
+            line-height: 1;
+        }
+
+        .event-stage {
+            display: inline-block;
+            font-size: 0.75rem;
+            color: var(--accent-pink);
+            font-weight: 700;
+            margin-top: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .event-hosts {
+            display: block;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .event-excerpt {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 8px;
+            line-height: 1.4;
+        }
+
+        .program-detail {
+            display: none;
+            border-top: 1px solid var(--border);
+        }
+
+        .program-detail-inner {
+            padding: 16px;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+            white-space: pre-line;
+        }
+
+        .program-item.open .program-detail {
+            display: block;
+        }
+
+        /* Event meta in favorites */
+        .event-meta {
+            display: block;
+            font-size: 0.75rem;
+            color: var(--accent-orange);
+            font-weight: 700;
+            margin-bottom: 4px;
+            letter-spacing: 0.5px;
+        }
     </style>
 </head>
 
@@ -713,7 +905,7 @@
             <div class="loading">Laden...⏳</div>
         </div>
 
-        
+
         <div class="install-prompt hidden" id="installBtn">
             <span class="install-icon">📲</span>
             <span class="install-text" id="installText">Zum Startbildschirm</span>
