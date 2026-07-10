@@ -272,7 +272,7 @@ function renderFavorites(container) {
             const isFav = isFavorite(item.page, item.index);
             return `<div class="grid-card" data-item-index="${item.index}">
                 <div class="card-header"><h3>${escapeHtml(title)}</h3>
-                <button class="fav-btn ${isFav ? 'active' : ''}" onclick="event.stopPropagation(); toggleFavFromCard(this, '${item.page}', ${item.index})" title="Favorit">⭐</button></div>
+                <button class="fav-btn ${isFav ? 'active' : ''}" onclick="event.stopPropagation(); toggleFavFromCard(this, '${item.page}', ${item.index})" title="Favorit">★</button></div>
                 ${meta}
                 ${desc ? `<p>${escapeHtml(desc.substring(0, 200))}${desc.length > 200 ? '...' : ''}</p>` : ''}
             </div>`;
@@ -294,8 +294,12 @@ function toggleFavFromCard(btn, pageSlug, itemIndex) {
 // ════════════════════════════════════════════════════════════════
 function getCurrentFestivalDay(days) {
     const now = new Date();
+    // Use local date (Europe/Berlin), not UTC ISO string
+    const yy = now.getFullYear();
+    const mm = String(now.getMonth() + 1).padStart(2, '0');
+    const dd = String(now.getDate()).padStart(2, '0');
+    const todayStr = `${yy}-${mm}-${dd}`;
     const festivalDates = ['2026-08-13', '2026-08-14', '2026-08-15', '2026-08-16'];
-    const todayStr = now.toISOString().slice(0, 10);
     if (festivalDates.includes(todayStr)) return todayStr;
     return days[0]?.value || '2026-08-13';
 }
@@ -426,7 +430,7 @@ function renderEventCard(ev) {
             <div class="tt-event-title-row">
                 <h3>${ev.title}</h3>
                 <div class="tt-event-actions">
-                    <button class="fav-btn ${isFav ? 'active' : ''}" onclick="event.stopPropagation(); toggleFavFromCard(this, 'timetable', ${idx})" title="Favorit">⭐</button>
+                    <button class="fav-btn ${isFav ? 'active' : ''}" onclick="event.stopPropagation(); toggleFavFromCard(this, 'timetable', ${idx})" title="Favorit">★</button>
                     ${hasDetail ? '<span class="tt-event-toggle">+</span>' : ''}
                 </div>
             </div>
@@ -480,7 +484,11 @@ function resetFilters() {
 
 function scrollToCurrentTime(selectedDay) {
     const now = new Date();
-    const todayStr = now.toISOString().slice(0, 10);
+    // Use local date (Europe/Berlin), not UTC
+    const yy = now.getFullYear();
+    const mm = String(now.getMonth() + 1).padStart(2, '0');
+    const dd = String(now.getDate()).padStart(2, '0');
+    const todayStr = `${yy}-${mm}-${dd}`;
     if (todayStr !== selectedDay) return;
 
     const currentHour = String(now.getHours()).padStart(2, '0') + ':00';
@@ -514,7 +522,7 @@ function renderFAQ(container, data, pageSlug) {
                     <div class="faq-question">
                         <span>${item.question}</span>
                         <div class="faq-actions">
-                            <button class="fav-btn ${isFav ? 'active' : ''}" onclick="event.stopPropagation(); toggleFavFromCard(this, '${pageSlug}', ${i})" title="Favorit">⭐</button>
+                            <button class="fav-btn ${isFav ? 'active' : ''}" onclick="event.stopPropagation(); toggleFavFromCard(this, '${pageSlug}', ${i})" title="Favorit">★</button>
                             <span class="faq-toggle">+</span>
                         </div>
                     </div>
