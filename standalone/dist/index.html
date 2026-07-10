@@ -885,6 +885,272 @@
             margin-bottom: 4px;
             letter-spacing: 0.5px;
         }
+
+        /* ── Unified Timetable ── */
+
+        .tt-intro {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+
+        /* Day tabs */
+        .tt-day-tabs {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding-bottom: 8px;
+            margin-bottom: 12px;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+        }
+        .tt-day-tabs::-webkit-scrollbar { display: none; }
+
+        .tt-day-tab {
+            flex-shrink: 0;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 50px;
+            padding: 8px 18px;
+            color: var(--text-muted);
+            font-family: var(--font-body);
+            font-size: 0.8rem;
+            font-weight: 700;
+            cursor: pointer;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            transition: all 0.2s;
+        }
+
+        .tt-day-tab.active {
+            background: linear-gradient(135deg, var(--accent-pink), var(--accent-purple));
+            border-color: var(--accent-pink);
+            color: var(--text);
+        }
+
+        .tt-day-tab:active { transform: scale(0.96); }
+
+        /* Events list */
+        .tt-events { display: flex; flex-direction: column; gap: 16px; padding-bottom: 80px; }
+
+        .tt-hour-group { display: flex; flex-direction: column; gap: 10px; }
+
+        .tt-hour-label {
+            font-family: var(--font-head);
+            font-size: 0.85rem;
+            color: var(--accent-orange);
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            position: sticky;
+            top: 0;
+            background: linear-gradient(to bottom, var(--bg) 80%, transparent);
+            padding: 8px 0;
+            z-index: 10;
+        }
+
+        .tt-hour-events { display: flex; flex-direction: column; gap: 10px; }
+
+        .tt-event {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            overflow: hidden;
+            transition: all 0.2s;
+            backdrop-filter: blur(8px);
+        }
+
+        .tt-event:hover, .tt-event.open {
+            border-color: var(--accent-pink);
+            background: var(--bg-card-hover);
+        }
+
+        .tt-event-header { padding: 16px; cursor: pointer; }
+
+        .tt-event-meta {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            margin-bottom: 6px;
+            flex-wrap: wrap;
+        }
+
+        .tt-event-title-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .tt-event-title-row h3 {
+            font-family: var(--font-head);
+            font-size: 1.05rem;
+            color: var(--text);
+            margin-bottom: 0;
+            flex: 1;
+        }
+
+        .tt-event-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+
+        .tt-event-toggle {
+            font-size: 1.4rem;
+            color: var(--accent-pink);
+            font-weight: 400;
+            min-width: 24px;
+            text-align: center;
+            line-height: 1;
+        }
+
+        .tt-event-detail {
+            display: none;
+            border-top: 1px solid var(--border);
+        }
+
+        .tt-event-detail-inner {
+            padding: 16px;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+            white-space: pre-line;
+        }
+
+        .tt-event.open .tt-event-detail { display: block; }
+
+        /* Filter button */
+        .tt-filter-btn {
+            position: fixed;
+            bottom: calc(80px + env(safe-area-inset-bottom));
+            right: 16px;
+            z-index: 300;
+            background: linear-gradient(135deg, var(--accent-pink), var(--accent-purple));
+            border: none;
+            border-radius: 50px;
+            padding: 12px 20px;
+            color: var(--text);
+            font-family: var(--font-body);
+            font-weight: 700;
+            font-size: 0.85rem;
+            cursor: pointer;
+            box-shadow: 0 4px 16px rgba(176, 50, 122, 0.4);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .tt-filter-btn:active { transform: scale(0.96); }
+
+        /* Filter panel (dropup) */
+        .tt-filter-panel {
+            position: fixed;
+            bottom: calc(72px + env(safe-area-inset-bottom));
+            left: 12px;
+            right: 12px;
+            z-index: 310;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 16px;
+            box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.5);
+            transform: translateY(120%);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            max-height: 60vh;
+            overflow-y: auto;
+        }
+
+        .tt-filter-panel.open { transform: translateY(0); }
+
+        .tt-filter-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .tt-filter-head strong {
+            font-family: var(--font-head);
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .tt-filter-close {
+            background: none;
+            border: none;
+            color: var(--text);
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 4px;
+        }
+
+        .tt-filter-group { margin-bottom: 16px; }
+
+        .tt-filter-group label {
+            display: block;
+            font-size: 0.65rem;
+            color: var(--accent-pink);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .tt-filter-group select {
+            width: 100%;
+            padding: 12px 14px;
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            background: var(--bg-card);
+            color: var(--text);
+            font-family: var(--font-body);
+            font-size: 0.9rem;
+            outline: none;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23f3efdf' viewBox='0 0 16 16'%3E%3Cpath d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            padding-right: 36px;
+        }
+
+        .tt-filter-group select:focus { border-color: var(--accent-pink); }
+
+        .tt-filter-reset {
+            width: 100%;
+            padding: 12px;
+            background: transparent;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            color: var(--text-muted);
+            font-family: var(--font-body);
+            font-weight: 700;
+            font-size: 0.85rem;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 4px;
+        }
+
+        .tt-filter-reset:active {
+            background: var(--bg-card-hover);
+            border-color: var(--accent-pink);
+        }
+
+        .tt-filter-backdrop {
+            position: fixed;
+            inset: 0;
+            z-index: 305;
+            background: rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+
+        .tt-filter-backdrop.open { opacity: 1; pointer-events: auto; }
     </style>
 </head>
 

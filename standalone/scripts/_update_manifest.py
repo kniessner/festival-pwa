@@ -19,15 +19,14 @@ def main():
     app_name = sys.argv[2]
 
     pages = []
-    # Find all JSON files except _manifest.json
+    # Find all JSON files except internal ones
     for path in sorted(glob.glob(os.path.join(data_dir, '*.json'))):
         name = os.path.basename(path)
-        if name.startswith('_') or name == '.json':
+        if name.startswith('_') or name in ('timetable.json', '.json'):
             continue
         slug = name.replace('.json', '')
-        if slug in ('home', 'favorites'):
+        if slug in ('home', 'favorites', 'programm-2026', 'programm', 'performances', 'workshops'):
             continue
-        # Read title from file if possible
         label = slug.title()
         try:
             with open(path) as f:
@@ -37,12 +36,17 @@ def main():
             pass
         pages.append({'slug': slug, 'label': label, 'icon': '📄'})
 
-    # Add home and favorites first
+    # Build ordered pages
     all_pages = [
         {'slug': 'home', 'label': 'Home', 'icon': '🏠'},
         {'slug': 'favorites', 'label': 'Mein Plan', 'icon': '⭐'},
+        {'slug': 'timetable', 'label': 'Kulturprogramm', 'icon': '📅'},
     ]
-    all_pages.extend(pages)
+
+    # Add remaining pages sorted alphabetically
+    seen = {'home', 'favorites', 'timetable'}
+    remaining = sorted([p for p in pages if p['slug'] not in seen], key=lambda x: x['label'].lower())
+    all_pages.extend(remaining)
 
     manifest = {
         'pages': all_pages,
@@ -55,7 +59,7 @@ def main():
         json.dump(manifest, f, indent=2, ensure_ascii=False)
         f.write('\n')
 
-    print(f"   ✅ Manifest updated: {len(pages)} content pages")
+    print(f"   ✅ Manifest updated: {len(all_pages) - 3} content pages")
 
 if __name__ == '__main__':
     main()

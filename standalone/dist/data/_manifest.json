@@ -11,6 +11,11 @@
       "icon": "⭐"
     },
     {
+      "slug": "timetable",
+      "label": "Kulturprogramm",
+      "icon": "📅"
+    },
+    {
       "slug": "cashless",
       "label": "Cashless & TOP-UP – Bucht der Träumer*",
       "icon": "📄"
@@ -19,33 +24,8 @@
       "slug": "faqs",
       "label": "FAQs – Bucht der Träumer*",
       "icon": "📄"
-    },
-    {
-      "slug": "performances",
-      "label": "Performances – Bucht der Träumer*",
-      "icon": "📄"
-    },
-    {
-      "slug": "performances.sync-conflict-20260710-183518-6XYX6AM",
-      "label": "Performances – Bucht der Träumer*",
-      "icon": "📄"
-    },
-    {
-      "slug": "programm-2026",
-      "label": "Kulturprogramm",
-      "icon": "📄"
-    },
-    {
-      "slug": "workshops",
-      "label": "Workshops – Bucht der Träumer*",
-      "icon": "📄"
-    },
-    {
-      "slug": "workshops.sync-conflict-20260710-183528-6XYX6AM",
-      "label": "Workshops – Bucht der Träumer*",
-      "icon": "📄"
     }
   ],
   "app_name": "Bucht der Träumer*",
-  "synced_at": 1783701457
+  "synced_at": 1783705277
 }

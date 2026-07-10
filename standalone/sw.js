@@ -1,4 +1,4 @@
-const CACHE_NAME = 'bucht-standalone-v1783701458';
+const CACHE_NAME = 'bucht-standalone-v1783707357';
 const SHELL_ASSETS = [
     './',
     './index.html',
@@ -9,8 +9,8 @@ const SHELL_ASSETS = [
     './images/bg.jpg',
     './images/datum.png',
     './data/cashless.json',
-    './data/performances.json',
-    './data/workshops.json',
+    './data/faqs.json',
+    './data/timetable.json',
     'https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&family=Space+Grotesk:wght@500;700&display=swap'
 ];
 

@@ -174,9 +174,10 @@ else
     echo "📄 Scraping HTML pages directly from source..."
     echo ""
     
-    # Hardcoded list of pages to fetch in source mode.
-    # The manifest is regenerated AFTER fetching, so we can't rely on it here.
     CURRENT_PAGES="cashless faqs programm-2026 performances workshops"
+
+    # Remove stale output files to avoid stale data if a page is removed
+    rm -f "$DATA_DIR"/_manifest.json "$DATA_DIR"/timetable.json
     
     info "Expected pages: $(echo $CURRENT_PAGES | tr '\n' ' ')"
     
@@ -251,7 +252,16 @@ else
             echo "{\"slug\":\"$slug\",\"status\":\"failed\",\"detail\":\"HTTP $HTTP_CODE\",\"http_code\":\"$HTTP_CODE\",\"bytes\":$SIZE}" >> "$TMP_PAGES"
         fi
     done
-    
+
+    info "Building unified timetable"
+    if python3 "$SCRIPTS_DIR/_build_timetable.py" "$DATA_DIR" >> "$LOG_FILE" 2>&1; then
+        ok "Timetable built"
+        echo "      ✅ Timetable built"
+    else
+        warn "Timetable build had issues"
+        echo "      ⚠️ Timetable build had issues"
+    fi
+
     info "Regenerating manifest"
     python3 "$SCRIPTS_DIR/_update_manifest.py" "$DATA_DIR" "Bucht der Träumer*" >> "$LOG_FILE" 2>&1 || warn "Manifest regeneration had issues"
 fi
