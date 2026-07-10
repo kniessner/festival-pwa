@@ -1,0 +1,7 @@
+{
+  "name": "Festival PWA Standalone",
+  "version": "1.0.0",
+  "source_url": "https://bucht-der-traeumer.de",
+  "last_synced": "2026-07-10T16:58:56.719515",
+  "description": "Self-contained festival PWA. Run ./scripts/start.sh to serve."
+}

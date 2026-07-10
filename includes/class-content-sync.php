@@ -188,28 +188,71 @@ class Festival_PWA_Content_Sync {
     /* ── Extractors ── */
     private function extract_faq($xpath, $page) {
         $items = [];
-        $headings = $xpath->query('//main//h2 | //main//h3');
-        foreach ($headings as $heading) {
-            $question = trim($heading->textContent);
-            if (strlen($question) < 10) continue;
-
-            $answer_parts = [];
-            $next = $heading->nextSibling;
-            while ($next) {
-                if (in_array($next->nodeName, ['h2','h3','h4'])) break;
-                if ($next->nodeName === 'p' || $next->nodeName === 'div') {
-                    $txt = trim($next->textContent);
+        
+        // Try WordPress accordion block structure first (eb-accordion-content)
+        $accordion_contents = $xpath->query('//div[contains(@class, "eb-accordion-content")]');
+        if ($accordion_contents->length >= 3) {
+            // Find the parent li.wp-block-post for each accordion
+            foreach ($accordion_contents as $content) {
+                // Walk up to find the containing post item
+                $post_item = $content;
+                while ($post_item && $post_item->nodeName !== 'li') {
+                    $post_item = $post_item->parentNode;
+                    if (!$post_item || $post_item->nodeName === 'body') {
+                        $post_item = null;
+                        break;
+                    }
+                }
+                if (!$post_item) continue;
+                
+                // Find h2.wp-block-post-title within this post item
+                $title_nodes = $xpath->query('.//h2[contains(@class, "wp-block-post-title")]', $post_item);
+                if ($title_nodes->length === 0) continue;
+                
+                $question = trim($title_nodes->item(0)->textContent);
+                if (strlen($question) < 10) continue;
+                if (stripos($question, 'destinations') !== false) continue; // Skip generic placeholder
+                
+                // Extract answer paragraphs from the accordion content
+                $answer_paras = $xpath->query('.//p', $content);
+                $answer_parts = [];
+                foreach ($answer_paras as $para) {
+                    $txt = trim($para->textContent);
                     if ($txt) $answer_parts[] = $txt;
                 }
-                $next = $next->nextSibling;
+                
+                $items[] = [
+                    'question' => $question,
+                    'answer'   => implode("\n\n", $answer_parts),
+                ];
             }
-
-            $items[] = [
-                'question' => $question,
-                'answer'   => implode("\n\n", $answer_parts),
-            ];
         }
-
+        
+        // Fallback: standard heading + sibling paragraphs
+        if (empty($items)) {
+            $headings = $xpath->query('//main//h2 | //main//h3');
+            foreach ($headings as $heading) {
+                $question = trim($heading->textContent);
+                if (strlen($question) < 10) continue;
+                
+                $answer_parts = [];
+                $next = $heading->nextSibling;
+                while ($next) {
+                    if (in_array($next->nodeName, ['h2','h3','h4'])) break;
+                    if ($next->nodeName === 'p' || $next->nodeName === 'div') {
+                        $txt = trim($next->textContent);
+                        if ($txt) $answer_parts[] = $txt;
+                    }
+                    $next = $next->nextSibling;
+                }
+                
+                $items[] = [
+                    'question' => $question,
+                    'answer'   => implode("\n\n", $answer_parts),
+                ];
+            }
+        }
+        
         return [
             'type'   => 'faq',
             'slug'   => $page['slug'],

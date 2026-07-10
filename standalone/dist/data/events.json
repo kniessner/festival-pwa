@@ -1,0 +1,23 @@
+[
+  {"id":1,"title":"Sunrise Yoga","description":"Start your day with grounding movement and breathwork.","day":"fr","start":"08:00","end":"09:30","category":"Workshop","stage":"Healing Garden"},
+  {"id":2,"title":"Forest Soundwalk","description":"Guided listening walk through the surrounding woods.","day":"fr","start":"09:00","end":"10:30","category":"Workshop","stage":"Wald Bühne"},
+  {"id":3,"title":"Ambient Breakfast","description":"Live ambient textures while you wake up.","day":"fr","start":"09:00","end":"11:00","category":"Live","stage":"Main Stage"},
+  {"id":4,"title":"Open Decks","description":"Bring your USB — first come first play.","day":"fr","start":"11:00","end":"14:00","category":"DJ","stage":"Dubstation"},
+  {"id":5,"title":"Drum Circle","description":"Community rhythm making — all instruments welcome.","day":"fr","start":"11:00","end":"12:30","category":"Workshop","stage":"Healing Garden"},
+  {"id":6,"title":"Live: The Meadows","description":"Psychedelic folk from the Scottish highlands.","day":"fr","start":"13:00","end":"14:30","category":"Live","stage":"Main Stage"},
+  {"id":7,"title":"Schlagen! Werfen! Schreien!","description":"Experimental performance art collective.","day":"fr","start":"13:00","end":"15:00","category":"Live","stage":"Casino"},
+  {"id":8,"title":"Queer Futurism Talk","description":"Panel on queer ecology and post-capitalist futures.","day":"fr","start":"13:00","end":"14:00","category":"Workshop","stage":"Cloud Cuckoo"},
+  {"id":9,"title":"Dub Roots","description":"Foundation soundsystem culture.","day":"fr","start":"14:00","end":"17:00","category":"DJ","stage":"Dubstation"},
+  {"id":10,"title":"Art Class: Nature Prints","description":"Create prints using leaves and found materials.","day":"fr","start":"14:00","end":"16:00","category":"Workshop","stage":"Healing Garden"},
+  {"id":11,"title":"dit:eau Live","description":"Modular synth + hydrophone soundscape.","day":"fr","start":"15:00","end":"16:30","category":"Live","stage":"Wald Bühne"},
+  {"id":12,"title":"Techno Therapy","description":"Hard techno for emotional release.","day":"fr","start":"16:00","end":"20:00","category":"DJ","stage":"Main Stage"},
+  {"id":13,"title":"Stargazing Session","description":"Guided night sky observation with astronomers.","day":"fr","start":"22:00","end":"00:00","category":"Workshop","stage":"Healing Garden"},
+  {"id":14,"title":"Deep Space Closing","description":"Ambient techno until sunrise.","day":"fr","start":"23:00","end":"04:00","category":"DJ","stage":"Main Stage"},
+  {"id":15,"title":"Morning Meditation","description":"Silent sitting in the meadow.","day":"sa","start":"07:00","end":"08:00","category":"Workshop","stage":"Healing Garden"},
+  {"id":16,"title":"Live: Rote Welle","description":"Berlin-based electronic post-punk trio.","day":"sa","start":"14:00","end":"15:30","category":"Live","stage":"Casino"},
+  {"id":17,"title":"Rave Ecology","description":"Sustainable party culture discussion.","day":"sa","start":"15:00","end":"16:30","category":"Workshop","stage":"Cloud Cuckoo"},
+  {"id":18,"title":"Forest Rave","description":"Hidden stage in the trees — follow the lights.","day":"sa","start":"22:00","end":"06:00","category":"DJ","stage":"Wald Bühne"},
+  {"id":19,"title":"Acoustic Sunrise","description":"Unplugged sets as the sun comes up.","day":"sa","start":"05:00","end":"08:00","category":"Live","stage":"Main Stage"},
+  {"id":20,"title":"Sound Healing","description":"Tibetan bowls and vocal harmonics.","day":"so","start":"10:00","end":"11:30","category":"Workshop","stage":"Healing Garden"},
+  {"id":21,"title":"Community Cleanup","description":"Leave no trace — collective site restoration.","day":"mo","start":"09:00","end":"12:00","category":"Workshop","stage":"Main Stage"}
+]
