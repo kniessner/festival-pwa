@@ -262,7 +262,7 @@
             max-width: 650px;
             margin: 0 auto;
             border: 1px solid #080943;
-            height: 100%;
+            height: 100vh;
             box-shadow: #080943 -1px 0px 5px 0px;
             background: linear-gradient(to bottom, #08094378 70%, transparent);
             position: relative;
@@ -295,6 +295,22 @@
             padding: 20px 20px 12px;
             text-align: center;
 
+        }
+
+      
+        figure.wp-block-video.alignfull.full-video-index.eplus-wrapper.hidden-desktop {
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            z-index: -1;
+        }
+
+        video {
+            object-fit: cover;
+            width: 100%;
+            vertical-align: middle;
+            width: 100%;
+            height: 100vh !important;
         }
 
         .app-header img {
@@ -359,6 +375,16 @@
             padding: 0 16px 24px;
             max-width: 720px;
             margin: 0 auto;
+
+            /* */
+
+            padding: 0 16px 24px;
+            max-width: 720px;
+            margin: 0 auto;
+            position: relative;
+            display: inline-block;
+            height: 100%;
+            width: 100%;
         }
 
         .loading,
@@ -396,6 +422,16 @@
             margin-bottom: 4px;
             color: var(--text);
         }
+        .hero  h1 {
+            font-family: var(--wp--preset--font-family--megan-display);
+            font-size: var(--wp--preset--font-size--x-large);
+            letter-spacing: 2px !important;
+            line-height: 1.125;
+            text-transform: uppercase;
+            font-style: normal;
+            font-weight: 700;
+        }
+
 
         .hero-sub {
             color: var(--accent-pink);
@@ -425,6 +461,12 @@
         /* Info section */
         .info-section {
             margin-top: 8px;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 20px;
+
         }
 
         .info-section h3 {
@@ -490,7 +532,7 @@
             background: linear-gradient(135deg, var(--accent-pink), var(--accent-purple));
             border: none;
             border-radius: 50px;
-           
+
             color: var(--text);
             font-family: var(--font-body);
             font-weight: 700;
@@ -498,12 +540,12 @@
             cursor: pointer;
             display: flex;
             align-items: center;
-           
+
             box-shadow: 0 4px 16px rgba(176, 50, 122, 0.3);
             transition: transform 0.2s, box-shadow 0.2s;
             padding: 0.5em 1em;
-             gap: 8px;
-             border: none;
+            gap: 8px;
+            border: none;
             background: var(--festival-filter-color);
             border-radius: var(--festival-radius);
             cursor: pointer;
@@ -1145,6 +1187,97 @@
             transform: scale(0.96);
         }
 
+        /* Info tabs */
+        .info-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+        }
+
+        .info-tabs::-webkit-scrollbar {
+            display: none;
+        }
+
+        .info-tab {
+            flex-shrink: 0;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 50px;
+            padding: 8px 18px;
+            color: var(--text-muted);
+            font-family: var(--font-body);
+            font-size: 0.8rem;
+            font-weight: 700;
+            cursor: pointer;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            transition: all 0.2s;
+        }
+
+        .info-tab.active {
+            background: linear-gradient(135deg, var(--accent-pink), var(--accent-purple));
+            border-color: var(--accent-pink);
+            color: var(--text);
+        }
+
+        .info-tab:active {
+            transform: scale(0.96);
+        }
+
+        /* Info panels */
+        .info-panel {
+            display: none;
+        }
+
+        .info-panel.active {
+            display: block;
+        }
+
+        /* News card */
+        .news-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 18px 16px;
+            margin-bottom: 10px;
+            transition: all 0.2s;
+            backdrop-filter: blur(8px);
+            position: relative;
+        }
+
+        .news-card:hover,
+        .news-card.news-highlight {
+            border-color: var(--accent-orange);
+            background: var(--bg-card-hover);
+        }
+
+        .news-card h3 {
+            font-family: var(--font-head);
+            font-size: 1.05rem;
+            color: var(--text);
+            margin-bottom: 6px;
+            font-weight: 700;
+        }
+
+        .news-card p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        .news-date {
+            display: inline-block;
+            font-size: 0.7rem;
+            color: var(--accent-orange);
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
         /* Events list */
         .tt-events {
             display: flex;
@@ -1435,9 +1568,17 @@
         <div class="content" id="content">
             <div class="loading">Laden...⏳</div>
         </div>
+        <figure class="wp-block-video alignfull full-video-index eplus-wrapper hidden-desktop" style="
+    /* object-fit: cover; */
+    /* width: 100%; */
+"><video height="1920"
+                style="object-fit: cover;width: 100%;vertical-align: middle;width: 100%;height: 100vh !important;"
+                width="1080" autoplay="" loop="" muted=""
+                poster="https://bucht-der-traeumer.de/wp-content/uploads/2026/01/landing_mobile.jpg"
+                src="https://bucht-der-traeumer.de/wp-content/uploads/2026/02/BdT_Animation_Story_Compressed.webm"
+                playsinline=""></video></figure>
 
-
-       <!--<div class="install-prompt hidden" id="installBtn">
+        <!--<div class="install-prompt hidden" id="installBtn">
             <span class="install-icon">📲</span>
             <span class="install-text" id="installText">Zum Startbildschirm</span>
             <button class="close-btn" id="installClose">✕</button>

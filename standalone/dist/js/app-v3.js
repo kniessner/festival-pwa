@@ -7,13 +7,11 @@ const PAGES = [
     { slug: 'home', label: 'Home', icon: '🏠' },
     { slug: 'timetable', label: 'Programm', icon: '📅' },
     { slug: 'favorites', label: 'Mein Plan', icon: '⭐' },
-    { slug: 'cashless', label: 'Cashless', icon: '💳' },
-    { slug: 'faqs', label: 'FAQs', icon: '❓' }
+    { slug: 'info', label: 'Info', icon: 'ℹ️' }
 ];
 
 const DATA_FILES = {
-    cashless: 'cashless.json',
-    faqs: 'faqs.json',
+    info: 'info.json',
     timetable: 'timetable.json'
 };
 
@@ -113,16 +111,30 @@ function doSearch(query) {
     for (const [slug, data] of Object.entries(pageData)) {
         if (!data) continue;
         const pageLabel = PAGES.find(p => p.slug === slug)?.label || slug;
-        if (data.items) {
-            data.items.forEach((item, i) => {
-                const text = `${item.question || ''} ${item.title || ''} ${item.desc || ''}`.toLowerCase();
-                if (text.includes(query)) results.push({ page: slug, pageLabel, index: i, item });
-            });
-        }
+        // Timetable events
         if (data.events) {
             data.events.forEach((ev, i) => {
                 const text = `${ev.title || ''} ${ev.excerpt || ''} ${ev.description || ''} ${ev.stage_label || ''} ${ev.type_label || ''} ${ev.hosts?.join(' ') || ''}`.toLowerCase();
                 if (text.includes(query)) results.push({ page: slug, pageLabel, index: i, item: ev, isEvent: true });
+            });
+        }
+        // Info view sub-sections (news, cashless, faqs)
+        if (slug === 'info') {
+            ['news', 'cashless', 'faqs'].forEach(sub => {
+                const subData = data[sub];
+                if (!subData || !subData.items) return;
+                subData.items.forEach((item, i) => {
+                    const text = `${item.question || ''} ${item.title || ''} ${item.desc || ''}`.toLowerCase();
+                    if (text.includes(query)) results.push({ page: slug, pageLabel: `${pageLabel} · ${sub}`, index: i, item, infoTab: sub });
+                });
+            });
+            continue;
+        }
+        // Direct items (old format fallback)
+        if (data.items) {
+            data.items.forEach((item, i) => {
+                const text = `${item.question || ''} ${item.title || ''} ${item.desc || ''}`.toLowerCase();
+                if (text.includes(query)) results.push({ page: slug, pageLabel, index: i, item });
             });
         }
     }
@@ -141,8 +153,12 @@ function renderSearchResults(results, query) {
         const desc = r.item.desc || r.item.answer || r.item.excerpt || '';
         const meta = r.item.time ? `${escapeHtml(r.item.time)} · ${escapeHtml(r.item.stage_label || '')}` : '';
         const pageIdx = PAGES.findIndex(p => p.slug === r.page);
+        // Info view results need tab switching
+        const clickHandler = r.infoTab
+            ? `loadPage(${pageIdx}); setTimeout(()=>{switchInfoTab('${r.infoTab}');scrollToItem('${r.page}',${r.index});}, 400)`
+            : `loadPage(${pageIdx}); setTimeout(()=>scrollToItem('${r.page}',${r.index}), 300)`;
         return `
-        <div class="grid-card search-card" onclick="loadPage(${pageIdx}); setTimeout(()=>scrollToItem('${r.page}',${r.index}), 300)">
+        <div class="grid-card search-card" onclick="${clickHandler}">
             <div class="search-meta">${escapeHtml(r.pageLabel)}${meta ? ' · ' + meta : ''}</div>
             <h3>${escapeHtml(title)}</h3>
             ${desc ? `<p>${escapeHtml(desc.substring(0, 120))}${desc.length > 120 ? '...' : ''}</p>` : ''}
@@ -177,8 +193,7 @@ function loadPage(index) {
     if (page.slug === 'home') { renderHome(container); }
     else if (page.slug === 'favorites') { renderFavorites(container); }
     else if (page.slug === 'timetable') { renderTimetable(container); }
-    else if (page.slug === 'cashless') { renderFAQ(container, pageData.cashless, 'cashless'); }
-    else if (page.slug === 'faqs') { renderFAQ(container, pageData.faqs, 'faqs'); }
+    else if (page.slug === 'info') { renderInfo(container); }
     else { container.innerHTML = '<div class="empty">Keine Inhalte verfügbar</div>'; }
 
     renderNav();
@@ -194,14 +209,13 @@ function renderHome(container) {
     container.innerHTML = `
         <div class="hero">
             <div class="hero-logo">🌊</div>
-            <h2>Bucht der Träumer*</h2>
+            <h1>Bucht der Träumer*</h1>
             <div class="hero-sub">Festival 2026</div>
-            <div class="countdown" id="countdown">–</div>
-            <div class="countdown-label">Tage bis zum Festival</div>
+            <!-- <div class="countdown" id="countdown">–</div>
+            <div class="countdown-label">Tage bis zum Festival</div>-->
             <div class="quick-nav">
                 <button class="quick-btn" onclick="loadPage(${pageIdx('timetable')})">📅 Programm</button>
-                <button class="quick-btn" onclick="loadPage(${pageIdx('cashless')})">💳 Cashless</button>
-                <button class="quick-btn" onclick="loadPage(${pageIdx('faqs')})">❓ FAQs</button>
+                <button class="quick-btn" onclick="loadPage(${pageIdx('info')})">ℹ️ Info</button>
                 ${favCount > 0 ? `<button class="quick-btn quick-btn-accent" onclick="loadPage(${pageIdx('favorites')})">⭐ Mein Plan (${favCount})</button>` : ''}
             </div>
         </div>
@@ -213,15 +227,15 @@ function renderHome(container) {
                     <div class="label">Kulturprogramm</div>
                     <div class="desc">149+ Events über alle Tage</div>
                 </div>
-                <div class="info-card" onclick="loadPage(${pageIdx('cashless')})">
+                <div class="info-card" onclick="loadPage(${pageIdx('info')})">
                     <span class="icon">💳</span>
-                    <div class="label">100% Cashless</div>
-                    <div class="desc">Lade dein Bändchen vor dem Festival auf</div>
+                    <div class="label">Cashless & FAQs</div>
+                    <div class="desc">Alles rund ums Festival</div>
                 </div>
-                <div class="info-card" onclick="loadPage(${pageIdx('faqs')})">
-                    <span class="icon">❓</span>
-                    <div class="label">FAQs</div>
-                    <div class="desc">Alles was du wissen musst</div>
+                <div class="info-card" onclick="loadPage(${pageIdx('info')})">
+                    <span class="icon">ℹ️</span>
+                    <div class="label">News & Updates</div>
+                    <div class="desc">Wichtige Infos und Updates</div>
                 </div>
                 <div class="info-card" onclick="loadPage(${pageIdx('favorites')})">
                     <span class="icon">⭐</span>
@@ -264,11 +278,23 @@ function renderFavorites(container) {
             grouped[f.page].push({ ...data.events[f.index], index: f.index, page: f.page });
         } else if (data && data.items && data.items[f.index]) {
             grouped[f.page].push({ ...data.items[f.index], index: f.index, page: f.page });
+        } else if (f.page.startsWith('info-') && pageData.info) {
+            const sub = f.page.replace('info-', '');
+            const subData = pageData.info[sub];
+            if (subData && subData.items && subData.items[f.index]) {
+                grouped[f.page].push({ ...subData.items[f.index], index: f.index, page: f.page });
+            }
         }
     }
     let html = '<div class="page-intro"><h3>⭐ Mein Plan</h3></div>';
     for (const [slug, items] of Object.entries(grouped)) {
-        const label = PAGES.find(p => p.slug === slug)?.label || slug;
+        let label = PAGES.find(p => p.slug === slug)?.label;
+        if (!label) {
+            if (slug === 'info-news') label = 'News';
+            else if (slug === 'info-cashless') label = 'Cashless';
+            else if (slug === 'info-faqs') label = 'FAQs';
+            else label = slug;
+        }
         html += `<div class="fav-group"><div class="fav-group-title">${escapeHtml(label)}</div>`;
         html += items.map(item => {
             const title = item.title || item.question;
@@ -292,6 +318,110 @@ function toggleFavFromCard(btn, pageSlug, itemIndex) {
     btn.classList.toggle('active', isNowFav);
     renderNav();
     if (PAGES[currentPage].slug === 'favorites') loadPage(currentPage);
+}
+
+// ════════════════════════════════════════════════════════════════
+// INFO — Cashless + FAQs + News
+// ════════════════════════════════════════════════════════════════
+function renderInfo(container) {
+    const info = pageData.info;
+    const cashless = info ? info.cashless : null;
+    const faqs     = info ? info.faqs : null;
+    const news     = info ? info.news : null;
+
+    let html = '<div class="info-tabs" id="infoTabs">';
+    html += '<button class="info-tab active" data-tab="news" onclick="switchInfoTab(\'news\')">News</button>';
+    html += '<button class="info-tab" data-tab="cashless" onclick="switchInfoTab(\'cashless\')">Cashless</button>';
+    html += '<button class="info-tab" data-tab="faqs" onclick="switchInfoTab(\'faqs\')">FAQs</button>';
+    html += '</div>';
+
+    // ── News ──
+    html += '<div class="info-panel active" id="panel-news">';
+    if (news && news.items && news.items.length) {
+        html += news.items.map((item, i) => {
+            const isFav = isFavorite('info-news', i);
+            const date = item.date ? `<span class="news-date">${escapeHtml(item.date)}</span>` : '';
+            const highlight = item.highlight ? 'news-highlight' : '';
+            return `<div class="news-card ${highlight}" data-item-index="${i}">
+                <div class="card-header"><h3>${escapeHtml(item.question)}</h3>
+                <button class="fav-btn ${isFav ? 'active' : ''}" onclick="event.stopPropagation(); toggleFavFromCard(this, 'info-news', ${i})" title="Favorit">★</button></div>
+                ${date}
+                <p>${escapeHtml(item.answer)}</p>
+            </div>`;
+        }).join('');
+    } else {
+        html += '<div class="page-intro" style="margin-top:0">Aktuelle News werden hier angezeigt, sobald verfügbar.</div>';
+    }
+    html += '</div>';
+
+    // ── Cashless ──
+    html += '<div class="info-panel" id="panel-cashless">';
+    if (cashless) {
+        html += `<div class="page-intro" style="margin-top:0">${textToHtml(cashless.intro)}</div>`;
+        html += '<div class="faq-list">' + cashless.items.map((item, i) => {
+            const hasAnswer = item.answer && item.answer.trim() && item.answer !== 'Details folgen bald.';
+            const isFav = isFavorite('info-cashless', i);
+            return `<div class="faq-item" data-faq="${i}" data-item-index="${i}">
+                <div class="faq-question">
+                    <span>${item.question}</span>
+                    <div class="faq-actions">
+                        <button class="fav-btn ${isFav ? 'active' : ''}" onclick="event.stopPropagation(); toggleFavFromCard(this, 'info-cashless', ${i})" title="Favorit">★</button>
+                        <span class="faq-toggle">+</span>
+                    </div>
+                </div>
+                <div class="faq-answer ${hasAnswer ? '' : 'empty'}">${hasAnswer ? item.answer : '<em>Details folgen bald.</em>'}</div>
+            </div>`;
+        }).join('') + '</div>';
+    }
+    html += '</div>';
+
+    // ── FAQs ──
+    html += '<div class="info-panel" id="panel-faqs">';
+    if (faqs && faqs.items) {
+        html += '<div class="faq-list">' + faqs.items.map((item, i) => {
+            const hasAnswer = item.answer && item.answer.trim() && item.answer !== 'Details folgen bald.';
+            const isFav = isFavorite('info-faqs', i);
+            return `<div class="faq-item" data-faq="${i}" data-item-index="${i}">
+                <div class="faq-question">
+                    <span>${item.question}</span>
+                    <div class="faq-actions">
+                        <button class="fav-btn ${isFav ? 'active' : ''}" onclick="event.stopPropagation(); toggleFavFromCard(this, 'info-faqs', ${i})" title="Favorit">★</button>
+                        <span class="faq-toggle">+</span>
+                    </div>
+                </div>
+                <div class="faq-answer ${hasAnswer ? '' : 'empty'}">${hasAnswer ? item.answer : '<em>Details folgen bald.</em>'}</div>
+            </div>`;
+        }).join('') + '</div>';
+    }
+    html += '</div>';
+
+    container.innerHTML = html;
+
+    // Wire accordion click handlers inside Info view
+    container.querySelectorAll('.faq-item').forEach(item => {
+        item.addEventListener('click', () => {
+            const answer = item.querySelector('.faq-answer');
+            const toggle = item.querySelector('.faq-toggle');
+            const isOpen = item.classList.contains('open');
+            // Close siblings within same panel only
+            item.closest('.info-panel').querySelectorAll('.faq-item').forEach(f => {
+                f.classList.remove('open');
+                f.querySelector('.faq-answer').style.display = 'none';
+                const t = f.querySelector('.faq-toggle');
+                if (t) t.textContent = '+';
+            });
+            if (!isOpen) {
+                item.classList.add('open');
+                answer.style.display = 'block';
+                toggle.textContent = '−';
+            }
+        });
+    });
+}
+
+function switchInfoTab(tab) {
+    document.querySelectorAll('.info-tab').forEach(t => t.classList.toggle('active', t.dataset.tab === tab));
+    document.querySelectorAll('.info-panel').forEach(p => p.classList.toggle('active', p.id === 'panel-' + tab));
 }
 
 // ════════════════════════════════════════════════════════════════
