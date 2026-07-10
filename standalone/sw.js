@@ -1,4 +1,4 @@
-const CACHE_NAME = 'bucht-standalone-v1783707357';
+const CACHE_NAME = 'bucht-standalone-v1783707678';
 const SHELL_ASSETS = [
     './',
     './index.html',
