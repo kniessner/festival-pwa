@@ -79,7 +79,7 @@
             background: var(--bg) url('images/bg.jpg') center top / cover fixed no-repeat;
             color: var(--text);
             min-height: 100vh;
-           
+
             line-height: 1.5;
             padding-top: env(safe-area-inset-top);
             padding-bottom: calc(72px + env(safe-area-inset-bottom));
@@ -92,7 +92,7 @@
             height: 100vh;
             box-shadow: #080943 -1px 0px 5px 0px;
             background: linear-gradient(to bottom, #08094378 70%, transparent);
-          
+
             position: relative;
         }
 
@@ -194,7 +194,7 @@
         .hero {
             text-align: center;
             padding: 20px 0 32px;
-          
+
         }
 
         .hero-logo {
@@ -584,7 +584,7 @@
             justify-content: center;
             border-top: 1px solid var(--border);
             backdrop-filter: blur(20px);
-            width: 650px;
+            max-width: 650px;
             margin: auto;
         }
 
@@ -713,10 +713,10 @@
             <div class="loading">Laden...⏳</div>
         </div>
 
-        <div class="install-prompt hidden" id="installBtn">
+        <div class="install-prompt hidden" id="installBtn" onclick="triggerInstall()">
             <span class="install-icon">📲</span>
-            <span class="install-text" id="installText">Zum Startbildschirm</span>
-            <button class="close-btn" id="installClose">✕</button>
+            <span class="install-text">Zum Startbildschirm</span>
+            <button class="close-btn" onclick="dismissInstall(event)">✕</button>
         </div>
 
         <nav class="bottom-nav" id="pageNav"><!-- JS fills --></nav>
