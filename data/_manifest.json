@@ -1,0 +1,41 @@
+{
+  "pages": [
+    {
+      "slug": "home",
+      "label": "Home",
+      "icon": "🏠"
+    },
+    {
+      "slug": "favorites",
+      "label": "Mein Plan",
+      "icon": "⭐"
+    },
+    {
+      "slug": "cashless",
+      "label": "Cashless & TOP-UP – Bucht der Träumer*",
+      "icon": "📄"
+    },
+    {
+      "slug": "cashless.sync-conflict-20260710-164509-XS36WRK",
+      "label": "Cashless & TOP-UP – Bucht der Träumer*",
+      "icon": "📄"
+    },
+    {
+      "slug": "events",
+      "label": "Events",
+      "icon": "📄"
+    },
+    {
+      "slug": "performances",
+      "label": "Performances – Bucht der Träumer*",
+      "icon": "📄"
+    },
+    {
+      "slug": "workshops",
+      "label": "Workshops – Bucht der Träumer*",
+      "icon": "📄"
+    }
+  ],
+  "app_name": "Bucht der Träumer*",
+  "synced_at": 1783694877
+}
