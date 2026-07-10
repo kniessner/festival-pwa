@@ -294,13 +294,28 @@ function toggleFavFromCard(btn, pageSlug, itemIndex) {
 // ════════════════════════════════════════════════════════════════
 function getCurrentFestivalDay(days) {
     const now = new Date();
-    // Use local date (Europe/Berlin), not UTC ISO string
     const yy = now.getFullYear();
     const mm = String(now.getMonth() + 1).padStart(2, '0');
     const dd = String(now.getDate()).padStart(2, '0');
     const todayStr = `${yy}-${mm}-${dd}`;
     const festivalDates = ['2026-08-13', '2026-08-14', '2026-08-15', '2026-08-16'];
+
+    // If we're literally during the festival, show that exact day
     if (festivalDates.includes(todayStr)) return todayStr;
+
+    // Otherwise map current weekday to the matching festival weekday
+    //   getDay(): 0=Sun, 1=Mon, 2=Tue, 3=Wed, 4=Thu, 5=Fri, 6=Sat
+    //   Festival: Thu=Aug13, Fri=Aug14, Sat=Aug15, Sun=Aug16
+    const weekdayMap = {
+        0: '2026-08-16', // Sunday   → festival Sunday
+        4: '2026-08-13', // Thursday → festival Thursday
+        5: '2026-08-14', // Friday   → festival Friday
+        6: '2026-08-15'  // Saturday → festival Saturday
+    };
+    const weekday = now.getDay();
+    if (weekdayMap[weekday]) return weekdayMap[weekday];
+
+    // Mon–Wed: fall back to first day (Thursday)
     return days[0]?.value || '2026-08-13';
 }
 
@@ -311,12 +326,15 @@ function renderTimetable(container) {
         return;
     }
 
+    // Persist user-changed filters (stage/category/genre) but ALWAYS recompute
+    // the day from the actual current date so it stays correct across days.
+    const currentDay = getCurrentFestivalDay(data.filters.days);
     window._ttFilters = window._ttFilters || {
-        day: getCurrentFestivalDay(data.filters.days),
         stage: 'all',
         category: 'all',
         genre: 'all'
     };
+    window._ttFilters.day = currentDay;
 
     container.innerHTML = `
         <div class="tt-intro">${textToHtml(data.intro)}</div>
@@ -484,25 +502,71 @@ function resetFilters() {
 
 function scrollToCurrentTime(selectedDay) {
     const now = new Date();
-    // Use local date (Europe/Berlin), not UTC
     const yy = now.getFullYear();
     const mm = String(now.getMonth() + 1).padStart(2, '0');
     const dd = String(now.getDate()).padStart(2, '0');
     const todayStr = `${yy}-${mm}-${dd}`;
-    if (todayStr !== selectedDay) return;
+    const festivalDates = ['2026-08-13', '2026-08-14', '2026-08-15', '2026-08-16'];
 
-    const currentHour = String(now.getHours()).padStart(2, '0') + ':00';
+    // Determine which festival day corresponds to "today" for scroll purposes.
+    // If we're literally during the festival, use the real date.
+    // Otherwise map today's weekday to the matching festival weekday.
+    const weekdayMap = {
+        0: '2026-08-16', // Sunday   → festival Sunday
+        4: '2026-08-13', // Thursday → festival Thursday
+        5: '2026-08-14', // Friday   → festival Friday
+        6: '2026-08-15'  // Saturday → festival Saturday
+    };
+    const weekday = now.getDay();
+    const effectiveDay = festivalDates.includes(todayStr)
+        ? todayStr
+        : (weekdayMap[weekday] || '2026-08-13');
+
+    // Only auto-scroll when the user is viewing today's mapped day
+    if (selectedDay !== effectiveDay) return;
+
+    const currentHour = now.getHours();
+    const currentHourStr = String(currentHour).padStart(2, '0') + ':00';
     const hourGroups = document.querySelectorAll('.tt-hour-group');
-    let target = null;
+
+    // Find the hour group that matches current hour (or closest before it)
+    let targetGroup = null;
     for (const g of hourGroups) {
         const h = g.dataset.hour;
         if (h === 'Ohne Zeit') continue;
-        if (h <= currentHour || !target) target = g;
-        if (h >= currentHour) { target = g; break; }
+        const hourNum = parseInt(h.split(':')[0], 10);
+        if (hourNum <= currentHour) {
+            targetGroup = g;
+        }
     }
-    if (target) {
+
+    // If current hour group exists, find the specific event closest to now
+    if (targetGroup) {
         setTimeout(() => {
-            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            targetGroup.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            // Highlight the closest event within this hour
+            const events = targetGroup.querySelectorAll('.tt-event');
+            let closestEvent = null;
+            let closestDiff = Infinity;
+            for (const ev of events) {
+                const timeEl = ev.querySelector('.event-time');
+                if (!timeEl) continue;
+                const t = timeEl.textContent.trim().split('–')[0].trim();
+                if (t) {
+                    const [h, m] = t.split(':');
+                    const evMinutes = (parseInt(h) * 60) + parseInt(m);
+                    const nowMinutes = (now.getHours() * 60) + now.getMinutes();
+                    const diff = Math.abs(evMinutes - nowMinutes);
+                    if (diff < closestDiff) {
+                        closestDiff = diff;
+                        closestEvent = ev;
+                    }
+                }
+            }
+            if (closestEvent) {
+                closestEvent.classList.add('highlight');
+                setTimeout(() => closestEvent.classList.remove('highlight'), 4000);
+            }
         }, 200);
     }
 }
