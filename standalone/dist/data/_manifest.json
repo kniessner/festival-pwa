@@ -26,6 +26,11 @@
       "icon": "📄"
     },
     {
+      "slug": "performances.sync-conflict-20260710-183518-6XYX6AM",
+      "label": "Performances – Bucht der Träumer*",
+      "icon": "📄"
+    },
+    {
       "slug": "programm-2026",
       "label": "Kulturprogramm",
       "icon": "📄"
@@ -34,8 +39,13 @@
       "slug": "workshops",
       "label": "Workshops – Bucht der Träumer*",
       "icon": "📄"
+    },
+    {
+      "slug": "workshops.sync-conflict-20260710-183528-6XYX6AM",
+      "label": "Workshops – Bucht der Träumer*",
+      "icon": "📄"
     }
   ],
   "app_name": "Bucht der Träumer*",
-  "synced_at": 1783700874
+  "synced_at": 1783701457
 }

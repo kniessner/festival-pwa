@@ -6,255 +6,516 @@
   "items": [
     {
       "title": "Daniela Sepehri",
-      "desc": ""
+      "points": [
+        "Wie geht es weiter im Iran?"
+      ],
+      "image": "https://i0.wp.com/bucht-der-traeumer.de/wp-content/uploads/2026/06/daniela_sepehri.jpg?fit=300%2C300&amp;ssl=1",
+      "desc": "Daniela Sepehri ist Journalistin, Aktivistin und Autorin. Sie beschäftigt sich u.a. mit der Menschenrechtslage in Iran."
     },
     {
       "title": "Arne Semsrott",
-      "desc": ""
+      "points": [
+        "Eat the rich – Klassenkampf von unten",
+        "Gegenmachten"
+      ],
+      "image": "https://i0.wp.com/bucht-der-traeumer.de/wp-content/uploads/2026/06/tobias_kruse.jpg?fit=300%2C300&amp;ssl=1",
+      "desc": "Arne ist Journalist und Aktivist. Seit 2014 leitet er die Recherche- und Transparenzplattform FragDenStaat. Mit dem Freiheitsfonds befreit er Menschen aus dem Gefängnis. 2024 veröffentlichte er das den Spiegel-Bestseller „Machtübernahme“, jetzt erscheint sein neues Buch „Gegenmacht“."
     },
     {
       "title": "Vanessa Faloye",
-      "desc": ""
+      "points": [
+        "Purity Politics & Punishment"
+      ],
+      "image": "https://i0.wp.com/bucht-der-traeumer.de/wp-content/uploads/2026/06/vanessa_faloye.jpg?fit=300%2C300&amp;ssl=1",
+      "desc": "Moderiert von Vanessa Faloye (alias DJ inda Flo), die sich im Rahmen des von ihr mitbegründeten Kollektivs „Held“ mit Sitz in Großbritannien für die Bekämpfung von Unterdrückung, Konfliktbewältigung und den Aufbau von Bewegungen einsetzt."
     },
     {
       "title": "Melanie Wolfers",
-      "desc": ""
+      "points": [
+        "Stell dir vor, die Zukunft wird gut"
+      ],
+      "image": "https://i0.wp.com/bucht-der-traeumer.de/wp-content/uploads/2026/06/melanie_wolfers.jpg?fit=300%2C300&amp;ssl=1",
+      "desc": "Melanie Wolfers wird von vielen als &#8222;Mutmacherin\" bezeichnet. Sie ist Podcasterin (GANZ SCHÖN MUTIG) und Bestellerautorin und berät junge Erwachsene. Dabei lässt sie sich von dem Motto leiten: &#8222;Entdecke und lebe deine wahre Größe.\" Melanie meditiert seit dem 13. Lebensjahr und lebt in einer christlichen Ordensgemeinschaft. Ihr Buch &#8222;Nimm der Ohnmacht ihre Macht. Entdecke die Kraft, die in die wohnt\" hat das Festivalmotto inspiriert."
     },
     {
       "title": "Laurie Penny",
-      "desc": ""
+      "points": [
+        "Neurodiversity, sex and politics"
+      ],
+      "image": "https://i0.wp.com/bucht-der-traeumer.de/wp-content/uploads/2026/06/laurie_penny.jpg?fit=300%2C300&amp;ssl=1",
+      "desc": "Laurie Penny is a journalist, screenwriter, activist and the author of nine books, including &#8218;Sexual Revolution: Modern Fascism and the Feminist Fightback.'"
     },
     {
       "title": "Lindi Delight",
-      "desc": ""
+      "points": [
+        "Decisive is the new black"
+      ],
+      "image": "https://i0.wp.com/bucht-der-traeumer.de/wp-content/uploads/2026/06/lindi_delight.jpg?fit=300%2C300&amp;ssl=1",
+      "desc": "Lindi Delight ist Transformationsarchitektin und doppelt zertifizierte Coachin, die seit fast zwei Jahrzehnten die Zukunft globaler Musikveranstaltungen und der Musikkultur mitgestaltet. Dank ihrer Erfahrung als Leiterin internationaler Markentourneen für Künstler wie Chris Liebing (CLR), DJ Tennis (Life and Death) und Lee Burridge (All Day I Dream), der Leitung kontinentübergreifender Teams sowie der Steuerung komplexer organisatorischer Veränderungen verfügt sie über eine seltene Kombination aus Kreativität und strategischer Umsetzungsstärke. Zu ihrem Beratungsportfolio zählen Most Wanted: Music, Boiler Room, XP Music Futures und die Beatport Group, wo sie Konferenzen konzipierte, Betriebsabläufe umstrukturierte und eine Kultur der Inklusion und Innovation förderte. Bekannt wurde sie ..."
     },
     {
-      "title": "Sophia Fritz &amp; Christina Lehr",
-      "desc": ""
+      "title": "Sophia Fritz & Christina Lehr",
+      "points": [
+        "Toxische Weiblichkeit und echte Begegnung"
+      ],
+      "image": "https://i0.wp.com/bucht-der-traeumer.de/wp-content/uploads/2026/06/mondkindxehrlich.jpg?fit=300%2C300&amp;ssl=1",
+      "desc": "Sophia Fritz, geb. 1997, hat Drehbuch an der Filmhochschule München studiert. Ihr SPIEGEL-Bestseller »Toxische Weiblichkeit« erschien 2024 bei Hanser Berlin. Christina Lehr (Stina), geb. 1982, ist Hebamme, Tantramasseurin und Gestalttherapeutin. Gemeinsam leiten die beiden seit 2025 ehrlichleben – somatische Erforschungsräume für Körperarbeit und solidarische Schwesternschaft."
     },
     {
       "title": "Bianca Nawrath",
-      "desc": ""
+      "points": [
+        "Scham & Sex: Fickfiction schreiben und Widerstände überwinden"
+      ],
+      "image": "https://i0.wp.com/bucht-der-traeumer.de/wp-content/uploads/2026/06/lena_faye.jpg?fit=300%2C300&amp;ssl=1",
+      "desc": "Bianca Nawrath ist Autorin und Schauspielerin mit polnischen Wurzeln. 1997 in Berlin geboren, stand sie als Moderatorin einer Jugendsendung mit 14 Jahren das erste Mal vor der Kamera. 2018 gab sie ihr Schauspieldebüt und spielte seitdem unter anderen an der Seite von Judi Dench und Jürgen Vogel. 2021 erschien ihr erster Roman »Iss das jetzt, wenn du mich liebst«, zuletzt »Schöne Scham« (2025) in der Frankfurter Verlagsanstalt. Bianca Nawrath lebt und arbeitet in Berlin."
     },
     {
       "title": "Christoph Dinkelaker und Ahmad Dakhnous",
-      "desc": ""
+      "points": [
+        "Israel & Palästina besprechbar machen"
+      ],
+      "image": "https://i0.wp.com/bucht-der-traeumer.de/wp-content/uploads/2026/06/ahmad_dakhnous.jpg?fit=300%2C300&amp;ssl=1",
+      "desc": "Christoph ist Islam-, Politik- und Geschichtswissenschaftler, lebte mehrere Jahre in Jerusalem und arbeitete dort in politischer Bildungsarbeit für die Friedrich-Ebert-Stiftung. Ahmad ist Politologe und Bildungsreferent zu Rassismus, Antisemitismus, Flucht und Palästina-Israel. Beide sind seit 2024 im Bildungsteam der Gesellschaft im Wandel"
     },
     {
       "title": "Christoph Steinacker",
-      "desc": ""
+      "points": [
+        "Israel & Palästina besprechbar machen"
+      ],
+      "image": "https://i0.wp.com/bucht-der-traeumer.de/wp-content/uploads/2026/06/Jordan-Pi-408553.jpg?fit=300%2C270&amp;ssl=1",
+      "desc": "Christoph ist studierter Islam-, Politik und Geschichtswissenschaftler. Er hat mehrere Jahre in Jerusalem gelebt und dort sowohl in der politischen Bildungsarbeit für die Friedrich-Ebert-Stiftung als auch in der grenzübergreifenden Dialogarbeit mit Israelis und Palästinenser*innen am Willy Brandt Center gearbeitet. Während seiner Zeit in Jerusalem hat der Mitgründer von Alsharq zahlreiche Artikel zu politischen Entwicklungen vor Ort geschrieben und unter anderem ein Kompendium zu palästinensischen Parteien und Bewegungen veröffentlicht. Seit 15 Jahren konzipiert und leitet Christoph zudem politische Studienreisen in Israel & Palästina. Seit 2024 ist er Teil des Bildungsteams der Gesellschaft im Wandel."
     },
     {
       "title": "Melanie Sichardt, André Richter",
-      "desc": ""
+      "points": [
+        "Gong Bath"
+      ],
+      "image": "",
+      "desc": "Eine Reise ausgelöst durch Frequenzen, Vibrationen und Klängen, die dir verhelfen in dich selbst und in den Moment einzutauchen."
     },
     {
-      "title": "Hæppy Änna &amp; Duchesne",
-      "desc": ""
+      "title": "Hæppy Änna & Duchesne",
+      "points": [
+        "self Massage: shake, flow, & release"
+      ],
+      "image": "",
+      "desc": "Steif und verspannt? Lerne 3 einfache Selbstmassage-Techniken für Alltags-, Arbeits- und Rave-bedingte Verspannungen. SHAKE THAT ASS: Vibration, Schütteln, Klopfen. FASCINATING FASCIA: von Steifheit zu&hellip;"
     },
     {
       "title": "Annie Strout",
-      "desc": ""
+      "points": [
+        "Divine Alignment"
+      ],
+      "image": "",
+      "desc": "Eine Reise durch Ebenen der Heilung, des Geistes und größeren Bewusstseins, um Wunden zu lösen, Führung zu finden und deine Verbindung zu höheren Dimensionen&hellip;"
     },
     {
       "title": "Anuschka Loose",
-      "desc": ""
+      "points": [
+        "Dance Improvisation Class"
+      ],
+      "image": "",
+      "desc": "Anuschka Loose (Berlin, 1997) ist Performerin und Choreografin. Geprägt durch Fusion Belly Dance, Physical Theatre, die ATE Method und somatische Praktiken, schloss sie 2025 ihr Studium in Dance and Choreography an der Fontys Hogeschool voor de Kunsten (NL) ab. Sie schafft Solos, Duette und Interventionen im öffentlichen Raum"
     },
     {
       "title": "Miriam Lütt",
-      "desc": ""
+      "points": [
+        "Right Here, Right Now – Gentle Yoga Flow",
+        "Yin Yoga, Stimme & Breathwork – gemeinsam im Moment"
+      ],
+      "image": "",
+      "desc": "Miriam Lütt ist Yogalehrerin aus Berlin, seit mehr als 6 Jahren in verschiedenen Studios und auf Festivals tätig. Ihre Stunden verbinden Bewegung, Atem und Klang zu einer lebendigen Praxis. Ihr Anliegen ist es, Räume zu schaffen, in denen Verbindung, Balance und echtes Spüren entstehen dürfen."
     },
     {
-      "title": "Nina Javshanashvili &amp; Tekla Tevdorashvili",
-      "desc": ""
+      "title": "Nina Javshanashvili & Tekla Tevdorashvili",
+      "points": [
+        "Radical Herbalism"
+      ],
+      "image": "",
+      "desc": "Tekla und Nina sind zwei Freundinnen aus Tiflis, deren Welten durch die Liebe zu Musik und Natur zusammenfanden. Tekla ist Artivistin und Produzentin, Nina ist Label-Managerin und Tierschützerin. Ihre Arbeit mit Kräutern begann mit Ninas Schilddrüsenerkrankung – heute begleiten sie Menschen dabei, durch Heilpflanzen wieder zu sich selbst zu finden."
     },
     {
       "title": "Lena Prieß und Zuzu",
-      "desc": ""
+      "points": [
+        "Lena Prieß"
+      ],
+      "image": "",
+      "desc": "Zuzu ist DJane und Tänzerin, Lena Osteopathin und ehemalige Geigerin. Beide leben in Berlin und haben sich durch ihre Liebe zur Musik und zum Tanz kennengelernt. Sie haben diesen Workshop ins Leben gerufen, um etwas von der Leidenschaft und Freude weiterzugeben, die sie auf so vielen Tanzflächen rund um die Welt erlebt haben."
     },
     {
       "title": "Julia Kefer by juliaflowsgreen",
-      "desc": ""
+      "points": [
+        "After Rave Recovery"
+      ],
+      "image": "",
+      "desc": "Julia aus Wien ist Lehrerin für bewusste, körperbezogene Liebe. In ihren nährenden Räumen erkundest du dich anhand spiritueller und yogischer Prinzipien. Durch sanfte Neugier und somatische Übungen entfalten sich Freiheit, Selbstermächtigung und eine tiefere Verbindung zu dir selbst."
     },
     {
       "title": "Heidi van de Flausen",
-      "desc": ""
+      "points": [
+        "Pranayama 101",
+        "Somatic Dance"
+      ],
+      "image": "",
+      "desc": "Heidi van de Flausen ist Yogalehrerin, Reiki-Meisterin und somatische Begleiterin. Sie unterstützt Menschen dabei, die Verbindung zu Körper, Energie und innerer Weisheit wiederherzustellen. Ihre Arbeit basiert auf somatischer Verkörperung und dem Chakrasystem – durch Bewegung, Atem und Achtsamkeit."
     },
     {
       "title": "Simone Burster",
-      "desc": ""
+      "points": [
+        "Morning Yoga – Ground Yourself & Recharge"
+      ],
+      "image": "",
+      "desc": "Bevor der Festivaltrubel erwacht, schenke dir einen zauberhaften Start in den Tag. Mit achtsamen Flows, erdenden Standhaltungen und bewusstem Atem kommst du bei dir&hellip;"
     },
     {
       "title": "Sanle Tong",
-      "desc": ""
+      "points": [
+        "Von Ohnmacht zur Selbstwirksamkeit"
+      ],
+      "image": "https://i0.wp.com/bucht-der-traeumer.de/wp-content/uploads/2026/07/14-Sanle-Tong.jpeg?fit=225%2C300&amp;ssl=1",
+      "desc": "Sanle (san-lee) ist Yoga- und Pilates-Lehrerin aus Berlin. Als angehende Heilpraktikerin für Psychotherapie interessiert sie sich für die Verbindung zwischen Körper, Geist und emotionalem Wohlbefinden. In ihren Workshops erkundet sie Themen wie Selbstliebe, Grenzen setzen und die Verbindung von Körper und Geist."
     },
     {
       "title": "Toni Kircheis",
-      "desc": ""
+      "points": [
+        "Dein inneres Team auf der Tanzfläche"
+      ],
+      "image": "https://i0.wp.com/bucht-der-traeumer.de/wp-content/uploads/2026/07/15-Toni-Kircheis.jpg?fit=200%2C300&amp;ssl=1",
+      "desc": "Toni Kircheis, geboren 1989 in Berlin, arbeitet als systemischer Therapeut und begleitet Menschen, Paare und Gruppen dabei, neue Perspektiven auf sich selbst zu entdecken. In seinen Workshops verbindet er systemische Impulse, Körperwahrnehmung und Begegnung – fasziniert von der Idee, dass wir aus vielen inneren Anteilen bestehen."
     },
     {
       "title": "Sophie Victoria Lauber",
-      "desc": ""
+      "points": [
+        "Reset & Reconnect – In 90 Minuten zurück ins Hier und Jetzt"
+      ],
+      "image": "https://i0.wp.com/bucht-der-traeumer.de/wp-content/uploads/2026/07/16-Sophie-Lauber.jpg?fit=200%2C300&amp;ssl=1",
+      "desc": "Sophie Victoria Lauber ist Traumapädagogin (DeGPT) mit langjähriger Erfahrung in psychosozialer Arbeit. Sie begleitet Fachkräfte, Teams und Gruppen dabei, auch in herausfordernden Situationen handlungsfähig zu bleiben. In ihren Workshops verbindet sie traumasensibles Wissen mit körperorientierten, alltagstauglichen Methoden."
     },
     {
       "title": "Wieland Evers",
-      "desc": ""
+      "points": [
+        "Reclaimed Touch – Flogger DIY",
+        "Butoh – Moving from the Inside"
+      ],
+      "image": "",
+      "desc": "Material- und Nachhaltigkeitsnerd. Gleichzeitig voll im Körper unterwegs. Irgendwann kam die Frage auf: Was, wenn man beides verbindet? Seitdem bin ich da irgendwo im Experiment zwischen Material und Körper unterwegs."
     },
     {
       "title": "Friederike von Aderkas",
-      "desc": ""
+      "points": [
+        "WutKraft : Deine Wut – Deine Kraft"
+      ],
+      "image": "https://i0.wp.com/bucht-der-traeumer.de/wp-content/uploads/2026/07/17-Friederike-von-Aderkas.jpg?fit=300%2C273&amp;ssl=1",
+      "desc": "WutKraft Trainerin, Autorin, Diplom Pädagogin, Systemische Coachin und Mutter Über acht Jahre Erfahrung im Zusammenleben, Forschen und Wirken in einer 120 köpfigen Gemeinschaft Mit Herzblut fühlende, lernende und lehrende Gefühls- und Beziehungsforschende, mit Hang zur Intensität und dem Wunsch nach echter Tiefe und Verbindung im zwischenmenschlichen Kontakt. Schnell gelangweilt von Oberflächlichkeit und Smalltalk. Ich sehe meine Wirksamkeit im authentischen Miteinander sein und Räume für echte Begegnungen öffnen – Zuerst im Kontakt mit dir selbst und dann auch mit den anderen."
     },
     {
       "title": "Hannah Pascucci",
-      "desc": ""
+      "points": [
+        "Courage Yoga"
+      ],
+      "image": "",
+      "desc": "Hannah ist Yogalehrerin und Gründerin von Courage Yoga – einem Raum für achtsame Bewegung, ehrliches Fühlen und echte Verbindung. Yoga ist für sie keine Performance, sondern ein Weg, wieder mehr zu spüren. In Berlin unterrichtet sie in Studios und bei niedrigschwelligen Outdoor-Klassen und schafft Räume, in denen Gemeinschaft wirklich spürbar wird."
     },
     {
-      "title": "Júlia von Montfort &amp; Ashraf Alali",
-      "desc": ""
+      "title": "Júlia von Montfort & Ashraf Alali",
+      "points": [
+        "Slow the F*ck Down: A Restorative Yoga Experience"
+      ],
+      "image": "",
+      "desc": "Júlia (Shakti) und Ashrif (Shiva) heißen euch herzlich willkommen zu einer verbindenden, befreienden Reise, auf der sich die Energien von Sonne (Surya) und Mond (Chandra) in heiliger Vereinigung treffen. Mit kraftvollen und intensiven Übungen, die eure Energie und Schwingung für das Festival steigern, kombiniert mit Kundalini-Kriyas und tantrischen Übungen, die euch miteinander verbinden."
     },
     {
       "title": "DJ: Zuzu, Dance Instructor: Toomuch",
-      "desc": ""
+      "points": [
+        "TANZEN3000 FIESTA"
+      ],
+      "image": "",
+      "desc": "Tanzen3000 ist ein Berliner Kollektiv mit Hintergrund in DJing, Tanz, Rap, Somatik und Nachtlebenaktivismus. Die Sessions laden alle ein – mit oder ohne Tanzerfahrung – die Partys körperlich und sozial verbundener machen wollen. In geführten Aktivierungen werden freie Bewegungskonzepte geteilt, die sofort auf dem Dancefloor angewendet werden können"
     },
     {
       "title": "Nessa Schnessa",
-      "desc": ""
+      "points": [
+        "Roll and Flow"
+      ],
+      "image": "https://i0.wp.com/bucht-der-traeumer.de/wp-content/uploads/2026/07/1-Nessa.jpg?fit=169%2C300&amp;ssl=1",
+      "desc": "Du wolltest schon immer mal mit Rollschuhen über den Asphalt gleiten und dabei zur Musikjammen – hast dich aber nie getraut? Dann schnapp dir&hellip;"
     },
     {
       "title": "Goldie",
-      "desc": ""
+      "points": [
+        "Whacking"
+      ],
+      "image": "https://i0.wp.com/bucht-der-traeumer.de/wp-content/uploads/2026/07/2-Goldie.jpg?fit=241%2C300&amp;ssl=1",
+      "desc": "Goldie ist multidisziplinäre Künstlerin, Tänzerin und Forscherin. Ihre Praxis verknüpft Bewegung, kritische Reflexion und visuelle Medien, um Wissen aus schwarzen Innenwelten zu vermitteln. Sie schöpft Ausdruckskraft aus Whacking und Punking, beeinflusst von Jazz, Soul und Funk. Sie trat u.a. bei Les Nuits de Fourvière (Lyon) und Le Carreau du Temple (Paris) auf."
     },
     {
       "title": "Tarot Reader",
-      "desc": ""
+      "points": [
+        "The Peepshow,"
+      ],
+      "image": "",
+      "desc": "Tagsüber verwandelt sich die „Peepshow“ in einen Ort für kreative und partizipative Begegnungen, darunter persönliche Tarot-Lesungen und individuelle Interaktionen mit den Festivalbesuchenden."
     },
     {
       "title": "Planet Atelier",
-      "desc": ""
+      "points": [
+        "A Quarter to Infinity"
+      ],
+      "image": "",
+      "desc": "Ein kreativer und meditativer Workshop, der die Teilnehmer dazu einlädt, aus recycelten Materialien, Texturen und Fundstücken ihre eigenen Miniaturplaneten zu gestalten. Inspiriert vom skulpturalen&hellip;"
     },
     {
       "title": "Rückenwind",
-      "desc": ""
+      "points": [
+        "Rückenwind Bike Space"
+      ],
+      "image": "",
+      "desc": "Rückenwind e. V. ist ein gemeinnütziger Berliner Verein, der seit 2015 gespendete Fahrräder sammelt, repariert und an Menschen weitergibt, die nach Berlin geflüchtet sind. In offenen Werkstätten lernen Volunteers und Geflüchtete gemeinsam Fahrradreparatur, teilen Wissen und schaffen Zugang zu nachhaltiger Mobilität. Rückenwind steht für Community, Solidarität, Integration und das Recht auf Reparatur."
     },
     {
       "title": "Glitzzy Goerlitzzy (Jasna Zajcek)",
-      "desc": ""
+      "points": [
+        "Mad Hatters"
+      ],
+      "image": "",
+      "desc": "Glitzzy ist das gestalterisch-kreative Alter Ego der Macherin, unter dem sie Mitmach-Aktionen und Festival-Workshops zur individuellen Verschönerung von Kopfbedeckungen anbietet. Ganz den jeweiligen Persönlichkeiten entsprechend! Just for the fun of us all!"
     },
     {
       "title": "Line Kiekbusch und Elias Manzel",
-      "desc": ""
+      "points": [
+        "RIGHT HERE – RIGHT NOW: Politische Graffiti als Stimme im öffentlichen Raum"
+      ],
+      "image": "",
+      "desc": "Wir sind eine Gruppe mit Graffitihintergrund, die sich mit politisch motiviertem Graffiti auseinander gesetzt haben."
     },
     {
       "title": "Lila Rose Kole",
+      "points": [
+        "DIY Fächer Upcycling"
+      ],
+      "image": "",
       "desc": ""
     },
     {
       "title": "Elise Alma",
-      "desc": ""
+      "points": [
+        "Temple of love"
+      ],
+      "image": "https://i0.wp.com/bucht-der-traeumer.de/wp-content/uploads/2026/07/13-Elise-Alma.jpg?fit=300%2C190&amp;ssl=1",
+      "desc": "Elise Alma begleitet Menschen dabei, durch Tantra, Shibari und Massage eine tiefere Verbindung zu ihrem Körper herzustellen. Ihre Arbeit basiert auf Achtsamkeit, Vertrauen und der transformativen Kraft bewusster Berührung. Sie schafft sichere, heilige Räume, in denen Loslassen, Sinneswahrnehmung und Selbstfindung möglich werden."
     },
     {
-      "title": "Sonja Werner &amp; Anna Gamburg",
-      "desc": ""
+      "title": "Sonja Werner & Anna Gamburg",
+      "points": [
+        "Where Fantasies meet We meet"
+      ],
+      "image": "https://i0.wp.com/bucht-der-traeumer.de/wp-content/uploads/2026/07/12-Sonja-Werner-Anna-Gamburg.jpg?fit=225%2C300&amp;ssl=1",
+      "desc": "Sonja ist Sexual- und Traumatherapeutin, Paarcoachin, Tantra-Masseurin und seit Anbeginn auf den Bucht-Floors dabei. Anna ist Tänzerin und Raverin – sie singt, legt auf und begleitet Menschen in transformativen Prozessen. Gemeinsam bringen die beiden Stimme, Klang, Körper und Spiel zusammen"
     },
     {
       "title": "Sascha Möckel",
-      "desc": ""
+      "points": [
+        "Männer* zwischen Kritik, Überforderung und positiver Männlichkeit"
+      ],
+      "image": "https://i0.wp.com/bucht-der-traeumer.de/wp-content/uploads/2026/07/9-Sascha-Moeckel.jpg?fit=300%2C237&amp;ssl=1",
+      "desc": "Sascha Möckel ist Sozialpädagoge und seit über acht Jahren im Vorstand des Männernetzwerk Dresden e.V., einem der wichtigsten Träger professioneller Männer- und Jungenarbeit in Deutschland. Er setzt sich für geschlechtersensible Arbeit, den Abbau toxischer Rollenbilder und die Gleichberechtigung aller Geschlechter ein – mit profeministischem Hintergrund."
     },
     {
       "title": "Isabelle Dikumbi",
-      "desc": ""
+      "points": [
+        "This Is your Moment – The art of being alive"
+      ],
+      "image": "https://i0.wp.com/bucht-der-traeumer.de/wp-content/uploads/2026/07/6-Isabelle-Dikumbi.jpeg?fit=200%2C300&amp;ssl=1",
+      "desc": "Isabelle Dikumbi Rivera wirkt seit 2016 in Berlin an der Schnittstelle von Aktivismus, Heilungsarbeit und Community-Building. Als Yogalehrerin, Spaceholderin und Empowerment-Facilitatorin schafft sie Räume für BIPOC-Communities, queere und diskriminierungserfahrene Menschen. Sie gründete 2020 das erste BIPOC Yoga Retreat in Deutschland – &#8218;Nourish Your Soul'."
     },
     {
       "title": "Emiko Gejic",
-      "desc": ""
+      "points": [
+        "Panel: Hedonism vs. Community Activation – How to reconnect (or get active) despite feelings of Powerlessness",
+        "Panel: Money & Power in cultural creation – aktuelle Situation/ Shift in der Kulturszene"
+      ],
+      "image": "",
+      "desc": "Emiko Gejic ist Kreative, Kulturproduzentin und Aktivistin aus Berlin. Sie ist Gründerin von Berlinsidestories, Geschäftsführerin von Urbane Praxis und Vorstandssprecherin der Berliner Clubkommission. Mit einem Hintergrund in Kulturwissenschaften und Stadtforschung setzt sie sich für Berlins Nachtleben, Subkulturen und eine gerechtere städtische Zukunft ein."
     },
     {
       "title": "Svenja Reese",
-      "desc": ""
+      "points": [
+        "Please take off your Phone! Tausche deinen Bildschirm gegen den Moment"
+      ],
+      "image": "",
+      "desc": "Was passiert, wenn wir ein Festival ohne Telefon, Bildschirm und ständige Erreichbarkeit erleben? Gemeinsam wagen wir ein analoges Experiment und entdecken, wie sich Wahrnehmung,&hellip;"
     },
     {
       "title": "Pia Zulauf, Marietta Hollensteiner",
-      "desc": ""
+      "points": [
+        "Straßenstaub abklopfen"
+      ],
+      "image": "https://i0.wp.com/bucht-der-traeumer.de/wp-content/uploads/2026/07/1Pia-Zulauf-Marietta-Hollensteiner.jpeg?fit=300%2C225&amp;ssl=1",
+      "desc": "Marietta liebt Räume, in denen Menschen einfach sein können. Ausgebildet in Jin Shin Jyutsu und Faszienarbeit, unterrichtet sie Hatha, Vinyasa und Yin Yoga. Pia studiert Psychologie, ist kritische Wildnispädagogin und arbeitet gelegentlich in der Zirkustherapie. Beide lieben es, echte Verbindungen zwischen Menschen entstehen zu lassen."
     },
     {
       "title": "Vanessa Martin",
-      "desc": ""
+      "points": [
+        "Human Tides: On cyclical life in a linear world"
+      ],
+      "image": "https://i0.wp.com/bucht-der-traeumer.de/wp-content/uploads/2026/07/11-Vanessa-Martin.jpg?fit=200%2C300&amp;ssl=1",
+      "desc": "Nachdem ich meine eigenen gesundheitlichen Herausforderungen gemeistert hatte, entdeckte ich einen anderen Weg, der mit dem Körper arbeitet und nicht gegen ihn. Heute helfe ich als zertifizierte Menstruationszyklus-Coach mit einem traumainformierten Ansatz anderen dabei, dasselbe zu tun, um wieder eine Verbindung zu ihrem Zyklus herzustellen."
     },
     {
       "title": "Pasquale Virginie Rotter",
-      "desc": ""
+      "points": [
+        "Deep Landing: Ankommen vor dem Abschied"
+      ],
+      "image": "https://i0.wp.com/bucht-der-traeumer.de/wp-content/uploads/2026/07/14-Pasquale-Virginie-Rotter.jpg?fit=200%2C300&amp;ssl=1",
+      "desc": "#thelovinggaze begleitet seit rund 20 Jahren Menschen in Veränderungs-, Wandlungs- und Übergangsprozessen."
     },
     {
       "title": "Havali Sergec",
-      "desc": ""
+      "points": [
+        "Schabernack mit Musik"
+      ],
+      "image": "https://i0.wp.com/bucht-der-traeumer.de/wp-content/uploads/2026/07/15-Sergec-Havali.jpg?fit=200%2C300&amp;ssl=1",
+      "desc": "Havali Sergec ist Musiker, Produzent und Content Creator. In seinen Inhalten kommentiert er gesellschaftliche Themen und aktuelle Debatten – oft ironisch, manchmal direkt, immer mit klarer Haltung. Im Fokus stehen Gleichberechtigung, Inklusion und ein respektvoller Umgang miteinander. Musik bildet das Fundament seiner Arbeit."
     },
     {
-      "title": "celephais &amp; uhuspecht",
-      "desc": ""
+      "title": "celephais & uhuspecht",
+      "points": [
+        "Digital Independence"
+      ],
+      "image": "https://i0.wp.com/bucht-der-traeumer.de/wp-content/uploads/2026/07/11celephais-uhuspecht.png?fit=300%2C98&amp;ssl=1",
+      "desc": "Wir sind seit Jahren aktivistisch unterwegs und organisieren Veranstaltungen zum Thema Freie Software, Digitale Selbstverteidigung und Datenschutz. Wir sind Member vom größten und ältesten Hackspace Europas, der c-base."
     },
     {
       "title": "Johanna Schuck",
-      "desc": ""
+      "points": [
+        "Staying present in conflict"
+      ],
+      "image": "https://i0.wp.com/bucht-der-traeumer.de/wp-content/uploads/2026/07/10Johanna-Schuck.jpg?fit=200%2C300&amp;ssl=1",
+      "desc": "Johanna hat fünf Jahre lang bei Sisyphos gearbeitet und weiß daher genau, was passiert, wenn Menschen müde sind und die Emotionen hochkochen. Heute lässt sie diese Erfahrungen in Workshops zu den Themen Kommunikation, Konflikte und Verbundenheit einfließen, wobei sie sich vor allem auf Gewaltfreie Kommunikation und Mediation stützt. Sie hilft Menschen dabei, die richtigen Worte – und die Neugier – zu finden, um schwierige Situationen zu meistern. Es macht ihr Freude, scheinbar Gegensätzliches miteinander zu verbinden, etwa indem sie mit ihrem eigenen Team aus KI-Agenten arbeitet und gleichzeitig erforscht, wie man von der Fähigkeit der Natur lernen kann, Veränderungen zu verarbeiten."
     },
     {
       "title": "Reinhild Benning",
-      "desc": ""
+      "points": [
+        "Klima- und menschenfreundlich einkaufen – wie kann das gehen? ["
+      ],
+      "image": "https://i0.wp.com/bucht-der-traeumer.de/wp-content/uploads/2026/07/8-Reinhild-Benning.jpg?fit=200%2C300&amp;ssl=1",
+      "desc": "Reinhild Benning ist Landwirtin und Aktivistin für gesunde Ernährung und einen gesunden Planeten. Sie kämpft für Menschenrechte in Lieferketten und mehr pflanzliche Lebensmittel. Sie ist Mitautorin des FLEISCHATLAS und Mitorganisatorin der Demo &#8218;Wir haben es satt' für klimagerechte Landwirtschaft und Ernährungsdemokratie."
     },
     {
-      "title": "Rita Maglio &amp; Jana Pfenning von Better Birth Control",
-      "desc": ""
+      "title": "Rita Maglio & Jana Pfenning von Better Birth Control",
+      "points": [
+        "Der Weg zu gleichberechtigter Verhütung"
+      ],
+      "image": "https://i0.wp.com/bucht-der-traeumer.de/wp-content/uploads/2026/07/7-Rita-MaglioJana-Pfenning.jpg?fit=200%2C300&amp;ssl=1",
+      "desc": "Better Birth Control e.V. ist ein gemeinnütziger Verein, der sich seit 2021 für fairere und bessere Verhütung für alle Geschlechter einsetzt. Der Verein leistet Aufklärungsarbeit mit diversen Perspektiven, engagiert sich für mehr Forschung an neuen Verhütungsmitteln und für deren vollständige Kostenübernahme durch Krankenkassen."
     },
     {
       "title": "Jessie Sonnenschein",
-      "desc": ""
+      "points": [
+        "Sober Speed Dating & Sober Rave Night"
+      ],
+      "image": "https://i0.wp.com/bucht-der-traeumer.de/wp-content/uploads/2026/07/6-Jessie-sonnenschein.jpeg?fit=300%2C200&amp;ssl=1",
+      "desc": "Jessie hat in über 20 Jahren im Nachtleben und bei Festivals in London und Berlin Höhen und Tiefen erlebt und in der Abstinenz eine neue Tiefe gefunden. In den vielfältigen Workshops, die sie leitet, vereint sie ihre Leidenschaft für zwischenmenschliche Verbindungen, Kreativität, Verkleiden und bewusstes Feiern."
     },
     {
-      "title": "Alex Cuthbertson &amp; Jo Schubert",
-      "desc": ""
+      "title": "Alex Cuthbertson & Jo Schubert",
+      "points": [
+        "Trippin' with Cyberdelics — No Substances Required"
+      ],
+      "image": "https://i0.wp.com/bucht-der-traeumer.de/wp-content/uploads/2026/07/9-Alex-Cuthbertson-Jo-Schubert.jpeg?fit=300%2C200&amp;ssl=1",
+      "desc": "Alexx Kaos ist Erfinder an der Schnittstelle zwischen Selbstreflexion und technologischer Neuromodulation – Physiker, Theatermacher und Künstler. Jo ist Wissenschaftler und neugieriger Entdecker in den Bereichen Informatik, Kognitionswissenschaft und Design Thinking. Er erforscht, wie neue Technologien uns helfen können, gemeinsam besser zu denken."
     },
     {
       "title": "Crispin Bade, Lara Pickener",
-      "desc": ""
+      "points": [
+        "Spiel mit Nähe"
+      ],
+      "image": "https://i0.wp.com/bucht-der-traeumer.de/wp-content/uploads/2026/07/4-Crispin-Bade-Lara-Pickener.jpg?fit=225%2C300&amp;ssl=1",
+      "desc": "Crispin Bade ist Zirkuspädagoge und Performer aus Berlin, Mitgründer des KNOT Kollektivs für partizipativen zeitgenössischen Zirkus. Lara Pickener ist Psychologische Psychotherapeutin mit Schwerpunkt Systemische Therapie und über zehn Jahren klinischer Erfahrung. Sie verbindet systemisches Denken mit einer körperorientierten Perspektive."
     },
     {
-      "title": "Juli Hause &amp; Natalie Krug",
-      "desc": ""
+      "title": "Juli Hause & Natalie Krug",
+      "points": [
+        "Wurzeln und Fliegen – Dein Weg vom Dancefloor zum Healing Space"
+      ],
+      "image": "https://i0.wp.com/bucht-der-traeumer.de/wp-content/uploads/2026/07/3-Juli-Hause-Nathalie-Krug.jpeg?fit=300%2C225&amp;ssl=1",
+      "desc": "Als Psychologiestudentin (Julia), Yogalehrerin (Natalie) und leidenschaftliche Tanzbegeisterte wissen wir, wie kraftvoll, verbindend und transformierend die Erfahrung von Körper, Bewegung und Klang sein kann. Für uns sind Raves mehr als nur Partys: Sie sind Orte der Begegnung und des Staunens – Räume, in denen wir die Magie des Lebendigseins spüren können."
     },
     {
       "title": "Joy Dorkhom",
-      "desc": ""
+      "points": [
+        "Drawn.Together"
+      ],
+      "image": "https://i0.wp.com/bucht-der-traeumer.de/wp-content/uploads/2026/07/2-Joy-Dorkhom.jpg?fit=139%2C300&amp;ssl=1",
+      "desc": "Hallo, hallo! Mein Name ist Joy! Seit nunmehr zehn Jahren erlebe ich die Freude, auf beiden Seiten der Leinwand zu stehen. Als Künstlerin und Architektin einerseits und als Aktmodell andererseits erlebe ich die Bereicherung, die sowohl das Schaffen als auch das Posieren mit sich bringen – und diese möchte ich gerne mit allen teilen!"
     },
     {
       "title": "Vulvaa Power",
-      "desc": ""
+      "points": [
+        "Body of pleasure",
+        "Vulvaa Power Day – Expressing",
+        "Vulvaa Power Day – Arriving",
+        "Vulvaa Power Day – Connecting",
+        "We are coming out – Free the Nipple"
+      ],
+      "image": "",
+      "desc": "Wir bei Vulvaa Power sind davon überzeugt, dass persönliche Veränderung kollektiven Wandel bewirkt. Durch Körperbewusstsein, Selbsterkenntnis und Verbundenheit unterstützen wir Menschen dabei, ihre Kraft zurückzugewinnen und ein authentischeres Leben zu führen."
     },
     {
-      "title": "Anna Gamburg &amp; Sonja Werner",
-      "desc": ""
+      "title": "Anna Gamburg & Sonja Werner",
+      "points": [
+        "Sexy Improv"
+      ],
+      "image": "https://i0.wp.com/bucht-der-traeumer.de/wp-content/uploads/2026/07/1-Anna-Guamburg.jpg?fit=169%2C300&amp;ssl=1",
+      "desc": "Mein Name ist Anna Gamburg und ich habe schon viele verschiedene Rollen und Facetten angenommen: Seit über 12 Jahren arbeite ich als Synchronsprecherin und Schauspielerin und habe dabei zahlreiche Rollen verkörpert. In den letzten 5 Jahren habe ich mich dem Coaching zugewandt und unterstütze Menschen dabei, wieder zu ihrer Authentizität und Freude zu finden. Das langjährige Improvisationstheater war für mich einer der ersten Schritte auf diesem Weg des Selbstausdrucks. Diese Freude zu entdecken – das ist es, was ich mit der Welt teilen möchte!"
     },
     {
       "title": "Isabelle Dikumbi",
-      "desc": ""
+      "points": [
+        "Landing Softly: A Closing Journey of Reflection & Integration"
+      ],
+      "image": "https://i0.wp.com/bucht-der-traeumer.de/wp-content/uploads/2026/07/5-Isabelle-Dikumbi.jpeg?fit=200%2C300&amp;ssl=1",
+      "desc": "Isabelle Dikumbi Rivera wirkt seit 2016 in Berlin an der Schnittstelle von Aktivismus, Heilungsarbeit und Community-Building. Als Yogalehrerin, Spaceholderin und Empowerment-Facilitatorin schafft sie Räume für BIPOC-Communities, queere und diskriminierungserfahrene Menschen. Sie gründete 2020 das erste BIPOC Yoga Retreat in Deutschland – &#8218;Nourish Your Soul'."
     },
     {
-      "title": "Noreen Reiter &amp; Samuel Friedl",
-      "desc": ""
+      "title": "Noreen Reiter & Samuel Friedl",
+      "points": [
+        "Electric Sparks – Flirten auf Festivalfrequenz"
+      ],
+      "image": "https://i0.wp.com/bucht-der-traeumer.de/wp-content/uploads/2026/07/4Noreen-Reiter-Samuel-Friedl.jpeg?fit=225%2C300&amp;ssl=1",
+      "desc": "Noreen: hat für Amorelie und Satisfyer das Branding verantwortet und baut nun an einer eigenen Idee in Berlin. Tanzt göttlich. Samuel: begleitet Führungskräfte in großen Konzernen, nun auch Gestalttherapeut & psychedelische Therapie."
     },
     {
-      "title": "Maria Salichow &amp; Theresa Stöhr",
-      "desc": ""
+      "title": "Maria Salichow & Theresa Stöhr",
+      "points": [
+        "Acro Play – Spielerische Akrobatik"
+      ],
+      "image": "https://i0.wp.com/bucht-der-traeumer.de/wp-content/uploads/2026/07/3-MariaTheresa.jpg?fit=225%2C300&amp;ssl=1",
+      "desc": "Theresa und Maria von Casa Nostra schaffen seit 2023 gemeinsam Räume für echte Begegnung und Bewegung. Maria bringt ihre Erfahrung als Dance-Yoga-Lehrerin ein, Theresa ihre Leidenschaft für Vinyasa Yoga und Akrobatik. Beide sind ausgebildete Yogalehrerinnen und verbindet die Liebe zu Kreativität, Bewegung und spielerischem Miteinander."
     },
     {
       "title": "Annemarie Witschas",
-      "desc": ""
+      "points": [
+        "To grow or not to grow? Ideas for a fair and sustainable future"
+      ],
+      "image": "",
+      "desc": "Wir sind eine Gruppe von Absolventen des Masterstudiengangs „Degrowth“ an der Autonomen Universität Barcelona und freuen uns darauf, Ideen für eine nachhaltige und gerechte Zukunft für alle auszutauschen."
     },
     {
       "title": "Storm Willow Hartley",
-      "desc": ""
+      "points": [
+        "Mandala Meditation"
+      ],
+      "image": "https://i0.wp.com/bucht-der-traeumer.de/wp-content/uploads/2026/07/1-Storm-Willow.jpeg?fit=200%2C300&amp;ssl=1",
+      "desc": "Storm ist Klangkünstlerin, ewige Studentin und Yogalehrerin. Durch körperliches Zuhören und kontemplative Übungen beschäftigt sich ihre Arbeit mit dem feinstofflichen Körper, dem Nervensystem und der Förderung kollektiver Zustände der Erinnerung, der Verbundenheit und der Transformation."
     },
     {
       "title": "Helena Steinhaus",
-      "desc": ""
+      "points": [
+        "Eat the rich – Klassenkampf von unten"
+      ],
+      "image": "https://i0.wp.com/bucht-der-traeumer.de/wp-content/uploads/2026/07/3-Helena-Steinhaus.jpeg?fit=300%2C200&amp;ssl=1",
+      "desc": "Helena Steinhaus ist Autorin und Gründerin des Vereins Sanktionsfrei, der sich für eine menschenwürdige Grundsicherung einsetzt. Menschen in Grundsicherung werden finanziell und juristisch durch den Verein unterstützt, ebenso zentral ist kontinuierliche Öffentlichkeitsarbeit zum Thema Erwerbslosigkeit und Armut."
     }
   ]
 }
