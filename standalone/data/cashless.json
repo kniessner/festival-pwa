@@ -1,0 +1,22 @@
+{
+  "type": "faq",
+  "title": "Cashless & TOP-UP",
+  "intro": "Hier erfahrt ihr, wie ihr euer Bändchen online aufladet, Rückerstattungen beantragt und mehr.\n\nDas Bucht der Träumer* Festival ist zu 100% bargeldlos. Das bedeutet, dass ihr alles mit eurem Chip am Festivalbändchen bezahlt und euch somit ganz ohne Geld und Wertsachen auf dem Gelände bewegen könnt.",
+  "items": [
+    {"question": "BARGELDLOS: WAS HEISST DAS?", "answer": ""},
+    {"question": "WIE LADE ICH GUTHABEN AUF MEIN FESTIVALBÄNDCHEN?", "answer": ""},
+    {"question": "WIE ERSTELLE ICH EINEN PERSÖNLICHEN ACCOUNT?", "answer": ""},
+    {"question": "WIE VERKNÜPFE ICH MEINEN PERSÖNLICHEN ACCOUNT MIT MEINEM FESTIVALTICKET?", "answer": ""},
+    {"question": "MUSS ICH EINEN CASHLESS-ACCOUNT ERSTELLEN?", "answer": ""},
+    {"question": "WELCHE VORTEILE HAT EINE REGISTRIERUNG FÜR MICH?", "answer": ""},
+    {"question": "WIE SEHE ICH, WIE VIEL GUTHABEN ICH NOCH HABE?", "answer": ""},
+    {"question": "WO KANN ICH MIT MEINEM CASHLESS GUTHABEN BEZAHLEN?", "answer": ""},
+    {"question": "WIE KANN ICH MIR MEIN GUTHABEN ZURÜCKZAHLEN LASSEN?", "answer": ""},
+    {"question": "ICH HABE EINEN PERSÖNLICHEN ACCOUNT ERSTELLT UND MEIN TICKET DAMIT VERKNÜPFT. LEIDER IST ES MIR JEDOCH NICHT MÖGLICH AM BUCHT DER TRÄUMER* FESTIVAL TEILZUNEHMEN, WESHALB ICH MEIN TICKET IN DEN RESALE BEI TIXFORGIGS WIEDER GEBE. WAS PASSIERT MIT MEINEM GUTHABEN?", "answer": ""},
+    {"question": "ICH HABE BEREITS EIN KONTO VOM LETZTEN JAHR EINGERICHTET – MUSS ICH DAS NOCH EINMAL MACHEN?", "answer": ""},
+    {"question": "WAS PASSIERT, WENN ICH MEIN ARMBAND VERLIERE ODER DER CHIP NICHT MEHR FUNKTIONIERT?", "answer": ""},
+    {"question": "KANN ICH ÜBER DAS CASHLESS SYSTEM TRINKGELD GEBEN?", "answer": ""},
+    {"question": "WAS PASSIERT MIT MEINEN DATEN, WENN ICH EINEN CASHLESS- ACCOUNT ANLEGE?", "answer": ""},
+    {"question": "WIRD MIR JEMAND HELFEN, WENN ICH NICHT WEITERKOMME?", "answer": ""}
+  ]
+}

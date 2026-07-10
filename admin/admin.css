@@ -1,0 +1,202 @@
+/* ================================================================
+   Festival PWA Admin Styles v1.3
+   ================================================================ */
+
+.festival-pwa-admin .pwa-card {
+    background: #fff;
+    border: 1px solid #c3c4c7;
+    border-radius: 4px;
+    padding: 20px 24px;
+    margin: 20px 0;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+
+.festival-pwa-admin .pwa-card h2 {
+    margin-top: 0;
+    font-size: 1.15em;
+    border-bottom: 1px solid #f0f0f1;
+    padding-bottom: 10px;
+    margin-bottom: 16px;
+}
+
+.festival-pwa-admin .description {
+    color: #646970;
+    font-size: 13px;
+    margin: 4px 0 12px;
+}
+
+/* ── Radio group ── */
+.radio-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.radio-label {
+    display: block;
+    padding: 12px 14px;
+    border: 1px solid #c3c4c7;
+    border-radius: 4px;
+    background: #f6f7f7;
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
+}
+.radio-label:hover {
+    border-color: #b0327a;
+    background: #fdf5f9;
+}
+.radio-label input[type="radio"] {
+    margin-right: 8px;
+}
+.radio-label strong {
+    color: #1d2327;
+    font-size: 13px;
+}
+.radio-desc {
+    display: block;
+    margin-left: 26px;
+    margin-top: 2px;
+    color: #646970;
+    font-size: 12px;
+}
+
+/* ── Start page selector ── */
+#start_page_select {
+    min-width: 280px;
+    padding: 4px 8px;
+    font-size: 13px;
+}
+
+/* ── Page builder ── */
+#page-builder {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.page-row {
+    background: #f6f7f7;
+    border: 1px solid #c3c4c7;
+    border-radius: 4px;
+    padding: 12px;
+    transition: border-color 0.15s;
+}
+.page-row:hover {
+    border-color: #b0327a;
+}
+
+.row-grid {
+    display: grid;
+    grid-template-columns: 48px 1fr 140px 160px 1fr 36px;
+    gap: 8px;
+    align-items: center;
+}
+
+@media (max-width: 782px) {
+    .row-grid {
+        grid-template-columns: 48px 1fr 1fr;
+        gap: 6px;
+    }
+    .row-grid .source-value-wrap,
+    .row-grid .source-type-select {
+        grid-column: 1 / -1;
+    }
+}
+
+.page-icon-input {
+    width: 44px !important;
+    text-align: center;
+    font-size: 18px;
+    padding: 4px 0;
+}
+.page-label-input,
+.page-slug-input {
+    width: 100%;
+}
+.source-type-select {
+    min-width: 140px;
+}
+.source-value-text {
+    width: 100%;
+}
+.source-value-select {
+    width: 100%;
+    min-height: 36px;
+}
+
+.remove-page {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    padding: 4px;
+    opacity: 0.6;
+    transition: opacity 0.15s;
+}
+.remove-page:hover {
+    opacity: 1;
+}
+
+/* ── Quick links ── */
+.quick-links .link-grid {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+/* ── Status grid ── */
+.status-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+}
+@media (max-width: 600px) {
+    .status-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+.status-item {
+    background: #f6f7f7;
+    border-radius: 4px;
+    padding: 14px 12px;
+    text-align: center;
+}
+.status-item strong {
+    display: block;
+    font-size: 1.6em;
+    color: #b0327a;
+    margin-bottom: 4px;
+}
+.status-item span {
+    font-size: 12px;
+    color: #646970;
+}
+
+/* ── Cached files table ── */
+.festival-pwa-admin .wp-list-table th,
+.festival-pwa-admin .wp-list-table td {
+    font-size: 12px;
+    padding: 8px 10px;
+}
+
+/* ── How to use ── */
+.howto-list {
+    margin: 0;
+    padding-left: 20px;
+}
+.howto-list li {
+    margin-bottom: 8px;
+    line-height: 1.6;
+}
+
+/* ── Sync button ── */
+.button-hero {
+    padding: 8px 24px;
+    font-size: 14px;
+    height: auto;
+}
+
+.sync-time {
+    color: #646970;
+    font-size: 13px;
+    margin-top: 8px;
+}

@@ -1,0 +1,10 @@
+{
+  "pages": [
+    {"slug": "home", "label": "Home", "icon": "🏠"},
+    {"slug": "cashless", "label": "Cashless", "icon": "💳"},
+    {"slug": "performances", "label": "Acts", "icon": "🎭"},
+    {"slug": "workshops", "label": "Workshops", "icon": "🛠️"}
+  ],
+  "app_name": "Bucht der Träumer*",
+  "synced_at": 1759946400
+}

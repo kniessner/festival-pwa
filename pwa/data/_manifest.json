@@ -1,0 +1,12 @@
+{
+    "pages": [
+        {
+            "slug": "cashless",
+            "label": "Cashless & TOP-UP",
+            "icon": "💳"
+        }
+    ],
+    "app_name": "Bucht der Träumer*",
+    "start_page": "cashless",
+    "synced_at": 1783688897
+}

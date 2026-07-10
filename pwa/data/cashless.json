@@ -1,0 +1,28 @@
+{
+    "type": "grid",
+    "slug": "cashless",
+    "title": "Cashless & TOP-UP",
+    "intro": "Handcrafted in Berlin · est. 2013\n\nA small atelier working sterling and reclaimed silver into objects meant to be kept. Drawn, raised and finished under one roof in Berlin-Neukölln.\n\nSpring · MMXXVI",
+    "items": [
+        {
+            "title": "Halo Cuff, Brushed",
+            "desc": "Sterling 925 · No. 014 \/ 30"
+        },
+        {
+            "title": "Tide Signet",
+            "desc": "Oxidised silver · Made to order"
+        },
+        {
+            "title": "Stone Vessel",
+            "desc": "Raised silver · Single piece"
+        },
+        {
+            "title": "Thread Band",
+            "desc": "Fine silver 999 · Pair"
+        },
+        {
+            "title": "Anchor Pendant",
+            "desc": "Silver + brass · Limited"
+        }
+    ]
+}
