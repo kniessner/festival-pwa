@@ -584,7 +584,7 @@
             justify-content: center;
             border-top: 1px solid var(--border);
             backdrop-filter: blur(20px);
-            width: 650px;
+            max-width: 650px;
             margin: auto;
         }
 
@@ -713,16 +713,7 @@
             <div class="loading">Laden...⏳</div>
         </div>
 
-         <div>
-    <button
-      v-if="deferredPrompt"
-      ref="addBtn"
-      class="add-button"
-      @click="clickCallback"
-    >
-      Add
-    </button>
-  </div>
+        
         <div class="install-prompt hidden" id="installBtn">
             <span class="install-icon">📲</span>
             <span class="install-text" id="installText">Zum Startbildschirm</span>
@@ -732,38 +723,6 @@
         <nav class="bottom-nav" id="pageNav"><!-- JS fills --></nav>
     </main>
     <script src="js/app-v3.js"></script>
-    <script>
-export default {
-  name: 'AddToHomeScreen',
-  data: () => ({
-    deferredPrompt: null,
-  }),
-  mounted() {
-    this.captureEvent()
-  },
-  methods: {
-    captureEvent() {
-      window.addEventListener('beforeinstallprompt', (e) => {
-        // ! Prevent Chrome 67 and earlier from automatically showing the prompt
-        e.preventDefault()
-        // Stash the event so it can be triggered later.
-        this.deferredPrompt = e
-      })
-    },
-    clickCallback() {
-      // Show the prompt
-      this.deferredPrompt.prompt()
-      // Wait for the user to respond to the prompt
-      this.deferredPrompt.userChoice.then((choiceResult) => {
-        if (choiceResult.outcome === 'accepted') {
-          // Call another function?
-        }
-        this.deferredPrompt = null
-      })
-    },
-  },
-}
-</script>
 </body>
 
 </html>
