@@ -220,16 +220,16 @@ else
                     echo "{\"slug\":\"$slug\",\"status\":\"failed\",\"detail\":\"Program extraction failed\",\"http_code\":\"$HTTP_CODE\",\"bytes\":$SIZE}" >> "$TMP_PAGES"
                 fi
             else
-                info "Using HTML parser for $slug"
-                if python3 "$SCRIPTS_DIR/_parse_html.py" "$TMP" "$DEST" "$slug" >> "$LOG_FILE" 2>&1; then
+                info "Using Grid extractor for $slug"
+                if python3 "$SCRIPTS_DIR/_extract_grid.py" "$PAGE_URL" "$DEST" "$slug" >> "$LOG_FILE" 2>&1; then
                     DEST_SIZE=$(wc -c < "$DEST" 2>/dev/null || echo 0)
-                    ok "/$slug/ parsed ($DEST_SIZE bytes)"
-                    echo "      ✅ Parsed to JSON ($DEST_SIZE bytes)"
-                    echo "{\"slug\":\"$slug\",\"status\":\"success\",\"detail\":\"HTML parsed\",\"http_code\":\"$HTTP_CODE\",\"bytes\":$DEST_SIZE}" >> "$TMP_PAGES"
+                    ok "/$slug/ grid extracted ($DEST_SIZE bytes)"
+                    echo "      ✅ Grid extracted ($DEST_SIZE bytes)"
+                    echo "{\"slug\":\"$slug\",\"status\":\"success\",\"detail\":\"Grid extracted\",\"http_code\":\"$HTTP_CODE\",\"bytes\":$DEST_SIZE}" >> "$TMP_PAGES"
                 else
-                    error "/$slug/ HTML parsing failed (see log)"
-                    echo "      ❌ HTML parsing failed"
-                    echo "{\"slug\":\"$slug\",\"status\":\"failed\",\"detail\":\"HTML parsing failed\",\"http_code\":\"$HTTP_CODE\",\"bytes\":$SIZE}" >> "$TMP_PAGES"
+                    error "/$slug/ grid extraction failed (see log)"
+                    echo "      ❌ Grid extraction failed"
+                    echo "{\"slug\":\"$slug\",\"status\":\"failed\",\"detail\":\"Grid extraction failed\",\"http_code\":\"$HTTP_CODE\",\"bytes\":$SIZE}" >> "$TMP_PAGES"
                 fi
             fi
             rm -f "$TMP"

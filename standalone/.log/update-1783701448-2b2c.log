@@ -1,0 +1,28 @@
+[2026-07-10T18:37:28+02:00] [1783701448-2b2c] [INFO] Starting update — Trace: 1783701448-2b2c, Mode: source, URL: https://bucht-der-traeumer.de
+[2026-07-10T18:37:28+02:00] [1783701448-2b2c] [INFO] Dependencies OK: curl ✅, python3 ✅
+[2026-07-10T18:37:28+02:00] [1783701448-2b2c] [INFO] Expected pages: cashless faqs programm-2026 performances workshops 
+[2026-07-10T18:37:28+02:00] [1783701448-2b2c] [INFO] Fetching /cashless/ from https://bucht-der-traeumer.de/cashless/
+[2026-07-10T18:37:29+02:00] [1783701448-2b2c] [INFO] /cashless/ fetched (  170127 bytes, HTTP 200)
+[2026-07-10T18:37:29+02:00] [1783701448-2b2c] [INFO] Using FAQ extractor for cashless
+Fetching https://bucht-der-traeumer.de/cashless/...
+✅ Extracted 15 FAQ items
+   Saved to: /Users/darius.kniessner/Dev/VaultOS/30-projects-active/2026-festival-pwa/standalone/data/cashless.json
+
+   Sample:
+   Q: Bargeldlos: was heißt das?...
+   A: Bargeldlos heißt, dass weder Bargeld noch Kartenzahlung beim Bezahlen an Bars und Ständen auf dem Fe...
+[2026-07-10T18:37:29+02:00] [1783701448-2b2c] [OK] /cashless/ FAQ extracted (   11144 bytes)
+[2026-07-10T18:37:29+02:00] [1783701448-2b2c] [INFO] Fetching /faqs/ from https://bucht-der-traeumer.de/faqs/
+[2026-07-10T18:37:30+02:00] [1783701448-2b2c] [INFO] /faqs/ fetched (  222174 bytes, HTTP 200)
+[2026-07-10T18:37:30+02:00] [1783701448-2b2c] [INFO] Using FAQ extractor for faqs
+Fetching https://bucht-der-traeumer.de/faqs/...
+✅ Extracted 24 FAQ items
+   Saved to: /Users/darius.kniessner/Dev/VaultOS/30-projects-active/2026-festival-pwa/standalone/data/faqs.json
+
+   Sample:
+   Q: Achtung: Ticket Betrüger!...
+   A: Alle Online Tickets sind personalisiert. Nur wenn der Name auf dem Ticket mit eurem übereinstimmt, e...
+[2026-07-10T18:37:30+02:00] [1783701448-2b2c] [OK] /faqs/ FAQ extracted (   10388 bytes)
+[2026-07-10T18:37:30+02:00] [1783701448-2b2c] [INFO] Fetching /programm-2026/ from https://bucht-der-traeumer.de/programm-2026/
+[2026-07-10T18:37:31+02:00] [1783701448-2b2c] [INFO] /programm-2026/ fetched ( 1116776 bytes, HTTP 200)
+[2026-07-10T18:37:31+02:00] [1783701448-2b2c] [INFO] Using Program extractor for programm-2026
