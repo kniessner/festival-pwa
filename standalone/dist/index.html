@@ -317,6 +317,10 @@
             padding: 0 16px 12px;
             max-width: 720px;
             margin: 0 auto;
+            position: sticky;
+            top: 52px;
+            z-index: 99;
+            background: var(--bg);
         }
 
         .search-bar input {
@@ -1100,10 +1104,14 @@
             display: flex;
             gap: 8px;
             overflow-x: auto;
-            padding-bottom: 8px;
-            margin-bottom: 12px;
             -webkit-overflow-scrolling: touch;
             scrollbar-width: none;
+            position: sticky;
+            top: 100px;
+            z-index: 98;
+            background: var(--bg);
+            margin: 0 -16px;
+            padding: 8px 16px;
         }
 
         .tt-day-tabs::-webkit-scrollbar {
@@ -1176,12 +1184,34 @@
             overflow: hidden;
             transition: all 0.2s;
             backdrop-filter: blur(8px);
+            position: relative;
         }
 
         .tt-event:hover,
         .tt-event.open {
             border-color: var(--accent-pink);
             background: var(--bg-card-hover);
+        }
+
+        .tt-event.running {
+            border-color: var(--accent-orange);
+            box-shadow: inset 0 0 0 1px var(--accent-orange), 0 0 16px rgba(255, 111, 33, 0.3);
+        }
+
+        .tt-event.running::before {
+            content: '● JETZT';
+            position: absolute;
+            top: 10px;
+            right: 14px;
+            background: var(--accent-orange);
+            color: var(--bg);
+            font-size: 0.6rem;
+            font-weight: 900;
+            padding: 3px 10px;
+            border-radius: 50px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            z-index: 5;
         }
 
         .tt-event-header {
@@ -1406,11 +1436,11 @@
         </div>
 
 
-        <div class="install-prompt hidden" id="installBtn">
+       <!--<div class="install-prompt hidden" id="installBtn">
             <span class="install-icon">📲</span>
             <span class="install-text" id="installText">Zum Startbildschirm</span>
             <button class="close-btn" id="installClose">✕</button>
-        </div>
+        </div>-->
 
         <nav class="bottom-nav" id="pageNav"><!-- JS fills --></nav>
     </main>

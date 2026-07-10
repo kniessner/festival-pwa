@@ -172,7 +172,7 @@ function loadPage(index) {
     title.textContent = page.label === 'Home' ? 'Bucht der Träumer*' : page.label;
     container.innerHTML = '';
     document.getElementById('searchResults').innerHTML = '';
-    if (searchBar) searchBar.style.display = (page.slug === 'home' || page.slug === 'favorites') ? 'none' : '';
+    if (searchBar) searchBar.style.display = '';
 
     if (page.slug === 'home') { renderHome(container); }
     else if (page.slug === 'favorites') { renderFavorites(container); }
@@ -229,6 +229,11 @@ function renderHome(container) {
                     <div class="desc">${favCount > 0 ? favCount + ' gespeichert' : 'Favoriten hinzufügen'}</div>
                 </div>
             </div>
+        </div>
+          <div class="install-prompt hidden" id="installBtn">
+            <span class="install-icon">📲</span>
+            <span class="install-text" id="installText">Zum Startbildschirm</span>
+            <button class="close-btn" id="installClose">✕</button>
         </div>
     `;
     // Update countdown
@@ -429,16 +434,41 @@ function refreshTimetable() {
     scrollToCurrentTime(filters.day);
 }
 
+function isEventRunning(ev, selectedDay) {
+    const now = new Date();
+    const festivalDates = ['2026-08-13', '2026-08-14', '2026-08-15', '2026-08-16'];
+    const yy = now.getFullYear();
+    const mm = String(now.getMonth() + 1).padStart(2, '0');
+    const dd = String(now.getDate()).padStart(2, '0');
+    const todayStr = `${yy}-${mm}-${dd}`;
+    const weekdayMap = { 0: '2026-08-16', 4: '2026-08-13', 5: '2026-08-14', 6: '2026-08-15' };
+    const effectiveDay = festivalDates.includes(todayStr) ? todayStr : (weekdayMap[now.getDay()] || '2026-08-13');
+    if (selectedDay !== effectiveDay) return false;
+    if (!ev.start_time) return false;
+    const [sh, sm] = ev.start_time.split(':').map(Number);
+    const startMinutes = sh * 60 + sm;
+    let endMinutes;
+    if (ev.end_time) {
+        const [eh, em] = ev.end_time.split(':').map(Number);
+        endMinutes = eh * 60 + em;
+    } else {
+        endMinutes = startMinutes + 90; // default 1.5h
+    }
+    const currentMinutes = now.getHours() * 60 + now.getMinutes();
+    return currentMinutes >= startMinutes && currentMinutes <= endMinutes;
+}
+
 function renderEventCard(ev) {
     const idx = pageData.timetable.events.indexOf(ev);
     const isFav = isFavorite('timetable', idx);
     const hasDetail = ev.description && ev.description.trim().length > 0 && ev.description !== ev.excerpt;
+    const runningClass = isEventRunning(ev, window._ttFilters?.day) ? 'running' : '';
     const langBadges = ev.langs && ev.langs.length ? ev.langs.map(l => `<span class="lang-badge">${l.toUpperCase()}</span>`).join('') : '';
     const hosts = ev.hosts && ev.hosts.length ? `<span class="event-hosts">${ev.hosts.join(', ')}</span>` : '';
     const endTime = ev.end_time ? ` – ${ev.end_time}` : '';
 
     return `
-    <div class="tt-event ${hasDetail ? 'has-detail' : ''}" data-item-index="${idx}">
+    <div class="tt-event ${hasDetail ? 'has-detail' : ''} ${runningClass}" data-item-index="${idx}">
         <div class="tt-event-header" onclick="toggleEventDetail(this)">
             <div class="tt-event-meta">
                 <span class="event-time">${ev.time}${endTime}</span>
