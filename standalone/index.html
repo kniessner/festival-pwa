@@ -79,7 +79,7 @@
             background: var(--bg) url('images/bg.jpg') center top / cover fixed no-repeat;
             color: var(--text);
             min-height: 100vh;
-           
+
             line-height: 1.5;
             padding-top: env(safe-area-inset-top);
             padding-bottom: calc(72px + env(safe-area-inset-bottom));
@@ -89,11 +89,11 @@
             max-width: 650px;
             margin: 0 auto;
             border: 1px solid #080943;
-            height: 100vh;
+            height: 100%;
             box-shadow: #080943 -1px 0px 5px 0px;
             background: linear-gradient(to bottom, #08094378 70%, transparent);
-          
             position: relative;
+            padding-bottom: 150px;
         }
 
         /* Offline badge */
@@ -194,7 +194,7 @@
         .hero {
             text-align: center;
             padding: 20px 0 32px;
-          
+
         }
 
         .hero-logo {
@@ -713,7 +713,7 @@
             <div class="loading">Laden...⏳</div>
         </div>
 
-        
+
         <div class="install-prompt hidden" id="installBtn">
             <span class="install-icon">📲</span>
             <span class="install-text" id="installText">Zum Startbildschirm</span>
