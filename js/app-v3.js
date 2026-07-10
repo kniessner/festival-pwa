@@ -381,22 +381,78 @@ function setupOfflineIndicator() {
 
 // ===== INSTALL PROMPT =====
 let installEvent = null;
+let installPromptShown = false;
 
 function setupInstallPrompt() {
+    // Chrome/Android: capture the beforeinstallprompt event
     window.addEventListener('beforeinstallprompt', (e) => {
         e.preventDefault();
         installEvent = e;
-        showInstallBtn();
+        if (!installPromptShown) {
+            showInstallBtn();
+            installPromptShown = true;
+        }
     });
+
+    // Hide button once installed
     window.addEventListener('appinstalled', () => {
         installEvent = null;
         hideInstallBtn();
+        showToast('App installiert');
     });
+
+    // iOS Safari: show manual install hint (beforeinstallprompt never fires on iOS)
     const isIos = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
     const isStandalone = window.matchMedia('(display-mode: standalone)').matches
                       || window.navigator.standalone === true;
-    if (isIos && !isStandalone) {
+
+    if (isStandalone) {
+        hideInstallBtn();
+    } else if (isIos) {
         showIosInstallHint();
+    }
+
+    // Wire up button events via listeners (no inline onclick)
+    const btn = document.getElementById('installBtn');
+    const closeBtn = document.getElementById('installClose');
+    if (btn) {
+        btn.addEventListener('click', (e) => {
+            if (e.target.closest('#installClose')) return;
+            handleInstallClick();
+        });
+    }
+    if (closeBtn) {
+        closeBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            dismissInstall();
+        });
+    }
+}
+
+async function handleInstallClick() {
+    const isIos = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+    if (isIos) {
+        showToast('iOS: Tippe unten auf Teilen → Zum Home-Bildschirm');
+        return;
+    }
+
+    if (!installEvent) {
+        if (window.matchMedia('(display-mode: standalone)').matches) {
+            showToast('Bereits installiert');
+        } else {
+            showToast('Chrome/Edge auf Android: Menü → Zum Startbildschirm');
+        }
+        return;
+    }
+
+    installEvent.prompt();
+    const { outcome } = await installEvent.userChoice;
+    if (outcome === 'accepted') {
+        installEvent = null;
+        hideInstallBtn();
+        showToast('App wird installiert...');
+    } else {
+        showToast('Installieren abgebrochen');
     }
 }
 
@@ -412,27 +468,54 @@ function hideInstallBtn() {
     if (btn) btn.classList.add('hidden');
 }
 
-async function triggerInstall() {
-    if (!installEvent) return;
-    installEvent.prompt();
-    const { outcome } = await installEvent.userChoice;
-    if (outcome === 'accepted') {
-        installEvent = null;
-        hideInstallBtn();
-    }
-}
-
-function dismissInstall(e) {
-    e.stopPropagation();
+function dismissInstall() {
     hideInstallBtn();
     sessionStorage.setItem('installDismissed', '1');
 }
 
 function showIosInstallHint() {
-    const btn = document.getElementById('installBtn');
-    if (!btn) return;
-    btn.querySelector('.install-text').textContent = 'iOS: Teilen → "Zum Home-Bildschirm"';
-    btn.classList.remove('hidden');
+    const text = document.getElementById('installText');
+    if (text) text.textContent = 'iOS: Teilen → "Zum Home-Bildschirm"';
+    showInstallBtn();
+}
+
+function showToast(message) {
+    const existing = document.querySelector('.toast-message');
+    if (existing) existing.remove();
+
+    const toast = document.createElement('div');
+    toast.className = 'toast-message';
+    toast.textContent = message;
+    toast.style.cssText = `
+        position: fixed;
+        bottom: calc(90px + env(safe-area-inset-bottom));
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 400;
+        background: linear-gradient(135deg, #b0327a, #762c8c);
+        color: #f3efdf;
+        padding: 12px 20px;
+        border-radius: 24px;
+        font-size: 0.85rem;
+        font-weight: 700;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+        max-width: 90vw;
+        text-align: center;
+        opacity: 0;
+    `;
+    document.body.appendChild(toast);
+
+    requestAnimationFrame(() => {
+        toast.style.transition = 'opacity 0.3s ease-out, transform 0.3s ease-out';
+        toast.style.opacity = '1';
+        toast.style.transform = 'translateX(-50%) translateY(0)';
+    });
+
+    setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateX(-50%) translateY(20px)';
+        setTimeout(() => toast.remove(), 350);
+    }, 3000);
 }
 
 // ===== START =====
