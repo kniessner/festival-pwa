@@ -16,11 +16,6 @@
       "icon": "📄"
     },
     {
-      "slug": "cashless.sync-conflict-20260710-164509-XS36WRK",
-      "label": "Cashless & TOP-UP – Bucht der Träumer*",
-      "icon": "📄"
-    },
-    {
       "slug": "events",
       "label": "Events",
       "icon": "📄"
@@ -37,5 +32,5 @@
     }
   ],
   "app_name": "Bucht der Träumer*",
-  "synced_at": 1783694877
+  "synced_at": 1783695536
 }

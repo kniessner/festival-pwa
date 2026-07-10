@@ -22,6 +22,10 @@ html, body {
 
 body { padding-bottom: 100px; }
 
+main{
+    max-width: 600px;
+    margin: 0 auto;
+}
 /* ===== Header ===== */
 .app-header {
     position: sticky;
