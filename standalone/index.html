@@ -297,7 +297,7 @@
 
         }
 
-      
+
         figure.wp-block-video.alignfull.full-video-index.eplus-wrapper.hidden-desktop {
             position: fixed;
             top: 0;
@@ -319,14 +319,14 @@
             margin-bottom: 8px;
         }
 
-        .app-header h1 {
+        /*   .app-header h1 {
             font-family: var(--font-head);
             font-size: 1.1rem;
-            color: var(--accent-pink);
+            
             font-weight: 700;
             letter-spacing: 2px;
             text-transform: uppercase;
-        }
+        }*/
 
         /* Search bar */
         .search-bar {
@@ -334,9 +334,10 @@
             max-width: 720px;
             margin: 0 auto;
             position: sticky;
-            top: 52px;
+              top: 131px;
+ 
             z-index: 999999;
-            background: var(--bg);
+          /*  background: var(--bg);*/
 
         }
 
@@ -422,7 +423,8 @@
             margin-bottom: 4px;
             color: var(--text);
         }
-        .hero  h1 {
+
+        .hero h1 {
             font-family: var(--wp--preset--font-family--megan-display);
             font-size: var(--wp--preset--font-size--x-large);
             letter-spacing: 2px !important;
@@ -432,6 +434,45 @@
             font-weight: 700;
         }
 
+        h1,
+        h2 {
+            letter-spacing: 2px !important;
+        }
+
+        h1 {
+            font-family: var(--wp--preset--font-family--megan-display);
+            font-size: var(--wp--preset--font-size--x-large);
+        }
+
+        h3 {
+            font-size: var(--wp--preset--font-size--large);
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            color: var(--wp--preset--color--base);
+            font-family: var(--wp--preset--font-family--megan-display);
+            font-style: normal;
+            font-weight: 700;
+            letter-spacing: -0.1px;
+            line-height: 1.125;
+            text-transform: uppercase;
+        }
+
+        h1 {
+            display: block;
+            font-size: 2em;
+            margin-block-start: 0.67em;
+            margin-block-end: 0.67em;
+            margin-inline-start: 0px;
+            margin-inline-end: 0px;
+            font-weight: bold;
+            unicode-bidi: isolate;
+        }
 
         .hero-sub {
             color: var(--accent-pink);
@@ -466,6 +507,7 @@
             left: 0;
             right: 0;
             padding: 20px;
+            display: none;
 
         }
 
@@ -1152,8 +1194,7 @@
             position: sticky;
             top: 100px;
             z-index: 98;
-            background: var(--bg);
-            margin: 0 -16px;
+             margin: 0 -16px;
             padding: 8px 16px;
         }
 
@@ -1163,7 +1204,7 @@
 
         .tt-day-tab {
             flex-shrink: 0;
-            background: var(--bg-card);
+            background: var(--bg);
             border: 1px solid var(--border);
             border-radius: 50px;
             padding: 8px 18px;
@@ -1554,15 +1595,14 @@
 
 <body>
     <main>
-        <div class="app-header">
+        <div class="app-header" id="app-header">
             <!--<img src="images/datum.png" alt="Bucht der Träumer" onerror="this.style.display='none'">-->
-            <h1 id="pageTitle">Bucht der Träumer*</h1>
+            <h3 class=" wp-block-heading has-text-align-center ">Kultur­programm</h3>
+            <h1 id="pageTitle">Timetable</h1>
             <div class="last-updated" id="lastUpdated"></div>
         </div>
 
-        <div class="search-bar" id="searchBar" style="display:none;">
-            <input type="search" id="searchInput" placeholder="🔍 Suchen..." autocomplete="off">
-        </div>
+        
         <div id="searchResults" style="padding:0 16px;max-width:720px;margin:0 auto;"></div>
 
         <div class="content" id="content">
