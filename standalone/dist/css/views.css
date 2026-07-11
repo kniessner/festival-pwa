@@ -569,10 +569,9 @@
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
-    position: sticky;
-    top: 50px;
+    position: relative;
     z-index: 98;
-    margin: 0 -16px;
+    margin: 0 -16px 20px;
     padding: 8px 16px;
     text-align: center;
     justify-content: center;

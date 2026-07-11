@@ -15,9 +15,7 @@ export function renderTimetable(container) {
 
     container.innerHTML = `
         <div class="tt-intro">${textToHtml(data.intro)}</div>
-         <div class="search-bar" id="searchBar"  >
-            <input type="search" id="searchInput" placeholder="🔍 Suchen..." autocomplete="off">
-        </div>
+    
         <div class="tt-day-tabs" id="ttDayTabs"></div>
         <div class="tt-events" id="ttEvents"></div>
         <button class="tt-filter-btn" id="ttFilterBtn" data-action="toggle-filter">🔍 Filter</button>
