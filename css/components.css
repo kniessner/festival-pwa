@@ -21,14 +21,14 @@
 /* Search bar */
 
 .search-bar {
-    padding: 0 16px 12px;
+       padding: 0 16px 12px;
     max-width: 720px;
     margin: 0 auto;
     position: sticky;
-    top: 0;
-
+    top: 20px;
     z-index: 999999;
-    /*  background: var(--bg);*/
+    background: var(--bg);
+    width: 100%;
 
 }
 
