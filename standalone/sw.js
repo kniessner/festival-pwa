@@ -1,16 +1,32 @@
-const CACHE_NAME = 'bucht-standalone-v1783707678';
+const CACHE_NAME = 'bucht-standalone-v2';
 const SHELL_ASSETS = [
     './',
     './index.html',
-    './js/app-v3.js',
+    './css/tokens.css',
+    './css/base.css',
+    './css/components.css',
+    './css/views.css',
+    './js/app.js',
+    './js/config.js',
+    './js/store.js',
+    './js/favorites.js',
+    './js/festival.js',
+    './js/ui.js',
+    './js/router.js',
+    './js/search.js',
+    './js/install.js',
+    './js/views/home.js',
+    './js/views/timetable.js',
+    './js/views/info.js',
+    './js/views/favorites.js',
     './manifest.json',
     './icons/icon-192.png',
     './icons/icon-512.png',
     './images/bg.jpg',
     './images/datum.png',
-    './data/cashless.json',
-    './data/faqs.json',
+    './data/info.json',
     './data/timetable.json',
+    './data/_manifest.json',
     'https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&family=Space+Grotesk:wght@500;700&display=swap'
 ];
 

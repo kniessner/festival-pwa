@@ -80,21 +80,21 @@ async function main() {
     // ── 4. Theme Colors ──
     const editTheme = await ask('Edit theme colors? [y/N]: ');
     if (editTheme.toLowerCase().startsWith('y')) {
-        let html = readFile('index.html');
+        let tokens = readFile('css/tokens.css');
 
-        const currentBg = html.match(/--bg:\s*([^;]+)/)?.[1]?.trim() || '#080943';
+        const currentBg = tokens.match(/--bg:\s*([^;]+)/)?.[1]?.trim() || '#080943';
         const bg = await ask(`Background color [${currentBg}]: `);
-        if (bg.trim()) html = html.replace(/--bg:\s*[^;]+/, `--bg: ${bg.trim()}`);
+        if (bg.trim()) tokens = tokens.replace(/--bg:\s*[^;]+/, `--bg: ${bg.trim()}`);
 
-        const currentPink = html.match(/--accent-pink:\s*([^;]+)/)?.[1]?.trim() || '#b0327a';
+        const currentPink = tokens.match(/--accent-pink:\s*([^;]+)/)?.[1]?.trim() || '#b0327a';
         const pink = await ask(`Accent pink [${currentPink}]: `);
-        if (pink.trim()) html = html.replace(/--accent-pink:\s*[^;]+/, `--accent-pink: ${pink.trim()}`);
+        if (pink.trim()) tokens = tokens.replace(/--accent-pink:\s*[^;]+/, `--accent-pink: ${pink.trim()}`);
 
-        const currentOrange = html.match(/--accent-orange:\s*([^;]+)/)?.[1]?.trim() || '#ff6f21';
+        const currentOrange = tokens.match(/--accent-orange:\s*([^;]+)/)?.[1]?.trim() || '#ff6f21';
         const orange = await ask(`Accent orange [${currentOrange}]: `);
-        if (orange.trim()) html = html.replace(/--accent-orange:\s*[^;]+/, `--accent-orange: ${orange.trim()}`);
+        if (orange.trim()) tokens = tokens.replace(/--accent-orange:\s*[^;]+/, `--accent-orange: ${orange.trim()}`);
 
-        writeFile('index.html', html);
+        writeFile('css/tokens.css', tokens);
         console.log('   ✅ Theme colors updated\n');
     }
 
