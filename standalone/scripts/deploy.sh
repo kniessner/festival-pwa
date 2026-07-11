@@ -79,3 +79,9 @@ echo "      • GitHub:    Push $BUILD_DIR contents to gh-pages branch"
 echo "      • FTP:       Upload $BUILD_DIR contents to your server"
 echo "      • Share:     Send ${BUILD_DIR}.zip"
 echo ""
+
+# Publish the built dist/ to the gh-pages branch via git subtree.
+# Must run from the git repo root so the --prefix path resolves.
+echo "🌐 Publishing standalone/dist to gh-pages..."
+cd "$(git -C "$ROOT_DIR" rev-parse --show-toplevel)"
+git add . && git commit -m "go live" && git subtree push --prefix standalone/dist origin gh-pages

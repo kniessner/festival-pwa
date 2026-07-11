@@ -24,8 +24,18 @@
       "slug": "faqs",
       "label": "FAQs – Bucht der Träumer*",
       "icon": "📄"
+    },
+    {
+      "slug": "info",
+      "label": "Info",
+      "icon": "📄"
+    },
+    {
+      "slug": "news",
+      "label": "News & Updates",
+      "icon": "📄"
     }
   ],
   "app_name": "Bucht der Träumer*",
-  "synced_at": 1783707678
+  "synced_at": 1783732870
 }

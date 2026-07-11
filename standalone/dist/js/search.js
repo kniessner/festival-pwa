@@ -72,10 +72,19 @@ function renderSearchResults(results, query) {
 }
 
 export function scrollToItem(pageSlug, itemIndex) {
-    const items = document.querySelectorAll(`[data-item-index="${itemIndex}"]`);
-    if (items.length) {
-        items[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
-        items[0].classList.add('highlight');
-        setTimeout(() => items[0].classList.remove('highlight'), 2000);
+    // Scope to the rendered page and prefer a *visible* match: the News, Cashless
+    // and FAQ panels reuse the same data-item-index values, so an unscoped lookup
+    // could land on an item inside a hidden (inactive) info panel. The search-jump
+    // handler activates the correct info tab before calling this, so the matching
+    // item is the one whose panel is currently displayed.
+    const candidates = document.querySelectorAll(`#content [data-item-index="${itemIndex}"]`);
+    let target = null;
+    for (const el of candidates) {
+        if (el.offsetParent !== null) { target = el; break; }
     }
+    if (!target) target = candidates[0];
+    if (!target) return;
+    target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    target.classList.add('highlight');
+    setTimeout(() => target.classList.remove('highlight'), 2000);
 }

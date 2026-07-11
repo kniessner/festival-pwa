@@ -46,7 +46,7 @@
 
 body {
     font-family: var(--font-body);
-    background: var(--bg) url('images/bg.jpg') center top / cover fixed no-repeat;
+    background: var(--bg) url('../images/bg.jpg') center top / cover fixed no-repeat;
     color: var(--text);
     min-height: 100vh;
 

@@ -13,6 +13,8 @@
 }
 
 figure.wp-block-video.alignfull.full-video-index.eplus-wrapper.hidden-desktop {
+        object-fit: cover;
+    width: 650px;
     position: fixed;
     top: 0;
     bottom: 0;
