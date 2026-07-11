@@ -877,9 +877,11 @@
     transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     max-height: 60vh;
     overflow-y: auto;
+    display: none;
 }
 
 .tt-filter-panel.open {
+    display: block;
     transform: translateY(0);
 }
 

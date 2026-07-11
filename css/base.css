@@ -68,9 +68,9 @@ main {
     height: 100vh;
     box-shadow: #080943 -1px 0px 5px 0px;
     background: linear-gradient(to bottom, #08094378 70%, transparent);
-       background: linear-gradient(to bottom, #8b235f70 70%, #0b0d7200);
+/*       background: linear-gradient(to bottom, #8b235f70 70%, #0b0d7200);
     background-blend-mode: difference;
-    
+   */  
     position: relative;
     padding: 0px 0px 250px 0px;
 
