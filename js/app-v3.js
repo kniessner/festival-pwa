@@ -50,7 +50,7 @@ function showLastUpdated() {
                 meta.textContent = `Stand: ${d.toLocaleDateString('de-DE')}`;
             }
         })
-        .catch(() => {});
+        .catch(() => { });
 }
 
 // ════════════════════════════════════════════════════════════════
@@ -181,11 +181,16 @@ function scrollToItem(pageSlug, itemIndex) {
 function loadPage(index) {
     currentPage = index;
     const page = PAGES[index];
+    const appHeader = document.getElementById('app-header');
     const container = document.getElementById('content');
     const title = document.getElementById('pageTitle');
     const searchBar = document.getElementById('searchBar');
+    if (page.label === 'Home') {
+        appHeader.style.display = 'none';
+    } else { appHeader.style.display = ''; }
 
-    title.textContent = page.label === 'Home' ? 'Bucht der Träumer*' : page.label;
+
+    title.textContent = page.label;
     container.innerHTML = '';
     document.getElementById('searchResults').innerHTML = '';
     if (searchBar) searchBar.style.display = '';
@@ -326,8 +331,8 @@ function toggleFavFromCard(btn, pageSlug, itemIndex) {
 function renderInfo(container) {
     const info = pageData.info;
     const cashless = info ? info.cashless : null;
-    const faqs     = info ? info.faqs : null;
-    const news     = info ? info.news : null;
+    const faqs = info ? info.faqs : null;
+    const news = info ? info.news : null;
 
     let html = '<div class="info-tabs" id="infoTabs">';
     html += '<button class="info-tab active" data-tab="news" onclick="switchInfoTab(\'news\')">News</button>';
@@ -473,6 +478,9 @@ function renderTimetable(container) {
 
     container.innerHTML = `
         <div class="tt-intro">${textToHtml(data.intro)}</div>
+         <div class="search-bar" id="searchBar"  >
+            <input type="search" id="searchInput" placeholder="🔍 Suchen..." autocomplete="off">
+        </div>
         <div class="tt-day-tabs" id="ttDayTabs"></div>
         <div class="tt-events" id="ttEvents"></div>
         <button class="tt-filter-btn" id="ttFilterBtn" onclick="toggleFilterPanel()">🔍 Filter</button>
@@ -739,9 +747,9 @@ function renderFAQ(container, data, pageSlug) {
         <div class="page-intro">${textToHtml(data.intro)}</div>
         <div class="faq-list">
             ${data.items.map((item, i) => {
-                const hasAnswer = item.answer && item.answer.trim() && item.answer !== 'Details folgen bald.';
-                const isFav = isFavorite(pageSlug, i);
-                return `
+        const hasAnswer = item.answer && item.answer.trim() && item.answer !== 'Details folgen bald.';
+        const isFav = isFavorite(pageSlug, i);
+        return `
                 <div class="faq-item" data-faq="${i}" data-item-index="${i}">
                     <div class="faq-question">
                         <span>${item.question}</span>
@@ -752,7 +760,7 @@ function renderFAQ(container, data, pageSlug) {
                     </div>
                     <div class="faq-answer ${hasAnswer ? '' : 'empty'}">${hasAnswer ? item.answer : '<em>Details folgen bald.</em>'}</div>
                 </div>`;
-            }).join('')}
+    }).join('')}
         </div>
     `;
 
@@ -786,7 +794,7 @@ function textToHtml(str) {
 
 function escapeHtml(str) {
     if (!str) return '';
-    return str.replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+    return str.replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]));
 }
 
 // ════════════════════════════════════════════════════════════════
