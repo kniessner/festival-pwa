@@ -28,7 +28,6 @@ jQuery(function ($) {
         var name = $select.attr('name').replace('[source_type]', '[source_value]');
 
         if (type === 'internal') {
-            // Build WP page dropdown from localized data
             var wpPages = (window.festivalPWA && festivalPWA.wpPages) || [];
             var $sel = $('<select>').addClass('source-value-select').attr('name', name);
             $sel.append('<option value="">— Select WP page —</option>');

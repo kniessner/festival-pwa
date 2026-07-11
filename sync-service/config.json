@@ -1,0 +1,15 @@
+{
+  "wpBaseUrl": "https://bucht-der-traeumer.de",
+  "syncEndpoint": "https://bucht-der-traeumer.de/wp-json/festival/v1/sync-batch",
+  "syncSecret": "secret",
+  "appName": "Bucht der Träumer*",
+  "startPage": "",
+  "pages": [
+    { "slug": "home", "label": "Home", "icon": "🏠", "sourceType": "source", "sourceValue": "home", "mode": "raw" },
+    { "slug": "cashless", "label": "Cashless", "icon": "💳", "sourceType": "source", "sourceValue": "cashless", "mode": "raw" },
+    { "slug": "performances", "label": "Acts", "icon": "🎭", "sourceType": "source", "sourceValue": "performances", "mode": "raw" },
+    { "slug": "workshops", "label": "Workshops", "icon": "🛠️", "sourceType": "source", "sourceValue": "workshops", "mode": "raw" }
+  ],
+  "scheduleMinutes": 15,
+  "requestTimeout": 30000
+}

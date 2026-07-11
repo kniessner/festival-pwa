@@ -16,7 +16,8 @@ export function renderHome(container) {
                 ${favCount > 0 ? `<button class="quick-btn quick-btn-accent" data-action="load-page" data-page="${pageIdx('favorites')}">⭐ Mein Plan (${favCount})</button>` : ''}
             </div>
         </div>
-        <div class="info-section">
+
+         <div class="info-section">
             <h3>📍 Wichtige Infos</h3>
             <div class="info-grid">
                 <div class="info-card" data-action="load-page" data-page="${pageIdx('timetable')}">
@@ -41,11 +42,7 @@ export function renderHome(container) {
                 </div>
             </div>
         </div>
-          <div class="install-prompt hidden" id="installBtn">
-            <span class="install-icon">📲</span>
-            <span class="install-text" id="installText">Zum Startbildschirm</span>
-            <button class="close-btn" id="installClose">✕</button>
-        </div>
+        
     `;
     // Update countdown
     const festivalStart = new Date(FESTIVAL_START);

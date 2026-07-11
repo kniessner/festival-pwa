@@ -1,0 +1,15 @@
+{
+  "name": "festival-pwa-sync-service",
+  "version": "1.0.0",
+  "description": "External sync service for Festival PWA",
+  "main": "sync.js",
+  "type": "module",
+  "scripts": {
+    "sync": "node sync.js",
+    "sync:once": "node sync.js --once"
+  },
+  "dependencies": {
+    "jsdom": "^24.0.0",
+    "node-fetch": "^3.3.2"
+  }
+}

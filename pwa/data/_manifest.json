@@ -1,12 +1,27 @@
 {
     "pages": [
         {
+            "slug": "home",
+            "label": "Home",
+            "icon": "🏠"
+        },
+        {
             "slug": "cashless",
-            "label": "Cashless & TOP-UP",
+            "label": "Cashless",
             "icon": "💳"
+        },
+        {
+            "slug": "performances",
+            "label": "Acts",
+            "icon": "🎭"
+        },
+        {
+            "slug": "workshops",
+            "label": "Workshops",
+            "icon": "🛠️"
         }
     ],
-    "app_name": "Bucht der Träumer",
+    "app_name": "Bucht der Träumer*",
     "start_page": "",
-    "synced_at": 1783719735
+    "synced_at": 1759946400
 }

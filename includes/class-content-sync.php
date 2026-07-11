@@ -345,27 +345,8 @@ class Festival_PWA_Content_Sync {
             return $this->extract_snapshot($html, $page, $fetched_url);
         }
 
-        if ($mode === 'raw') {
-            return $this->extract_raw($html, $page, $fetched_url);
-        }
-
-        // Structured mode: strip scripts/styles and run heuristic extractors
-        $clean_html = preg_replace('#<script[^>]*>.*?</script>#is', '', $html);
-        $clean_html = preg_replace('#<style[^>]*>.*?</style>#is', '', $clean_html);
-
-        $doc = new DOMDocument();
-        libxml_use_internal_errors(true);
-        $doc->loadHTML('<?xml encoding="UTF-8"?>' . $clean_html);
-        libxml_clear_errors();
-
-        $xpath = new DOMXPath($doc);
-        $type  = $this->guess_page_type($xpath, $page['slug']);
-
-        switch ($type) {
-            case 'faq':  return $this->extract_faq($xpath, $page);
-            case 'grid': return $this->extract_grid($xpath, $page);
-            default:     return $this->extract_generic($xpath, $page);
-        }
+        // Default: raw. Keep the whole page HTML + styles.
+        return $this->extract_raw($html, $page, $fetched_url);
     }
 
     /* ── SNAPSHOT extraction: full offline mirror ── */

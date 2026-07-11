@@ -2,14 +2,14 @@
 /**
  * Plugin Name: Bucht der Träumer* – Festival PWA
  * Description: Offline-capable festival guide PWA. Choose start page, internal or remote pages, and sync for offline use.
- * Version:      1.3.0
+ * Version:      1.3.1
  * Author:       Festival Tech
  * Text Domain:  festival-pwa
  */
 
 if (!defined('ABSPATH')) exit;
 
-define('FESTIVAL_PWA_VERSION', '1.3.0');
+define('FESTIVAL_PWA_VERSION', '1.3.1');
 define('FESTIVAL_PWA_DIR', plugin_dir_path(__FILE__));
 define('FESTIVAL_PWA_URL', plugin_dir_url(__FILE__));
 
@@ -81,6 +81,9 @@ class Festival_PWA {
         wp_enqueue_style('festival-pwa-admin', FESTIVAL_PWA_URL . 'admin/admin.css', [], FESTIVAL_PWA_VERSION);
         wp_enqueue_script('festival-pwa-admin', FESTIVAL_PWA_URL . 'admin/admin.js', ['jquery'], FESTIVAL_PWA_VERSION, true);
         wp_localize_script('festival-pwa-admin', 'festivalPWA', [
+            'version' => FESTIVAL_PWA_VERSION,
+            'apiBase' => esc_url_raw(rest_url('festival/v1')),
+            'nonce'   => wp_create_nonce('wp_rest'),
             'wpPages' => $this->get_wp_pages_for_js(),
         ]);
     }
@@ -112,6 +115,9 @@ class Festival_PWA {
         } else {
             delete_option('festival_pwa_source_url');
         }
+
+        // ── Sync secret ──
+        update_option('festival_pwa_sync_secret', sanitize_text_field($_POST['sync_secret'] ?? ''));
 
         // ── App name ──
         update_option('festival_pwa_app_name', sanitize_text_field($_POST['app_name'] ?? get_bloginfo('name')));
@@ -149,10 +155,11 @@ class Festival_PWA {
        ================================================================ */
     public function render_admin_page() {
         $source_mode = get_option('festival_pwa_source_mode', 'current');
-        $source_url  = get_option('festival_pwa_source_url', '');
-        $app_name    = get_option('festival_pwa_app_name', get_bloginfo('name'));
-        $start_page  = get_option('festival_pwa_start_page', '');
-        $pages       = (array) get_option('festival_pwa_pages', []);
+        $source_url   = get_option('festival_pwa_source_url', '');
+        $sync_secret  = get_option('festival_pwa_sync_secret', '');
+        $app_name     = get_option('festival_pwa_app_name', get_bloginfo('name'));
+        $start_page   = get_option('festival_pwa_start_page', '');
+        $pages        = (array) get_option('festival_pwa_pages', []);
                 $last_sync   = get_option('festival_pwa_last_sync');
         $pwa_url     = home_url('/pwa/');
         $api_base    = home_url('/wp-json/festival/v1/');
@@ -217,6 +224,15 @@ class Festival_PWA {
                         placeholder="https://bucht-der-traeumer.de"
                         class="regular-text"
                         style="margin-top:10px;<?php echo $source_mode === 'current' ? 'display:none;' : ''; ?>">
+                </div>
+
+                <!-- ── SYNC SECRET ── -->
+                <div class="pwa-card">
+                    <h2>🔐 Sync Secret</h2>
+                    <p class="description">Shared secret used by the external sync service to push content. Keep it long and random.</p>
+                    <input type="text" name="sync_secret" value="<?php echo esc_attr($sync_secret); ?>"
+                        class="regular-text" placeholder="random-long-string">
+                    <p class="description" style="margin-top:8px;">Endpoint: <code><?php echo esc_html($api_base . 'sync-batch'); ?></code></p>
                 </div>
 
                 <!-- ── APP NAME ── -->
@@ -483,10 +499,9 @@ class Festival_PWA {
                     <option value="source" <?php selected($type, 'source'); ?>>From Source Site</option>
                     <option value="remote" <?php selected($type, 'remote'); ?>>Remote URL</option>
                 </select>
-                <select name="pages[<?php echo $i; ?>][mode]" class="page-mode-select" title="Extraction mode: snapshot = full offline mirror; raw = original HTML/CSS; structured = FAQ/Grid/text">
+                <select name="pages[<?php echo $i; ?>][mode]" class="page-mode-select" title="Extraction mode: snapshot = full offline mirror; raw = original HTML/CSS">
                     <option value="snapshot" <?php selected(($page['mode'] ?? 'raw'), 'snapshot'); ?>>Snapshot (full offline mirror)</option>
                     <option value="raw" <?php selected(($page['mode'] ?? 'raw'), 'raw'); ?>>Raw HTML (keep original design)</option>
-                    <option value="structured" <?php selected(($page['mode'] ?? 'raw'), 'structured'); ?>>Structured (FAQ / Grid / Text)</option>
                 </select>
                 <div class="source-value-wrap">
                     <?php if ($type === 'internal'): ?>

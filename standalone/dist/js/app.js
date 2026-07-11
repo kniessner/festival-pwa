@@ -13,8 +13,54 @@ async function init() {
     goToPage(0);
     setupOfflineIndicator();
     setupInstallPrompt();
+    setupUpdateBanner();
     showLastUpdated();
     wireDelegation();
+}
+
+function setupUpdateBanner() {
+    if (!('serviceWorker' in navigator)) return;
+
+    navigator.serviceWorker.addEventListener('message', event => {
+        if (event.data?.type === 'UPDATE_AVAILABLE') {
+            showUpdateBanner();
+        }
+    });
+
+    navigator.serviceWorker.register('sw.js').then(reg => {
+        reg.addEventListener('updatefound', () => {
+            const newWorker = reg.installing;
+            if (!newWorker) return;
+            newWorker.addEventListener('statechange', () => {
+                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                    showUpdateBanner(newWorker);
+                }
+            });
+        });
+    }).catch(() => {});
+}
+
+let updateWorker = null;
+function showUpdateBanner(worker = null) {
+    if (document.getElementById('sw-update-banner')) return;
+    if (worker) updateWorker = worker;
+
+    const banner = document.createElement('div');
+    banner.id = 'sw-update-banner';
+    banner.className = 'update-banner';
+    banner.innerHTML = `
+        <span>Neue Version verfügbar</span>
+        <button id="sw-update-now">Aktualisieren</button>
+        <button id="sw-update-later">Später</button>
+    `;
+    document.body.appendChild(banner);
+
+    document.getElementById('sw-update-now').addEventListener('click', () => {
+        if (updateWorker) updateWorker.postMessage({ type: 'SKIP_WAITING' });
+        banner.remove();
+        window.location.reload();
+    });
+    document.getElementById('sw-update-later').addEventListener('click', () => banner.remove());
 }
 
 // loadPage() re-renders #content via innerHTML, so any page containing a
@@ -79,10 +125,6 @@ function wireDelegation() {
         const fn = actions[el.dataset.action];
         if (fn) { e.stopPropagation(); fn(el); }
     });
-}
-
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
 }
 
 init();
