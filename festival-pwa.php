@@ -126,12 +126,15 @@ class Festival_PWA {
                 if (empty($page['slug'])) continue;
                 $type = in_array($page['source_type'] ?? '', ['internal', 'remote', 'source'])
                     ? $page['source_type'] : 'source';
+                $mode = in_array($page['mode'] ?? '', ['snapshot', 'raw', 'structured'])
+                    ? $page['mode'] : 'raw';
                 $pages[] = [
                     'slug'         => sanitize_title($page['slug']),
                     'label'        => sanitize_text_field($page['label']),
                     'icon'         => sanitize_text_field($page['icon'] ?? '📄'),
                     'source_type'  => $type,
                     'source_value' => sanitize_text_field($page['source_value'] ?? ''),
+                    'mode'         => $mode,
                 ];
             }
         }
@@ -150,9 +153,10 @@ class Festival_PWA {
         $app_name    = get_option('festival_pwa_app_name', get_bloginfo('name'));
         $start_page  = get_option('festival_pwa_start_page', '');
         $pages       = (array) get_option('festival_pwa_pages', []);
-        $last_sync   = get_option('festival_pwa_last_sync');
+                $last_sync   = get_option('festival_pwa_last_sync');
         $pwa_url     = home_url('/pwa/');
         $api_base    = home_url('/wp-json/festival/v1/');
+        $sync_log    = (array) get_option('festival_pwa_sync_log', []);
 
         $wp_pages = get_pages(['sort_column' => 'post_title', 'posts_per_page' => -1]);
         ?>
@@ -272,17 +276,38 @@ class Festival_PWA {
             <div class="pwa-card">
                 <h2>🔄 Content Sync</h2>
                 <p class="description">
-                    Fetches fresh HTML from all configured sources, extracts content, and rebuilds the
-                    offline cache. Happens automatically every 6 hours via WP Cron.
+                    Syncs all configured pages. For large pages (e.g. snapshots with many images) use
+                    <strong>Background Sync</strong> — it runs one page per cron step and won't time out.
                 </p>
-                <a href="<?php echo wp_nonce_url(admin_url('admin-post.php?action=festival_pwa_sync'), 'festival_pwa_sync'); ?>"
-                   class="button button-primary button-hero">
-                    🔄 Sync Content Now
-                </a>
+
+                <?php
+                $status = Festival_PWA_Content_Sync::get_sync_status();
+                if ($status['state'] === 'running'): ?>
+                    <div class="notice notice-info inline" style="margin-bottom:12px;">
+                        <p>⏳ Background sync running: <?php echo count($status['synced']); ?> / <?php echo $status['total']; ?> pages done.</p>
+                        <p style="font-size:12px;color:#646970;">Current: <code><?php echo esc_html($status['current']); ?></code></p>
+                    </div>
+                <?php elseif ($status['state'] === 'finished'): ?>
+                    <div class="notice notice-success inline" style="margin-bottom:12px;">
+                        <p>✅ Background sync finished: <?php echo count($status['synced']); ?> synced, <?php echo count($status['failed']); ?> failed.</p>
+                    </div>
+                <?php endif; ?>
+
+                <div class="sync-actions" style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
+                    <a href="<?php echo wp_nonce_url(admin_url('admin-post.php?action=festival_pwa_sync_async'), 'festival_pwa_sync_async'); ?>"
+                       class="button button-primary button-hero">
+                        🔄 Sync in Background
+                    </a>
+                    <a href="<?php echo wp_nonce_url(admin_url('admin-post.php?action=festival_pwa_sync'), 'festival_pwa_sync'); ?>"
+                       class="button">
+                        ⚡ Sync Now (one request)
+                    </a>
+                </div>
+
                 <?php if ($last_sync): ?>
                     <p class="sync-time">Last sync: <strong><?php echo human_time_diff($last_sync, time()); ?> ago</strong></p>
                 <?php else: ?>
-                    <p class="sync-time" style="color:#b0327a;"><strong>⚠️ Never synced — click the button above.</strong></p>
+                    <p class="sync-time" style="color:#b0327a;"><strong>⚠️ Never synced — start a background sync above.</strong></p>
                 <?php endif; ?>
             </div>
 
@@ -309,8 +334,14 @@ class Festival_PWA {
                     </div>
                 </div>
 
-                <h3 style="margin-top:24px;">Cached JSON Files</h3>
+                <h3 style="margin-top:24px;">Cached JSON Files                </h3>
                 <p class="description">Click to view raw JSON. These are what the PWA serves offline.</p>
+
+                <?php if (!empty($sync_log)): ?>
+                    <h4>Latest sync log</h4>
+                    <pre class="sync-log"><?php echo esc_html(implode("\n", array_slice($sync_log, -10))); ?></pre>
+                <?php endif; ?>
+
                 <table class="wp-list-table widefat fixed striped">
                     <thead>
                         <tr>
@@ -414,6 +445,11 @@ class Festival_PWA {
                         <option value="source" selected>From Source Site</option>
                         <option value="remote">Remote URL</option>
                     </select>
+                    <select name="pages[__INDEX__][mode]" class="page-mode-select" title="Extraction mode: snapshot = full offline mirror; raw = original HTML/CSS; structured = FAQ/Grid/text">
+                        <option value="snapshot" selected>Snapshot (full offline mirror)</option>
+                        <option value="raw">Raw HTML (keep original design)</option>
+                        <option value="structured">Structured (FAQ / Grid / Text)</option>
+                    </select>
                     <div class="source-value-wrap">
                         <input type="text" name="pages[__INDEX__][source_value]" value=""
                             class="regular-text source-value-text" placeholder="page-slug (relative to source)">
@@ -446,6 +482,11 @@ class Festival_PWA {
                     <option value="internal" <?php selected($type, 'internal'); ?>>Internal WP Page</option>
                     <option value="source" <?php selected($type, 'source'); ?>>From Source Site</option>
                     <option value="remote" <?php selected($type, 'remote'); ?>>Remote URL</option>
+                </select>
+                <select name="pages[<?php echo $i; ?>][mode]" class="page-mode-select" title="Extraction mode: snapshot = full offline mirror; raw = original HTML/CSS; structured = FAQ/Grid/text">
+                    <option value="snapshot" <?php selected(($page['mode'] ?? 'raw'), 'snapshot'); ?>>Snapshot (full offline mirror)</option>
+                    <option value="raw" <?php selected(($page['mode'] ?? 'raw'), 'raw'); ?>>Raw HTML (keep original design)</option>
+                    <option value="structured" <?php selected(($page['mode'] ?? 'raw'), 'structured'); ?>>Structured (FAQ / Grid / Text)</option>
                 </select>
                 <div class="source-value-wrap">
                     <?php if ($type === 'internal'): ?>
@@ -486,6 +527,25 @@ add_action('admin_post_festival_pwa_sync', function() {
 
     wp_redirect(admin_url('options-general.php?page=festival-pwa&sync=' . ($result ? 'success' : 'error')));
     exit;
+});
+
+/* ================================================================
+   ASYNC SYNC ACTION
+   ================================================================ */
+add_action('admin_post_festival_pwa_sync_async', function() {
+    if (!current_user_can('manage_options')) wp_die('Unauthorized');
+    if (!wp_verify_nonce($_GET['_wpnonce'], 'festival_pwa_sync_async')) wp_die('Invalid nonce');
+
+    $sync = new Festival_PWA_Content_Sync();
+    $sync->sync_all_async();
+
+    wp_redirect(admin_url('options-general.php?page=festival-pwa&async=started'));
+    exit;
+});
+
+add_action('festival_pwa_async_step', function() {
+    $sync = new Festival_PWA_Content_Sync();
+    $sync->async_step();
 });
 
 /* ================================================================

@@ -1,5 +1,9 @@
 <?php
 class Festival_PWA_Frontend {
+    public function __construct() {
+        self::serve();
+    }
+
     public static function serve() {
         // Use only the path component — REQUEST_URI also carries the query
         // string (and could be URL-encoded), neither of which belongs in a

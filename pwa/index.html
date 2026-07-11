@@ -56,8 +56,9 @@ body {
 
 /* App shell */
 .app-header {
-    position: sticky;
+    position: fixed;
     top: 0;
+    width: 100%;
     z-index: 100;
     background: linear-gradient(to bottom, var(--bg) 60%, transparent);
     padding: 20px 20px 12px;
@@ -337,6 +338,32 @@ body {
 ::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-thumb { background: var(--accent-pink); border-radius: 4px; }
 
+/* Raw content from source page */
+.raw-content {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 0;
+    margin-bottom: 20px;
+    overflow: hidden;
+    backdrop-filter: blur(8px);
+}
+.raw-content main {
+    padding: 20px;
+}
+
+/* Snapshot fragment injected into shadow DOM */
+.snapshot-content-host {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    backdrop-filter: blur(8px);
+}
+.snapshot-content-host .snapshot-content {
+    padding: 16px;
+}
+
 /* Install prompt */
 .install-prompt {
     position: fixed;
@@ -410,6 +437,7 @@ body {
 
     <nav class="bottom-nav" id="pageNav"><!-- JS fills --></nav>
 
-    <script src="js/app.js"></script>
+    <script src="js/raw-timetable.js?v=3"></script>
+    <script src="js/app.js?v=3"></script>
 </body>
 </html>

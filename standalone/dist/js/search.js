@@ -1,0 +1,81 @@
+import { store } from './store.js';
+import { PAGES, pageIdx } from './config.js';
+import { escapeHtml } from './ui.js';
+
+export function setupSearch() {
+    const input = document.getElementById('searchInput');
+    if (!input) return;
+    input.addEventListener('input', (e) => {
+        const q = e.target.value.trim().toLowerCase();
+        if (q.length < 2) {
+            document.getElementById('searchResults').innerHTML = '';
+            return;
+        }
+        doSearch(q);
+    });
+}
+
+function doSearch(query) {
+    const results = [];
+    for (const [slug, data] of Object.entries(store.pageData)) {
+        if (!data) continue;
+        const pageLabel = PAGES.find(p => p.slug === slug)?.label || slug;
+        // Timetable events
+        if (data.events) {
+            data.events.forEach((ev, i) => {
+                const text = `${ev.title || ''} ${ev.excerpt || ''} ${ev.description || ''} ${ev.stage_label || ''} ${ev.type_label || ''} ${ev.hosts?.join(' ') || ''}`.toLowerCase();
+                if (text.includes(query)) results.push({ page: slug, pageLabel, index: i, item: ev, isEvent: true });
+            });
+        }
+        // Info view sub-sections (news, cashless, faqs)
+        if (slug === 'info') {
+            ['news', 'cashless', 'faqs'].forEach(sub => {
+                const subData = data[sub];
+                if (!subData || !subData.items) return;
+                subData.items.forEach((item, i) => {
+                    const text = `${item.question || ''} ${item.title || ''} ${item.desc || ''}`.toLowerCase();
+                    if (text.includes(query)) results.push({ page: slug, pageLabel: `${pageLabel} · ${sub}`, index: i, item, infoTab: sub });
+                });
+            });
+            continue;
+        }
+        // Direct items (old format fallback)
+        if (data.items) {
+            data.items.forEach((item, i) => {
+                const text = `${item.question || ''} ${item.title || ''} ${item.desc || ''}`.toLowerCase();
+                if (text.includes(query)) results.push({ page: slug, pageLabel, index: i, item });
+            });
+        }
+    }
+    renderSearchResults(results, query);
+}
+
+function renderSearchResults(results, query) {
+    const container = document.getElementById('searchResults');
+    if (!container) return;
+    if (results.length === 0) {
+        container.innerHTML = `<div class="empty">Keine Ergebnisse für "${escapeHtml(query)}"</div>`;
+        return;
+    }
+    container.innerHTML = results.map(r => {
+        const title = r.item.title || r.item.question || 'Item';
+        const desc = r.item.desc || r.item.answer || r.item.excerpt || '';
+        const meta = r.item.time ? `${escapeHtml(r.item.time)} · ${escapeHtml(r.item.stage_label || '')}` : '';
+        const infoTabAttr = r.infoTab ? ` data-info-tab="${r.infoTab}"` : '';
+        return `
+        <div class="grid-card search-card" data-action="search-jump" data-page-idx="${pageIdx(r.page)}" data-index="${r.index}"${infoTabAttr}>
+            <div class="search-meta">${escapeHtml(r.pageLabel)}${meta ? ' · ' + meta : ''}</div>
+            <h3>${escapeHtml(title)}</h3>
+            ${desc ? `<p>${escapeHtml(desc.substring(0, 120))}${desc.length > 120 ? '...' : ''}</p>` : ''}
+        </div>`;
+    }).join('');
+}
+
+export function scrollToItem(pageSlug, itemIndex) {
+    const items = document.querySelectorAll(`[data-item-index="${itemIndex}"]`);
+    if (items.length) {
+        items[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
+        items[0].classList.add('highlight');
+        setTimeout(() => items[0].classList.remove('highlight'), 2000);
+    }
+}

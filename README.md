@@ -8,7 +8,9 @@ Fetches live content from the main WordPress site, lets admins pick which pages 
 - **Dynamic page selector** – Admin chooses which WP pages are included
 - **Auto-sync** – Fetches and caches content every 6 hours via WP Cron
 - **Manual sync** – One-click refresh in admin settings
+- **Background sync** – Runs one page per cron step to avoid timeouts on large sites
 - **Offline-first** – Service Worker precaches shell + selected pages
+- **Snapshot mode** – Builds a self-contained offline mirror of a page (HTML + CSS + images)
 - **Real design** – Downloads background images and design tokens from source site
 - **Heuristic parsing** – Auto-detects FAQ vs Grid vs Generic layouts
 - **PWA installable** – Add to home screen on iOS/Android
@@ -40,7 +42,8 @@ Plugin
 |---------|---------|
 | Source Website URL | The WP site to scrape content from |
 | App Name | Shown in PWA title bar and install prompt |
-| Select Pages | Checkbox grid: pick which slugs to include |
+| Select Pages | Add pages, choose source, and extraction mode |
+| Extraction Mode | Snapshot / Raw HTML / Structured text |
 | Urgent Announcement | Banner shown on PWA load |
 | Sync Now | Manual trigger to fetch all selected pages |
 
@@ -53,9 +56,17 @@ Plugin
 | `GET /wp-json/festival/v1/design` | Design tokens + asset URLs |
 | `POST /wp-json/festival/v1/sync` | Trigger manual sync (admin only) |
 
-## Supported Page Types
+## Supported Page Types / Extraction Modes
 
-The sync engine auto-detects layout by analyzing the HTML:
+Each PWA page can use one of three extraction modes:
+
+| Mode | What it does | Best for |
+|------|--------------|----------|
+| **Snapshot** | Downloads the page HTML, CSS, and images into a self-contained offline file (`pwa/snapshots/{slug}.html`) | Complex layouts like `/programm-2026` with timetable filters |
+| **Raw HTML** | Keeps original `<main>` markup + styles, rendered inside a Shadow DOM | Pages that need original styling but not all assets offline |
+| **Structured** | Auto-detects FAQ / Grid / Generic and extracts clean text | Simple info pages, FAQ, lists |
+
+The sync engine auto-detects layout only in **Structured** mode:
 
 | Type | Detection | Example |
 |------|-----------|---------|
@@ -84,6 +95,9 @@ festival-pwa/
 │   ├── images/                   ← Downloaded design assets
 │   │   ├── bg.jpg                ← Background from source WP
 │   │   └── datum.png             ← Logo/date image
+│   ├── snapshots/                ← Self-contained offline page mirrors
+│   │   └── programm-2026.html
+│   ├── cache/                    ← Downloaded CSS/images for snapshots
 │   └── data/                     ← Cached JSON per page
 │       ├── _manifest.json          ← Page list + app config
 │       ├── cashless.json

@@ -41,6 +41,15 @@ class Festival_PWA_REST_API {
                 return current_user_can('manage_options');
             },
         ]);
+
+        // Async sync status
+        register_rest_route('festival/v1', '/sync-status', [
+            'methods'             => 'GET',
+            'callback'            => [$this, 'get_sync_status'],
+            'permission_callback' => function () {
+                return current_user_can('manage_options');
+            },
+        ]);
     }
 
     /**
@@ -119,5 +128,15 @@ class Festival_PWA_REST_API {
             'timestamp' => time(),
             'pages'     => get_option('festival_pwa_synced_pages', []),
         ], $result ? 200 : 500);
+    }
+
+    /**
+     * Return async sync status.
+     */
+    public function get_sync_status() {
+        require_once FESTIVAL_PWA_DIR . 'includes/class-content-sync.php';
+        $status = Festival_PWA_Content_Sync::get_sync_status();
+        $status['_server_time'] = time();
+        return new WP_REST_Response($status, 200);
     }
 }
