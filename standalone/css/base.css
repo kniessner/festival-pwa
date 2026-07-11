@@ -45,21 +45,20 @@
 }
 
 body {
-    font-family: var(--font-body);
-    background: var(--bg) url('../images/bg.jpg') center top / cover fixed no-repeat;
+     font-family: var(--font-body);
+    background: var(--bg) url(../images/bg.jpg) center center / contain fixed no-repeat;
     color: var(--text);
     min-height: 100vh;
-
     line-height: 1.5;
-    padding-top: env(safe-area-inset-top);
-    padding-bottom: calc(72px + env(safe-area-inset-bottom));
-
-        height: 100%;
+    padding-top: 0;
+    padding-bottom: 0;
+    height: 100%;
     position: fixed;
     right: 0;
     left: 0;
     bottom: 0;
     top: 0;
+    overflow: hidden;
 }
 
 main {
@@ -69,6 +68,9 @@ main {
     height: 100vh;
     box-shadow: #080943 -1px 0px 5px 0px;
     background: linear-gradient(to bottom, #08094378 70%, transparent);
+       background: linear-gradient(to bottom, #8b235f70 70%, #0b0d7200);
+    background-blend-mode: difference;
+    
     position: relative;
     padding: 0px 0px 250px 0px;
 
