@@ -21,13 +21,18 @@ export function renderNav() {
 export function loadPage(index) {
     store.currentPage = index;
     const page = PAGES[index];
-    const appHeader = document.getElementById('app-header');
-    const container = document.getElementById('content');
+    document.body.className = `page-${page.slug} ${page.slug !== 'home' ? 'page-sub' : ''}`;
+const container = document.getElementById('content');
+     if (page.slug === 'home') renderHome(container);
+
+     
+    
     const title = document.getElementById('pageTitle');
-    appHeader.style.display = page.slug === 'home' ? 'none' : '';
+   
     title.textContent = page.label;
+  
     container.innerHTML = '';
-    document.getElementById('searchResults').innerHTML = '';
+    // document.getElementById('searchResults').innerHTML = '';
     if (page.slug === 'home') renderHome(container);
     else if (page.slug === 'favorites') renderFavorites(container);
     else if (page.slug === 'timetable') renderTimetable(container);

@@ -2,6 +2,42 @@
 
 /* App shell */
 
+
+.page-home figure {
+    object-fit: cover;
+    width: 650px;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    z-index: -1;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    z-index: -1;
+}
+
+.install-prompt {
+    display: none;
+}
+
+.page-home .install-prompt {
+    display: inline-flex
+}
+
+.page-home .app-header {
+    display: none;
+}
+
+.page-sub figure {
+    display: none;
+}
+
+.page-sub main {
+    background: linear-gradient(to bottom, #8b235fcc 70%, #0b0d72);
+
+}
+
+
 .app-header {
     position: sticky;
     top: 0;
@@ -10,15 +46,6 @@
     padding: 20px 20px 12px;
     text-align: center;
 
-}
-
-figure.wp-block-video.alignfull.full-video-index.eplus-wrapper.hidden-desktop {
-        object-fit: cover;
-    width: 650px;
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    z-index: -1;
 }
 
 .app-header img {
@@ -543,10 +570,12 @@ figure.wp-block-video.alignfull.full-video-index.eplus-wrapper.hidden-desktop {
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
     position: sticky;
-    top: 100px;
+    top: 50px;
     z-index: 98;
     margin: 0 -16px;
     padding: 8px 16px;
+    text-align: center;
+    justify-content: center;
 }
 
 .tt-day-tabs::-webkit-scrollbar {
