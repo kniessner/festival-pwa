@@ -26,13 +26,22 @@ const SHELL_ASSETS = [
     './images/datum.png',
     './data/info.json',
     './data/timetable.json',
-    './data/_manifest.json',
+    './data/_manifest.json'
+];
+
+// Remote assets: cached best-effort so a CDN hiccup can't fail the whole install.
+const REMOTE_ASSETS = [
     'https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&family=Space+Grotesk:wght@500;700&display=swap'
 ];
 
 self.addEventListener('install', e => {
     e.waitUntil(
-        caches.open(CACHE_NAME).then(cache => cache.addAll(SHELL_ASSETS))
+        caches.open(CACHE_NAME).then(cache =>
+            // Local shell must all cache (atomic); remote assets are optional.
+            cache.addAll(SHELL_ASSETS).then(() =>
+                Promise.all(REMOTE_ASSETS.map(url => cache.add(url).catch(() => {})))
+            )
+        )
     );
     self.skipWaiting();
 });

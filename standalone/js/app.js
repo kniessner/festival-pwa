@@ -1,4 +1,4 @@
-import { store, loadData, loadManifest } from './store.js';
+import { loadData, loadManifest } from './store.js';
 import { loadPage, renderNav } from './router.js';
 import { setupSearch, scrollToItem } from './search.js';
 import { setDay, toggleFilterPanel, resetFilters, toggleEventDetail } from './views/timetable.js';
