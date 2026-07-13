@@ -2,7 +2,7 @@
 
 :root {
     --bg: #080943;
-    --bg-card: rgba(15, 18, 130, 0.35);
+    --bg-card: rgba(8, 9, 67, 1);
     --bg-card-hover: rgba(15, 18, 130, 0.55);
     --accent-pink: #b0327a;
     --accent-purple: #762c8c;
@@ -13,7 +13,7 @@
     --border: rgba(176, 50, 122, 0.3);
     --radius: 12px;
     --font-body: 'Lato', sans-serif;
-    --font-head: 'Space Grotesk', sans-serif;
+    /* --font-head: 'Space Grotesk', sans-serif; */
 }
 
 :root {
