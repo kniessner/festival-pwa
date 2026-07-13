@@ -44,6 +44,13 @@
     padding: 0;
 }
 
+
+@media (display-mode: standalone) { 
+    body {
+        background: var(--bg) url(../images/bg.jpg) center center / contain fixed no-repeat;
+    }
+
+ } 
 body {
      font-family: var(--font-body);
     background: var(--bg) url(../images/bg.jpg) center center / contain fixed no-repeat;
@@ -65,8 +72,7 @@ main {
     max-width: 650px;
     margin: 0 auto;
     border: 1px solid #080943;
-    height: 100vh;            /* fallback for browsers without dvh */
-    height: 100dvh;           /* dynamic viewport height: correct in iOS standalone */
+    height: 100vh;
     box-shadow: #080943 -1px 0px 5px 0px;
     background: linear-gradient(to bottom, #08094378 70%, transparent);
 /*       background: linear-gradient(to bottom, #8b235f70 70%, #0b0d7200);
@@ -78,10 +84,11 @@ main {
 }
 
 video {
-    display: block;
+    object-fit: cover;
     width: 100%;
-    height: auto;              /* was 100vh !important — caused the full-screen blue gap */
-    aspect-ratio: 1920 / 1020;
+    vertical-align: middle;
+    width: 100%;
+    height: 100vh !important;
 }
 
 /* Content */
