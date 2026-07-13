@@ -15,3 +15,6 @@
 
 * aktueller Tag funktioniert nicht immer
 * Filter filtern Filter
+* Genre weglassen
+* blauen Hintergrund einbinden
+* 
