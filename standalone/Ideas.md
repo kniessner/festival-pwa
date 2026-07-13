@@ -14,4 +14,4 @@
 * drop down symbol ändern 
 
 * aktueller Tag funktioniert nicht immer
-* 
+* Filter filtern Filter
