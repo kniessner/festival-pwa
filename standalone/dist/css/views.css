@@ -39,13 +39,16 @@
 
 
 .app-header {
-    position: sticky;
+    position: relative;
     top: 0;
     z-index: 100;
-    background: linear-gradient(to bottom, var(--bg) 70%, transparent);
-    padding: 20px 20px 12px;
+    /* background: linear-gradient(to bottom, var(--bg) 70%, transparent); */
+    /* padding: 20px 20px 12px; */
     text-align: center;
 
+}
+.app-header h1  {
+        margin-top: 0;
 }
 
 .app-header img {
@@ -253,6 +256,8 @@
 /* Page intro */
 
 .page-intro {
+
+    display:none;
     background: var(--bg-card);
     border: 1px solid var(--border);
     border-radius: var(--radius);
@@ -559,6 +564,7 @@
     font-size: var(--wp--preset--font-size--medium) !important;
     color: var(--wp--preset--color--base) !important;
     text-align: center;
+    display:none;
 }
 
 /* Day tabs */
