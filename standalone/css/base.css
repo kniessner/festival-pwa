@@ -65,23 +65,23 @@ main {
     max-width: 650px;
     margin: 0 auto;
     border: 1px solid #080943;
-    height: 100vh;
+    height: 100vh;            /* fallback for browsers without dvh */
+    height: 100dvh;           /* dynamic viewport height: correct in iOS standalone */
     box-shadow: #080943 -1px 0px 5px 0px;
     background: linear-gradient(to bottom, #08094378 70%, transparent);
 /*       background: linear-gradient(to bottom, #8b235f70 70%, #0b0d7200);
     background-blend-mode: difference;
-   */  
+   */
     position: relative;
     padding: 0px 0px 250px 0px;
 
 }
 
 video {
-    object-fit: cover;
+    display: block;
     width: 100%;
-    vertical-align: middle;
-    width: 100%;
-    height: 100vh !important;
+    height: auto;              /* was 100vh !important — caused the full-screen blue gap */
+    aspect-ratio: 1920 / 1020;
 }
 
 /* Content */
