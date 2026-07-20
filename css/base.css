@@ -45,14 +45,15 @@
 }
 
 
-@media (display-mode: standalone) { 
+@media (display-mode: standalone) {
     body {
         background: var(--bg) url(../images/bg.jpg) center center / contain fixed no-repeat;
     }
 
- } 
+}
+
 body {
-     font-family: var(--font-body);
+    font-family: var(--font-body);
     background: var(--bg) url(../images/bg.jpg) center center / contain fixed no-repeat;
     color: var(--text);
     min-height: 100vh;
@@ -72,10 +73,10 @@ main {
     max-width: 650px;
     margin: 0 auto;
     border: 1px solid #080943;
-    height: 100vh;
+    height: calc(var(--vh, 1vh) * 100);
     box-shadow: #080943 -1px 0px 5px 0px;
     background: linear-gradient(to bottom, #08094378 70%, transparent);
-/*       background: linear-gradient(to bottom, #8b235f70 70%, #0b0d7200);
+    /*       background: linear-gradient(to bottom, #8b235f70 70%, #0b0d7200);
     background-blend-mode: difference;
    */
     position: relative;
@@ -95,7 +96,7 @@ video {
 
 .content {
 
-    
+
     /*  padding: 0 16px 24px;
     max-width: 720px;
     margin: 0 auto;
@@ -110,12 +111,12 @@ video {
     height: 100%;
     width: 100%;*/
     padding: 0 20px 24px;
-        max-width: 100%;
+    max-width: 100%;
     margin: 0 auto;
     display: block;
     height: 100%;
     width: 100%;
-            overflow-y: scroll;
+    overflow-y: scroll;
     overflow-x: hidden;
     /* border: 2px solid; */
 }
