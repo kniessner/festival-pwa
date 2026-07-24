@@ -1118,7 +1118,8 @@
 }
 
 .gtt-corner {
-    flex: 0 0 52px;
+    flex: 0 0 auto;
+    width: 52px;
     position: sticky;
     left: 0;
     z-index: 4;
@@ -1140,8 +1141,15 @@
 }
 
 .gtt-track {
-    display: flex;
     position: relative;
+}
+
+.gtt-track-v {
+    display: flex;
+}
+
+.gtt-track-h {
+    display: block;
 }
 
 .gtt-timeaxis {
@@ -1208,6 +1216,68 @@
     left: 52px;
     right: 0;
     height: 2px;
+    background: #ff3b3b;
+    z-index: 1;
+    box-shadow: 0 0 6px #ff3b3b;
+}
+
+/* Horizontal layout: time runs left-to-right, stages are rows */
+
+.gtt-hour-ruler {
+    flex: 0 0 auto;
+    position: relative;
+    height: 40px;
+}
+
+.gtt-hour-label-h {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    padding-left: 4px;
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    border-left: 1px dashed var(--border);
+}
+
+.gtt-stagerow-wrap {
+    display: flex;
+    align-items: stretch;
+    border-bottom: 1px solid var(--border);
+}
+
+.gtt-stagelabel {
+    flex: 0 0 96px;
+    position: sticky;
+    left: 0;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 6px;
+    background: var(--bg);
+    color: var(--stage-color, var(--text));
+    font-family: var(--font-head);
+    font-weight: 700;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-right: 1px solid var(--border);
+}
+
+.gtt-stagerow {
+    flex: 0 0 auto;
+    position: relative;
+    background-image: repeating-linear-gradient(to right, transparent 0, transparent 119px, var(--border) 119px, var(--border) 120px);
+}
+
+.gtt-now-line-v {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 2px;
     background: #ff3b3b;
     z-index: 1;
     box-shadow: 0 0 6px #ff3b3b;
