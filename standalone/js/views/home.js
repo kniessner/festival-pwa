@@ -9,8 +9,8 @@ export function renderHome(container) {
         <div class="hero">
             <div class="hero-logo">🌊</div>
             <h1>Bucht der Träumer*</h1>
-            <div class="hero-sub">Festival 2026</div>
-            <!-- <div class="countdown" id="countdown">–</div>
+            <!--  <div class="hero-sub">Festival 2026</div>
+           <div class="countdown" id="countdown">–</div>
             <div class="countdown-label">Tage bis zum Festival</div>-->
             <div class="quick-nav">
                 <button class="quick-btn" data-action="load-page" data-page="${pageIdx('timetable')}">📅 Programm</button>
