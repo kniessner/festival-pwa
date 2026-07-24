@@ -1028,12 +1028,38 @@
 
 /* Grid timetable (fusion-festival-style stage/hour grid) */
 
+.gtt-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
 .gtt-daytabs {
     display: flex;
     gap: 8px;
     overflow-x: auto;
+    flex: 1 1 auto;
+    min-width: 0;
     padding: 4px 0 12px;
     -webkit-overflow-scrolling: touch;
+}
+
+.gtt-scroll-toggle {
+    flex: 0 0 auto;
+    width: 40px;
+    height: 40px;
+    margin-bottom: 8px;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    background: var(--bg-card);
+    color: var(--text);
+    font-size: 1.1rem;
+    cursor: pointer;
+}
+
+.gtt-scroll-toggle:active {
+    border-color: var(--accent-pink);
+    background: var(--bg-card-hover);
 }
 
 .gtt-daytabs::-webkit-scrollbar {
@@ -1070,6 +1096,16 @@
     border: 1px solid var(--border);
     border-radius: var(--radius);
     background: var(--bg-card);
+}
+
+/* Single-finger touch drag is constrained to one axis; wheel/trackpad/scrollbar
+   still pan both, since those gestures don't suffer from the diagonal-drag problem. */
+.gtt-scroll.scroll-v {
+    touch-action: pan-y;
+}
+
+.gtt-scroll.scroll-h {
+    touch-action: pan-x;
 }
 
 .gtt-header {
