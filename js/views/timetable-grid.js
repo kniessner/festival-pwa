@@ -3,8 +3,8 @@ import { favButton } from '../ui.js';
 import { getEffectiveFestivalDay } from '../festival.js';
 
 const PX_PER_MIN = 2;
-const COL_WIDTH = 130;      // vertical mode: stage column width per lane
-const LANE_WIDTH = 80;      // vertical mode: overlap-lane width within a stage column
+const COL_WIDTH = 130;      // vertical mode: fixed width for every stage column
+const AXIS_WIDTH = 52;      // vertical mode: time-axis / corner column width
 const STAGE_LABEL_WIDTH = 96; // horizontal mode: stage-label column width
 const LANE_HEIGHT = 60;     // horizontal mode: overlap-lane height within a stage row
 
@@ -100,8 +100,10 @@ export function refreshGridTimetable() {
     const track = document.getElementById('gttTrack');
     if (!header || !track) return;
 
+    // Anything with a real slot (start, end, and a stage) gets plotted — including
+    // "Space" installations that run for a set window, e.g. De Loite 10:00-21:00.
     const events = data.events.filter(ev =>
-        ev.day === store.gridDay && ev.start_time && ev.end_time && ev.stage && ev.type !== 'space'
+        ev.day === store.gridDay && ev.start_time && ev.end_time && ev.stage
     );
 
     if (events.length === 0) {
@@ -149,11 +151,13 @@ export function refreshGridTimetable() {
 
 function renderVerticalLayout({ data, header, track, stages, byStage, stageLanes, gridMin, gridMax }) {
     const gridHeight = (gridMax - gridMin) * PX_PER_MIN;
+    // Every stage column is the same fixed width; a stage with overlapping acts
+    // subdivides that width into narrower lanes instead of widening its column.
+    const totalWidth = AXIS_WIDTH + stages.length * COL_WIDTH;
 
     header.innerHTML = '<div class="gtt-corner"></div>' + stages.map(stage => {
         const label = data.filters.stages.find(s => s.value === stage)?.label || stage;
-        const width = Math.max(COL_WIDTH, stageLanes.get(stage) * LANE_WIDTH);
-        return `<div class="gtt-stagehead" style="width:${width}px;--stage-color:${stageColor(stage)}">${label}</div>`;
+        return `<div class="gtt-stagehead" style="width:${COL_WIDTH}px;--stage-color:${stageColor(stage)}">${label}</div>`;
     }).join('');
 
     const hourLabels = [];
@@ -162,9 +166,9 @@ function renderVerticalLayout({ data, header, track, stages, byStage, stageLanes
     }
 
     const stageColumns = stages.map(stage => {
-        const width = Math.max(COL_WIDTH, stageLanes.get(stage) * LANE_WIDTH);
-        const blocks = byStage.get(stage).map(ev => renderEventBlockV(ev, gridMin)).join('');
-        return `<div class="gtt-stagecol" style="width:${width}px;height:${gridHeight}px;--stage-color:${stageColor(stage)}">${blocks}</div>`;
+        const numLanes = stageLanes.get(stage);
+        const blocks = byStage.get(stage).map(ev => renderEventBlockV(ev, gridMin, numLanes)).join('');
+        return `<div class="gtt-stagecol" style="width:${COL_WIDTH}px;height:${gridHeight}px;--stage-color:${stageColor(stage)}">${blocks}</div>`;
     }).join('');
 
     let nowLine = '';
@@ -175,8 +179,13 @@ function renderVerticalLayout({ data, header, track, stages, byStage, stageLanes
         }
     }
 
+    // Header/track must be sized to their full (overflowing) content width explicitly —
+    // a flex container's auto width otherwise stays at the scrollport's width, which
+    // caps how far position:sticky children can travel before they detach.
+    header.style.width = totalWidth + 'px';
     track.className = 'gtt-track gtt-track-v';
-    track.style.height = '';
+    track.style.width = totalWidth + 'px';
+    track.style.height = gridHeight + 'px';
     track.innerHTML = `
         <div class="gtt-timeaxis" style="height:${gridHeight}px">${hourLabels.join('')}</div>
         ${stageColumns}
@@ -190,6 +199,7 @@ function renderVerticalLayout({ data, header, track, stages, byStage, stageLanes
 
 function renderHorizontalLayout({ data, header, track, stages, byStage, stageLanes, gridMin, gridMax }) {
     const gridWidth = (gridMax - gridMin) * PX_PER_MIN;
+    const totalWidth = STAGE_LABEL_WIDTH + gridWidth;
 
     const hourLabels = [];
     for (let m = gridMin; m <= gridMax; m += 60) {
@@ -223,7 +233,9 @@ function renderHorizontalLayout({ data, header, track, stages, byStage, stageLan
         }
     }
 
+    header.style.width = totalWidth + 'px';
     track.className = 'gtt-track gtt-track-h';
+    track.style.width = totalWidth + 'px';
     track.style.height = totalHeight + 'px';
     track.innerHTML = rows + nowLine;
 
@@ -239,13 +251,14 @@ function currentContinuousMinutes() {
     return nowMin;
 }
 
-function renderEventBlockV(ev, gridMin) {
+function renderEventBlockV(ev, gridMin, numLanes) {
     const idx = store.pageData.timetable.events.indexOf(ev);
     const top = (ev._start - gridMin) * PX_PER_MIN;
     const height = Math.max(24, (ev._end - ev._start) * PX_PER_MIN);
-    const left = ev._lane * LANE_WIDTH;
+    const laneWidth = COL_WIDTH / numLanes;
+    const left = ev._lane * laneWidth;
     return `
-    <div class="gtt-event" data-item-index="${idx}" data-action="toggle-grid-event" style="top:${top}px;height:${height}px;left:${left}px;width:${LANE_WIDTH - 4}px">
+    <div class="gtt-event" data-item-index="${idx}" data-action="toggle-grid-event" style="top:${top}px;height:${height}px;left:${left}px;width:${laneWidth - 4}px">
         <span class="gtt-event-time">${ev.start_time}</span>
         <span class="gtt-event-title">${ev.title}</span>
     </div>`;
