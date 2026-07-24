@@ -131,6 +131,18 @@ def extract_events(html):
             time_display = ''
             if start_time:
                 time_display = f"{day_short.get(day_value, '')} {start_time}".strip()
+
+            # End time — the accordion header renders a "festival-accordion-badge--time"
+            # badge (e.g. "DO 13:00 – 14:00") that data-start/data-* attributes don't carry.
+            end_time = ''
+            badge_match = re.search(
+                r'<span[^>]*class="[^"]*festival-accordion-badge--time[^"]*"[^>]*>([^<]*)</span>',
+                raw_content, re.I
+            )
+            if badge_match:
+                badge_times = re.findall(r'(\d{1,2}:\d{2})', decode_entities(badge_match.group(1)))
+                if len(badge_times) >= 2:
+                    end_time = badge_times[1]
             
             # Determine event type label
             type_label = ''
@@ -169,6 +181,7 @@ def extract_events(html):
                     'day_label': day_label,
                     'time': time_display,
                     'start_time': start_time,
+                    'end_time': end_time,
                     'stage': data_stages.group(1) if data_stages else '',
                     'stage_label': stage_label,
                     'type': data_types.group(1) if data_types else '',

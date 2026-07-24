@@ -60,20 +60,18 @@ def build_timetable(data_dir):
         if match and len(match) > len(desc):
             desc = match
 
-        # Build start/end times
+        # Build start/end times. The program extractor now reads end_time directly
+        # from the site's "festival-accordion-badge--time" badge; fall back to
+        # guessing from the description text only for older programm-2026.json
+        # dumps that predate that badge extraction.
         start_time = ev.get('start_time', '')
-        # Try to extract end time from description (e.g. "13:00 – 19:00")
-        end_time = ''
-        if desc:
+        end_time = ev.get('end_time', '')
+        if not end_time and desc:
             import re
             # Look for time patterns like "13:00 – 19:00" or "13:00 - 19:00"
             m = re.search(r'(\d{1,2}:\d{2})\s*[–\-]\s*(\d{1,2}:\d{2})', desc)
-            if m and start_time:
-                # Only use end time if start matches
-                if m.group(1).replace(':', '') == start_time.replace(':', ''):
-                    end_time = m.group(2)
-                else:
-                    end_time = m.group(2)
+            if m and start_time and m.group(1).replace(':', '') == start_time.replace(':', ''):
+                end_time = m.group(2)
 
         # Determine category
         type_val = ev.get('type', '')
