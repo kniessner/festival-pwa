@@ -2,6 +2,7 @@ import { loadData, loadManifest } from './store.js';
 import { loadPage, renderNav } from './router.js';
 import { setupSearch, scrollToItem, closeSearchModal } from './search.js';
 import { setDay, toggleFilterPanel, resetFilters, toggleEventDetail } from './views/timetable.js';
+import { setGridDay, openGridEventDetail, closeGridEventDetail } from './views/timetable-grid.js';
 import { store } from './store.js';
 import { switchInfoTab } from './views/info.js';
 import { toggleFavFromCard } from './views/favorites.js';
@@ -101,6 +102,9 @@ const actions = {
     'toggle-filter': () => toggleFilterPanel(),
     'reset-filters': () => resetFilters(),
     'toggle-event': el => toggleEventDetail(el),
+    'set-grid-day': el => setGridDay(el.dataset.day),
+    'toggle-grid-event': el => openGridEventDetail(el),
+    'close-grid-detail': () => closeGridEventDetail(),
     'toggle-faq': el => toggleFaqItem(el),
     'switch-info-tab': el => switchInfoTab(el.dataset.tab),
     'search-jump': el => {

@@ -1,6 +1,7 @@
 export const PAGES = [
     { slug: 'home', label: 'Home', icon: '🏠' },
     { slug: 'timetable', label: 'Programm', icon: '📅' },
+    { slug: 'grid', label: 'Timetable', icon: '▦' },
     { slug: 'favorites', label: 'Mein Plan', icon: '⭐' },
     { slug: 'info', label: 'Info', icon: 'ℹ️' }
 ];
