@@ -1092,6 +1092,7 @@
     overflow: auto;
     -webkit-overflow-scrolling: touch;
     height: calc(var(--vh, 1vh) * 100 - 320px);
+    height: 100%;
     min-height: 320px;
     border: 1px solid var(--border);
     border-radius: var(--radius);
