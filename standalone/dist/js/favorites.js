@@ -1,5 +1,15 @@
 import { FAV_KEY } from './config.js';
 import { store } from './store.js';
+import { getEffectiveFestivalDay } from './festival.js';
+
+// Matches the rollover used for the "JETZT" badges and grid now-line: hours
+// before this belong to the previous festival night, not a new calendar day.
+const DAY_ROLLOVER_HOUR = 6;
+
+function continuousMinutes(hour, minute) {
+    if (hour < DAY_ROLLOVER_HOUR) hour += 24;
+    return hour * 60 + minute;
+}
 
 export function getFavorites() {
     try { return JSON.parse(localStorage.getItem(FAV_KEY)) || []; }
@@ -21,25 +31,44 @@ export function isFavorite(pageSlug, itemIndex) {
 
 // Scheduled favorites (timetable events) that haven't ended yet, soonest first.
 // Events without a day/start_time have no schedule to compare against and are skipped.
+//
+// "Now" is the app's current festival day (getEffectiveFestivalDay — mapped to a
+// real weekday outside the festival window) combined with the real clock time,
+// not the true calendar date. This keeps the home screen consistent with the
+// JETZT badges and grid now-line, which use the same effective-day concept.
 export function getNextUpcomingFavorite() {
-    const events = store.pageData.timetable?.events;
+    const data = store.pageData.timetable;
+    const events = data?.events;
     if (!events) return null;
+
+    const dayOrder = data.filters.days.map(d => d.value);
+    const dayIndex = dayOrder.indexOf(getEffectiveFestivalDay());
+    if (dayIndex === -1) return null;
+
     const now = new Date();
+    const nowAbs = dayIndex * 1440 + continuousMinutes(now.getHours(), now.getMinutes());
+
     let best = null;
     for (const f of getFavorites()) {
         if (f.page !== 'timetable') continue;
         const ev = events[f.index];
         if (!ev || !ev.day || !ev.start_time) continue;
-        const start = new Date(`${ev.day}T${ev.start_time}:00`);
-        let end;
+        const evDayIndex = dayOrder.indexOf(ev.day);
+        if (evDayIndex === -1) continue;
+
+        const [sh, sm] = ev.start_time.split(':').map(Number);
+        const startAbs = evDayIndex * 1440 + continuousMinutes(sh, sm);
+        let endAbs;
         if (ev.end_time) {
-            end = new Date(`${ev.day}T${ev.end_time}:00`);
-            if (end <= start) end.setDate(end.getDate() + 1); // event runs past midnight
+            const [eh, em] = ev.end_time.split(':').map(Number);
+            endAbs = evDayIndex * 1440 + continuousMinutes(eh, em);
+            if (endAbs <= startAbs) endAbs += 24 * 60; // runs past midnight
         } else {
-            end = new Date(start.getTime() + 90 * 60000);
+            endAbs = startAbs + 90;
         }
-        if (end < now) continue;
-        if (!best || start < best.start) best = { ev, index: f.index, start, running: start <= now };
+
+        if (endAbs < nowAbs) continue;
+        if (!best || startAbs < best.startAbs) best = { ev, index: f.index, startAbs, running: startAbs <= nowAbs };
     }
     return best;
 }
