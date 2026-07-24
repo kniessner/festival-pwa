@@ -1,6 +1,6 @@
 import { loadData, loadManifest } from './store.js';
 import { loadPage, renderNav } from './router.js';
-import { setupSearch, scrollToItem } from './search.js';
+import { setupSearch, scrollToItem, closeSearchModal } from './search.js';
 import { setDay, toggleFilterPanel, resetFilters, toggleEventDetail } from './views/timetable.js';
 import { switchInfoTab } from './views/info.js';
 import { toggleFavFromCard } from './views/favorites.js';
@@ -63,14 +63,8 @@ function showUpdateBanner(worker = null) {
     document.getElementById('sw-update-later').addEventListener('click', () => banner.remove());
 }
 
-// loadPage() re-renders #content via innerHTML, so any page containing a
-// #searchInput (currently: timetable) gets a brand-new node each visit.
-// setupSearch() binds its 'input' listener directly to that node rather than
-// delegating from a stable ancestor, so it must be re-run after every
-// navigation for search to keep working (verified: without this, search never
-// fires — reproduces identically in the pre-refactor app-v3.js, since its
-// setupSearch() call happens once after the initial home-page load too, before
-// any #searchInput exists).
+// setupSearch() guards against double-binding its listener, so calling it
+// on every navigation is a harmless no-op once #searchInput is already wired.
 function goToPage(index) {
     loadPage(index);
     setupSearch();
@@ -112,10 +106,13 @@ const actions = {
         const idx = parseInt(el.dataset.pageIdx, 10);
         const itemIndex = parseInt(el.dataset.index, 10);
         const tab = el.dataset.infoTab;
+        closeSearchModal();
+        document.getElementById('searchInput').value = '';
         goToPage(idx);
         if (tab) setTimeout(() => { switchInfoTab(tab); scrollToItem(PAGES[idx].slug, itemIndex); }, 400);
         else setTimeout(() => scrollToItem(PAGES[idx].slug, itemIndex), 300);
-    }
+    },
+    'close-search': () => closeSearchModal()
 };
 
 function wireDelegation() {
