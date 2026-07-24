@@ -4,15 +4,31 @@ import { escapeHtml } from './ui.js';
 
 export function setupSearch() {
     const input = document.getElementById('searchInput');
-    if (!input) return;
+    if (!input || input.dataset.searchBound) return;
+    input.dataset.searchBound = 'true';
     input.addEventListener('input', (e) => {
         const q = e.target.value.trim().toLowerCase();
         if (q.length < 2) {
-            document.getElementById('searchResults').innerHTML = '';
+            closeSearchModal();
             return;
         }
         doSearch(q);
     });
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeSearchModal();
+    });
+}
+
+export function closeSearchModal() {
+    const modal = document.getElementById('searchModal');
+    if (modal) modal.classList.remove('open');
+    const container = document.getElementById('searchResults');
+    if (container) container.innerHTML = '';
+}
+
+function openSearchModal() {
+    const modal = document.getElementById('searchModal');
+    if (modal) modal.classList.add('open');
 }
 
 function doSearch(query) {
@@ -53,6 +69,7 @@ function doSearch(query) {
 function renderSearchResults(results, query) {
     const container = document.getElementById('searchResults');
     if (!container) return;
+    openSearchModal();
     if (results.length === 0) {
         container.innerHTML = `<div class="empty">Keine Ergebnisse für "${escapeHtml(query)}"</div>`;
         return;
