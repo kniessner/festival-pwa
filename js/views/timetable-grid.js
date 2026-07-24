@@ -44,7 +44,10 @@ export function renderGridTimetable(container) {
     const days = data.filters.days.filter(d => FESTIVAL_DATES.includes(d.value));
 
     container.innerHTML = `
-        <div class="gtt-daytabs" id="gttDayTabs"></div>
+        <div class="gtt-toolbar">
+            <div class="gtt-daytabs" id="gttDayTabs"></div>
+            <button class="gtt-scroll-toggle" id="gttScrollToggle" data-action="toggle-grid-scroll" title="Scrollrichtung wechseln"></button>
+        </div>
         <div class="gtt-scroll" id="gttScroll">
             <div class="gtt-header" id="gttHeader"></div>
             <div class="gtt-track" id="gttTrack"></div>
@@ -58,7 +61,26 @@ export function renderGridTimetable(container) {
         `<button class="gtt-day-tab ${d.value === store.gridDay ? 'active' : ''}" data-day="${d.value}" data-action="set-grid-day">${d.label}</button>`
     ).join('');
 
+    applyGridScrollMode();
     refreshGridTimetable();
+}
+
+// Locks single-finger touch panning to one axis at a time (mouse wheel / trackpad /
+// scrollbar still work on both) — avoids accidental diagonal drags on a 2D grid.
+export function toggleGridScrollMode() {
+    store.gridScrollMode = store.gridScrollMode === 'vertical' ? 'horizontal' : 'vertical';
+    applyGridScrollMode();
+}
+
+function applyGridScrollMode() {
+    const scroll = document.getElementById('gttScroll');
+    const btn = document.getElementById('gttScrollToggle');
+    if (!scroll || !btn) return;
+    const isVertical = store.gridScrollMode === 'vertical';
+    scroll.classList.toggle('scroll-v', isVertical);
+    scroll.classList.toggle('scroll-h', !isVertical);
+    btn.textContent = isVertical ? '↕' : '↔';
+    btn.setAttribute('aria-label', isVertical ? 'Scrollt vertikal (Stunden) – zum Wechseln tippen' : 'Scrollt horizontal (Bühnen) – zum Wechseln tippen');
 }
 
 export function setGridDay(dayValue) {

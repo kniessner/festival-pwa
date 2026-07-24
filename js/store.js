@@ -5,7 +5,8 @@ export const store = {
     pageData: {},
     ttFilters: { stage: 'all', category: 'all', genre: 'all', day: 'all' },
     ttPendingDay: null,
-    gridDay: null
+    gridDay: null,
+    gridScrollMode: 'vertical'
 };
 
 export async function loadData() {
