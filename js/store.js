@@ -4,7 +4,8 @@ export const store = {
     currentPage: 0,
     pageData: {},
     ttFilters: { stage: 'all', category: 'all', genre: 'all', day: 'all' },
-    ttPendingDay: null
+    ttPendingDay: null,
+    gridDay: null
 };
 
 export async function loadData() {
