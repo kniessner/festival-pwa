@@ -1,12 +1,12 @@
 import { store } from '../store.js';
 import { favButton } from '../ui.js';
 import { getEffectiveFestivalDay } from '../festival.js';
-import { FESTIVAL_DATES } from '../config.js';
 
 const PX_PER_MIN = 2;
-const COL_WIDTH = 130;
-const LANE_WIDTH = 80;
-const AXIS_WIDTH = 52;
+const COL_WIDTH = 130;      // vertical mode: stage column width per lane
+const LANE_WIDTH = 80;      // vertical mode: overlap-lane width within a stage column
+const STAGE_LABEL_WIDTH = 96; // horizontal mode: stage-label column width
+const LANE_HEIGHT = 60;     // horizontal mode: overlap-lane height within a stage row
 
 // Stage acts run around the clock, so hours before this cutoff belong to the
 // previous festival night rather than a new calendar day.
@@ -41,12 +41,13 @@ export function renderGridTimetable(container) {
 
     if (!store.gridDay) store.gridDay = getEffectiveFestivalDay();
 
-    const days = data.filters.days.filter(d => FESTIVAL_DATES.includes(d.value));
+    // Same day set as the existing Programm list view (incl. Monday's closing acts).
+    const days = data.filters.days;
 
     container.innerHTML = `
         <div class="gtt-toolbar">
             <div class="gtt-daytabs" id="gttDayTabs"></div>
-            <button class="gtt-scroll-toggle" id="gttScrollToggle" data-action="toggle-grid-scroll" title="Scrollrichtung wechseln"></button>
+            <button class="gtt-scroll-toggle" id="gttScrollToggle" data-action="toggle-grid-scroll" title="Ausrichtung wechseln"></button>
         </div>
         <div class="gtt-scroll" id="gttScroll">
             <div class="gtt-header" id="gttHeader"></div>
@@ -61,18 +62,20 @@ export function renderGridTimetable(container) {
         `<button class="gtt-day-tab ${d.value === store.gridDay ? 'active' : ''}" data-day="${d.value}" data-action="set-grid-day">${d.label}</button>`
     ).join('');
 
-    applyGridScrollMode();
+    updateScrollToggleButton();
     refreshGridTimetable();
 }
 
-// Locks single-finger touch panning to one axis at a time (mouse wheel / trackpad /
-// scrollbar still work on both) — avoids accidental diagonal drags on a 2D grid.
+// Two layouts: 'vertical' stacks events top-to-bottom (time runs down, stages are
+// columns); 'horizontal' lays events out left-to-right (time runs across, stages
+// are rows). Switching re-renders the whole grid transposed, not just the pan axis.
 export function toggleGridScrollMode() {
     store.gridScrollMode = store.gridScrollMode === 'vertical' ? 'horizontal' : 'vertical';
-    applyGridScrollMode();
+    updateScrollToggleButton();
+    refreshGridTimetable();
 }
 
-function applyGridScrollMode() {
+function updateScrollToggleButton() {
     const scroll = document.getElementById('gttScroll');
     const btn = document.getElementById('gttScrollToggle');
     if (!scroll || !btn) return;
@@ -80,7 +83,7 @@ function applyGridScrollMode() {
     scroll.classList.toggle('scroll-v', isVertical);
     scroll.classList.toggle('scroll-h', !isVertical);
     btn.textContent = isVertical ? '↕' : '↔';
-    btn.setAttribute('aria-label', isVertical ? 'Scrollt vertikal (Stunden) – zum Wechseln tippen' : 'Scrollt horizontal (Bühnen) – zum Wechseln tippen');
+    btn.setAttribute('aria-label', isVertical ? 'Events laufen von oben nach unten – zum Wechseln tippen' : 'Events laufen von links nach rechts – zum Wechseln tippen');
 }
 
 export function setGridDay(dayValue) {
@@ -124,7 +127,6 @@ export function refreshGridTimetable() {
 
     const gridMin = Math.floor(Math.min(...events.map(e => e._start)) / 60) * 60;
     const gridMax = Math.ceil(Math.max(...events.map(e => e._end)) / 60) * 60;
-    const gridHeight = (gridMax - gridMin) * PX_PER_MIN;
 
     // Assign overlap lanes per stage (greedy interval partitioning, calendar-style).
     const stageLanes = new Map();
@@ -140,6 +142,14 @@ export function refreshGridTimetable() {
         stageLanes.set(stage, laneEnds.length);
     });
 
+    const ctx = { data, header, track, stages, byStage, stageLanes, gridMin, gridMax };
+    if (store.gridScrollMode === 'horizontal') renderHorizontalLayout(ctx);
+    else renderVerticalLayout(ctx);
+}
+
+function renderVerticalLayout({ data, header, track, stages, byStage, stageLanes, gridMin, gridMax }) {
+    const gridHeight = (gridMax - gridMin) * PX_PER_MIN;
+
     header.innerHTML = '<div class="gtt-corner"></div>' + stages.map(stage => {
         const label = data.filters.stages.find(s => s.value === stage)?.label || stage;
         const width = Math.max(COL_WIDTH, stageLanes.get(stage) * LANE_WIDTH);
@@ -153,36 +163,101 @@ export function refreshGridTimetable() {
 
     const stageColumns = stages.map(stage => {
         const width = Math.max(COL_WIDTH, stageLanes.get(stage) * LANE_WIDTH);
-        const blocks = byStage.get(stage).map(ev => renderEventBlock(ev, gridMin)).join('');
+        const blocks = byStage.get(stage).map(ev => renderEventBlockV(ev, gridMin)).join('');
         return `<div class="gtt-stagecol" style="width:${width}px;height:${gridHeight}px;--stage-color:${stageColor(stage)}">${blocks}</div>`;
     }).join('');
 
     let nowLine = '';
     if (store.gridDay === getEffectiveFestivalDay()) {
-        const now = new Date();
-        let nowMin = now.getHours() * 60 + now.getMinutes();
-        if (now.getHours() < DAY_ROLLOVER_HOUR) nowMin += 24 * 60;
+        const nowMin = currentContinuousMinutes();
         if (nowMin >= gridMin && nowMin <= gridMax) {
             nowLine = `<div class="gtt-now-line" style="top:${(nowMin - gridMin) * PX_PER_MIN}px"></div>`;
         }
     }
 
+    track.className = 'gtt-track gtt-track-v';
+    track.style.height = '';
     track.innerHTML = `
         <div class="gtt-timeaxis" style="height:${gridHeight}px">${hourLabels.join('')}</div>
         ${stageColumns}
         ${nowLine}
     `;
 
-    if (store.gridDay === getEffectiveFestivalDay()) scrollGridToNow(gridMin);
+    const scroll = document.getElementById('gttScroll');
+    if (scroll) scroll.scrollLeft = 0;
+    if (store.gridDay === getEffectiveFestivalDay()) scrollGridToNow('vertical');
 }
 
-function renderEventBlock(ev, gridMin) {
+function renderHorizontalLayout({ data, header, track, stages, byStage, stageLanes, gridMin, gridMax }) {
+    const gridWidth = (gridMax - gridMin) * PX_PER_MIN;
+
+    const hourLabels = [];
+    for (let m = gridMin; m <= gridMax; m += 60) {
+        hourLabels.push(`<div class="gtt-hour-label-h" style="left:${(m - gridMin) * PX_PER_MIN}px">${String(Math.floor(m / 60) % 24).padStart(2, '0')}:00</div>`);
+    }
+
+    header.innerHTML = `
+        <div class="gtt-corner" style="width:${STAGE_LABEL_WIDTH}px"></div>
+        <div class="gtt-hour-ruler" style="width:${gridWidth}px">${hourLabels.join('')}</div>
+    `;
+
+    const rowHeights = stages.map(stage => Math.max(LANE_HEIGHT, stageLanes.get(stage) * LANE_HEIGHT));
+    const totalHeight = rowHeights.reduce((a, b) => a + b, 0);
+
+    const rows = stages.map((stage, i) => {
+        const label = data.filters.stages.find(s => s.value === stage)?.label || stage;
+        const height = rowHeights[i];
+        const blocks = byStage.get(stage).map(ev => renderEventBlockH(ev, gridMin)).join('');
+        return `
+        <div class="gtt-stagerow-wrap" style="height:${height}px">
+            <div class="gtt-stagelabel" style="--stage-color:${stageColor(stage)}">${label}</div>
+            <div class="gtt-stagerow" style="width:${gridWidth}px;--stage-color:${stageColor(stage)}">${blocks}</div>
+        </div>`;
+    }).join('');
+
+    let nowLine = '';
+    if (store.gridDay === getEffectiveFestivalDay()) {
+        const nowMin = currentContinuousMinutes();
+        if (nowMin >= gridMin && nowMin <= gridMax) {
+            nowLine = `<div class="gtt-now-line-v" style="left:${STAGE_LABEL_WIDTH + (nowMin - gridMin) * PX_PER_MIN}px"></div>`;
+        }
+    }
+
+    track.className = 'gtt-track gtt-track-h';
+    track.style.height = totalHeight + 'px';
+    track.innerHTML = rows + nowLine;
+
+    const scroll = document.getElementById('gttScroll');
+    if (scroll) scroll.scrollTop = 0;
+    if (store.gridDay === getEffectiveFestivalDay()) scrollGridToNow('horizontal');
+}
+
+function currentContinuousMinutes() {
+    const now = new Date();
+    let nowMin = now.getHours() * 60 + now.getMinutes();
+    if (now.getHours() < DAY_ROLLOVER_HOUR) nowMin += 24 * 60;
+    return nowMin;
+}
+
+function renderEventBlockV(ev, gridMin) {
     const idx = store.pageData.timetable.events.indexOf(ev);
     const top = (ev._start - gridMin) * PX_PER_MIN;
     const height = Math.max(24, (ev._end - ev._start) * PX_PER_MIN);
     const left = ev._lane * LANE_WIDTH;
     return `
     <div class="gtt-event" data-item-index="${idx}" data-action="toggle-grid-event" style="top:${top}px;height:${height}px;left:${left}px;width:${LANE_WIDTH - 4}px">
+        <span class="gtt-event-time">${ev.start_time}</span>
+        <span class="gtt-event-title">${ev.title}</span>
+    </div>`;
+}
+
+function renderEventBlockH(ev, gridMin) {
+    const idx = store.pageData.timetable.events.indexOf(ev);
+    const left = (ev._start - gridMin) * PX_PER_MIN;
+    const width = Math.max(40, (ev._end - ev._start) * PX_PER_MIN);
+    const top = ev._lane * LANE_HEIGHT;
+    return `
+    <div class="gtt-event" data-item-index="${idx}" data-action="toggle-grid-event" style="left:${left}px;width:${width}px;top:${top}px;height:${LANE_HEIGHT - 6}px">
         <span class="gtt-event-time">${ev.start_time}</span>
         <span class="gtt-event-title">${ev.title}</span>
     </div>`;
@@ -223,12 +298,19 @@ export function closeGridEventDetail() {
     if (backdrop) backdrop.classList.remove('open');
 }
 
-function scrollGridToNow(gridMin) {
+function scrollGridToNow(orientation) {
     setTimeout(() => {
         const scroll = document.getElementById('gttScroll');
-        const line = document.querySelector('.gtt-now-line');
-        if (!scroll || !line) return;
-        const headerHeight = document.getElementById('gttHeader')?.offsetHeight || 0;
-        scroll.scrollTop = Math.max(0, line.offsetTop - headerHeight - 80);
+        if (!scroll) return;
+        if (orientation === 'horizontal') {
+            const line = document.querySelector('.gtt-now-line-v');
+            if (!line) return;
+            scroll.scrollLeft = Math.max(0, line.offsetLeft - STAGE_LABEL_WIDTH - 40);
+        } else {
+            const line = document.querySelector('.gtt-now-line');
+            if (!line) return;
+            const headerHeight = document.getElementById('gttHeader')?.offsetHeight || 0;
+            scroll.scrollTop = Math.max(0, line.offsetTop - headerHeight - 80);
+        }
     }, 150);
 }
