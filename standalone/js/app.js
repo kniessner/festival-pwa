@@ -2,10 +2,11 @@ import { loadData, loadManifest } from './store.js';
 import { loadPage, renderNav } from './router.js';
 import { setupSearch, scrollToItem, closeSearchModal } from './search.js';
 import { setDay, toggleFilterPanel, resetFilters, toggleEventDetail } from './views/timetable.js';
+import { store } from './store.js';
 import { switchInfoTab } from './views/info.js';
 import { toggleFavFromCard } from './views/favorites.js';
 import { setupInstallPrompt, setupOfflineIndicator } from './install.js';
-import { PAGES } from './config.js';
+import { PAGES, pageIdx } from './config.js';
 
 async function init() {
     await loadData();
@@ -112,7 +113,14 @@ const actions = {
         if (tab) setTimeout(() => { switchInfoTab(tab); scrollToItem(PAGES[idx].slug, itemIndex); }, 400);
         else setTimeout(() => scrollToItem(PAGES[idx].slug, itemIndex), 300);
     },
-    'close-search': () => closeSearchModal()
+    'close-search': () => closeSearchModal(),
+    'goto-event': el => {
+        const itemIndex = parseInt(el.dataset.index, 10);
+        if (el.dataset.day) store.ttPendingDay = el.dataset.day;
+        const idx = pageIdx('timetable');
+        goToPage(idx);
+        setTimeout(() => scrollToItem('timetable', itemIndex), 300);
+    }
 };
 
 function wireDelegation() {

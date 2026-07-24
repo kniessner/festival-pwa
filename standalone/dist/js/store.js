@@ -3,7 +3,8 @@ import { DATA_FILES } from './config.js';
 export const store = {
     currentPage: 0,
     pageData: {},
-    ttFilters: { stage: 'all', category: 'all', genre: 'all', day: 'all' }
+    ttFilters: { stage: 'all', category: 'all', genre: 'all', day: 'all' },
+    ttPendingDay: null
 };
 
 export async function loadData() {
