@@ -26,7 +26,7 @@
     margin: 0 auto;
     position: sticky;
     top: 0px;
-    z-index: 999999;
+    z-index: 1000001;
     /* background: var(--bg); */
     width: 100%;
 
