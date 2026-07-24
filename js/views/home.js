@@ -1,8 +1,10 @@
 import { pageIdx, FESTIVAL_START } from '../config.js';
-import { getFavorites } from '../favorites.js';
+import { getFavorites, getNextUpcomingFavorite } from '../favorites.js';
+import { escapeHtml } from '../ui.js';
 
 export function renderHome(container) {
     const favCount = getFavorites().length;
+    const next = getNextUpcomingFavorite();
     container.innerHTML = `
         <div class="hero">
             <div class="hero-logo">🌊</div>
@@ -15,6 +17,12 @@ export function renderHome(container) {
                 <button class="quick-btn" data-action="load-page" data-page="${pageIdx('info')}">ℹ️ Info</button>
                 ${favCount > 0 ? `<button class="quick-btn quick-btn-accent" data-action="load-page" data-page="${pageIdx('favorites')}">⭐ Mein Plan (${favCount})</button>` : ''}
             </div>
+            ${next ? `
+            <div class="next-event-card" data-action="goto-event" data-index="${next.index}" data-day="${next.ev.day}">
+                <div class="next-event-label">${next.running ? '🔴 Läuft gerade' : '⭐ Dein nächstes Event'}</div>
+                <h3>${escapeHtml(next.ev.title)}</h3>
+                <div class="next-event-meta">${escapeHtml(next.ev.time)}${next.ev.stage_label ? ' · ' + escapeHtml(next.ev.stage_label) : ''}</div>
+            </div>` : ''}
         </div>
 
          <div class="info-section">

@@ -141,6 +141,48 @@
     text-transform: uppercase;
 }
 
+/* Next upcoming favorite (home screen) */
+
+.next-event-card {
+    max-width: 320px;
+    margin: 0 auto;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px 18px;
+    text-align: center;
+    backdrop-filter: blur(8px);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.next-event-card:active {
+    background: var(--bg-card-hover);
+    border-color: var(--accent-pink);
+}
+
+.next-event-label {
+    font-size: 0.7rem;
+    color: var(--accent-pink);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 700;
+    margin-bottom: 6px;
+}
+
+.next-event-card h3 {
+    font-family: var(--font-head);
+    font-size: 1rem;
+    color: var(--text);
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+.next-event-meta {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
 /* Info section */
 
 .info-section {
