@@ -10,14 +10,8 @@ export function renderTimetable(container) {
     }
 
     // Persist user-changed filters (stage/category/genre) but ALWAYS recompute
-    // the day from the actual current date so it stays correct across days —
-    // unless a jump (search/next-event) requested a specific day to land on.
-    if (store.ttPendingDay) {
-        store.ttFilters.day = store.ttPendingDay;
-        store.ttPendingDay = null;
-    } else {
-        store.ttFilters.day = getEffectiveFestivalDay();
-    }
+    // the day from the actual current date so it stays correct across days.
+    store.ttFilters.day = getEffectiveFestivalDay();
 
     container.innerHTML = `
         <div class="tt-intro">${textToHtml(data.intro)}</div>
