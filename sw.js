@@ -7,7 +7,7 @@
  *   - Cross-origin assets        → Cache-First only for CORS/basic responses
  */
 
-const CACHE_VERSION = '1.3.1';
+const CACHE_VERSION = '1.4.0';
 const APP_NAME = 'bucht-standalone';
 const CACHE_NAME = `${APP_NAME}-v${CACHE_VERSION}`;
 
@@ -20,6 +20,7 @@ const SHELL_ASSETS = [
     './css/components.css',
     './css/views.css',
     './js/app.js',
+    './js/i18n.js',
     './js/config.js',
     './js/store.js',
     './js/favorites.js',
@@ -39,6 +40,7 @@ const SHELL_ASSETS = [
     './images/datum.png',
     './data/info.json',
     './data/timetable.json',
+    './data/en/timetable.json',
     './data/_manifest.json'
 ];
 
@@ -106,7 +108,9 @@ async function precacheData() {
     // Discover any additional data files referenced by the manifest pages.
     const dataFiles = new Set(['./data/_manifest.json']);
     (manifest.pages || []).forEach(p => {
-        if (p.slug) dataFiles.add(`./data/${p.slug}.json`);
+        if (!p.slug) return;
+        dataFiles.add(`./data/${p.slug}.json`);
+        dataFiles.add(`./data/en/${p.slug}.json`);
     });
 
     const results = await Promise.allSettled(

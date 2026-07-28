@@ -1,5 +1,6 @@
 import { store } from './store.js';
 import { PAGES } from './config.js';
+import { t } from './i18n.js';
 import { renderHome } from './views/home.js';
 import { renderTimetable } from './views/timetable.js';
 import { renderGridTimetable } from './views/timetable-grid.js';
@@ -14,7 +15,7 @@ export function renderNav() {
         const badge = p.slug === 'favorites' && favCount > 0 ? `<span class="nav-badge">${favCount}</span>` : '';
         return `<button class="${i === store.currentPage ? 'active' : ''}" data-action="load-page" data-page="${i}">
             <span class="nav-icon">${p.icon}${badge}</span>
-            <span class="nav-label">${p.label}</span>
+            <span class="nav-label">${t(p.labelKey)}</span>
         </button>`;
     }).join('');
 }
@@ -30,7 +31,7 @@ const container = document.getElementById('content');
     
     const title = document.getElementById('pageTitle');
    
-    title.textContent = page.label;
+    title.textContent = t(page.labelKey);
   
     container.innerHTML = '';
     // document.getElementById('searchResults').innerHTML = '';
@@ -39,6 +40,6 @@ const container = document.getElementById('content');
     else if (page.slug === 'timetable') renderTimetable(container);
     else if (page.slug === 'grid') renderGridTimetable(container);
     else if (page.slug === 'info') renderInfo(container);
-    else container.innerHTML = '<div class="empty">Keine Inhalte verfügbar</div>';
+    else container.innerHTML = `<div class="empty">${t('common.noContent')}</div>`;
     renderNav();
 }

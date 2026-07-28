@@ -3,14 +3,15 @@ import { PAGES, pageIdx } from '../config.js';
 import { escapeHtml, card } from '../ui.js';
 import { getFavorites, toggleFavorite } from '../favorites.js';
 import { renderNav, loadPage } from '../router.js';
+import { t } from '../i18n.js';
 
 export function renderFavorites(container) {
     const favs = getFavorites();
     if (favs.length === 0) {
         container.innerHTML = `
-            <div class="page-intro"><h3>⭐ Mein Plan</h3>
-            <p style="margin-top:12px;">Noch keine Favoriten. Tippe auf den Stern ⭐ bei Events im Programm, um sie hier zu speichern.</p></div>
-            <div class="quick-nav"><button class="quick-btn" data-action="load-page" data-page="${pageIdx('timetable')}">📅 Programm</button></div>`;
+            <div class="page-intro"><h3>${t('fav.title')}</h3>
+            <p style="margin-top:12px;">${t('fav.emptyHint')}</p></div>
+            <div class="quick-nav"><button class="quick-btn" data-action="load-page" data-page="${pageIdx('timetable')}">${t('home.quickProgram')}</button></div>`;
         return;
     }
     const grouped = {};
@@ -29,13 +30,14 @@ export function renderFavorites(container) {
             }
         }
     }
-    let html = '<div class="page-intro"><h3>⭐ Mein Plan</h3></div>';
+    let html = `<div class="page-intro"><h3>${t('fav.title')}</h3></div>`;
     for (const [slug, items] of Object.entries(grouped)) {
-        let label = PAGES.find(p => p.slug === slug)?.label;
+        const pageEntry = PAGES.find(p => p.slug === slug);
+        let label = pageEntry ? t(pageEntry.labelKey) : null;
         if (!label) {
-            if (slug === 'info-news') label = 'News';
-            else if (slug === 'info-cashless') label = 'Cashless';
-            else if (slug === 'info-faqs') label = 'FAQs';
+            if (slug === 'info-news') label = t('info.tabNews');
+            else if (slug === 'info-cashless') label = t('info.tabCashless');
+            else if (slug === 'info-faqs') label = t('info.tabFaqs');
             else label = slug;
         }
         html += `<div class="fav-group"><div class="fav-group-title">${escapeHtml(label)}</div>`;

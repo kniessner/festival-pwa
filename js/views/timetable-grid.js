@@ -1,6 +1,7 @@
 import { store } from '../store.js';
 import { favButton } from '../ui.js';
 import { getEffectiveFestivalDay } from '../festival.js';
+import { t } from '../i18n.js';
 
 const PX_PER_MIN = 2;
 const COL_WIDTH = 130;      // vertical mode: fixed width for every stage column
@@ -35,7 +36,7 @@ function toContinuousMinutes(time) {
 export function renderGridTimetable(container) {
     const data = store.pageData.timetable;
     if (!data || !data.events) {
-        container.innerHTML = '<div class="empty">Programm wird geladen…</div>';
+        container.innerHTML = `<div class="empty">${t('tt.loading')}</div>`;
         return;
     }
 
@@ -47,7 +48,7 @@ export function renderGridTimetable(container) {
     container.innerHTML = `
         <div class="gtt-toolbar">
             <div class="gtt-daytabs" id="gttDayTabs"></div>
-            <button class="gtt-scroll-toggle" id="gttScrollToggle" data-action="toggle-grid-scroll" title="Ausrichtung wechseln"></button>
+            <button class="gtt-scroll-toggle" id="gttScrollToggle" data-action="toggle-grid-scroll"></button>
         </div>
         <div class="gtt-scroll" id="gttScroll">
             <div class="gtt-header" id="gttHeader"></div>
@@ -83,7 +84,8 @@ function updateScrollToggleButton() {
     scroll.classList.toggle('scroll-v', isVertical);
     scroll.classList.toggle('scroll-h', !isVertical);
     btn.textContent = isVertical ? '↕' : '↔';
-    btn.setAttribute('aria-label', isVertical ? 'Events laufen von oben nach unten – zum Wechseln tippen' : 'Events laufen von links nach rechts – zum Wechseln tippen');
+    btn.title = t('grid.toggleTitle');
+    btn.setAttribute('aria-label', isVertical ? t('grid.ariaVertical') : t('grid.ariaHorizontal'));
 }
 
 export function setGridDay(dayValue) {
@@ -108,7 +110,7 @@ export function refreshGridTimetable() {
 
     if (events.length === 0) {
         header.innerHTML = '';
-        track.innerHTML = '<div class="empty" style="padding:40px 20px;">Keine geplanten Acts für diesen Tag</div>';
+        track.innerHTML = `<div class="empty" style="padding:40px 20px;">${t('grid.empty')}</div>`;
         return;
     }
 

@@ -548,7 +548,8 @@
       "excerpt": "Das Leben macht mehr Spaß, wenn wir JA sagen statt nein und erkunden statt immer auf Nummer sicher zu gehen. „Sexy Improv“ verbindet die&hellip;",
       "description": "Mein Name ist Anna Gamburg und ich habe schon viele verschiedene Rollen und Facetten angenommen: Seit über 12 Jahren arbeite ich als Synchronsprecherin und Schauspielerin und habe dabei zahlreiche Rollen verkörpert. In den letzten 5 Jahren habe ich mich dem Coaching zugewandt und unterstütze Menschen dabei, wieder zu ihrer Authentizität und Freude zu finden. Das langjährige Improvisationstheater war für mich einer der ersten Schritte auf diesem Weg des Selbstausdrucks. Diese Freude zu entdecken – das ist es, was ich mit der Welt teilen möchte!",
       "hosts": [
-        "Anna Gamburg & Sonja Werner"
+        "Sonja Werner",
+        "Anna Gamburg"
       ],
       "source": "workshops"
     },
@@ -598,7 +599,7 @@
     },
     {
       "id": 21,
-      "title": "Body of pleasure",
+      "title": "Body of Pleasure",
       "day": "2026-08-14",
       "day_label": "Freitag",
       "time": "FR 00:00",
@@ -713,7 +714,7 @@
       "excerpt": "Raves können kraftvolle Räume der Verbindung, des Staunens und der Verwandlung sein. Wir verweben psychologische Erkenntnisse zum Phänomen des Staunens mit yogischer Philosophie. Durch&hellip;",
       "description": "Raves können kraftvolle Räume der Verbindung, des Staunens und der Verwandlung sein. Wir verweben psychologische Erkenntnisse zum Phänomen des Staunens mit yogischer Philosophie. Durch Atemarbeit, somatische Praktiken und achtsame Bewegung erkunden wir, wie Hingabe, Selbsttranszendenz und Einheit auf der Tanzfläche entstehen – und wie diese Erfahrungen Heilung, Integration und tiefere Verbindung über das Festival hinaus unterstützen können.",
       "hosts": [
-        "Juli Hause & Natalie Krug"
+        "Juli Hauser & Natalie Krug"
       ],
       "source": "workshops"
     },
@@ -977,13 +978,15 @@
       "excerpt": "Diese Tanzfläche ist zum Tanzen da! Das ist das Credo von Tanzen3000 – eine geführte Aktivierung deiner körperlichen und sozialen Muskeln, gepaart mit einem&hellip;",
       "description": "Diese Tanzfläche ist zum Tanzen da! Das ist das Credo von Tanzen3000 – eine geführte Aktivierung deiner körperlichen und sozialen Muskeln, gepaart mit einem frechen DJ-Mix. Tanzen3000 verwandelt steife Kartoffeln in scharfe Chilis und verspannte Hüften in lebendiges Dynamit. Bring dein fehlendes Rhythmusgefühl und deine Angst vor Social Dancing mit, vergiss dann alles und versuch nur, deine Klamotten anzubehalten – denn wir machen Fiesta.",
       "hosts": [
-        "DJ: Zuzu, Dance Instructor: Toomuch"
+        "Zuzu",
+        "Thomas Scheele",
+        "Toomuch by Tanzen3000"
       ],
       "source": "workshops"
     },
     {
       "id": 37,
-      "title": "Eat the rich – Klassenkampf von unten",
+      "title": "Eat the Rich – Klassenkampf von unten",
       "day": "2026-08-14",
       "day_label": "Freitag",
       "time": "FR 13:30",
@@ -1026,14 +1029,14 @@
       "excerpt": "Palästina & Israel beschäftigt viele Menschen. Wir möchten das Thema auf empathische Weise besprechbar machen, indem wir einen Raum des Teilens, Reflektierens und des&hellip;",
       "description": "Palästina & Israel beschäftigt viele Menschen. Wir möchten das Thema auf empathische Weise besprechbar machen, indem wir einen Raum des Teilens, Reflektierens und des Zuhörens schaffen, in dem Gedanken und Gefühle Platz haben. Dabei gehen wir den Fragen nach: Wie ist meine Perspektive auf das Thema Palästina-Israel entstanden? Warum wird das Thema Palästina-Israel in Deutschland so kontrovers und emotional diskutiert? Wie kann das “Im Hier Und Jetzt Sein” politisch verstanden werden? Wie drückt sich unsere Ohnmacht in Bezug auf dieses Thema aus – und wie können wir diese in eine Gegenmacht, in eine Handlungsfähigkeit umwandeln?\n\nDer Raum setzt eine Bereitschaft zur Selbstreflexion und zum respektvollen Umgang mit  unterschiedlichen Zugängen und Erfahrungen voraus. Die Teilnahme ist freiwillig.",
       "hosts": [
-        "Christoph Dinkelaker und Ahmad Dakhnous",
-        "Christoph Steinacker"
+        "Ahmad Dakhnous",
+        "Christoph Dinkelacker"
       ],
       "source": "program"
     },
     {
       "id": 39,
-      "title": "The Peepshow,",
+      "title": "The Peepshow",
       "day": "2026-08-14",
       "day_label": "Freitag",
       "time": "FR 14:00",
@@ -1124,7 +1127,7 @@
       "excerpt": "",
       "description": "",
       "hosts": [
-        "Lila Rose Kole"
+        "Florian Henkel & Celine Wulbeck"
       ],
       "source": "workshops"
     },
@@ -1154,7 +1157,7 @@
     },
     {
       "id": 44,
-      "title": "Panel: Hedonism vs. Community Activation – How to reconnect (or get active) despite feelings of Powerlessness",
+      "title": "Panel: Hedonism vs. Community Activation – How to reconnect (or get active) despite Feelings of Powerlessness",
       "day": "2026-08-14",
       "day_label": "Freitag",
       "time": "FR 15:00",
@@ -1170,8 +1173,11 @@
         "en"
       ],
       "excerpt": "",
-      "description": "Emiko Gejic ist Kreative, Kulturproduzentin und Aktivistin aus Berlin. Sie ist Gründerin von Berlinsidestories, Geschäftsführerin von Urbane Praxis und Vorstandssprecherin der Berliner Clubkommission. Mit einem Hintergrund in Kulturwissenschaften und Stadtforschung setzt sie sich für Berlins Nachtleben, Subkulturen und eine gerechtere städtische Zukunft ein.",
+      "description": "Zuher Jazmati is a political educator, moderator, DJ and podcaster based in Berlin. His work focuses on anti-racism, queer politics, intersectionality and anti-discrimination, combining political education with cultural practice. As co-host of the award-winning BBQ – The Black Brown Queer Podcast and co-founder of the queer-Arab party series ADIRA, he creates spaces that foster dialogue, visibility and community.",
       "hosts": [
+        "Zuher Jazmati",
+        "Luise Klingma",
+        "Pauline Jäckels",
         "Emiko Gejic"
       ],
       "source": "program"
@@ -1203,7 +1209,7 @@
     },
     {
       "id": 46,
-      "title": "The Peepshow,",
+      "title": "The Peepshow",
       "day": "2026-08-14",
       "day_label": "Freitag",
       "time": "FR 16:00",
@@ -1227,7 +1233,7 @@
     },
     {
       "id": 47,
-      "title": "To grow or not to grow? Ideas for a fair and sustainable future",
+      "title": "To grow or not to grow? Ideas for a fair and sustainable Future",
       "day": "2026-08-14",
       "day_label": "Freitag",
       "time": "FR 16:00",
@@ -1245,7 +1251,7 @@
       "excerpt": "Wir betrachten, wie aktuelle soziale und ökologische Krisen mit unserem Wirtschaftssystem und dessen Wachstumszwang verflochten sind. Wir stellen Degrowth als alternatives Modell für Konsum&hellip;",
       "description": "Wir betrachten, wie aktuelle soziale und ökologische Krisen mit unserem Wirtschaftssystem und dessen Wachstumszwang verflochten sind. Wir stellen Degrowth als alternatives Modell für Konsum und Produktion vor und zeigen, warum bloßes „Grünfärben“ der Wirtschaft nicht ausreicht. Teilnehmende können in ein Thema vertiefen: Feminismus & Care-Arbeit, Depense, Neokolonialismus oder KI-Beschleunigung & Klimawirkungen.",
       "hosts": [
-        "Annemarie Witschas"
+        "Annie Witschas & Valentina Vavalà & Gusztáv Ottrubay"
       ],
       "source": "workshops"
     },
@@ -1316,7 +1322,7 @@
       "excerpt": "Hast du Lust, dich auf eine kleine Reise mitnehmen zu lassen, auf der du dich, dein Gegenüber und eure Möglichkeiten der Begegnung neu entdecken&hellip;",
       "description": "Hast du Lust, dich auf eine kleine Reise mitnehmen zu lassen, auf der du dich, dein Gegenüber und eure Möglichkeiten der Begegnung neu entdecken darfst? Wir laden dich ein, spielerisch authentische Begegnungen zu erleben. Wir sind Lara und Crispin, systemische Therapeutin und Zirkuspädagoge. Mit achtsamen Bewegungs- und Partnerübungen schaffen wir einen Raum, um sanft in Kontakt zu kommen und Nähe und Distanz zu gestalten.",
       "hosts": [
-        "Crispin Bade, Lara Pickener"
+        "Crispin Bade & Lara Pickener"
       ],
       "source": "workshops"
     },
@@ -1370,7 +1376,7 @@
     },
     {
       "id": 53,
-      "title": "A Quarter to Infinity",
+      "title": "Planet Atelier",
       "day": "2026-08-14",
       "day_label": "Freitag",
       "time": "FR 18:00",
@@ -1389,7 +1395,7 @@
       "excerpt": "Ein kreativer und meditativer Workshop, der die Teilnehmer dazu einlädt, aus recycelten Materialien, Texturen und Fundstücken ihre eigenen Miniaturplaneten zu gestalten. Inspiriert vom skulpturalen&hellip;",
       "description": "Ein kreativer und meditativer Workshop, der die Teilnehmer dazu einlädt, aus recycelten Materialien, Texturen und Fundstücken ihre eigenen Miniaturplaneten zu gestalten. Inspiriert vom skulpturalen Universum von „A Quarter to Infinity“ erkundet das Atelier alternative Kosmologien durch intuitive Vorstellungskraft.",
       "hosts": [
-        "Planet Atelier"
+        "A Quarter to Infinity"
       ],
       "source": "workshops"
     },
@@ -1585,12 +1591,12 @@
     },
     {
       "id": 62,
-      "title": "Sober Speed Dating & Sober Rave Night",
+      "title": "Sober Speed Dating",
       "day": "2026-08-14",
       "day_label": "Freitag",
       "time": "FR 22:30",
       "start_time": "22:30",
-      "end_time": "03:30",
+      "end_time": "23:30",
       "stage": "cuddle-poodle",
       "stage_label": "Cuddle Poodle",
       "type": "interaktiver-workshop",
@@ -1601,7 +1607,7 @@
         "de"
       ],
       "excerpt": "Seid dabei und erlebt flirtigen Dating-Spaß, bei dem die Chemie zwischen faszinierenden, abstinenten (und neugierigen) Menschen sprüht! Angeleitet durch Gesprächsanregungen und Kennenlernspiele – wer&hellip;",
-      "description": "Seid dabei und erlebt flirtigen Dating-Spaß, bei dem die Chemie zwischen faszinierenden, abstinenten (und neugierigen) Menschen sprüht! Angeleitet durch Gesprächsanregungen und Kennenlernspiele – wer weiß, welche herzklopfenden, verspielten, bedeutungsvollen Verbindungen und Romanzen sich daraus entwickeln könnten? Anschließend findet ein von MINJA kuratierter „Sober Rave“ mit mitreißenden Beats statt",
+      "description": "Seid dabei und erlebt flirtigen Dating-Spaß, bei dem die Chemie zwischen faszinierenden, abstinenten (und neugierigen) Menschen sprüht! Angeleitet durch Gesprächsanregungen und Kennenlernspiele – wer weiß, welche herzklopfenden, verspielten, bedeutungsvollen Verbindungen und Romanzen sich daraus entwickeln könnten?",
       "hosts": [
         "Jessie Sonnenschein"
       ],
@@ -1631,6 +1637,31 @@
     },
     {
       "id": 64,
+      "title": "Sober Rave Night",
+      "day": "2026-08-14",
+      "day_label": "Freitag",
+      "time": "FR 23:30",
+      "start_time": "23:30",
+      "end_time": "03:30",
+      "stage": "",
+      "stage_label": "",
+      "type": "",
+      "type_label": "",
+      "category": "",
+      "genre": "",
+      "langs": [
+        "de",
+        "en"
+      ],
+      "excerpt": "Freut euch aufen einen von MINJA kuratiertern „Sober Rave“ mit mitreißenden Beats 🥰 Line-Up:Minja B2B MaleaLila Veil (live)",
+      "description": "Jessie hat in über 20 Jahren im Nachtleben und bei Festivals in London und Berlin Höhen und Tiefen erlebt und in der Abstinenz eine neue Tiefe gefunden. In den vielfältigen Workshops, die sie leitet, vereint sie ihre Leidenschaft für zwischenmenschliche Verbindungen, Kreativität, Verkleiden und bewusstes Feiern.",
+      "hosts": [
+        "Jessie Sonnenschein"
+      ],
+      "source": "program"
+    },
+    {
+      "id": 65,
       "title": "Schweissperle",
       "day": "2026-08-15",
       "day_label": "Samstag",
@@ -1652,7 +1683,7 @@
       "source": "program"
     },
     {
-      "id": 65,
+      "id": 66,
       "title": "Momentarium",
       "day": "2026-08-15",
       "day_label": "Samstag",
@@ -1674,7 +1705,7 @@
       "source": "program"
     },
     {
-      "id": 66,
+      "id": 67,
       "title": "Morning Yoga – Ground Yourself & Recharge",
       "day": "2026-08-15",
       "day_label": "Samstag",
@@ -1698,7 +1729,7 @@
       "source": "workshops"
     },
     {
-      "id": 67,
+      "id": 68,
       "title": "Cuddle Poodle – Kuscheln, Komfort, Konsens",
       "day": "2026-08-15",
       "day_label": "Samstag",
@@ -1723,7 +1754,7 @@
       "source": "program"
     },
     {
-      "id": 68,
+      "id": 69,
       "title": "Der Weg zu gleichberechtigter Verhütung",
       "day": "2026-08-15",
       "day_label": "Samstag",
@@ -1747,7 +1778,7 @@
       "source": "workshops"
     },
     {
-      "id": 69,
+      "id": 70,
       "title": "De Loite",
       "day": "2026-08-15",
       "day_label": "Samstag",
@@ -1772,8 +1803,8 @@
       "source": "program"
     },
     {
-      "id": 70,
-      "title": "This Is your Moment – The art of being alive",
+      "id": 71,
+      "title": "This Is your Moment – The Art of being alive",
       "day": "2026-08-15",
       "day_label": "Samstag",
       "time": "SA 10:00",
@@ -1786,7 +1817,7 @@
       "category": "Workshop",
       "genre": "Workshop",
       "langs": [
-        "de"
+        "en"
       ],
       "excerpt": "Wann hast du dich das letzte Mal vollkommen präsent gefühlt? Was passiert, wenn du aufhörst zu hetzen und wirklich ankommst? Komm zu diesem Workshop,&hellip;",
       "description": "Wann hast du dich das letzte Mal vollkommen präsent gefühlt? Was passiert, wenn du aufhörst zu hetzen und wirklich ankommst? Komm zu diesem Workshop, um bei dir einzuchecken und den Grundstein für einen schönen Festivalstart zu legen. Durch Stille, bewusstes Atmen, Stimmübungen, sanftes Stretching, Bewegung und Klanglandschaften verbinden wir uns wieder mit uns selbst und dem gegenwärtigen Moment. Präsenz ist eine Praxis der Freiheit.",
@@ -1796,7 +1827,7 @@
       "source": "workshops"
     },
     {
-      "id": 71,
+      "id": 72,
       "title": "Pranayama 101",
       "day": "2026-08-15",
       "day_label": "Samstag",
@@ -1820,7 +1851,7 @@
       "source": "workshops"
     },
     {
-      "id": 72,
+      "id": 73,
       "title": "Gong Bath",
       "day": "2026-08-15",
       "day_label": "Samstag",
@@ -1839,13 +1870,13 @@
       "excerpt": "Eine Reise ausgelöst durch Frequenzen, Vibrationen und Klängen, die dir verhelfen in dich selbst und in den Moment einzutauchen.",
       "description": "Eine Reise ausgelöst durch Frequenzen, Vibrationen und Klängen, die dir verhelfen in dich selbst und in den Moment einzutauchen.",
       "hosts": [
-        "Melanie Sichardt, André Richter"
+        "Melanie Sichardt & André Richter"
       ],
       "source": "workshops"
     },
     {
-      "id": 73,
-      "title": "Decisive is the new black",
+      "id": 74,
+      "title": "Decisive is the new Black",
       "day": "2026-08-15",
       "day_label": "Samstag",
       "time": "SA 11:30",
@@ -1868,7 +1899,7 @@
       "source": "workshops"
     },
     {
-      "id": 74,
+      "id": 75,
       "title": "Klima- und menschenfreundlich einkaufen – wie kann das gehen? [",
       "day": "2026-08-15",
       "day_label": "Samstag",
@@ -1892,7 +1923,7 @@
       "source": "workshops"
     },
     {
-      "id": 75,
+      "id": 76,
       "title": "Divine Alignment",
       "day": "2026-08-15",
       "day_label": "Samstag",
@@ -1916,7 +1947,7 @@
       "source": "workshops"
     },
     {
-      "id": 76,
+      "id": 77,
       "title": "We are coming out – Free the Nipple",
       "day": "2026-08-15",
       "day_label": "Samstag",
@@ -1940,7 +1971,7 @@
       "source": "workshops"
     },
     {
-      "id": 77,
+      "id": 78,
       "title": "Whacking",
       "day": "2026-08-15",
       "day_label": "Samstag",
@@ -1964,7 +1995,7 @@
       "source": "workshops"
     },
     {
-      "id": 78,
+      "id": 79,
       "title": "Burghain Hüpfburg",
       "day": "2026-08-15",
       "day_label": "Samstag",
@@ -1989,7 +2020,7 @@
       "source": "performances"
     },
     {
-      "id": 79,
+      "id": 80,
       "title": "Shenanigames",
       "day": "2026-08-15",
       "day_label": "Samstag",
@@ -2011,7 +2042,7 @@
       "source": "performances"
     },
     {
-      "id": 80,
+      "id": 81,
       "title": "Human Wash",
       "day": "2026-08-15",
       "day_label": "Samstag",
@@ -2033,8 +2064,8 @@
       "source": "program"
     },
     {
-      "id": 81,
-      "title": "self Massage: shake, flow, & release",
+      "id": 82,
+      "title": "Self Massage: Shake, Flow, & Release",
       "day": "2026-08-15",
       "day_label": "Samstag",
       "time": "SA 13:30",
@@ -2057,7 +2088,7 @@
       "source": "workshops"
     },
     {
-      "id": 82,
+      "id": 83,
       "title": "Song Bingo by Zart Kollektiv",
       "day": "2026-08-15",
       "day_label": "Samstag",
@@ -2081,7 +2112,7 @@
       "source": "performances"
     },
     {
-      "id": 83,
+      "id": 84,
       "title": "Shady Lady Aerobic",
       "day": "2026-08-15",
       "day_label": "Samstag",
@@ -2105,7 +2136,7 @@
       "source": "performances"
     },
     {
-      "id": 84,
+      "id": 85,
       "title": "Trippin' with Cyberdelics — No Substances Required",
       "day": "2026-08-15",
       "day_label": "Samstag",
@@ -2129,8 +2160,8 @@
       "source": "workshops"
     },
     {
-      "id": 85,
-      "title": "Panel: Money & Power in cultural creation – aktuelle Situation/ Shift in der Kulturszene",
+      "id": 86,
+      "title": "Panel: Money & Power in Cultural Creation – aktuelle Situation/ Shift in der Kulturszene",
       "day": "2026-08-15",
       "day_label": "Samstag",
       "time": "SA 14:00",
@@ -2147,14 +2178,17 @@
         "en"
       ],
       "excerpt": "Wer Kultur finanziert, bestimmt oft auch ihre Handlungsspielräume. In Zeiten von Haushaltskürzungen und wachsender Förderabhängigkeit stellt sich die Frage: Wie frei kann die Kulturszene&hellip;",
-      "description": "Wer Kultur finanziert, bestimmt oft auch ihre Handlungsspielräume. In Zeiten von Haushaltskürzungen und wachsender Förderabhängigkeit stellt sich die Frage: Wie frei kann die Kulturszene wirklich sein? Das Panel diskutiert Machtstrukturen in der Kulturförderung und Herausforderungen für eine unabhängige Kulturszene. Welche alternativen Finanzierungsmodelle brauchen wir – und wie entstehen selbstbestimmte Strukturen jenseits staatlicher Förderung?",
+      "description": "Lindi Delight ist Transformationsarchitektin und doppelt zertifizierte Coachin, die seit fast zwei Jahrzehnten die Zukunft globaler Musikveranstaltungen und der Musikkultur mitgestaltet. Dank ihrer Erfahrung als Leiterin internationaler Markentourneen für Künstler wie Chris Liebing (CLR), DJ Tennis (Life and Death) und Lee Burridge (All Day I Dream), der Leitung kontinentübergreifender Teams sowie der Steuerung komplexer organisatorischer Veränderungen verfügt sie über eine seltene Kombination aus Kreativität und strategischer Umsetzungsstärke. Zu ihrem Beratungsportfolio zählen Most Wanted: Music, Boiler Room, XP Music Futures und die Beatport Group, wo sie Konferenzen konzipierte, Betriebsabläufe umstrukturierte und eine Kultur der Inklusion und Innovation förderte. Bekannt wurde sie ...",
       "hosts": [
+        "Thomas Scheele",
+        "Alexander Krüger",
+        "Lindi Delight",
         "Emiko Gejic"
       ],
       "source": "program"
     },
     {
-      "id": 86,
+      "id": 87,
       "title": "Ohrenzirkus, das interaktive Audio Erlebnis",
       "day": "2026-08-15",
       "day_label": "Samstag",
@@ -2178,7 +2212,7 @@
       "source": "performances"
     },
     {
-      "id": 87,
+      "id": 88,
       "title": "Feelings Oasis",
       "day": "2026-08-15",
       "day_label": "Samstag",
@@ -2203,7 +2237,7 @@
       "source": "program"
     },
     {
-      "id": 88,
+      "id": 89,
       "title": "RIGHT HERE – RIGHT NOW: Politische Graffiti als Stimme im öffentlichen Raum",
       "day": "2026-08-15",
       "day_label": "Samstag",
@@ -2222,12 +2256,12 @@
       "excerpt": "Der Workshop verbindet Graffiti, politischen Ausdruck und gemeinschaftliches Arbeiten. Nach einem gemeinsamen Einstieg tauschen wir uns über die Bedeutung von Street Art und gesellschaftliche&hellip;",
       "description": "Der Workshop verbindet Graffiti, politischen Ausdruck und gemeinschaftliches Arbeiten. Nach einem gemeinsamen Einstieg tauschen wir uns über die Bedeutung von Street Art und gesellschaftliche Anliegen aus. Anschließend gestalten alle Teilnehmenden gemeinsam eine Wand, auf der individuelle Botschaften kreativ sichtbar werden. Im Mittelpunkt stehen Ausdruck, Begegnung und kollektive Kreativität – nicht Perfektion.",
       "hosts": [
-        "Line Kiekbusch und Elias Manzel"
+        "Line Kiekbusch & Elias Manzel"
       ],
       "source": "workshops"
     },
     {
-      "id": 89,
+      "id": 90,
       "title": "Somatic Dance",
       "day": "2026-08-15",
       "day_label": "Samstag",
@@ -2251,7 +2285,7 @@
       "source": "workshops"
     },
     {
-      "id": 90,
+      "id": 91,
       "title": "B…B…B…Blabla.fm! by Seifentheater",
       "day": "2026-08-15",
       "day_label": "Samstag",
@@ -2275,7 +2309,7 @@
       "source": "performances"
     },
     {
-      "id": 91,
+      "id": 92,
       "title": "Jugger Match – Kampf der Besten",
       "day": "2026-08-15",
       "day_label": "Samstag",
@@ -2300,8 +2334,8 @@
       "source": "performances"
     },
     {
-      "id": 92,
-      "title": "Staying present in conflict",
+      "id": 93,
+      "title": "Staying present in Conflict",
       "day": "2026-08-15",
       "day_label": "Samstag",
       "time": "SA 16:00",
@@ -2324,8 +2358,8 @@
       "source": "workshops"
     },
     {
-      "id": 93,
-      "title": "Neurodiversity, sex and politics",
+      "id": 94,
+      "title": "Neurodiversity, Sex and Politics",
       "day": "2026-08-15",
       "day_label": "Samstag",
       "time": "SA 16:00",
@@ -2338,7 +2372,7 @@
       "category": "Workshop",
       "genre": "Workshop",
       "langs": [
-        "de"
+        "en"
       ],
       "excerpt": "In den letzten Jahren wurde bei immer mehr Menschen Autismus, ADHS oder beides diagnostiziert – und mit dem Aufstieg der extremen Rechten regt sich&hellip;",
       "description": "In den letzten Jahren wurde bei immer mehr Menschen Autismus, ADHS oder beides diagnostiziert – und mit dem Aufstieg der extremen Rechten regt sich Widerstand gegen die Neurodiversitäts-Debatte. Sind wir Teil eines Trends, krank, oder eine Interessengruppe mit eigenen Rechten? Geschlechterpolitik überschneidet sich persönlich mit Neurodiversität, besonders für FLINTA-Personen.\n\nDer Workshop beginnt mit Lauries Vortrag, danach Raum für Diskussion",
@@ -2348,7 +2382,7 @@
       "source": "workshops"
     },
     {
-      "id": 94,
+      "id": 95,
       "title": "Con-Cent Späti",
       "day": "2026-08-15",
       "day_label": "Samstag",
@@ -2373,7 +2407,7 @@
       "source": "performances"
     },
     {
-      "id": 95,
+      "id": 96,
       "title": "Dance Improvisation Class",
       "day": "2026-08-15",
       "day_label": "Samstag",
@@ -2397,7 +2431,7 @@
       "source": "workshops"
     },
     {
-      "id": 96,
+      "id": 97,
       "title": "Männer* zwischen Kritik, Überforderung und positiver Männlichkeit",
       "day": "2026-08-15",
       "day_label": "Samstag",
@@ -2421,8 +2455,8 @@
       "source": "workshops"
     },
     {
-      "id": 97,
-      "title": "A Quarter to Infinity",
+      "id": 98,
+      "title": "Planet Atelier",
       "day": "2026-08-15",
       "day_label": "Samstag",
       "time": "SA 18:00",
@@ -2441,12 +2475,12 @@
       "excerpt": "Ein kreativer und meditativer Workshop, der die Teilnehmer dazu einlädt, aus recycelten Materialien, Texturen und Fundstücken ihre eigenen Miniaturplaneten zu gestalten. Inspiriert vom skulpturalen&hellip;",
       "description": "Ein kreativer und meditativer Workshop, der die Teilnehmer dazu einlädt, aus recycelten Materialien, Texturen und Fundstücken ihre eigenen Miniaturplaneten zu gestalten. Inspiriert vom skulpturalen Universum von „A Quarter to Infinity“ erkundet das Atelier alternative Kosmologien durch intuitive Vorstellungskraft.",
       "hosts": [
-        "Planet Atelier"
+        "A Quarter to Infinity"
       ],
       "source": "workshops"
     },
     {
-      "id": 98,
+      "id": 99,
       "title": "Digital Independence",
       "day": "2026-08-15",
       "day_label": "Samstag",
@@ -2470,7 +2504,7 @@
       "source": "workshops"
     },
     {
-      "id": 99,
+      "id": 100,
       "title": "SingSisySing – Hanna & Aron",
       "day": "2026-08-15",
       "day_label": "Samstag",
@@ -2495,7 +2529,7 @@
       "source": "performances"
     },
     {
-      "id": 100,
+      "id": 101,
       "title": "Weizmann’s Universal-Medikament by Down to Clown",
       "day": "2026-08-15",
       "day_label": "Samstag",
@@ -2519,7 +2553,7 @@
       "source": "performances"
     },
     {
-      "id": 101,
+      "id": 102,
       "title": "The Diaspora Speaks",
       "day": "2026-08-15",
       "day_label": "Samstag",
@@ -2543,7 +2577,7 @@
       "source": "performances"
     },
     {
-      "id": 102,
+      "id": 103,
       "title": "ArtEmiss Walking Act",
       "day": "2026-08-15",
       "day_label": "Samstag",
@@ -2568,7 +2602,7 @@
       "source": "performances"
     },
     {
-      "id": 103,
+      "id": 104,
       "title": "RATTE by Kitty and The Cat",
       "day": "2026-08-15",
       "day_label": "Samstag",
@@ -2592,7 +2626,7 @@
       "source": "performances"
     },
     {
-      "id": 104,
+      "id": 105,
       "title": "Zirkus Mond’s „Circ du Rave“",
       "day": "2026-08-15",
       "day_label": "Samstag",
@@ -2614,7 +2648,7 @@
       "source": "performances"
     },
     {
-      "id": 105,
+      "id": 106,
       "title": "Scham & Sex: Fickfiction schreiben und Widerstände überwinden",
       "day": "2026-08-15",
       "day_label": "Samstag",
@@ -2638,7 +2672,7 @@
       "source": "workshops"
     },
     {
-      "id": 106,
+      "id": 107,
       "title": "A Quarter to Infinity",
       "day": "2026-08-15",
       "day_label": "Samstag",
@@ -2660,7 +2694,7 @@
       "source": "program"
     },
     {
-      "id": 107,
+      "id": 108,
       "title": "Where Fantasies meet We meet",
       "day": "2026-08-15",
       "day_label": "Samstag",
@@ -2677,14 +2711,15 @@
         "en"
       ],
       "excerpt": "Traust du dich, in deine Fantasien einzutauchen, bei der Bucht der Träumer*? Finde uns am Samstagabend und entdecke dich selbst gemeinsam mit anderen. In&hellip;",
-      "description": "Traust du dich, in deine Fantasien einzutauchen, bei der Bucht der Träumer*? Finde uns am Samstagabend und entdecke dich selbst gemeinsam mit anderen. In diesem sexpositiven, musikgeleiteten Cuddle Poodle geben wir unseren Wünschen, Bedürfnissen und Fantasien eine Stimme. Spielerisch und performativ erkunden wir Fantasien als Regisseur:innen, Darsteller:innen oder Zeug:innen – und treffen hoffentlich andere darin.",
+      "description": "Mein Name ist Anna Gamburg und ich habe schon viele verschiedene Rollen und Facetten angenommen: Seit über 12 Jahren arbeite ich als Synchronsprecherin und Schauspielerin und habe dabei zahlreiche Rollen verkörpert. In den letzten 5 Jahren habe ich mich dem Coaching zugewandt und unterstütze Menschen dabei, wieder zu ihrer Authentizität und Freude zu finden. Das langjährige Improvisationstheater war für mich einer der ersten Schritte auf diesem Weg des Selbstausdrucks. Diese Freude zu entdecken – das ist es, was ich mit der Welt teilen möchte!",
       "hosts": [
-        "Sonja Werner & Anna Gamburg"
+        "Sonja Werner",
+        "Anna Gamburg"
       ],
       "source": "workshops"
     },
     {
-      "id": 108,
+      "id": 109,
       "title": "DRÄEMBOT™",
       "day": "2026-08-15",
       "day_label": "Samstag",
@@ -2706,7 +2741,7 @@
       "source": "performances"
     },
     {
-      "id": 109,
+      "id": 110,
       "title": "Pinky Promise Cabaret Show",
       "day": "2026-08-15",
       "day_label": "Samstag",
@@ -2728,7 +2763,7 @@
       "source": "performances"
     },
     {
-      "id": 110,
+      "id": 111,
       "title": "Schweissperle",
       "day": "2026-08-16",
       "day_label": "Sonntag",
@@ -2750,7 +2785,7 @@
       "source": "program"
     },
     {
-      "id": 111,
+      "id": 112,
       "title": "Momentarium",
       "day": "2026-08-16",
       "day_label": "Sonntag",
@@ -2772,8 +2807,8 @@
       "source": "program"
     },
     {
-      "id": 112,
-      "title": "Temple of love",
+      "id": 113,
+      "title": "Temple of Love",
       "day": "2026-08-16",
       "day_label": "Sonntag",
       "time": "SO 00:00",
@@ -2796,7 +2831,7 @@
       "source": "workshops"
     },
     {
-      "id": 113,
+      "id": 114,
       "title": "Right Here, Right Now – Gentle Yoga Flow",
       "day": "2026-08-16",
       "day_label": "Sonntag",
@@ -2820,7 +2855,7 @@
       "source": "workshops"
     },
     {
-      "id": 114,
+      "id": 115,
       "title": "Cuddle Poodle – Kuscheln, Komfort, Konsens",
       "day": "2026-08-16",
       "day_label": "Sonntag",
@@ -2845,7 +2880,7 @@
       "source": "program"
     },
     {
-      "id": 115,
+      "id": 116,
       "title": "Von Ohnmacht zur Selbstwirksamkeit",
       "day": "2026-08-16",
       "day_label": "Sonntag",
@@ -2869,7 +2904,7 @@
       "source": "workshops"
     },
     {
-      "id": 116,
+      "id": 117,
       "title": "De Loite",
       "day": "2026-08-16",
       "day_label": "Sonntag",
@@ -2894,8 +2929,8 @@
       "source": "program"
     },
     {
-      "id": 117,
-      "title": "Human Tides: On cyclical life in a linear world",
+      "id": 118,
+      "title": "Human Tides: On a cyclical Life in a linear World",
       "day": "2026-08-16",
       "day_label": "Sonntag",
       "time": "SO 10:00",
@@ -2918,7 +2953,7 @@
       "source": "workshops"
     },
     {
-      "id": 118,
+      "id": 119,
       "title": "Radical Herbalism",
       "day": "2026-08-16",
       "day_label": "Sonntag",
@@ -2942,7 +2977,7 @@
       "source": "workshops"
     },
     {
-      "id": 119,
+      "id": 120,
       "title": "Toxische Weiblichkeit und echte Begegnung",
       "day": "2026-08-16",
       "day_label": "Sonntag",
@@ -2966,7 +3001,7 @@
       "source": "workshops"
     },
     {
-      "id": 120,
+      "id": 121,
       "title": "Butoh – Moving from the Inside",
       "day": "2026-08-16",
       "day_label": "Sonntag",
@@ -2985,12 +3020,12 @@
       "excerpt": "",
       "description": "Material- und Nachhaltigkeitsnerd. Gleichzeitig voll im Körper unterwegs. Irgendwann kam die Frage auf: Was, wenn man beides verbindet? Seitdem bin ich da irgendwo im Experiment zwischen Material und Körper unterwegs.",
       "hosts": [
-        "Wieland Evers"
+        "Avy"
       ],
       "source": "workshops"
     },
     {
-      "id": 121,
+      "id": 122,
       "title": "Dein inneres Team auf der Tanzfläche",
       "day": "2026-08-16",
       "day_label": "Sonntag",
@@ -3014,8 +3049,8 @@
       "source": "workshops"
     },
     {
-      "id": 122,
-      "title": "Lena Prieß",
+      "id": 123,
+      "title": "Being moved by Music",
       "day": "2026-08-16",
       "day_label": "Sonntag",
       "time": "SO 13:00",
@@ -3033,12 +3068,13 @@
       "excerpt": "Lass dich von der Musik mitreißen. Die meisten kennen das: Man steht auf der Tanzfläche, versucht im Takt mitzuwippen – aber wann beginnt der&hellip;",
       "description": "Lass dich von der Musik mitreißen. Die meisten kennen das: Man steht auf der Tanzfläche, versucht im Takt mitzuwippen – aber wann beginnt der Spaß wirklich? Sobald wir aufhören zu denken und die Musik spüren. Wir schließen die Augen und lassen Arme, Hüften, Beine sich bewegen, statt sie zu bewegen – dann spüren wir die Welle der Freude. Begleite uns auf eine Reise, die verändert, wie du dich auf der Tanzfläche fühlst – genau hier, genau jetzt.",
       "hosts": [
-        "Lena Prieß und Zuzu"
+        "Zuzu",
+        "Lena Prieß"
       ],
       "source": "workshops"
     },
     {
-      "id": 123,
+      "id": 124,
       "title": "Wie geht es weiter im Iran?",
       "day": "2026-08-16",
       "day_label": "Sonntag",
@@ -3062,7 +3098,7 @@
       "source": "program"
     },
     {
-      "id": 124,
+      "id": 125,
       "title": "Reset & Reconnect – In 90 Minuten zurück ins Hier und Jetzt",
       "day": "2026-08-16",
       "day_label": "Sonntag",
@@ -3086,7 +3122,7 @@
       "source": "workshops"
     },
     {
-      "id": 125,
+      "id": 126,
       "title": "Landing Softly: A Closing Journey of Reflection & Integration",
       "day": "2026-08-16",
       "day_label": "Sonntag",
@@ -3110,7 +3146,7 @@
       "source": "workshops"
     },
     {
-      "id": 126,
+      "id": 127,
       "title": "Yin Yoga, Stimme & Breathwork – gemeinsam im Moment",
       "day": "2026-08-16",
       "day_label": "Sonntag",
@@ -3134,7 +3170,7 @@
       "source": "workshops"
     },
     {
-      "id": 127,
+      "id": 128,
       "title": "Deep Landing: Ankommen vor dem Abschied",
       "day": "2026-08-16",
       "day_label": "Sonntag",
@@ -3158,7 +3194,7 @@
       "source": "workshops"
     },
     {
-      "id": 128,
+      "id": 129,
       "title": "Feelings Oasis",
       "day": "2026-08-16",
       "day_label": "Sonntag",
@@ -3183,8 +3219,8 @@
       "source": "program"
     },
     {
-      "id": 129,
-      "title": "The Peepshow,",
+      "id": 130,
+      "title": "The Peepshow",
       "day": "2026-08-16",
       "day_label": "Sonntag",
       "time": "SO 15:00",
@@ -3207,7 +3243,7 @@
       "source": "workshops"
     },
     {
-      "id": 130,
+      "id": 131,
       "title": "Mad Hatters",
       "day": "2026-08-16",
       "day_label": "Sonntag",
@@ -3227,12 +3263,12 @@
       "excerpt": "Bringt Eure Kopfbedeckungen damit wir sie gemeinsam individualisieren! Mit Federn, Stoffen, Bändern, Kleber und Stickern verschönern / verglitzern wir eure selbst mitgebrachten Lieblingshüte und&hellip;",
       "description": "Glitzzy ist das gestalterisch-kreative Alter Ego der Macherin, unter dem sie Mitmach-Aktionen und Festival-Workshops zur individuellen Verschönerung von Kopfbedeckungen anbietet. Ganz den jeweiligen Persönlichkeiten entsprechend! Just for the fun of us all!",
       "hosts": [
-        "Glitzzy Goerlitzzy (Jasna Zajcek)"
+        "Glitzzy Goerlitzzy"
       ],
       "source": "workshops"
     },
     {
-      "id": 131,
+      "id": 132,
       "title": "Song Bingo by Zart Kollektiv",
       "day": "2026-08-16",
       "day_label": "Sonntag",
@@ -3256,7 +3292,7 @@
       "source": "performances"
     },
     {
-      "id": 132,
+      "id": 133,
       "title": "After Rave Recovery",
       "day": "2026-08-16",
       "day_label": "Sonntag",
@@ -3275,12 +3311,12 @@
       "excerpt": "Ein sanfter Landeplatz nach einer intensiven Nacht. Diese Reise unterstützt müde Hüften und den unteren Rücken sowie ein überreiztes Nervensystem mit sanfter Bewegung, tiefen&hellip;",
       "description": "Ein sanfter Landeplatz nach einer intensiven Nacht. Diese Reise unterstützt müde Hüften und den unteren Rücken sowie ein überreiztes Nervensystem mit sanfter Bewegung, tiefen Dehnungen und erdendem Atem – damit du die Nacht integrieren und dein System mit Leichtigkeit nähren kannst. Nach der Körperpraxis gleitest du in einen schamanischen Nidra-Schlaf für tiefe Entspannung und Erholung.",
       "hosts": [
-        "Julia Kefer by juliaflowsgreen"
+        "Julia Kefer"
       ],
       "source": "workshops"
     },
     {
-      "id": 133,
+      "id": 134,
       "title": "WutKraft : Deine Wut – Deine Kraft",
       "day": "2026-08-16",
       "day_label": "Sonntag",
@@ -3304,7 +3340,7 @@
       "source": "workshops"
     },
     {
-      "id": 134,
+      "id": 135,
       "title": "Schabernack mit Musik",
       "day": "2026-08-16",
       "day_label": "Sonntag",
@@ -3328,8 +3364,8 @@
       "source": "workshops"
     },
     {
-      "id": 135,
-      "title": "The Peepshow,",
+      "id": 136,
+      "title": "The Peepshow",
       "day": "2026-08-16",
       "day_label": "Sonntag",
       "time": "SO 17:00",
@@ -3352,7 +3388,7 @@
       "source": "workshops"
     },
     {
-      "id": 136,
+      "id": 137,
       "title": "Reclaimed Touch – Flogger DIY",
       "day": "2026-08-16",
       "day_label": "Sonntag",
@@ -3371,12 +3407,12 @@
       "excerpt": "In circa 30 Minuten baust du dir deinen ganz persönlichen Flogger – handgemacht und ganz nach deinem Belieben. Als Material nutzen wir alte, ausgediente&hellip;",
       "description": "In circa 30 Minuten baust du dir deinen ganz persönlichen Flogger – handgemacht und ganz nach deinem Belieben. Als Material nutzen wir alte, ausgediente Fahrradschläuche. Der funktioniert richtig gut 😉Dazu gibts ein kleines 1&#215;1 rund um Konsent.Keine Vorerfahrung oder eigenes Material benötig, nur Lust am Selbermachen.",
       "hosts": [
-        "Wieland Evers"
+        "Avy"
       ],
       "source": "workshops"
     },
     {
-      "id": 137,
+      "id": 138,
       "title": "Raxa Drag Show",
       "day": "2026-08-16",
       "day_label": "Sonntag",
@@ -3400,7 +3436,7 @@
       "source": "performances"
     },
     {
-      "id": 138,
+      "id": 139,
       "title": "WIKABARETT",
       "day": "2026-08-16",
       "day_label": "Sonntag",
@@ -3422,7 +3458,7 @@
       "source": "performances"
     },
     {
-      "id": 139,
+      "id": 140,
       "title": "🎬 Cuddle-Kino: Filmnacht Bucht der Träumer ✨",
       "day": "2026-08-16",
       "day_label": "Sonntag",
@@ -3442,12 +3478,12 @@
       "excerpt": "Filme schieben?  Sonntag-Nacht heißt es für alle die entspannen wollen nochmal Flimmern lassen in bester Atmossphäre: Ob es die „10 Jahre Pinky Promise“-Doku ist,&hellip;",
       "description": "Filme schieben?  Sonntag-Nacht heißt es für alle die entspannen wollen nochmal Flimmern lassen in bester Atmossphäre: Ob es die „10 Jahre Pinky Promise“-Doku ist, eine Ibiza-DJ-Mockumentary über den sagenumwobenen Heimlich Müller, ein exklusives Behind-the-Scenes zum Making-of der Sissy Bravo oder einfach die schönsten Video-Erinnerungen vom allerersten Mal Feiern: Am Sonntagabend läuft mit süßem Popcorn für alle auf Halbmast ausgewählter Stoff aus der Szene über den heißen Beamer!\n\nOpen Call (online only): Wollt ihr noch was einreichen? Wir freuen uns über eure Beiträge. Deadline 30.07: Bucht-Beitrag einreichen",
       "hosts": [
-        "Bucht der Träumer*"
+        "Cuddle Kino"
       ],
       "source": "performances"
     },
     {
-      "id": 140,
+      "id": 141,
       "title": "A Quarter to Infinity",
       "day": "2026-08-16",
       "day_label": "Sonntag",
@@ -3469,7 +3505,7 @@
       "source": "program"
     },
     {
-      "id": 141,
+      "id": 142,
       "title": "Schweissperle",
       "day": "2026-06-15",
       "day_label": "Montag",
@@ -3491,7 +3527,7 @@
       "source": "program"
     },
     {
-      "id": 142,
+      "id": 143,
       "title": "Momentarium",
       "day": "2026-06-15",
       "day_label": "Montag",
@@ -3513,7 +3549,7 @@
       "source": "program"
     },
     {
-      "id": 143,
+      "id": 144,
       "title": "After Rave Care (Movement)",
       "day": "2026-06-15",
       "day_label": "Montag",
@@ -3535,7 +3571,7 @@
       "source": "workshops"
     },
     {
-      "id": 144,
+      "id": 145,
       "title": "Cuddle Poodle",
       "day": "2026-06-15",
       "day_label": "Montag",
@@ -3560,7 +3596,7 @@
       "source": "program"
     },
     {
-      "id": 145,
+      "id": 146,
       "title": "Sektamt",
       "day": "no-day",
       "day_label": "Ohne Tag",
@@ -3585,7 +3621,7 @@
       "source": "program"
     },
     {
-      "id": 146,
+      "id": 147,
       "title": "NOW.HERE /// NO.WHERE",
       "day": "no-day",
       "day_label": "Ohne Tag",
@@ -3607,7 +3643,7 @@
       "source": "program"
     },
     {
-      "id": 147,
+      "id": 148,
       "title": "Neo:Trash Oasis by Trashi Systers",
       "day": "no-day",
       "day_label": "Ohne Tag",
@@ -3632,7 +3668,7 @@
       "source": "program"
     },
     {
-      "id": 148,
+      "id": 149,
       "title": "Rückenwind Bike Space",
       "day": "no-day",
       "day_label": "Ohne Tag",

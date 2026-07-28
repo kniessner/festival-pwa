@@ -1,9 +1,9 @@
 export const PAGES = [
-    { slug: 'home', label: 'Home', icon: '🏠' },
-    { slug: 'timetable', label: 'Programm', icon: '📅' },
-    { slug: 'grid', label: 'Timetable', icon: '▦' },
-    { slug: 'favorites', label: 'Mein Plan', icon: '⭐' },
-    { slug: 'info', label: 'Info', icon: 'ℹ️' }
+    { slug: 'home', labelKey: 'nav.home', icon: '🏠' },
+    { slug: 'timetable', labelKey: 'nav.timetable', icon: '📅' },
+    { slug: 'grid', labelKey: 'nav.grid', icon: '▦' },
+    { slug: 'favorites', labelKey: 'nav.favorites', icon: '⭐' },
+    { slug: 'info', labelKey: 'nav.info', icon: 'ℹ️' }
 ];
 export const DATA_FILES = { info: 'info.json', timetable: 'timetable.json' };
 export const FAV_KEY = 'bucht-favorites';

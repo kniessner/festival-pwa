@@ -1,6 +1,7 @@
 import { store } from './store.js';
 import { PAGES, pageIdx } from './config.js';
 import { escapeHtml } from './ui.js';
+import { t } from './i18n.js';
 
 export function setupSearch() {
     const input = document.getElementById('searchInput');
@@ -35,7 +36,8 @@ function doSearch(query) {
     const results = [];
     for (const [slug, data] of Object.entries(store.pageData)) {
         if (!data) continue;
-        const pageLabel = PAGES.find(p => p.slug === slug)?.label || slug;
+        const pageEntry = PAGES.find(p => p.slug === slug);
+        const pageLabel = pageEntry ? t(pageEntry.labelKey) : slug;
         // Timetable events
         if (data.events) {
             data.events.forEach((ev, i) => {
@@ -71,7 +73,7 @@ function renderSearchResults(results, query) {
     if (!container) return;
     openSearchModal();
     if (results.length === 0) {
-        container.innerHTML = `<div class="empty">Keine Ergebnisse für "${escapeHtml(query)}"</div>`;
+        container.innerHTML = `<div class="empty">${t('search.noResults', { query: escapeHtml(query) })}</div>`;
         return;
     }
     container.innerHTML = results.map(r => {
