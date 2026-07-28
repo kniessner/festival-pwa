@@ -469,7 +469,7 @@ span#headerFilterLabel {
 }
 
 .fav-tab {
-    padding: 10px 22px;
+    /* padding: 10px 22px;
     border: none;
     border-radius: 50px;
     background: var(--accent-blue, #0303d5);
@@ -479,11 +479,28 @@ span#headerFilterLabel {
     font-size: 0.85rem;
     text-transform: uppercase;
     letter-spacing: 0.5px;
+    cursor: pointer; */
+    
+     flex: 0 0 auto;
+    background: rgba(73, 69, 184, 1);
+    border: none;
+    color: var(--text-muted);
+    border-radius: 20px;
+    padding: 8px 16px;
+    font-family: 'Megan Display';
+    font-weight: 400;
+    font-size: 15px;
+    text-transform: uppercase;
     cursor: pointer;
+    line-height: 22px;
+    height: 32px;
 }
 
 .fav-tab.active {
-    background: var(--accent-pink);
+      line-height: 17px;
+    color: var(--text);
+    background: rgba(242, 184, 176, 1);
+    border: 2px solid rgba(222, 78, 57, 1);
 }
 
 .fav-day-heading {
@@ -750,9 +767,7 @@ span#headerFilterLabel {
 }
 
 .tt-day-tab.active {
-    background: rgba(242, 184, 176, 1);
-    border-color: var(--accent-pink);
-    color: #fff;
+ 
     line-height: 17px;
     color: var(--text);
     background: rgba(242, 184, 176, 1);
