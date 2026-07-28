@@ -8,10 +8,16 @@ const COL_WIDTH = 130;      // vertical mode: fixed width for every stage column
 const AXIS_WIDTH = 52;      // vertical mode: time-axis / corner column width
 const STAGE_LABEL_WIDTH = 96; // horizontal mode: stage-label column width
 const LANE_HEIGHT = 60;     // horizontal mode: overlap-lane height within a stage row
+const DAY_GAP = 28;         // horizontal mode: gap between consecutive day blocks
 
 // Stage acts run around the clock, so hours before this cutoff belong to the
 // previous festival night rather than a new calendar day.
 const DAY_ROLLOVER_HOUR = 6;
+
+// Baseline hour range every day block shows at minimum, in continuous minutes —
+// noon through 6am the next morning — regardless of whether events fill it.
+const DAY_WINDOW_START = 12 * 60;
+const DAY_WINDOW_END = (24 + DAY_ROLLOVER_HOUR) * 60;
 
 const STAGE_COLORS = {
     'community-corner dezentral': '#5a5ad1',
@@ -44,6 +50,11 @@ function toContinuousMinutes(time) {
     if (h < DAY_ROLLOVER_HOUR) h += 24;
     return h * 60 + m;
 }
+
+// Horizontal mode's day-block offsets from the most recent render, keyed by day
+// value — lets the day tabs jump-scroll the continuous strip, and lets the
+// scroll handler below figure out which day is currently in view.
+let gridDayOffsets = [];
 
 export function renderGridTimetable(container) {
     const data = store.pageData.timetable;
@@ -86,8 +97,9 @@ export function renderGridTimetable(container) {
 }
 
 // Two layouts: 'vertical' stacks events top-to-bottom (time runs down, stages are
-// columns); 'horizontal' lays events out left-to-right (time runs across, stages
-// are rows). Switching re-renders the whole grid transposed, not just the pan axis.
+// columns) one day at a time; 'horizontal' lays every day out left-to-right as one
+// continuous, endlessly scrollable strip (time runs across, stages are rows).
+// Switching re-renders the whole grid transposed, not just the pan axis.
 export function toggleGridScrollMode() {
     store.gridScrollMode = store.gridScrollMode === 'vertical' ? 'horizontal' : 'vertical';
     updateScrollToggleButton();
@@ -106,31 +118,46 @@ function updateScrollToggleButton() {
     btn.setAttribute('aria-label', isVertical ? t('grid.ariaVertical') : t('grid.ariaHorizontal'));
 }
 
+// In horizontal mode every day already lives on the one continuous strip, so a
+// day tab just scrolls there instead of re-rendering. Vertical mode still shows
+// one day at a time, so it re-renders as before.
 export function setGridDay(dayValue) {
     store.gridDay = dayValue;
-    refreshGridTimetable();
+    if (store.gridScrollMode === 'horizontal') {
+        const target = gridDayOffsets.find(o => o.day === dayValue);
+        const scroll = document.getElementById('gttScroll');
+        if (target && scroll) scroll.scrollLeft = Math.max(0, target.offset - 8);
+    } else {
+        refreshGridTimetable();
+    }
     document.querySelectorAll('#gttDayTabs .gtt-day-tab').forEach(btn => {
         btn.classList.toggle('active', btn.dataset.day === dayValue);
     });
 }
 
-export function refreshGridTimetable() {
-    const data = store.pageData.timetable;
-    const header = document.getElementById('gttHeader');
-    const track = document.getElementById('gttTrack');
-    if (!header || !track) return;
-
+// Builds one day's stage/lane layout — used directly by vertical mode (single
+// day) and as one segment of the continuous strip in horizontal mode.
+function buildDayBlock(data, dayValue) {
     // Anything with a real slot (start, end, and a stage) gets plotted — including
     // "Space" installations that run for a set window, e.g. De Loite 10:00-21:00.
     const events = data.events.filter(ev =>
-        ev.day === store.gridDay && ev.start_time && ev.end_time && ev.stage
+        ev.day === dayValue && ev.start_time && ev.end_time && ev.stage
     );
+    if (events.length === 0) return null;
 
-    if (events.length === 0) {
-        header.innerHTML = '';
-        track.innerHTML = `<div class="empty" style="padding:40px 20px;">${t('grid.empty')}</div>`;
-        return;
-    }
+    events.forEach(ev => {
+        ev._start = toContinuousMinutes(ev.start_time);
+        ev._end = toContinuousMinutes(ev.end_time);
+        if (ev._end <= ev._start) ev._end += 24 * 60;
+    });
+
+    // Every day always shows the full noon-to-6am festival window, even the hours
+    // no stage has anything on — cropping tightly to the first/last event made
+    // quiet stretches (and quiet days) disappear from the timeline entirely. Real
+    // events outside that window (very early risers, very late closers) still
+    // expand it rather than getting clipped.
+    const gridMin = Math.min(DAY_WINDOW_START, Math.floor(Math.min(...events.map(e => e._start)) / 60) * 60);
+    const gridMax = Math.max(DAY_WINDOW_END, Math.ceil(Math.max(...events.map(e => e._end)) / 60) * 60);
 
     // Group by stage, in the festival's canonical stage order.
     const stageOrder = data.filters.stages.map(s => s.value);
@@ -140,15 +167,6 @@ export function refreshGridTimetable() {
         byStage.get(ev.stage).push(ev);
     });
     const stages = [...byStage.keys()].sort((a, b) => stageOrder.indexOf(a) - stageOrder.indexOf(b));
-
-    events.forEach(ev => {
-        ev._start = toContinuousMinutes(ev.start_time);
-        ev._end = toContinuousMinutes(ev.end_time);
-        if (ev._end <= ev._start) ev._end += 24 * 60;
-    });
-
-    const gridMin = Math.floor(Math.min(...events.map(e => e._start)) / 60) * 60;
-    const gridMax = Math.ceil(Math.max(...events.map(e => e._end)) / 60) * 60;
 
     // Assign overlap lanes per stage (greedy interval partitioning, calendar-style).
     const stageLanes = new Map();
@@ -164,9 +182,32 @@ export function refreshGridTimetable() {
         stageLanes.set(stage, laneEnds.length);
     });
 
-    const ctx = { data, header, track, stages, byStage, stageLanes, gridMin, gridMax };
-    if (store.gridScrollMode === 'horizontal') renderHorizontalLayout(ctx);
-    else renderVerticalLayout(ctx);
+    return { dayValue, gridMin, gridMax, byStage, stages, stageLanes };
+}
+
+export function refreshGridTimetable() {
+    const data = store.pageData.timetable;
+    const header = document.getElementById('gttHeader');
+    const track = document.getElementById('gttTrack');
+    if (!header || !track) return;
+
+    if (store.gridScrollMode === 'horizontal') {
+        const blocks = data.filters.days.map(d => buildDayBlock(data, d.value)).filter(Boolean);
+        if (blocks.length === 0) {
+            header.innerHTML = '';
+            track.innerHTML = `<div class="empty" style="padding:40px 20px;">${t('grid.empty')}</div>`;
+            return;
+        }
+        renderHorizontalLayout({ data, header, track, blocks });
+    } else {
+        const block = buildDayBlock(data, store.gridDay);
+        if (!block) {
+            header.innerHTML = '';
+            track.innerHTML = `<div class="empty" style="padding:40px 20px;">${t('grid.empty')}</div>`;
+            return;
+        }
+        renderVerticalLayout({ data, header, track, ...block });
+    }
 }
 
 function renderVerticalLayout({ data, header, track, stages, byStage, stageLanes, gridMin, gridMax }) {
@@ -217,41 +258,76 @@ function renderVerticalLayout({ data, header, track, stages, byStage, stageLanes
     if (store.gridDay === getEffectiveFestivalDay()) scrollGridToNow('vertical');
 }
 
-function renderHorizontalLayout({ data, header, track, stages, byStage, stageLanes, gridMin, gridMax }) {
-    const gridWidth = (gridMax - gridMin) * PX_PER_MIN;
+// The continuous, "endless" strip: every festival day laid out left-to-right in
+// order, sharing one set of stage rows, separated by a visible gap + divider —
+// you scroll straight from one day into the next instead of switching tabs.
+function renderHorizontalLayout({ data, header, track, blocks }) {
+    let cursor = 0;
+    blocks.forEach(b => {
+        b._offset = cursor;
+        b._width = (b.gridMax - b.gridMin) * PX_PER_MIN;
+        cursor += b._width + DAY_GAP;
+    });
+    const gridWidth = cursor - DAY_GAP;
     const totalWidth = STAGE_LABEL_WIDTH + gridWidth;
 
-    const hourLabels = [];
-    for (let m = gridMin; m <= gridMax; m += 60) {
-        hourLabels.push(`<div class="gtt-hour-label-h" style="left:${(m - gridMin) * PX_PER_MIN}px">${String(Math.floor(m / 60) % 24).padStart(2, '0')}:00</div>`);
-    }
+    // Stage rows span every day block — union of stages, canonical order.
+    const stageOrder = data.filters.stages.map(s => s.value);
+    const stageSet = new Set();
+    blocks.forEach(b => b.stages.forEach(s => stageSet.add(s)));
+    const stages = [...stageSet].sort((a, b) => stageOrder.indexOf(a) - stageOrder.indexOf(b));
 
-    const dayLabel = data.filters.days.find(d => d.value === store.gridDay)?.label || '';
+    // Hour ticks, continuous across the whole strip — the first tick of each day
+    // carries that day's label as a small badge instead of a separate marker row.
+    const hourLabels = [];
+    blocks.forEach(b => {
+        const dayLabel = data.filters.days.find(d => d.value === b.dayValue)?.label || '';
+        let first = true;
+        for (let m = b.gridMin; m <= b.gridMax; m += 60) {
+            const hourText = `${String(Math.floor(m / 60) % 24).padStart(2, '0')}:00`;
+            const text = first ? `${dayLabel} ${hourText}` : hourText;
+            hourLabels.push(`<div class="gtt-hour-label-h ${first ? 'gtt-hour-label-day' : ''}" style="left:${b._offset + (m - b.gridMin) * PX_PER_MIN}px">${text}</div>`);
+            first = false;
+        }
+    });
 
     header.innerHTML = `
-        <div class="gtt-corner gtt-corner-day" style="width:${STAGE_LABEL_WIDTH}px">${dayLabel}</div>
+        <div class="gtt-corner gtt-corner-day" id="gttCornerDay" style="width:${STAGE_LABEL_WIDTH}px"></div>
         <div class="gtt-hour-ruler" style="width:${gridWidth}px">${hourLabels.join('')}</div>
     `;
 
-    const rowHeights = stages.map(stage => Math.max(LANE_HEIGHT, stageLanes.get(stage) * LANE_HEIGHT));
+    // Row height: the tallest lane-count that stage needs on any single day.
+    const rowHeights = stages.map(stage => {
+        const maxLanes = Math.max(1, ...blocks.map(b => b.stageLanes.get(stage) || 0));
+        return Math.max(LANE_HEIGHT, maxLanes * LANE_HEIGHT);
+    });
     const totalHeight = rowHeights.reduce((a, b) => a + b, 0);
 
     const rows = stages.map((stage, i) => {
         const label = data.filters.stages.find(s => s.value === stage)?.label || stage;
         const height = rowHeights[i];
-        const blocks = byStage.get(stage).map(ev => renderEventBlockH(ev, gridMin)).join('');
+        const blocksHtml = blocks.map(b => {
+            const evs = b.byStage.get(stage);
+            return evs ? evs.map(ev => renderEventBlockH(ev, b.gridMin, b._offset)).join('') : '';
+        }).join('');
         return `
         <div class="gtt-stagerow-wrap" style="height:${height}px">
             <div class="gtt-stagelabel ${i % 2 === 1 ? 'gtt-alt' : ''}">${label}</div>
-            <div class="gtt-stagerow" style="width:${gridWidth}px">${blocks}</div>
+            <div class="gtt-stagerow" style="width:${gridWidth}px">${blocksHtml}</div>
         </div>`;
     }).join('');
 
+    // Vertical day-boundary dividers spanning every stage row.
+    const dividers = blocks.slice(1).map(b =>
+        `<div class="gtt-day-divider" style="left:${b._offset - DAY_GAP / 2}px"></div>`
+    ).join('');
+
+    const todayBlock = blocks.find(b => b.dayValue === getEffectiveFestivalDay());
     let nowLine = '';
-    if (store.gridDay === getEffectiveFestivalDay()) {
+    if (todayBlock) {
         const nowMin = currentContinuousMinutes();
-        if (nowMin >= gridMin && nowMin <= gridMax) {
-            nowLine = `<div class="gtt-now-line-v" style="left:${STAGE_LABEL_WIDTH + (nowMin - gridMin) * PX_PER_MIN}px"></div>`;
+        if (nowMin >= todayBlock.gridMin && nowMin <= todayBlock.gridMax) {
+            nowLine = `<div class="gtt-now-line-v" style="left:${STAGE_LABEL_WIDTH + todayBlock._offset + (nowMin - todayBlock.gridMin) * PX_PER_MIN}px"></div>`;
         }
     }
 
@@ -259,11 +335,49 @@ function renderHorizontalLayout({ data, header, track, stages, byStage, stageLan
     track.className = 'gtt-track gtt-track-h';
     track.style.width = totalWidth + 'px';
     track.style.height = totalHeight + 'px';
-    track.innerHTML = rows + nowLine;
+    track.innerHTML = rows + dividers + nowLine;
+
+    gridDayOffsets = blocks.map(b => ({ day: b.dayValue, offset: b._offset }));
 
     const scroll = document.getElementById('gttScroll');
-    if (scroll) scroll.scrollTop = 0;
-    if (store.gridDay === getEffectiveFestivalDay()) scrollGridToNow('horizontal');
+    if (scroll) {
+        if (!scroll._gttScrollBound) {
+            scroll.addEventListener('scroll', onGridScroll);
+            scroll._gttScrollBound = true;
+        }
+        scroll.scrollTop = 0;
+        if (store.gridDay === getEffectiveFestivalDay() && todayBlock) {
+            scrollGridToNow('horizontal');
+        } else {
+            const target = gridDayOffsets.find(o => o.day === store.gridDay) || gridDayOffsets[0];
+            if (target) scroll.scrollLeft = Math.max(0, target.offset - 8);
+        }
+    }
+    onGridScroll();
+}
+
+// As the user free-scrolls across the continuous strip, keep the sticky corner
+// label and the day-tabs' active state in sync with whichever day is in view.
+function onGridScroll() {
+    const scroll = document.getElementById('gttScroll');
+    const corner = document.getElementById('gttCornerDay');
+    if (!scroll || !corner || !gridDayOffsets.length) return;
+
+    const x = scroll.scrollLeft + 8;
+    let current = gridDayOffsets[0];
+    for (const o of gridDayOffsets) {
+        if (x >= o.offset) current = o; else break;
+    }
+
+    const label = store.pageData.timetable?.filters.days.find(d => d.value === current.day)?.label || '';
+    corner.textContent = label;
+
+    if (store.gridDay !== current.day) {
+        store.gridDay = current.day;
+        document.querySelectorAll('#gttDayTabs .gtt-day-tab').forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.day === current.day);
+        });
+    }
 }
 
 function currentContinuousMinutes() {
@@ -286,9 +400,9 @@ function renderEventBlockV(ev, gridMin, numLanes) {
     </div>`;
 }
 
-function renderEventBlockH(ev, gridMin) {
+function renderEventBlockH(ev, gridMin, dayOffset) {
     const idx = store.pageData.timetable.events.indexOf(ev);
-    const left = (ev._start - gridMin) * PX_PER_MIN;
+    const left = dayOffset + (ev._start - gridMin) * PX_PER_MIN;
     const width = Math.max(40, (ev._end - ev._start) * PX_PER_MIN);
     const top = ev._lane * LANE_HEIGHT;
     return `
