@@ -8,8 +8,13 @@ import { switchInfoTab } from './views/info.js';
 import { toggleFavFromCard } from './views/favorites.js';
 import { setupInstallPrompt, setupOfflineIndicator } from './install.js';
 import { PAGES, pageIdx } from './config.js';
+import { t, setLang } from './i18n.js';
 
 async function init() {
+    document.documentElement.lang = store.lang;
+    document.getElementById('searchInput').placeholder = t('search.placeholder');
+    document.querySelector('.search-modal-header span').textContent = t('search.resultsTitle');
+    updateLangToggleUI();
     await loadData();
     renderNav();
     goToPage(0);
@@ -18,6 +23,24 @@ async function init() {
     setupUpdateBanner();
     showLastUpdated();
     wireDelegation();
+}
+
+function updateLangToggleUI() {
+    document.querySelectorAll('#langToggle button').forEach(b => {
+        b.classList.toggle('active', b.dataset.lang === store.lang);
+    });
+}
+
+async function setLangAndRefresh(lang) {
+    if (lang === store.lang) return;
+    setLang(lang);
+    store.lang = lang;
+    updateLangToggleUI();
+    document.getElementById('searchInput').placeholder = t('search.placeholder');
+    document.querySelector('.search-modal-header span').textContent = t('search.resultsTitle');
+    await loadData();
+    renderNav();
+    goToPage(store.currentPage);
 }
 
 function setupUpdateBanner() {
@@ -51,9 +74,9 @@ function showUpdateBanner(worker = null) {
     banner.id = 'sw-update-banner';
     banner.className = 'update-banner';
     banner.innerHTML = `
-        <span>Neue Version verfügbar</span>
-        <button id="sw-update-now">Aktualisieren</button>
-        <button id="sw-update-later">Später</button>
+        <span>${t('install.updateAvailable')}</span>
+        <button id="sw-update-now">${t('install.updateNow')}</button>
+        <button id="sw-update-later">${t('install.updateLater')}</button>
     `;
     document.body.appendChild(banner);
 
@@ -77,7 +100,8 @@ async function showLastUpdated() {
     if (!el) return;
     const m = await loadManifest();
     if (m && m.synced_at) {
-        el.textContent = `Stand: ${new Date(m.synced_at * 1000).toLocaleDateString('de-DE')}`;
+        const date = new Date(m.synced_at * 1000).toLocaleDateString(store.lang === 'en' ? 'en-GB' : 'de-DE');
+        el.textContent = t('common.updatedOn', { date });
     }
 }
 
@@ -107,6 +131,7 @@ const actions = {
     'close-grid-detail': () => closeGridEventDetail(),
     'toggle-grid-scroll': () => toggleGridScrollMode(),
     'toggle-faq': el => toggleFaqItem(el),
+    'set-lang': el => setLangAndRefresh(el.dataset.lang),
     'switch-info-tab': el => switchInfoTab(el.dataset.tab),
     'search-jump': el => {
         const idx = parseInt(el.dataset.pageIdx, 10);

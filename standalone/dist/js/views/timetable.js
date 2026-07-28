@@ -1,11 +1,12 @@
 import { store } from '../store.js';
 import { textToHtml, favButton } from '../ui.js';
 import { isEventRunning, getEffectiveFestivalDay } from '../festival.js';
+import { t } from '../i18n.js';
 
 export function renderTimetable(container) {
     const data = store.pageData.timetable;
     if (!data || !data.events) {
-        container.innerHTML = '<div class="empty">Programm wird geladen…</div>';
+        container.innerHTML = `<div class="empty">${t('tt.loading')}</div>`;
         return;
     }
 
@@ -15,28 +16,28 @@ export function renderTimetable(container) {
 
     container.innerHTML = `
         <div class="tt-intro">${textToHtml(data.intro)}</div>
-    
+
         <div class="tt-day-tabs" id="ttDayTabs"></div>
         <div class="tt-events" id="ttEvents"></div>
-        <button class="tt-filter-btn" id="ttFilterBtn" data-action="toggle-filter">🔍 Filter</button>
+        <button class="tt-filter-btn" id="ttFilterBtn" data-action="toggle-filter">${t('tt.filterButton')}</button>
         <div class="tt-filter-panel" id="ttFilterPanel">
             <div class="tt-filter-head">
-                <strong>Filter</strong>
+                <strong>${t('tt.filterTitle')}</strong>
                 <button class="tt-filter-close" data-action="toggle-filter">✕</button>
             </div>
             <div class="tt-filter-group">
-                <label>Bühne / Stage</label>
-                <select id="filter-stage"><option value="all">Alle Bühnen</option></select>
+                <label>${t('tt.stageLabel')}</label>
+                <select id="filter-stage"><option value="all">${t('tt.allStages')}</option></select>
             </div>
             <div class="tt-filter-group">
-                <label>Kategorie</label>
-                <select id="filter-category"><option value="all">Alle Kategorien</option></select>
+                <label>${t('tt.categoryLabel')}</label>
+                <select id="filter-category"><option value="all">${t('tt.allCategories')}</option></select>
             </div>
             <div class="tt-filter-group">
-                <label>Genre</label>
-                <select id="filter-genre"><option value="all">Alle Genres</option></select>
+                <label>${t('tt.genreLabel')}</label>
+                <select id="filter-genre"><option value="all">${t('tt.allGenres')}</option></select>
             </div>
-            <button class="tt-filter-reset" data-action="reset-filters">Filter zurücksetzen</button>
+            <button class="tt-filter-reset" data-action="reset-filters">${t('tt.resetFilters')}</button>
         </div>
         <div class="tt-filter-backdrop" id="ttFilterBackdrop" data-action="toggle-filter"></div>
     `;
@@ -80,7 +81,7 @@ export function refreshTimetable() {
     });
 
     if (events.length === 0) {
-        container.innerHTML = '<div class="empty" style="padding:40px 20px;">Keine Events für diese Auswahl</div>';
+        container.innerHTML = `<div class="empty" style="padding:40px 20px;">${t('tt.emptySelection')}</div>`;
         return;
     }
 

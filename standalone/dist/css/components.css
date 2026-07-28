@@ -249,6 +249,34 @@
     position: relative;
 }
 
+/* Language toggle */
+
+.lang-toggle {
+    display: inline-flex;
+    gap: 4px;
+    margin: 8px auto 0;
+    padding: 3px;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.lang-toggle button {
+    border: none;
+    background: transparent;
+    color: var(--text-muted);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    padding: 4px 12px;
+    border-radius: 16px;
+    cursor: pointer;
+}
+
+.lang-toggle button.active {
+    background: linear-gradient(135deg, var(--accent-pink), var(--accent-purple));
+    color: #f3efdf;
+}
+
 /* Bottom nav */
 
 .bottom-nav {
