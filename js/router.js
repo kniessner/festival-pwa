@@ -14,7 +14,7 @@ export function renderNav() {
     nav.innerHTML = PAGES.map((p, i) => {
         const badge = p.slug === 'favorites' && favCount > 0 ? `<span class="nav-badge">${favCount}</span>` : '';
         const icon = p.icon.endsWith('.svg')
-            ? `<span class="nav-icon-mask" style="--icon-url: url('images/${p.icon}')"></span>`
+            ? `<span class="nav-icon-mask" style="-webkit-mask-image:url(images/${p.icon});mask-image:url(images/${p.icon})"></span>`
             : p.icon;
         return `<button class="${i === store.currentPage ? 'active' : ''}" data-action="load-page" data-page="${i}" data-slug="${p.slug}">
             <span class="nav-icon">${icon}${badge}</span>

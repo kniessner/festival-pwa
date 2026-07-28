@@ -24,6 +24,7 @@
     display: flex;
     justify-content: flex-end;
     align-items: center;
+    gap: 8px;
     padding: 12px 16px;
     max-width: 720px;
     margin: 0 auto;
@@ -329,30 +330,25 @@
 
 /* Language toggle */
 
-.lang-toggle {
-    display: inline-flex;
-    gap: 4px;
-    margin: 8px auto 0;
-    padding: 3px;
-    border-radius: 20px;
-    background: rgba(255, 255, 255, 0.08);
-}
-
-.lang-toggle button {
+.lang-switcher {
+    flex-shrink: 0;
     border: none;
-    background: transparent;
+    background: rgba(255, 255, 255, 0.1);
     color: var(--text-muted);
-    font-size: 0.7rem;
+    font-family: var(--font-body);
+    font-size: 0.8rem;
     font-weight: 700;
     letter-spacing: 0.5px;
-    padding: 4px 12px;
-    border-radius: 16px;
+    padding: 8px 14px;
+    border-radius: 50px;
     cursor: pointer;
+    transition: opacity 0.15s ease;
 }
 
-.lang-toggle button.active {
-    background: linear-gradient(135deg, var(--accent-pink), var(--accent-purple));
-    color: #f3efdf;
+.search-bar.open .lang-switcher {
+    opacity: 0;
+    pointer-events: none;
+    position: absolute;
 }
 
 /* Bottom nav */
@@ -403,8 +399,6 @@
     width: 36px;
     height: 36px;
     background-color: var(--text-muted);
-    -webkit-mask-image: var(--icon-url);
-    mask-image: var(--icon-url);
     -webkit-mask-size: contain;
     mask-size: contain;
     -webkit-mask-repeat: no-repeat;

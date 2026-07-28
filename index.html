@@ -27,6 +27,7 @@
 
   <main>
   <div class="search-bar" id="searchBar">
+    <button type="button" class="lang-switcher" id="langSwitcher" data-action="toggle-lang"></button>
     <button type="button" class="search-toggle" id="searchToggle" data-action="toggle-search-bar" aria-label="Search">
       <img src="images/search.svg" alt="" width="20" height="20">
     </button>
@@ -52,10 +53,6 @@
 
     <div class="app-header" id="app-header">
       <h1 id="pageTitle">Bucht der Träumer</h1>
-      <div class="lang-toggle" id="langToggle">
-        <button data-action="set-lang" data-lang="de">DE</button>
-        <button data-action="set-lang" data-lang="en">EN</button>
-      </div>
       <div class="last-updated" id="lastUpdated"></div>
     </div>
 
