@@ -1,7 +1,66 @@
-import { showToast } from './ui.js';
 import { t } from './i18n.js';
 
-let installEvent = null;
+// Captured from 'beforeinstallprompt' when the browser offers a real,
+// triggerable install flow (Android/desktop Chrome/Edge). Stays null on
+// iOS, which has no such API — there, the card is purely instructional.
+let deferredPrompt = null;
+
+function isStandalone() {
+    return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+}
+
+function isIos() {
+    return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+}
+
+export function shouldShowInstallCard() {
+    return !isStandalone() && sessionStorage.getItem('installCardDismissed') !== '1';
+}
+
+// Renders the card's markup, or '' when it shouldn't show. Views inject
+// this directly into their own template (right below their title) rather
+// than the card being one persistent global DOM node, since it only ever
+// appears on Home and My Plan.
+export function installCardHtml() {
+    if (!shouldShowInstallCard()) return '';
+    const actionable = deferredPrompt !== null;
+    const text = actionable ? t('install.tapToInstall') : (isIos() ? t('install.iosShareHint') : t('install.androidHint'));
+    const actionAttr = actionable ? ' data-action="trigger-install"' : '';
+    return `
+    <div class="install-card ${actionable ? 'actionable' : ''}"${actionAttr}>
+        <button type="button" class="install-card-close" data-action="dismiss-install-card" aria-label="Close">✕</button>
+        <h3>${t('install.cardTitle')}</h3>
+        <p>${text}</p>
+    </div>`;
+}
+
+// Registers the two window-level PWA install events. onUpdate is called
+// whenever card-relevant state changes (prompt captured or app installed)
+// so the caller can re-render the current page if the card is showing.
+export function setupInstallTracking(onUpdate) {
+    window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        onUpdate();
+    });
+    window.addEventListener('appinstalled', () => {
+        deferredPrompt = null;
+        onUpdate();
+    });
+}
+
+export async function triggerInstall() {
+    if (!deferredPrompt) return null;
+    const evt = deferredPrompt;
+    deferredPrompt = null;
+    evt.prompt();
+    const { outcome } = await evt.userChoice;
+    return outcome;
+}
+
+export function dismissInstallCard() {
+    sessionStorage.setItem('installCardDismissed', '1');
+}
 
 export function setupOfflineIndicator() {
     const update = () => {
@@ -20,60 +79,4 @@ export function setupOfflineIndicator() {
     window.addEventListener('online', update);
     window.addEventListener('offline', update);
     update();
-}
-
-export function setupInstallPrompt() {
-    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
-    if (isStandalone || sessionStorage.getItem('installCardDismissed') === '1') {
-        hideInstallCard();
-        return;
-    }
-
-    const isIos = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-    setCardText(isIos ? t('install.iosShareHint') : t('install.androidHint'));
-
-    window.addEventListener('beforeinstallprompt', (e) => {
-        e.preventDefault();
-        installEvent = e;
-        document.getElementById('installCard')?.classList.add('actionable');
-        setCardText(t('install.tapToInstall'));
-    });
-
-    window.addEventListener('appinstalled', () => {
-        installEvent = null;
-        hideInstallCard();
-        showToast(t('install.installed'));
-    });
-
-    const card = document.getElementById('installCard');
-    const closeBtn = document.getElementById('installCardClose');
-    if (card) card.addEventListener('click', (e) => {
-        if (e.target.closest('#installCardClose') || !installEvent) return;
-        handleInstallClick();
-    });
-    if (closeBtn) closeBtn.addEventListener('click', (e) => { e.stopPropagation(); dismissInstallCard(); });
-}
-
-async function handleInstallClick() {
-    if (!installEvent) return;
-    installEvent.prompt();
-    const { outcome } = await installEvent.userChoice;
-    if (outcome === 'accepted') { installEvent = null; hideInstallCard(); showToast(t('install.installing')); }
-    else showToast(t('install.cancelled'));
-}
-
-function setCardText(message) {
-    const title = document.getElementById('installCardTitle');
-    const text = document.getElementById('installCardText');
-    if (title) title.textContent = t('install.cardTitle');
-    if (text) text.textContent = message;
-}
-
-function hideInstallCard() {
-    document.getElementById('installCard')?.classList.add('hidden');
-}
-
-function dismissInstallCard() {
-    hideInstallCard();
-    sessionStorage.setItem('installCardDismissed', '1');
 }
