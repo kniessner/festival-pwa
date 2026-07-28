@@ -1,7 +1,7 @@
 const STRINGS = {
     de: {
         // common
-        'common.loading': 'Laden...⏳',
+        'common.loading': 'Laden...',
         'common.noContent': 'Keine Inhalte verfügbar',
         'common.favorite': 'Favorit',
         'common.detailsSoon': 'Details folgen bald.',
@@ -13,7 +13,7 @@ const STRINGS = {
         'nav.favorites': 'Mein Plan',
         'nav.info': 'Info',
         // search
-        'search.placeholder': '🔍 Suchen...',
+        'search.placeholder': 'Suchen...',
         'search.resultsTitle': 'Suchergebnisse',
         'search.noResults': 'Keine Ergebnisse für "{{query}}"',
         // install / offline
@@ -50,7 +50,7 @@ const STRINGS = {
         // timetable
         'tt.loading': 'Programm wird geladen…',
         'tt.emptySelection': 'Keine Events für diese Auswahl',
-        'tt.filterButton': '🔍 Filter',
+        'tt.filterButton': 'Filter',
         'tt.filterTitle': 'Filter',
         'tt.stageLabel': 'Bühne / Stage',
         'tt.allStages': 'Alle Bühnen',
@@ -59,6 +59,9 @@ const STRINGS = {
         'tt.genreLabel': 'Genre',
         'tt.allGenres': 'Alle Genres',
         'tt.resetFilters': 'Filter zurücksetzen',
+        'tt.more': '+ Mehr',
+        'tt.less': '− Weniger',
+        'tt.now': 'JETZT',
         // grid
         'grid.empty': 'Keine geplanten Acts für diesen Tag',
         'grid.toggleTitle': 'Ausrichtung wechseln',
@@ -74,7 +77,7 @@ const STRINGS = {
         'info.newsEmpty': 'Aktuelle News werden hier angezeigt, sobald verfügbar.'
     },
     en: {
-        'common.loading': 'Loading...⏳',
+        'common.loading': 'Loading...',
         'common.noContent': 'No content available',
         'common.favorite': 'Favorite',
         'common.detailsSoon': 'Details coming soon.',
@@ -84,7 +87,7 @@ const STRINGS = {
         'nav.grid': 'Timetable',
         'nav.favorites': 'My Plan',
         'nav.info': 'Info',
-        'search.placeholder': '🔍 Search...',
+        'search.placeholder': ' Search...',
         'search.resultsTitle': 'Search results',
         'search.noResults': 'No results for "{{query}}"',
         'install.addToHome': 'Add to Home Screen',
@@ -118,7 +121,7 @@ const STRINGS = {
         'home.countdownOver': 'Over',
         'tt.loading': 'Program is loading…',
         'tt.emptySelection': 'No events for this selection',
-        'tt.filterButton': '🔍 Filter',
+        'tt.filterButton': ' Filter',
         'tt.filterTitle': 'Filter',
         'tt.stageLabel': 'Stage',
         'tt.allStages': 'All stages',
@@ -127,6 +130,9 @@ const STRINGS = {
         'tt.genreLabel': 'Genre',
         'tt.allGenres': 'All genres',
         'tt.resetFilters': 'Reset filters',
+        'tt.more': '+ More',
+        'tt.less': '− Less',
+        'tt.now': 'NOW',
         'grid.empty': 'No scheduled acts for this day',
         'grid.toggleTitle': 'Switch orientation',
         'grid.ariaVertical': 'Events run top to bottom – tap to switch',

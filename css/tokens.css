@@ -2,16 +2,19 @@
 
 :root {
     --bg: #080943;
-    --bg-card: rgba(8, 9, 67, 1);
-    --bg-card-hover: rgba(15, 18, 130, 0.55);
-    --accent-pink: #b0327a;
+    --bg-card: rgba(242, 233, 220, 1);
+    --bg-card-hover:rgba(242, 233, 220, 0.7);
+    --accent-pink: rgba(222, 78, 57, 1);
     --accent-purple: #762c8c;
     --accent-orange: #ff6f21;
     --accent-blue: #0303d5;
-    --text: #f3efdf;
-    --text-muted: rgba(243, 239, 223, 0.6);
+    --text: rgba(27, 25, 42, 1);
+    --text-muted: rgba(242, 233, 220, 1);
+    --text-on-card: rgba(27, 25, 42, 0.65);
     --border: rgba(176, 50, 122, 0.3);
+    --card-border: rgba(15, 18, 130, 0.15);
     --radius: 12px;
+    --card-radius: 18px;
     --font-body: 'Lato', sans-serif;
     /* --font-head: 'Space Grotesk', sans-serif; */
 }

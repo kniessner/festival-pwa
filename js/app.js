@@ -25,6 +25,22 @@ async function init() {
     wireDelegation();
 }
 
+function toggleSearchBar() {
+    const bar = document.getElementById('searchBar');
+    const isOpen = bar.classList.toggle('open');
+    if (isOpen) {
+        setTimeout(() => document.getElementById('searchInput').focus(), 260);
+    } else {
+        closeSearchBar();
+    }
+}
+
+function closeSearchBar() {
+    document.getElementById('searchBar').classList.remove('open');
+    document.getElementById('searchInput').value = '';
+    closeSearchModal();
+}
+
 function updateLangToggleUI() {
     document.querySelectorAll('#langToggle button').forEach(b => {
         b.classList.toggle('active', b.dataset.lang === store.lang);
@@ -133,12 +149,13 @@ const actions = {
     'toggle-faq': el => toggleFaqItem(el),
     'set-lang': el => setLangAndRefresh(el.dataset.lang),
     'switch-info-tab': el => switchInfoTab(el.dataset.tab),
+    'toggle-search-bar': () => toggleSearchBar(),
+    'close-search-bar': () => closeSearchBar(),
     'search-jump': el => {
         const idx = parseInt(el.dataset.pageIdx, 10);
         const itemIndex = parseInt(el.dataset.index, 10);
         const tab = el.dataset.infoTab;
-        closeSearchModal();
-        document.getElementById('searchInput').value = '';
+        closeSearchBar();
         goToPage(idx);
         if (tab) setTimeout(() => { switchInfoTab(tab); scrollToItem(PAGES[idx].slug, itemIndex); }, 400);
         else setTimeout(() => scrollToItem(PAGES[idx].slug, itemIndex), 300);
