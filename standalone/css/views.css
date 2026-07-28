@@ -146,41 +146,54 @@
 .next-event-card {
     max-width: 320px;
     margin: 0 auto;
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 14px 18px;
+    min-height: 168px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--wp--preset--color--base, #f3efdf);
+    background-image: url('../images/card_bg.png');
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    background-position: center;
+    border: 6px solid var(--wp--preset--color--accent-4, #0f1282);
+    border-radius: 22px;
+    padding: 18px 30px;
     text-align: center;
-    backdrop-filter: blur(8px);
     cursor: pointer;
-    transition: all 0.2s;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    box-shadow: 0 10px 28px rgba(15, 18, 130, 0.35);
 }
 
 .next-event-card:active {
-    background: var(--bg-card-hover);
-    border-color: var(--accent-pink);
+    transform: scale(0.97);
+    box-shadow: 0 4px 14px rgba(15, 18, 130, 0.3);
 }
 
 .next-event-label {
-    font-size: 0.7rem;
+    font-size: 0.72rem;
     color: var(--accent-pink);
     text-transform: uppercase;
-    letter-spacing: 1px;
+    letter-spacing: 1.5px;
     font-weight: 700;
-    margin-bottom: 6px;
+    margin-bottom: 8px;
 }
 
 .next-event-card h3 {
-    font-family: var(--font-head);
-    font-size: 1rem;
+    font-family: var(--wp--preset--font-family--megan-display, var(--font-head)), serif;
+    font-size: 1.2rem;
+    line-height: 1.25;
     color: var(--text);
     font-weight: 700;
-    margin-bottom: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 6px;
 }
 
 .next-event-meta {
     font-size: 0.8rem;
-    color: var(--text-muted);
+    color: rgba(27, 25, 42, 0.65);
+    font-family: var(--font-body);
 }
 
 /* Info section */
