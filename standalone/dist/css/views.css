@@ -1472,7 +1472,17 @@ span#headerFilterLabel {
     flex: 0 0 auto;
     position: relative;
     background: var(--bg);
-    background-image: repeating-linear-gradient(to right, transparent 0, transparent 119px, rgba(255, 255, 255, 0.25) 119px, rgba(255, 255, 255, 0.25) 120px);
+}
+
+/* One absolutely-positioned line per hour boundary, spanning the whole track —
+   drawn explicitly in JS instead of a repeating CSS background so the ticks
+   stay aligned with real hour boundaries across the gaps between day blocks. */
+.gtt-hour-tick {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: rgba(255, 255, 255, 0.25);
 }
 
 .gtt-now-line-v {
