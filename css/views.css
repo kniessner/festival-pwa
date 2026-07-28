@@ -1248,12 +1248,20 @@ span#headerFilterLabel {
     position: relative;
     overflow: auto;
     -webkit-overflow-scrolling: touch;
+    /* Needs a real bounded height (not 100%, which never resolves against an
+       auto-height parent) so this element is itself the scrolling container —
+       .gtt-header/.gtt-stagelabel's position:sticky only takes effect relative
+       to an ancestor that actually scrolls. */
     height: calc(var(--vh, 1vh) * 100 - 320px);
-    height: 100%;
     min-height: 320px;
     border: 1px solid var(--border);
     border-radius: var(--radius);
     background: var(--bg-card);
+    position:fixed;
+    left: 0;
+    right: 0;
+    bottom: 74px;
+    border-radius: 0;
 }
 
 /* Single-finger touch drag is constrained to one axis; wheel/trackpad/scrollbar
