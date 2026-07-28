@@ -1,11 +1,11 @@
 import { pageIdx, FESTIVAL_START } from '../config.js';
-import { getFavorites, getNextUpcomingFavorite } from '../favorites.js';
+import { countValidFavorites, getNextUpcomingFavorite } from '../favorites.js';
 import { escapeHtml } from '../ui.js';
 import { t } from '../i18n.js';
 import { installCardHtml } from '../install.js';
 
 export function renderHome(container) {
-    const favCount = getFavorites().length;
+    const favCount = countValidFavorites();
     const next = getNextUpcomingFavorite();
     container.innerHTML = `
         <div class="hero">
