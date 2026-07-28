@@ -403,8 +403,6 @@
     width: 36px;
     height: 36px;
     background-color: var(--text-muted);
-    -webkit-mask-image: var(--icon-url);
-    mask-image: var(--icon-url);
     -webkit-mask-size: contain;
     mask-size: contain;
     -webkit-mask-repeat: no-repeat;
