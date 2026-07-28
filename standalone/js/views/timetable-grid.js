@@ -348,7 +348,10 @@ function renderHorizontalLayout({ data, header, track, blocks }) {
     track.className = 'gtt-track gtt-track-h';
     track.style.width = totalWidth + 'px';
     track.style.height = totalHeight + 'px';
-    track.innerHTML = rows + hourTicks.join('') + dividers + nowLine;
+    // Ticks come before the rows so events (also absolutely positioned) paint
+    // on top of them, same as the old background-based ticks did; the day
+    // dividers and now-line stay on top of everything, same as before.
+    track.innerHTML = hourTicks.join('') + rows + dividers + nowLine;
 
     gridDayOffsets = blocks.map(b => ({ day: b.dayValue, offset: b._offset }));
 
