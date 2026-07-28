@@ -21,36 +21,92 @@
 /* Search bar */
 
 .search-bar {
-       padding: 12px 16px 12px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 12px 16px;
     max-width: 720px;
     margin: 0 auto;
     position: sticky;
     top: 0px;
     z-index: 1000001;
-    /* background: var(--bg); */
     width: 100%;
+}
 
+.search-toggle {
+    flex-shrink: 0;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: none;
+    background: var(--bg-card);
+    color: var(--text);
+    font-size: 1.1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.15s ease;
+}
+
+.search-bar.open .search-toggle {
+    opacity: 0;
+    pointer-events: none;
+    position: absolute;
+}
+
+.search-input-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 0;
+    overflow: hidden;
+    opacity: 0;
+    padding: 0;
+    border-radius: 50px;
+    background: var(--bg-card);
+    backdrop-filter: blur(8px);
+    transition: width 0.25s ease, opacity 0.2s ease, padding 0.25s ease;
+}
+
+.search-bar.open .search-input-wrap {
+    width: 100%;
+    opacity: 1;
+    padding: 10px 14px;
+}
+
+.search-input-icon {
+    flex-shrink: 0;
+    color: var(--text-muted);
+    font-size: 1rem;
+    line-height: 1;
 }
 
 .search-bar input {
-    width: 100%;
-    padding: 12px 16px;
-    border-radius: var(--radius);
-    border: 1px solid var(--border);
-    background: var(--bg-card);
+    flex: 1;
+    min-width: 0;
+    padding: 2px 0;
+    border: none;
+    background: transparent;
     color: var(--text);
     font-family: var(--font-body);
     font-size: 0.95rem;
     outline: none;
-    backdrop-filter: blur(8px);
 }
 
 .search-bar input::placeholder {
     color: var(--text-muted);
 }
 
-.search-bar input:focus {
-    border-color: var(--accent-pink);
+.search-input-close {
+    flex-shrink: 0;
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-size: 1rem;
+    line-height: 1;
+    cursor: pointer;
+    padding: 4px;
 }
 
 /* Search modal */
@@ -249,6 +305,12 @@
     position: relative;
 }
 
+/* Home tab hidden from the nav for now — keep the markup/route in place
+   in case we want it back. */
+.bottom-nav button[data-slug="home"] {
+    display: none;
+}
+
 /* Language toggle */
 
 .lang-toggle {
@@ -304,8 +366,9 @@
     align-items: center;
     gap: 3px;
     padding: 6px 8px;
-    font-family: var(--font-body);
-    font-size: 14px;
+ /* font-family: var(--font-body); */
+    font-family: 'Megan Display';
+    font-size: 16px;
     cursor: pointer;
     transition: color 0.2s;
     min-width: 56px;

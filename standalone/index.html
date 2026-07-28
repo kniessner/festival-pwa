@@ -27,7 +27,12 @@
 
   <main>
   <div class="search-bar" id="searchBar">
-    <input type="search" id="searchInput" placeholder="🔍 Suchen..." autocomplete="off">
+    <button type="button" class="search-toggle" id="searchToggle" data-action="toggle-search-bar" aria-label="Search">🔍</button>
+    <div class="search-input-wrap" id="searchInputWrap">
+      <span class="search-input-icon">🔍</span>
+      <input type="search" id="searchInput" placeholder="Suchen..." autocomplete="off">
+      <button type="button" class="search-input-close" data-action="close-search-bar" aria-label="Close search">✕</button>
+    </div>
   </div>
 
   <div class="search-modal" id="searchModal">
