@@ -136,7 +136,6 @@
 /* Next upcoming favorite (home screen) */
 
 .next-event-card {
-    max-width: 320px;
     margin: 0 auto;
     min-height: 168px;
     display: flex;
