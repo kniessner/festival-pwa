@@ -469,7 +469,7 @@ span#headerFilterLabel {
 }
 
 .fav-tab {
-    padding: 10px 22px;
+    /* padding: 10px 22px;
     border: none;
     border-radius: 50px;
     background: var(--accent-blue, #0303d5);
@@ -479,11 +479,28 @@ span#headerFilterLabel {
     font-size: 0.85rem;
     text-transform: uppercase;
     letter-spacing: 0.5px;
+    cursor: pointer; */
+    
+     flex: 0 0 auto;
+    background: rgba(73, 69, 184, 1);
+    border: none;
+    color: var(--text-muted);
+    border-radius: 20px;
+    padding: 8px 16px;
+    font-family: 'Megan Display';
+    font-weight: 400;
+    font-size: 15px;
+    text-transform: uppercase;
     cursor: pointer;
+    line-height: 22px;
+    height: 32px;
 }
 
 .fav-tab.active {
-    background: var(--accent-pink);
+      line-height: 17px;
+    color: var(--text);
+    background: rgba(242, 184, 176, 1);
+    border: 2px solid rgba(222, 78, 57, 1);
 }
 
 .fav-day-heading {
@@ -750,9 +767,7 @@ span#headerFilterLabel {
 }
 
 .tt-day-tab.active {
-    background: rgba(242, 184, 176, 1);
-    border-color: var(--accent-pink);
-    color: #fff;
+ 
     line-height: 17px;
     color: var(--text);
     background: rgba(242, 184, 176, 1);
@@ -1399,6 +1414,26 @@ span#headerFilterLabel {
     color: #fff;
 }
 
+.gtt-hour-label-day {
+    background: #a49fe6;
+    color: #14123f;
+    padding: 4px 10px;
+    margin: 8px 0;
+    border-radius: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    z-index: 2;
+}
+
+.gtt-day-divider {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: rgba(255, 255, 255, 0.6);
+    z-index: 1;
+}
+
 .gtt-stagerow-wrap {
     display: flex;
     align-items: stretch;
@@ -1407,6 +1442,10 @@ span#headerFilterLabel {
 
 .gtt-stagelabel {
     flex: 0 0 96px;
+    min-width: 0;
+    max-width: 96px;
+    overflow: hidden;
+    overflow-wrap: break-word;
     position: sticky;
     left: 0;
     z-index: 2;
