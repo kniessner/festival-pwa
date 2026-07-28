@@ -51,6 +51,14 @@ if [ "$1" = "--dry-run" ]; then
     exit 0
 fi
 
+# The host sits behind WordPress.com's edge cache (Batcache-style), which
+# caches the /app/ response independently of the files on disk — without
+# this, visitors (and our own verification below) can keep seeing a stale
+# snapshot for a while after a successful rsync.
+echo ""
+echo "🧹 Purging edge cache for $LIVE_URL ..."
+ssh -o BatchMode=yes -o ConnectTimeout=10 "$SSH_TARGET" "wp edge-cache purge '$LIVE_URL' '${LIVE_URL%/}'" || echo "   ⚠️  Edge cache purge failed — page may serve stale content until the cache naturally expires"
+
 echo ""
 echo "🔎 Verifying $LIVE_URL ..."
 HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" "$LIVE_URL")
