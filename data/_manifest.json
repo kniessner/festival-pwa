@@ -17,12 +17,12 @@
     },
     {
       "slug": "cashless",
-      "label": "Cashless & TOP-UP – Bucht der Träumer*",
+      "label": "Cashless & TOP-UP – Bucht der Träumer",
       "icon": "📄"
     },
     {
       "slug": "faqs",
-      "label": "FAQs – Bucht der Träumer*",
+      "label": "FAQs – Bucht der Träumer",
       "icon": "📄"
     },
     {
@@ -36,6 +36,6 @@
       "icon": "📄"
     }
   ],
-  "app_name": "Bucht der Träumer*",
+  "app_name": "Bucht der Träumer",
   "synced_at": 1785225171
 }

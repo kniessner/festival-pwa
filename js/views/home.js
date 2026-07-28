@@ -9,7 +9,7 @@ export function renderHome(container) {
     container.innerHTML = `
         <div class="hero">
             <div class="hero-logo">🌊</div>
-            <h1>Bucht der Träumer*</h1>
+            <h1>Bucht der Träumer</h1>
             <!--  <div class="hero-sub">Festival 2026</div>
            <div class="countdown" id="countdown">–</div>
             <div class="countdown-label">Tage bis zum Festival</div>-->
