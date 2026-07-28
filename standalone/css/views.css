@@ -1378,7 +1378,7 @@
     right: 12px;
     background: none;
     border: none;
-    color: var(--text-muted);
+    color: var(--text-on-card);
     font-size: 1.1rem;
     cursor: pointer;
 }
