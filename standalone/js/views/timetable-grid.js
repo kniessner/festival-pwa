@@ -27,6 +27,18 @@ const STAGE_COLORS = {
 };
 function stageColor(stage) { return STAGE_COLORS[stage] || '#b0327a'; }
 
+// Event blocks are colored by type, not by stage — matches the Figma legend
+// (Spaces/Music/Workshop/Performance). 'Music' has no data yet (stages/acts
+// not imported), so it's a placeholder for when that category shows up.
+const CATEGORY_COLORS = {
+    'Space': '#e0847a',
+    'Music': '#ef8a2c',
+    'Workshop': '#e0b400',
+    'Performance': '#2ea88a',
+    'Talk': '#5a5ad1'
+};
+function categoryColor(category) { return CATEGORY_COLORS[category] || '#b0327a'; }
+
 function toContinuousMinutes(time) {
     let [h, m] = time.split(':').map(Number);
     if (h < DAY_ROLLOVER_HOUR) h += 24;
@@ -49,6 +61,12 @@ export function renderGridTimetable(container) {
         <div class="gtt-toolbar">
             <div class="gtt-daytabs" id="gttDayTabs"></div>
             <button class="gtt-scroll-toggle" id="gttScrollToggle" data-action="toggle-grid-scroll"></button>
+        </div>
+        <div class="gtt-legend">
+            <span class="gtt-legend-item"><span class="gtt-legend-swatch" style="background:${categoryColor('Space')}"></span>${t('grid.legendSpace')}</span>
+            <span class="gtt-legend-item"><span class="gtt-legend-swatch" style="background:${categoryColor('Music')}"></span>${t('grid.legendMusic')}</span>
+            <span class="gtt-legend-item"><span class="gtt-legend-swatch" style="background:${categoryColor('Workshop')}"></span>${t('grid.legendWorkshop')}</span>
+            <span class="gtt-legend-item"><span class="gtt-legend-swatch" style="background:${categoryColor('Performance')}"></span>${t('grid.legendPerformance')}</span>
         </div>
         <div class="gtt-scroll" id="gttScroll">
             <div class="gtt-header" id="gttHeader"></div>
@@ -208,8 +226,10 @@ function renderHorizontalLayout({ data, header, track, stages, byStage, stageLan
         hourLabels.push(`<div class="gtt-hour-label-h" style="left:${(m - gridMin) * PX_PER_MIN}px">${String(Math.floor(m / 60) % 24).padStart(2, '0')}:00</div>`);
     }
 
+    const dayLabel = data.filters.days.find(d => d.value === store.gridDay)?.label || '';
+
     header.innerHTML = `
-        <div class="gtt-corner" style="width:${STAGE_LABEL_WIDTH}px"></div>
+        <div class="gtt-corner gtt-corner-day" style="width:${STAGE_LABEL_WIDTH}px">${dayLabel}</div>
         <div class="gtt-hour-ruler" style="width:${gridWidth}px">${hourLabels.join('')}</div>
     `;
 
@@ -222,8 +242,8 @@ function renderHorizontalLayout({ data, header, track, stages, byStage, stageLan
         const blocks = byStage.get(stage).map(ev => renderEventBlockH(ev, gridMin)).join('');
         return `
         <div class="gtt-stagerow-wrap" style="height:${height}px">
-            <div class="gtt-stagelabel" style="--stage-color:${stageColor(stage)}">${label}</div>
-            <div class="gtt-stagerow" style="width:${gridWidth}px;--stage-color:${stageColor(stage)}">${blocks}</div>
+            <div class="gtt-stagelabel ${i % 2 === 1 ? 'gtt-alt' : ''}">${label}</div>
+            <div class="gtt-stagerow" style="width:${gridWidth}px">${blocks}</div>
         </div>`;
     }).join('');
 
@@ -260,7 +280,7 @@ function renderEventBlockV(ev, gridMin, numLanes) {
     const laneWidth = COL_WIDTH / numLanes;
     const left = ev._lane * laneWidth;
     return `
-    <div class="gtt-event" data-item-index="${idx}" data-action="toggle-grid-event" style="top:${top}px;height:${height}px;left:${left}px;width:${laneWidth - 4}px">
+    <div class="gtt-event" data-item-index="${idx}" data-action="toggle-grid-event" style="top:${top}px;height:${height}px;left:${left}px;width:${laneWidth - 4}px;--event-color:${categoryColor(ev.category)}">
         <span class="gtt-event-time">${ev.start_time}</span>
         <span class="gtt-event-title">${ev.title}</span>
     </div>`;
@@ -272,7 +292,7 @@ function renderEventBlockH(ev, gridMin) {
     const width = Math.max(40, (ev._end - ev._start) * PX_PER_MIN);
     const top = ev._lane * LANE_HEIGHT;
     return `
-    <div class="gtt-event" data-item-index="${idx}" data-action="toggle-grid-event" style="left:${left}px;width:${width}px;top:${top}px;height:${LANE_HEIGHT - 6}px">
+    <div class="gtt-event" data-item-index="${idx}" data-action="toggle-grid-event" style="left:${left}px;width:${width}px;top:${top}px;height:${LANE_HEIGHT - 6}px;--event-color:${categoryColor(ev.category)}">
         <span class="gtt-event-time">${ev.start_time}</span>
         <span class="gtt-event-title">${ev.title}</span>
     </div>`;

@@ -8,7 +8,7 @@ export const store = {
     ttFilters: { stage: 'all', category: 'all', genre: 'all', day: 'all' },
     ttPendingDay: null,
     gridDay: null,
-    gridScrollMode: 'vertical',
+    gridScrollMode: 'horizontal',
     favTab: 'program'
 };
 
