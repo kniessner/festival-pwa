@@ -14,9 +14,11 @@ const DAY_GAP = 28;         // horizontal mode: gap between consecutive day bloc
 // previous festival night rather than a new calendar day.
 const DAY_ROLLOVER_HOUR = 6;
 
-// Baseline hour range every day block shows at minimum, in continuous minutes —
-// noon through 6am the next morning — regardless of whether events fill it.
-const DAY_WINDOW_START = 12 * 60;
+// Every day block spans this same fixed 24h window — 6am through 6am the next
+// morning — regardless of whether events fill it. Using the rollover hour as
+// both ends (rather than e.g. noon) is what makes consecutive days meet with
+// zero gap: day N's block always ends exactly where day N+1's begins.
+const DAY_WINDOW_START = DAY_ROLLOVER_HOUR * 60;
 const DAY_WINDOW_END = (24 + DAY_ROLLOVER_HOUR) * 60;
 
 const STAGE_COLORS = {
@@ -151,10 +153,11 @@ function buildDayBlock(data, dayValue) {
         if (ev._end <= ev._start) ev._end += 24 * 60;
     });
 
-    // Every day always shows the full noon-to-6am festival window, even the hours
+    // Every day always shows the full 6am-to-6am festival window, even the hours
     // no stage has anything on — cropping tightly to the first/last event made
-    // quiet stretches (and quiet days) disappear from the timeline entirely. Real
-    // events outside that window (very early risers, very late closers) still
+    // quiet stretches (and the gap between one day's block and the next)
+    // disappear from the timeline entirely. Real events outside that window
+    // (very early risers, very late closers) still
     // expand it rather than getting clipped.
     const gridMin = Math.min(DAY_WINDOW_START, Math.floor(Math.min(...events.map(e => e._start)) / 60) * 60);
     const gridMax = Math.max(DAY_WINDOW_END, Math.ceil(Math.max(...events.map(e => e._end)) / 60) * 60);
