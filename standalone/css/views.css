@@ -1414,6 +1414,26 @@ span#headerFilterLabel {
     color: #fff;
 }
 
+.gtt-hour-label-day {
+    background: #a49fe6;
+    color: #14123f;
+    padding: 4px 10px;
+    margin: 8px 0;
+    border-radius: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    z-index: 2;
+}
+
+.gtt-day-divider {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: rgba(255, 255, 255, 0.6);
+    z-index: 1;
+}
+
 .gtt-stagerow-wrap {
     display: flex;
     align-items: stretch;
@@ -1422,6 +1442,10 @@ span#headerFilterLabel {
 
 .gtt-stagelabel {
     flex: 0 0 96px;
+    min-width: 0;
+    max-width: 96px;
+    overflow: hidden;
+    overflow-wrap: break-word;
     position: sticky;
     left: 0;
     z-index: 2;
