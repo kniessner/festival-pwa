@@ -274,7 +274,7 @@ else
     run_scrape_pass "$URL/en" "$DATA_DIR/en" "en" programm-2026 performances workshops
 
     info "Regenerating manifest"
-    python3 "$SCRIPTS_DIR/_update_manifest.py" "$DATA_DIR" "Bucht der Träumer*" >> "$LOG_FILE" 2>&1 || warn "Manifest regeneration had issues"
+    python3 "$SCRIPTS_DIR/_update_manifest.py" "$DATA_DIR" "Bucht der Träumer" >> "$LOG_FILE" 2>&1 || warn "Manifest regeneration had issues"
 fi
 
 # ═══════════════════════════════════════════════════════════════════

@@ -175,7 +175,7 @@
 .search-modal-close {
     background: none;
     border: none;
-    color: var(--text-muted);
+    color: var(--text-on-card);
     font-size: 1rem;
     line-height: 1;
     cursor: pointer;

@@ -32,7 +32,7 @@ async function main() {
 
     // ── 1. App Name ──
     const manifest = readJson('data/_manifest.json');
-    const currentName = manifest.app_name || 'Bucht der Träumer*';
+    const currentName = manifest.app_name || 'Bucht der Träumer';
     const name = await ask(`App name [${currentName}]: `);
     if (name.trim()) manifest.app_name = name.trim();
 

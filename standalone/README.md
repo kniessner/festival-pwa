@@ -203,4 +203,4 @@ cp -r dist/* /var/www/html/festival/
 
 ---
 
-*Built for Bucht der Träumer* 2026. Fully offline, zero dependencies.*
+*Built for Bucht der Träumer 2026. Fully offline, zero dependencies.*
