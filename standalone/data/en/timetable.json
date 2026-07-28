@@ -8,23 +8,23 @@
     "days": [
       {
         "value": "2026-08-13",
-        "label": "Thursday"
+        "label": "THU"
       },
       {
         "value": "2026-08-14",
-        "label": "Friday"
+        "label": "FRI"
       },
       {
         "value": "2026-08-15",
-        "label": "Saturday"
+        "label": "SAT"
       },
       {
         "value": "2026-08-16",
-        "label": "Sunday"
+        "label": "SUN"
       },
       {
         "value": "2026-06-15",
-        "label": "Monday"
+        "label": "MON"
       }
     ],
     "stages": [

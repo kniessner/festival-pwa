@@ -207,31 +207,32 @@
 }
 
 .grid-card {
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 18px 16px;
-    transition: all 0.2s;
-    backdrop-filter: blur(8px);
+    background: var(--wp--preset--color--base, #f3efdf);
+    border: 2px solid var(--card-border);
+    border-radius: var(--card-radius);
+    padding: 16px 18px;
+    transition: border-color 0.2s, box-shadow 0.2s;
 }
 
 .grid-card:hover,
 .grid-card:active {
     border-color: var(--accent-pink);
-    background: var(--bg-card-hover);
 }
 
 .grid-card h3 {
-    font-family: var(--font-head);
-    font-size: 1.05rem;
+    font-family: var(--wp--preset--font-family--megan-display, var(--font-head)), serif;
+    font-size: 1.1rem;
+    line-height: 1.2;
     color: var(--text);
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
     margin-bottom: 6px;
     font-weight: 700;
 }
 
 .grid-card p {
     font-size: 0.9rem;
-    color: var(--text-muted);
+    color: var(--text-on-card);
     line-height: 1.5;
 }
 
@@ -257,21 +258,21 @@
     font-size: 1.3rem;
     cursor: pointer;
     padding: 2px 4px;
-    opacity: 0.6;
+    opacity: 1;
     transition: opacity 0.2s, transform 0.2s;
     line-height: 1;
     flex-shrink: 0;
-    color: wheat;
+    color: var(--text-on-card);
 }
 
 .fav-btn:hover {
-    opacity: 0.6;
+    opacity: 0.7;
 }
 
 .fav-btn.active {
     opacity: 1;
     color: #FFEB3B;
-    filter: drop-shadow(0 0 6px rgba(255, 193, 7, 0.5));
+    filter: drop-shadow(0 0 4px rgba(15, 18, 130, 0.2));
 }
 
 .fav-btn:active {

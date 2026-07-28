@@ -291,7 +291,7 @@ export function openGridEventDetail(el) {
     detail.innerHTML = `
         <div class="gtt-detail-panel">
             <button class="gtt-detail-close" data-action="close-grid-detail">✕</button>
-            <div class="tt-event-meta">
+            <div class="gtt-detail-meta">
                 <span class="event-time">${ev.start_time}${ev.end_time ? ` – ${ev.end_time}` : ''}</span>
                 <span class="event-type">${ev.category}</span>
             </div>

@@ -8,23 +8,23 @@
     "days": [
       {
         "value": "2026-08-13",
-        "label": "Donnerstag"
+        "label": "DO"
       },
       {
         "value": "2026-08-14",
-        "label": "Freitag"
+        "label": "FR"
       },
       {
         "value": "2026-08-15",
-        "label": "Samstag"
+        "label": "SA"
       },
       {
         "value": "2026-08-16",
-        "label": "Sonntag"
+        "label": "SO"
       },
       {
         "value": "2026-06-15",
-        "label": "Montag"
+        "label": "MO"
       }
     ],
     "stages": [

@@ -1,8 +1,8 @@
 export const PAGES = [
     { slug: 'home', labelKey: 'nav.home', icon: '🏠' },
+    { slug: 'favorites', labelKey: 'nav.favorites', icon: '⭐' },
     { slug: 'timetable', labelKey: 'nav.timetable', icon: '📅' },
     { slug: 'grid', labelKey: 'nav.grid', icon: '▦' },
-    { slug: 'favorites', labelKey: 'nav.favorites', icon: '⭐' },
     { slug: 'info', labelKey: 'nav.info', icon: 'ℹ️' }
 ];
 export const DATA_FILES = { info: 'info.json', timetable: 'timetable.json' };
