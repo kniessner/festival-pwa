@@ -388,9 +388,9 @@
     cursor: pointer;
     transition: color 0.2s;
     min-width: 56px;
-    letter-spacing: 0.5px;
+    letter-spacing: 0;
     text-transform: uppercase;
-    font-weight: 700;
+    font-weight: 400;
 } 
 
 .bottom-nav button .nav-icon {
