@@ -27,11 +27,15 @@
 
   <main>
   <div class="search-bar" id="searchBar">
-    <button type="button" class="search-toggle" id="searchToggle" data-action="toggle-search-bar" aria-label="Search">🔍</button>
+    <button type="button" class="search-toggle" id="searchToggle" data-action="toggle-search-bar" aria-label="Search">
+      <img src="images/search.svg" alt="" width="20" height="20">
+    </button>
     <div class="search-input-wrap" id="searchInputWrap">
-      <span class="search-input-icon">🔍</span>
+      <span class="search-input-icon"><img src="images/search.svg" alt="" width="18" height="18"></span>
       <input type="search" id="searchInput" placeholder="Suchen..." autocomplete="off">
-      <button type="button" class="search-input-close" data-action="close-search-bar" aria-label="Close search">✕</button>
+      <button type="button" class="search-input-close" data-action="close-search-bar" aria-label="Close search">
+        <img src="images/close.svg" alt="" width="14" height="14">
+      </button>
     </div>
   </div>
 
