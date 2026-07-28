@@ -3,10 +3,8 @@
 
 <head>
   <meta charset="UTF-8" />
-   <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, shrink-to-fit=no, maximum-scale=1.0, user-scalable=0"
-    />
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1, shrink-to-fit=no, maximum-scale=1.0, user-scalable=0" />
   <meta name="theme-color" content="#080943" />
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -26,34 +24,40 @@
 <body>
 
   <main>
-  <div class="search-bar" id="searchBar">
-    <button type="button" class="lang-switcher" id="langSwitcher" data-action="toggle-lang"></button>
-    <button type="button" class="search-toggle" id="searchToggle" data-action="toggle-search-bar" aria-label="Search">
-      <img src="images/search.svg" alt="" width="20" height="20">
-    </button>
-    <div class="search-input-wrap" id="searchInputWrap">
-      <span class="search-input-icon"><img src="images/search.svg" alt="" width="18" height="18"></span>
-      <input type="search" id="searchInput" placeholder="Suchen..." autocomplete="off">
-      <button type="button" class="search-input-close" data-action="close-search-bar" aria-label="Close search">
-        <img src="images/close.svg" alt="" width="14" height="14">
+    <div class="search-bar" id="searchBar">
+      <button type="button" class="lang-switcher" id="langSwitcher" data-action="toggle-lang"></button>
+      <button type="button" class="search-toggle" id="searchToggle" data-action="toggle-search-bar" aria-label="Search">
+        <img src="images/search.svg" alt="" width="20" height="20">
       </button>
-    </div>
-  </div>
-
-  <div class="search-modal" id="searchModal">
-    <div class="search-modal-backdrop" data-action="close-search"></div>
-    <div class="search-modal-panel">
-      <div class="search-modal-header">
-        <span>Suchergebnisse</span>
-        <button type="button" class="search-modal-close" data-action="close-search">✕</button>
+      <div class="search-input-wrap" id="searchInputWrap">
+        <span class="search-input-icon"><img src="images/search.svg" alt="" width="18" height="18"></span>
+        <input type="search" id="searchInput" placeholder="Suchen..." autocomplete="off">
+        <button type="button" class="search-input-close" data-action="close-search-bar" aria-label="Close search">
+          <img src="images/close.svg" alt="" width="14" height="14">
+        </button>
       </div>
-      <div class="search-results" id="searchResults"></div>
     </div>
-  </div>
+
+    <div class="search-modal" id="searchModal">
+      <div class="search-modal-backdrop" data-action="close-search"></div>
+      <div class="search-modal-panel">
+        <div class="search-modal-header">
+          <span>Suchergebnisse</span>
+          <button type="button" class="search-modal-close" data-action="close-search">✕</button>
+        </div>
+        <div class="search-results" id="searchResults"></div>
+      </div>
+    </div>
 
     <div class="app-header" id="app-header">
-      <h1 id="pageTitle">Bucht der Träumer</h1>
       <div class="last-updated" id="lastUpdated"></div>
+      <div class="app-header-row">
+        <h1 id="pageTitle">Bucht der Träumer</h1>
+        <button type="button" class="header-filter-btn" id="headerFilterBtn" data-action="toggle-filter">
+          <img src="images/filter.svg" alt="" width="18" height="18">
+          <span id="headerFilterLabel"></span>
+        </button>
+      </div>
     </div>
 
     <div class="content" id="content">

@@ -18,6 +18,7 @@ async function init() {
     document.getElementById('searchInput').placeholder = t('search.placeholder');
     document.querySelector('.search-modal-header span').textContent = t('search.resultsTitle');
     updateLangSwitcherLabel();
+    updateHeaderFilterLabel();
     await loadData();
     renderNav();
     goToPage(0);
@@ -56,11 +57,17 @@ function updateLangSwitcherLabel() {
     if (btn) btn.textContent = LANG_LABELS[store.lang] || store.lang;
 }
 
+function updateHeaderFilterLabel() {
+    const label = document.getElementById('headerFilterLabel');
+    if (label) label.textContent = t('tt.filterButton');
+}
+
 async function setLangAndRefresh(lang) {
     if (lang === store.lang) return;
     setLang(lang);
     store.lang = lang;
     updateLangSwitcherLabel();
+    updateHeaderFilterLabel();
     document.getElementById('searchInput').placeholder = t('search.placeholder');
     document.querySelector('.search-modal-header span').textContent = t('search.resultsTitle');
     await loadData();

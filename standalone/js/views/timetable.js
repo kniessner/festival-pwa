@@ -19,7 +19,6 @@ export function renderTimetable(container) {
 
         <div class="tt-day-tabs" id="ttDayTabs"></div>
         <div class="tt-events" id="ttEvents"></div>
-        <button class="tt-filter-btn" id="ttFilterBtn" data-action="toggle-filter">${t('tt.filterButton')}</button>
         <div class="tt-filter-panel" id="ttFilterPanel">
             <div class="tt-filter-head">
                 <strong>${t('tt.filterTitle')}</strong>
