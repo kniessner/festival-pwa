@@ -2,6 +2,7 @@ import { pageIdx, FESTIVAL_START } from '../config.js';
 import { getFavorites, getNextUpcomingFavorite } from '../favorites.js';
 import { escapeHtml } from '../ui.js';
 import { t } from '../i18n.js';
+import { installCardHtml } from '../install.js';
 
 export function renderHome(container) {
     const favCount = getFavorites().length;
@@ -10,6 +11,7 @@ export function renderHome(container) {
         <div class="hero">
             <div class="hero-logo">🌊</div>
             <h1>Bucht der Träumer</h1>
+            ${installCardHtml()}
             <!--  <div class="hero-sub">Festival 2026</div>
            <div class="countdown" id="countdown">–</div>
             <div class="countdown-label">Tage bis zum Festival</div>-->

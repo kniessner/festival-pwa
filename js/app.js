@@ -6,7 +6,8 @@ import { setGridDay, openGridEventDetail, closeGridEventDetail, toggleGridScroll
 import { store } from './store.js';
 import { switchInfoTab } from './views/info.js';
 import { toggleFavFromCard, setFavTab } from './views/favorites.js';
-import { setupInstallPrompt, setupOfflineIndicator } from './install.js';
+import { setupInstallTracking, setupOfflineIndicator, dismissInstallCard, triggerInstall } from './install.js';
+import { showToast } from './ui.js';
 import { PAGES, pageIdx } from './config.js';
 import { t, setLang } from './i18n.js';
 
@@ -19,10 +20,17 @@ async function init() {
     renderNav();
     goToPage(0);
     setupOfflineIndicator();
-    setupInstallPrompt();
+    setupInstallTracking(refreshInstallCardIfVisible);
     setupUpdateBanner();
     showLastUpdated();
     wireDelegation();
+}
+
+// The install card only ever renders on Home/My Plan — re-rendering any
+// other page just to refresh install state would needlessly reset it
+// (open filter panel, scroll position, etc.).
+function refreshInstallCardIfVisible() {
+    if (['home', 'favorites'].includes(PAGES[store.currentPage]?.slug)) goToPage(store.currentPage);
 }
 
 function toggleSearchBar() {
@@ -152,6 +160,13 @@ const actions = {
     'switch-info-tab': el => switchInfoTab(el.dataset.tab),
     'toggle-search-bar': () => toggleSearchBar(),
     'close-search-bar': () => closeSearchBar(),
+    'dismiss-install-card': () => { dismissInstallCard(); refreshInstallCardIfVisible(); },
+    'trigger-install': async () => {
+        const outcome = await triggerInstall();
+        if (outcome === 'accepted') showToast(t('install.installing'));
+        else if (outcome === 'dismissed') showToast(t('install.cancelled'));
+        refreshInstallCardIfVisible();
+    },
     'search-jump': el => {
         const idx = parseInt(el.dataset.pageIdx, 10);
         const itemIndex = parseInt(el.dataset.index, 10);

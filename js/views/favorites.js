@@ -5,15 +5,17 @@ import { getFavorites, toggleFavorite } from '../favorites.js';
 import { renderNav, loadPage } from '../router.js';
 import { renderEventCard } from './timetable.js';
 import { t } from '../i18n.js';
+import { installCardHtml } from '../install.js';
 
 function emptyStateCard(message) {
     return `<div class="fav-empty-card">${escapeHtml(message)}</div>`;
 }
 
 export function renderFavorites(container) {
+    const installCard = installCardHtml();
     const favs = getFavorites();
     if (favs.length === 0) {
-        container.innerHTML = emptyStateCard(t('fav.emptyHint'));
+        container.innerHTML = installCard + emptyStateCard(t('fav.emptyHint'));
         return;
     }
 
@@ -76,7 +78,7 @@ export function renderFavorites(container) {
         }
     }
 
-    container.innerHTML = html;
+    container.innerHTML = installCard + html;
 }
 
 export function setFavTab(tab) {
