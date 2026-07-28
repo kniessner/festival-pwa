@@ -144,10 +144,9 @@
     justify-content: center;
     background-color: var(--wp--preset--color--base, #f3efdf);
     background-image: url('../images/card_bg.png');
-    background-size: 100% 100%;
+    background-size: 120% 120%;
     background-repeat: no-repeat;
     background-position: center;
-    border: 6px solid var(--wp--preset--color--accent-4, #0f1282);
     border-radius: 22px;
     padding: 18px 30px;
     text-align: center;
