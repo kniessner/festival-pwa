@@ -1,4 +1,5 @@
 import { isFavorite } from './favorites.js';
+import { t } from './i18n.js';
 
 export function textToHtml(str) {
     if (!str) return '';
@@ -32,7 +33,7 @@ export function showToast(message) {
 
 export function favButton(pageSlug, index) {
     const active = isFavorite(pageSlug, index) ? 'active' : '';
-    return `<button class="fav-btn ${active}" data-action="toggle-fav" data-page="${pageSlug}" data-index="${index}" title="Favorit">★</button>`;
+    return `<button class="fav-btn ${active}" data-action="toggle-fav" data-page="${pageSlug}" data-index="${index}" title="${t('common.favorite')}">★</button>`;
 }
 
 export function card({ page, index, title, desc, meta = '', maxDesc = 200 }) {
@@ -55,7 +56,7 @@ export function renderFaqList(items, pageSlug) {
                     <span class="faq-toggle">+</span>
                 </div>
             </div>
-            <div class="faq-answer ${hasAnswer ? '' : 'empty'}">${hasAnswer ? item.answer : '<em>Details folgen bald.</em>'}</div>
+            <div class="faq-answer ${hasAnswer ? '' : 'empty'}">${hasAnswer ? item.answer : `<em>${t('common.detailsSoon')}</em>`}</div>
         </div>`;
     }).join('') + '</div>';
 }

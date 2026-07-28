@@ -1,5 +1,6 @@
 import { store } from '../store.js';
 import { escapeHtml, textToHtml, favButton, renderFaqList } from '../ui.js';
+import { t } from '../i18n.js';
 
 export function renderInfo(container) {
     const info = store.pageData.info;
@@ -8,9 +9,9 @@ export function renderInfo(container) {
     const news = info ? info.news : null;
 
     let html = '<div class="info-tabs" id="infoTabs">';
-    html += '<button class="info-tab active" data-tab="news" data-action="switch-info-tab">News</button>';
-    html += '<button class="info-tab" data-tab="cashless" data-action="switch-info-tab">Cashless</button>';
-    html += '<button class="info-tab" data-tab="faqs" data-action="switch-info-tab">FAQs</button>';
+    html += `<button class="info-tab active" data-tab="news" data-action="switch-info-tab">${t('info.tabNews')}</button>`;
+    html += `<button class="info-tab" data-tab="cashless" data-action="switch-info-tab">${t('info.tabCashless')}</button>`;
+    html += `<button class="info-tab" data-tab="faqs" data-action="switch-info-tab">${t('info.tabFaqs')}</button>`;
     html += '</div>';
 
     // ── News ──
@@ -27,7 +28,7 @@ export function renderInfo(container) {
             </div>`;
         }).join('');
     } else {
-        html += '<div class="page-intro" style="margin-top:0">Aktuelle News werden hier angezeigt, sobald verfügbar.</div>';
+        html += `<div class="page-intro" style="margin-top:0">${t('info.newsEmpty')}</div>`;
     }
     html += '</div>';
 
