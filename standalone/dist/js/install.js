@@ -2,7 +2,6 @@ import { showToast } from './ui.js';
 import { t } from './i18n.js';
 
 let installEvent = null;
-let installPromptShown = false;
 
 export function setupOfflineIndicator() {
     const update = () => {
@@ -24,53 +23,57 @@ export function setupOfflineIndicator() {
 }
 
 export function setupInstallPrompt() {
-    const textEl = document.getElementById('installText');
-    if (textEl) textEl.textContent = t('install.addToHome');
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+    if (isStandalone || sessionStorage.getItem('installCardDismissed') === '1') {
+        hideInstallCard();
+        return;
+    }
+
+    const isIos = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+    setCardText(isIos ? t('install.iosShareHint') : t('install.androidHint'));
+
     window.addEventListener('beforeinstallprompt', (e) => {
         e.preventDefault();
         installEvent = e;
-        if (!installPromptShown) { showInstallBtn(); installPromptShown = true; }
+        document.getElementById('installCard')?.classList.add('actionable');
+        setCardText(t('install.tapToInstall'));
     });
+
     window.addEventListener('appinstalled', () => {
-        installEvent = null; hideInstallBtn(); showToast(t('install.installed'));
+        installEvent = null;
+        hideInstallCard();
+        showToast(t('install.installed'));
     });
-    const isIos = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
-    if (isStandalone) hideInstallBtn();
-    else if (isIos) showIosInstallHint();
-    const btn = document.getElementById('installBtn');
-    const closeBtn = document.getElementById('installClose');
-    if (btn) btn.addEventListener('click', (e) => { if (e.target.closest('#installClose')) return; handleInstallClick(); });
-    if (closeBtn) closeBtn.addEventListener('click', (e) => { e.stopPropagation(); dismissInstall(); });
+
+    const card = document.getElementById('installCard');
+    const closeBtn = document.getElementById('installCardClose');
+    if (card) card.addEventListener('click', (e) => {
+        if (e.target.closest('#installCardClose') || !installEvent) return;
+        handleInstallClick();
+    });
+    if (closeBtn) closeBtn.addEventListener('click', (e) => { e.stopPropagation(); dismissInstallCard(); });
 }
 
 async function handleInstallClick() {
-    const isIos = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-    if (isIos) { showToast(t('install.iosShareHint')); return; }
-    if (!installEvent) {
-        if (window.matchMedia('(display-mode: standalone)').matches) showToast(t('install.alreadyInstalled'));
-        else showToast(t('install.androidHint'));
-        return;
-    }
+    if (!installEvent) return;
     installEvent.prompt();
     const { outcome } = await installEvent.userChoice;
-    if (outcome === 'accepted') { installEvent = null; hideInstallBtn(); showToast(t('install.installing')); }
+    if (outcome === 'accepted') { installEvent = null; hideInstallCard(); showToast(t('install.installing')); }
     else showToast(t('install.cancelled'));
 }
 
-function showInstallBtn() {
-    const btn = document.getElementById('installBtn');
-    if (!btn) return;
-    if (sessionStorage.getItem('installDismissed') === '1') return;
-    btn.classList.remove('hidden');
+function setCardText(message) {
+    const title = document.getElementById('installCardTitle');
+    const text = document.getElementById('installCardText');
+    if (title) title.textContent = t('install.cardTitle');
+    if (text) text.textContent = message;
 }
-function hideInstallBtn() {
-    const btn = document.getElementById('installBtn');
-    if (btn) btn.classList.add('hidden');
+
+function hideInstallCard() {
+    document.getElementById('installCard')?.classList.add('hidden');
 }
-function dismissInstall() { hideInstallBtn(); sessionStorage.setItem('installDismissed', '1'); }
-function showIosInstallHint() {
-    const text = document.getElementById('installText');
-    if (text) text.textContent = t('install.iosHintText');
-    showInstallBtn();
+
+function dismissInstallCard() {
+    hideInstallCard();
+    sessionStorage.setItem('installCardDismissed', '1');
 }
