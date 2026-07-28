@@ -359,13 +359,14 @@
     left: 0;
     right: 0;
     z-index: 200;
-    background: linear-gradient(to top, var(--bg) 80%, transparent);
-    padding: 8px 12px calc(8px + env(safe-area-inset-bottom));
+    background:rgba(13, 10, 74, 1);
+    /* padding: 8px 12px calc(8px + env(safe-area-inset-bottom)); */
     display: flex;
     justify-content: center;
     border-top: 2px solid rgba(225, 96, 77, 1);
     max-width: 650px;
     margin: auto;
+    height: 74px;
 }
 
 .bottom-nav button {
