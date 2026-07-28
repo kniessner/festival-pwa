@@ -282,14 +282,24 @@ function renderHorizontalLayout({ data, header, track, blocks }) {
 
     // Hour ticks, continuous across the whole strip — the first tick of each day
     // carries that day's label as a small badge instead of a separate marker row.
+    // Vertical gridlines (one per tick) are collected separately and drawn once
+    // across the full track height, rather than as a per-row CSS repeating
+    // background — a repeating pattern can't restart its phase at each day's
+    // offset, so it drifts out of alignment with the real hour boundaries as
+    // soon as a day's block width isn't an exact multiple of the tick spacing.
     const hourLabels = [];
+    const hourTicks = [];
     blocks.forEach(b => {
         const dayLabel = data.filters.days.find(d => d.value === b.dayValue)?.label || '';
         let first = true;
         for (let m = b.gridMin; m <= b.gridMax; m += 60) {
+            const rulerLeft = b._offset + (m - b.gridMin) * PX_PER_MIN;
             const hourText = `${String(Math.floor(m / 60) % 24).padStart(2, '0')}:00`;
             const text = first ? `${dayLabel} ${hourText}` : hourText;
-            hourLabels.push(`<div class="gtt-hour-label-h ${first ? 'gtt-hour-label-day' : ''}" style="left:${b._offset + (m - b.gridMin) * PX_PER_MIN}px">${text}</div>`);
+            hourLabels.push(`<div class="gtt-hour-label-h ${first ? 'gtt-hour-label-day' : ''}" style="left:${rulerLeft}px">${text}</div>`);
+            // Ticks live inside .gtt-track, not the ruler, so they need the stage-label
+            // column's width added to line up with the ruler/row content above/below them.
+            if (!first) hourTicks.push(`<div class="gtt-hour-tick" style="left:${STAGE_LABEL_WIDTH + rulerLeft}px"></div>`);
             first = false;
         }
     });
@@ -322,7 +332,7 @@ function renderHorizontalLayout({ data, header, track, blocks }) {
 
     // Vertical day-boundary dividers spanning every stage row.
     const dividers = blocks.slice(1).map(b =>
-        `<div class="gtt-day-divider" style="left:${b._offset - DAY_GAP / 2}px"></div>`
+        `<div class="gtt-day-divider" style="left:${STAGE_LABEL_WIDTH + b._offset - DAY_GAP / 2}px"></div>`
     ).join('');
 
     const todayBlock = blocks.find(b => b.dayValue === getEffectiveFestivalDay());
@@ -338,7 +348,7 @@ function renderHorizontalLayout({ data, header, track, blocks }) {
     track.className = 'gtt-track gtt-track-h';
     track.style.width = totalWidth + 'px';
     track.style.height = totalHeight + 'px';
-    track.innerHTML = rows + dividers + nowLine;
+    track.innerHTML = rows + hourTicks.join('') + dividers + nowLine;
 
     gridDayOffsets = blocks.map(b => ({ day: b.dayValue, offset: b._offset }));
 
