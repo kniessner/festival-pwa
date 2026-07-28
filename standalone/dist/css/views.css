@@ -32,10 +32,10 @@
     display: none;
 }
 
-.page-sub main {
+/* .page-sub main {
     background: linear-gradient(to bottom, #8b235fcc 70%, #0b0d72);
 
-}
+} */
 
 
 .app-header {
@@ -146,41 +146,54 @@
 .next-event-card {
     max-width: 320px;
     margin: 0 auto;
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 14px 18px;
+    min-height: 168px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--wp--preset--color--base, #f3efdf);
+    background-image: url('../images/card_bg.png');
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    background-position: center;
+    border: 6px solid var(--wp--preset--color--accent-4, #0f1282);
+    border-radius: 22px;
+    padding: 18px 30px;
     text-align: center;
-    backdrop-filter: blur(8px);
     cursor: pointer;
-    transition: all 0.2s;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    box-shadow: 0 10px 28px rgba(15, 18, 130, 0.35);
 }
 
 .next-event-card:active {
-    background: var(--bg-card-hover);
-    border-color: var(--accent-pink);
+    transform: scale(0.97);
+    box-shadow: 0 4px 14px rgba(15, 18, 130, 0.3);
 }
 
 .next-event-label {
-    font-size: 0.7rem;
+    font-size: 0.72rem;
     color: var(--accent-pink);
     text-transform: uppercase;
-    letter-spacing: 1px;
+    letter-spacing: 1.5px;
     font-weight: 700;
-    margin-bottom: 6px;
+    margin-bottom: 8px;
 }
 
 .next-event-card h3 {
-    font-family: var(--font-head);
-    font-size: 1rem;
+    font-family: var(--wp--preset--font-family--megan-display, var(--font-head)), serif;
+    font-size: 1.2rem;
+    line-height: 1.25;
     color: var(--text);
     font-weight: 700;
-    margin-bottom: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 6px;
 }
 
 .next-event-meta {
     font-size: 0.8rem;
-    color: var(--text-muted);
+    color: var(--text-on-card);
+    font-family: var(--font-body);
 }
 
 /* Info section */
@@ -213,17 +226,15 @@
 }
 
 .info-card {
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
+    background: var(--wp--preset--color--base, #f3efdf);
+    border: 2px solid var(--card-border);
+    border-radius: var(--card-radius);
     padding: 20px 16px;
     text-align: center;
-    backdrop-filter: blur(8px);
-    transition: all 0.2s;
+    transition: border-color 0.2s;
 }
 
 .info-card:active {
-    background: var(--bg-card-hover);
     border-color: var(--accent-pink);
 }
 
@@ -242,7 +253,7 @@
 
 .info-card .desc {
     font-size: 0.8rem;
-    color: var(--text-muted);
+    color: var(--text-on-card);
     line-height: 1.4;
 }
 
@@ -254,6 +265,7 @@
     justify-content: center;
     margin: 24px 0;
     flex-wrap: wrap;
+    display:none;
 }
 
 .quick-btn {
@@ -300,15 +312,14 @@
 .page-intro {
 
     display:none;
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
+    background: var(--wp--preset--color--base, #f3efdf);
+    border: 2px solid var(--card-border);
+    border-radius: var(--card-radius);
     padding: 20px;
     margin-bottom: 20px;
-    backdrop-filter: blur(8px);
     font-size: 0.95rem;
     line-height: 1.7;
-    color: var(--text-muted);
+    color: var(--text-on-card);
 }
 
 .page-intro p+p {
@@ -324,19 +335,17 @@
 }
 
 .faq-item {
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
+    background: var(--wp--preset--color--base, #f3efdf);
+    border: 2px solid var(--card-border);
+    border-radius: var(--card-radius);
     overflow: hidden;
     cursor: pointer;
-    transition: all 0.2s;
-    backdrop-filter: blur(8px);
+    transition: border-color 0.2s;
 }
 
 .faq-item:hover,
 .faq-item.open {
     border-color: var(--accent-pink);
-    background: var(--bg-card-hover);
 }
 
 .faq-question {
@@ -344,12 +353,13 @@
     justify-content: space-between;
     align-items: center;
     padding: 18px 16px;
-    font-family: var(--font-head);
+    font-family: var(--wp--preset--font-family--megan-display, var(--font-head)), serif;
+    color: var(--text);
     font-weight: 700;
-    font-size: 0.9rem;
+    font-size: 0.95rem;
     gap: 12px;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.3px;
     line-height: 1.4;
 }
 
@@ -376,7 +386,7 @@
 
 .faq-answer {
     padding: 0 16px 18px;
-    color: var(--text-muted);
+    color: var(--text-on-card);
     font-size: 0.9rem;
     line-height: 1.6;
     display: none;
@@ -557,7 +567,7 @@
 .event-hosts {
     display: block;
     font-size: 0.8rem;
-    color: var(--text-muted);
+    color: var(--text-on-card);
     margin-top: 2px;
 }
 
@@ -646,9 +656,9 @@
 }
 
 .tt-day-tab.active {
-    background: linear-gradient(135deg, var(--accent-pink), var(--accent-purple));
+    background: var(--accent-pink);
     border-color: var(--accent-pink);
-    color: var(--text);
+    color: #fff;
 }
 
 .tt-day-tab:active {
@@ -709,33 +719,34 @@
 /* News card */
 
 .news-card {
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 18px 16px;
+    background: var(--wp--preset--color--base, #f3efdf);
+    border: 2px solid var(--card-border);
+    border-radius: var(--card-radius);
+    padding: 16px 18px;
     margin-bottom: 10px;
-    transition: all 0.2s;
-    backdrop-filter: blur(8px);
+    transition: border-color 0.2s;
     position: relative;
 }
 
 .news-card:hover,
 .news-card.news-highlight {
     border-color: var(--accent-orange);
-    background: var(--bg-card-hover);
 }
 
 .news-card h3 {
-    font-family: var(--font-head);
-    font-size: 1.05rem;
+    font-family: var(--wp--preset--font-family--megan-display, var(--font-head)), serif;
+    font-size: 1.1rem;
+    line-height: 1.2;
     color: var(--text);
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
     margin-bottom: 6px;
     font-weight: 700;
 }
 
 .news-card p {
     font-size: 0.9rem;
-    color: var(--text-muted);
+    color: var(--text-on-card);
     line-height: 1.5;
 }
 
@@ -784,53 +795,27 @@
 }
 
 .tt-event {
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
+    background: var(--wp--preset--color--base, #f3efdf);
+    border: 2px solid rgba(15, 18, 130, 0.15);
+    border-radius: 18px;
     overflow: hidden;
-    transition: all 0.2s;
-    backdrop-filter: blur(8px);
+    transition: border-color 0.2s, box-shadow 0.2s;
     position: relative;
 }
 
 .tt-event:hover,
 .tt-event.open {
     border-color: var(--accent-pink);
-    background: var(--bg-card-hover);
 }
 
 .tt-event.running {
-    border-color: var(--accent-orange);
-    box-shadow: inset 0 0 0 1px var(--accent-orange), 0 0 16px rgba(255, 111, 33, 0.3);
-}
-
-.tt-event.running::before {
-    content: '● JETZT';
-    position: absolute;
-    top: 10px;
-    right: 14px;
-    background: var(--accent-orange);
-    color: var(--bg);
-    font-size: 0.6rem;
-    font-weight: 900;
-    padding: 3px 10px;
-    border-radius: 50px;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    z-index: 5;
+    border-color: var(--accent-pink);
+    box-shadow: 0 6px 20px rgba(222, 78, 57, 0.3);
 }
 
 .tt-event-header {
-    padding: 16px;
+    padding: 16px 18px;
     cursor: pointer;
-}
-
-.tt-event-meta {
-    display: flex;
-    gap: 8px;
-    align-items: center;
-    margin-bottom: 6px;
-    flex-wrap: wrap;
 }
 
 .tt-event-title-row {
@@ -838,41 +823,87 @@
     justify-content: space-between;
     align-items: flex-start;
     gap: 12px;
+    margin-bottom: 4px;
 }
 
 .tt-event-title-row h3 {
-    font-family: var(--font-head);
-    font-size: 1.05rem;
+    font-family: var(--wp--preset--font-family--megan-display, var(--font-head)), serif;
+    font-size: 1.15rem;
+    line-height: 1.2;
     color: var(--text);
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    font-weight: 700;
     margin-bottom: 0;
     flex: 1;
 }
 
-.tt-event-actions {
+.tt-event-subline {
+    font-size: 0.85rem;
+    color: var(--text);
+    margin-bottom: 4px;
+}
+
+.tt-event-subline strong {
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.tt-event-meta {
+    display: block;
+    font-size: 0.8rem;
+    color: var(--text-on-card);
+    margin-bottom: 10px;
+}
+
+.tt-event-meta .event-time {
+    color: inherit;
+    font-weight: inherit;
+    letter-spacing: inherit;
+}
+
+.tt-event-footer {
     display: flex;
     align-items: center;
     gap: 8px;
-    flex-shrink: 0;
+}
+
+.tt-event-badges {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
 }
 
 .tt-event-toggle {
-    font-size: 1.4rem;
+    font-size: 0.8rem;
     color: var(--accent-pink);
-    font-weight: 400;
-    min-width: 24px;
-    text-align: center;
-    line-height: 1;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    cursor: pointer;
+}
+
+.tt-now-badge {
+    margin-left: auto;
+    flex-shrink: 0;
+    background: var(--accent-pink);
+    color: #fff;
+    font-size: 0.65rem;
+    font-weight: 900;
+    padding: 4px 12px;
+    border-radius: 50px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
 }
 
 .tt-event-detail {
     display: none;
-    border-top: 1px solid var(--border);
+    border-top: 1px solid rgba(15, 18, 130, 0.15);
 }
 
 .tt-event-detail-inner {
-    padding: 16px;
+    padding: 14px 18px 18px;
     font-size: 0.9rem;
-    color: var(--text-muted);
+    color: rgba(27, 25, 42, 0.8);
     line-height: 1.6;
     white-space: pre-line;
 }
@@ -1315,21 +1346,30 @@
 }
 
 .gtt-detail-panel {
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius) var(--radius) 0 0;
+    background: var(--wp--preset--color--base, #f3efdf);
+    border: 2px solid var(--card-border);
+    border-radius: var(--card-radius) var(--card-radius) 0 0;
     padding: 20px 20px calc(20px + env(safe-area-inset-bottom));
     max-height: 70vh;
     overflow-y: auto;
     position: relative;
-    backdrop-filter: blur(12px);
+}
+
+.gtt-detail-meta {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    margin-bottom: 6px;
+    flex-wrap: wrap;
 }
 
 .gtt-detail-panel h3 {
-    font-family: var(--font-head);
+    font-family: var(--wp--preset--font-family--megan-display, var(--font-head)), serif;
     color: var(--text);
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
     margin: 8px 0;
-    font-size: 1.1rem;
+    font-size: 1.15rem;
 }
 
 .gtt-detail-close {
@@ -1338,7 +1378,7 @@
     right: 12px;
     background: none;
     border: none;
-    color: var(--text-muted);
+    color: var(--text-on-card);
     font-size: 1.1rem;
     cursor: pointer;
 }

@@ -47,14 +47,15 @@
 
 @media (display-mode: standalone) {
     body {
-        background: var(--bg) url(../images/bg.jpg) center center / contain fixed no-repeat;
+            border: 5px solid #E91E63;
+        background: var(--bg) url(../images/bg.jpg) center center / cover fixed no-repeat;
     }
 
 }
 
 body {
     font-family: var(--font-body);
-    background: var(--bg) url(../images/bg.jpg) center center / contain fixed no-repeat;
+    background: var(--bg) url(../images/bg.jpg) center center / cover fixed no-repeat;
     color: var(--text);
     min-height: 100vh;
     line-height: 1.5;

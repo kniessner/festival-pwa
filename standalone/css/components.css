@@ -286,7 +286,7 @@
 }
 
 .search-card:hover {
-    border-color: var(--accent-purple);
+    border-color: var(--accent-pink);
 }
 
 .search-meta {

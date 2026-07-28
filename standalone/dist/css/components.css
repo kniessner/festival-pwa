@@ -21,36 +21,107 @@
 /* Search bar */
 
 .search-bar {
-       padding: 12px 16px 12px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 12px 16px;
     max-width: 720px;
     margin: 0 auto;
     position: sticky;
     top: 0px;
     z-index: 1000001;
-    /* background: var(--bg); */
     width: 100%;
+}
 
+.search-toggle {
+    flex-shrink: 0;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: none;
+    background: transparent;
+    padding: 0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.15s ease;
+}
+
+.search-toggle img {
+    display: block;
+    width: 20px;
+    height: 20px;
+}
+
+.search-bar.open .search-toggle {
+    opacity: 0;
+    pointer-events: none;
+    position: absolute;
+}
+
+.search-input-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 0;
+    overflow: hidden;
+    opacity: 0;
+    padding: 0;
+    border-radius: 50px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(8px);
+    transition: width 0.25s ease, opacity 0.2s ease, padding 0.25s ease;
+}
+
+.search-bar.open .search-input-wrap {
+    width: 100%;
+    opacity: 1;
+    padding: 10px 14px;
+}
+
+.search-input-icon {
+    flex-shrink: 0;
+    display: flex;
+    line-height: 1;
+}
+
+.search-input-icon img {
+    display: block;
+    width: 18px;
+    height: 18px;
 }
 
 .search-bar input {
-    width: 100%;
-    padding: 12px 16px;
-    border-radius: var(--radius);
-    border: 1px solid var(--border);
-    background: var(--bg-card);
-    color: var(--text);
+    flex: 1;
+    min-width: 0;
+    padding: 2px 0;
+    border: none;
+    background: transparent;
+    color: var(--text-muted);
     font-family: var(--font-body);
     font-size: 0.95rem;
     outline: none;
-    backdrop-filter: blur(8px);
 }
 
 .search-bar input::placeholder {
-    color: var(--text-muted);
+    color: rgba(242, 233, 220, 0.55);
 }
 
-.search-bar input:focus {
-    border-color: var(--accent-pink);
+.search-input-close {
+    flex-shrink: 0;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    display: flex;
+    line-height: 1;
+}
+
+.search-input-close img {
+    display: block;
+    width: 14px;
+    height: 14px;
 }
 
 /* Search modal */
@@ -136,31 +207,32 @@
 }
 
 .grid-card {
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 18px 16px;
-    transition: all 0.2s;
-    backdrop-filter: blur(8px);
+    background: var(--wp--preset--color--base, #f3efdf);
+    border: 2px solid var(--card-border);
+    border-radius: var(--card-radius);
+    padding: 16px 18px;
+    transition: border-color 0.2s, box-shadow 0.2s;
 }
 
 .grid-card:hover,
 .grid-card:active {
     border-color: var(--accent-pink);
-    background: var(--bg-card-hover);
 }
 
 .grid-card h3 {
-    font-family: var(--font-head);
-    font-size: 1.05rem;
+    font-family: var(--wp--preset--font-family--megan-display, var(--font-head)), serif;
+    font-size: 1.1rem;
+    line-height: 1.2;
     color: var(--text);
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
     margin-bottom: 6px;
     font-weight: 700;
 }
 
 .grid-card p {
     font-size: 0.9rem;
-    color: var(--text-muted);
+    color: var(--text-on-card);
     line-height: 1.5;
 }
 
@@ -186,21 +258,21 @@
     font-size: 1.3rem;
     cursor: pointer;
     padding: 2px 4px;
-    opacity: 0.6;
+    opacity: 1;
     transition: opacity 0.2s, transform 0.2s;
     line-height: 1;
     flex-shrink: 0;
-    color: wheat;
+    color: var(--text-on-card);
 }
 
 .fav-btn:hover {
-    opacity: 0.6;
+    opacity: 0.7;
 }
 
 .fav-btn.active {
     opacity: 1;
     color: #FFEB3B;
-    filter: drop-shadow(0 0 6px rgba(255, 193, 7, 0.5));
+    filter: drop-shadow(0 0 4px rgba(15, 18, 130, 0.2));
 }
 
 .fav-btn:active {
@@ -214,7 +286,7 @@
 }
 
 .search-card:hover {
-    border-color: var(--accent-purple);
+    border-color: var(--accent-pink);
 }
 
 .search-meta {
@@ -247,6 +319,12 @@
 
 .bottom-nav button {
     position: relative;
+}
+
+/* Home tab hidden from the nav for now — keep the markup/route in place
+   in case we want it back. */
+.bottom-nav button[data-slug="home"] {
+    display: none;
 }
 
 /* Language toggle */
@@ -304,8 +382,9 @@
     align-items: center;
     gap: 3px;
     padding: 6px 8px;
-    font-family: var(--font-body);
-    font-size: 14px;
+ /* font-family: var(--font-body); */
+    font-family: 'Megan Display';
+    font-size: 16px;
     cursor: pointer;
     transition: color 0.2s;
     min-width: 56px;

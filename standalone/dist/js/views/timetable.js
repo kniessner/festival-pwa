@@ -113,27 +113,22 @@ function renderEventCard(ev) {
     const hasDetail = ev.description && ev.description.trim().length > 0 && ev.description !== ev.excerpt;
     const runningClass = isEventRunning(ev, store.ttFilters.day) ? 'running' : '';
     const langBadges = ev.langs && ev.langs.length ? ev.langs.map(l => `<span class="lang-badge">${l.toUpperCase()}</span>`).join('') : '';
-    const hosts = ev.hosts && ev.hosts.length ? `<span class="event-hosts">${ev.hosts.join(', ')}</span>` : '';
     const endTime = ev.end_time ? ` – ${ev.end_time}` : '';
 
     return `
     <div class="tt-event ${hasDetail ? 'has-detail' : ''} ${runningClass}" data-item-index="${idx}">
         <div class="tt-event-header" data-action="toggle-event">
-            <div class="tt-event-meta">
-                <span class="event-time">${ev.time}${endTime}</span>
-                <span class="event-type">${ev.category}</span>
-                ${langBadges}
-            </div>
             <div class="tt-event-title-row">
                 <h3>${ev.title}</h3>
-                <div class="tt-event-actions">
-                    ${favButton('timetable', idx)}
-                    ${hasDetail ? '<span class="tt-event-toggle">+</span>' : ''}
-                </div>
+                ${favButton('timetable', idx)}
             </div>
-            <span class="event-stage">${ev.stage_label}</span>
-            ${hosts}
-            ${ev.excerpt ? `<p class="event-excerpt">${ev.excerpt.substring(0, 140)}${ev.excerpt.length > 140 ? '...' : ''}</p>` : ''}
+            <div class="tt-event-subline"><strong>${ev.stage_label}</strong>, ${ev.title}</div>
+            <div class="tt-event-meta"><span class="event-time">${ev.time}${endTime}</span>, ${ev.category}</div>
+            <div class="tt-event-footer">
+                <div class="tt-event-badges">${langBadges}</div>
+                ${hasDetail ? `<span class="tt-event-toggle">${t('tt.more')}</span>` : '<span></span>'}
+                ${runningClass ? `<span class="tt-now-badge">${t('tt.now')}</span>` : ''}
+            </div>
         </div>
         ${hasDetail ? `<div class="tt-event-detail"><div class="tt-event-detail-inner">${ev.description}</div></div>` : ''}
     </div>`;
@@ -153,11 +148,11 @@ export function toggleEventDetail(header) {
     if (isOpen) {
         item.classList.remove('open');
         detail.style.display = 'none';
-        if (toggle) toggle.textContent = '+';
+        if (toggle) toggle.textContent = t('tt.more');
     } else {
         item.classList.add('open');
         detail.style.display = 'block';
-        if (toggle) toggle.textContent = '−';
+        if (toggle) toggle.textContent = t('tt.less');
     }
 }
 
