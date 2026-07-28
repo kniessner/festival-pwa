@@ -1405,9 +1405,12 @@ span#headerFilterLabel {
     position: absolute;
     top: 0;
     bottom: 0;
+    width: 120px;
+    box-sizing: border-box;
     display: flex;
     align-items: center;
-    padding-left: 6px;
+    justify-content: center;
+    border-right: 1px solid rgba(255, 255, 255, 0.2);
     font-family: var(--font-head);
     font-size: 1.05rem;
     font-weight: 700;
@@ -1415,13 +1418,15 @@ span#headerFilterLabel {
 }
 
 .gtt-hour-label-day {
+    width: auto;
+    padding: 4px 10px;
+    margin: 8px 0 8px 4px;
     background: #a49fe6;
     color: #14123f;
-    padding: 4px 10px;
-    margin: 8px 0;
     border-radius: 8px;
     text-transform: uppercase;
     letter-spacing: 0.5px;
+    border-right: none;
     z-index: 2;
 }
 
@@ -1437,6 +1442,7 @@ span#headerFilterLabel {
 .gtt-stagerow-wrap {
     display: flex;
     align-items: stretch;
+    background: var(--bg);
     border-bottom: 1px solid rgba(255, 255, 255, 0.3);
 }
 
@@ -1471,7 +1477,11 @@ span#headerFilterLabel {
 .gtt-stagerow {
     flex: 0 0 auto;
     position: relative;
-    background: var(--bg);
+    /* No background here — .gtt-stagerow is a positioned element (for its
+       .gtt-event children), so an opaque background here would paint on top
+       of the .gtt-hour-tick lines (also positioned, but earlier in the DOM).
+       The row's background lives on .gtt-stagerow-wrap instead, which is
+       unpositioned and always paints behind every positioned element. */
 }
 
 /* One absolutely-positioned line per hour boundary, spanning the whole track —
