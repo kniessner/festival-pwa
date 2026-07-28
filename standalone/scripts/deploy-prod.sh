@@ -1,13 +1,16 @@
 #!/usr/bin/env bash
 # Festival PWA Standalone — Production Deploy (SSH)
-# Rsyncs the current standalone build to bucht-der-traeumer.de/app over SSH.
+# Rsyncs the current standalone build to bucht-der-traeumer.de/webapp over SSH.
 #
 # Usage: ./scripts/deploy-prod.sh [--dry-run]
 #
-# Target: htdocs/app/ on the WordPress.com Atomic host. Apache serves that
-# directory directly (same mechanism the existing /pwa symlink relies on),
-# shadowing the unrelated WordPress page that otherwise lives at /app —
-# see standalone/docs/plans/2026-07-27-i18n-de-en-round1.md context for why.
+# Target: htdocs/webapp/ on the WordPress.com Atomic host. Apache serves
+# that directory directly (same mechanism the existing /pwa symlink relies
+# on). This path used to be /app, which shadowed an unrelated WordPress
+# page — see standalone/docs/plans/2026-07-27-i18n-de-en-round1.md context
+# for why that mechanism works. The old htdocs/app/ content on the server
+# is left in place (not cleaned up automatically); remove it by hand once
+# nothing still links to /app.
 #
 # This does NOT touch wp-content/plugins/festival-pwa/ (a separate git
 # checkout on the server with its own uncommitted edits) or the /pwa path.
@@ -18,8 +21,8 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 
 SSH_TARGET="buchtdertraeumer.wordpress.com@ssh.wp.com"
-REMOTE_APP_DIR="htdocs/app/"
-LIVE_URL="https://bucht-der-traeumer.de/app/"
+REMOTE_APP_DIR="htdocs/webapp/"
+LIVE_URL="https://bucht-der-traeumer.de/webapp/"
 
 RSYNC_FLAGS=(-avz)
 if [ "$1" = "--dry-run" ]; then
