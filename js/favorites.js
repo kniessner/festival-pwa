@@ -29,6 +29,26 @@ export function isFavorite(pageSlug, itemIndex) {
     return getFavorites().some(f => f.page === pageSlug && f.index === itemIndex);
 }
 
+// Stored favorites can outlive the item they pointed to — e.g. a re-scrape
+// reshuffles the timetable's event order, or a favorite was saved while
+// viewing the other language's (differently-indexed) data. getFavorites()
+// itself doesn't know about that; this filters to entries that still
+// resolve to a real event/item in the *currently loaded* data, which is
+// what the nav badge and the My Plan page should both be counting instead
+// of the raw, possibly-stale localStorage entry count.
+export function countValidFavorites() {
+    let count = 0;
+    for (const f of getFavorites()) {
+        if (f.page === 'timetable') {
+            if (store.pageData.timetable?.events?.[f.index]) count++;
+        } else if (f.page.startsWith('info-')) {
+            const sub = f.page.replace('info-', '');
+            if (store.pageData.info?.[sub]?.items?.[f.index]) count++;
+        }
+    }
+    return count;
+}
+
 // Scheduled favorites (timetable events) that haven't ended yet, soonest first.
 // Events without a day/start_time have no schedule to compare against and are skipped.
 //

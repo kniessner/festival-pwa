@@ -390,7 +390,7 @@ span#headerFilterLabel {
     font-family: var(--wp--preset--font-family--megan-display, var(--font-head)), serif;
     color: var(--text);
     font-weight: 700;
-    font-size: 0.95rem;
+    font-size: 24px;
     gap: 12px;
     text-transform: uppercase;
     letter-spacing: 0.3px;
@@ -421,7 +421,7 @@ span#headerFilterLabel {
 .faq-answer {
     padding: 0 16px 18px;
     color: var(--text-on-card);
-    font-size: 0.9rem;
+    font-size: 16px;
     line-height: 1.6;
     display: none;
 }

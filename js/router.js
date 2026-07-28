@@ -6,11 +6,11 @@ import { renderTimetable } from './views/timetable.js';
 import { renderGridTimetable } from './views/timetable-grid.js';
 import { renderInfo } from './views/info.js';
 import { renderFavorites } from './views/favorites.js';
-import { getFavorites } from './favorites.js';
+import { countValidFavorites } from './favorites.js';
 
 export function renderNav() {
     const nav = document.getElementById('pageNav');
-    const favCount = getFavorites().length;
+    const favCount = countValidFavorites();
     nav.innerHTML = PAGES.map((p, i) => {
         const badge = p.slug === 'favorites' && favCount > 0 ? `<span class="nav-badge">${favCount}</span>` : '';
         const icon = p.icon.endsWith('.svg')
