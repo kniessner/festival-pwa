@@ -11,11 +11,23 @@ export const store = {
     gridScrollMode: 'vertical'
 };
 
+async function fetchLocalized(file, lang) {
+    if (lang !== 'de') {
+        try {
+            const res = await fetch(`data/${lang}/${file}`);
+            if (res.ok) return await res.json();
+        } catch (e) {
+            // fall through to German
+        }
+    }
+    const res = await fetch(`data/${file}`);
+    return res.json();
+}
+
 export async function loadData() {
     for (const [slug, file] of Object.entries(DATA_FILES)) {
         try {
-            const res = await fetch(`data/${file}`);
-            store.pageData[slug] = await res.json();
+            store.pageData[slug] = await fetchLocalized(file, store.lang);
         } catch (e) {
             console.error('Failed to load', file, e);
         }
