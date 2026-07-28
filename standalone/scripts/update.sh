@@ -173,94 +173,105 @@ with open('$MANIFEST_TMP') as f:
 else
     echo "📄 Scraping HTML pages directly from source..."
     echo ""
-    
-    CURRENT_PAGES="cashless faqs programm-2026 performances workshops"
 
-    # Remove stale output files to avoid stale data if a page is removed
-    rm -f "$DATA_DIR"/_manifest.json "$DATA_DIR"/timetable.json
-    
-    info "Expected pages: $(echo $CURRENT_PAGES | tr '\n' ' ')"
-    
-    for slug in $CURRENT_PAGES; do
-        PAGE_URL="$URL/$slug/"
-        DEST="$DATA_DIR/${slug}.json"
-        TMP="$DATA_DIR/_tmp_${slug}.html"
-        
-        echo "   Fetching /$slug/ ..."
-        info "Fetching /$slug/ from $PAGE_URL"
-        
-        HTTP_CODE=$(curl -sfL -o "$TMP" -w "%{http_code}" "$PAGE_URL" 2>/dev/null; echo "") || true
-        HTTP_CODE=$(echo "$HTTP_CODE" | tail -c 4 | head -c 3)
-        if [ ! -f "$TMP" ]; then SIZE=0; else SIZE=$(wc -c < "$TMP" 2>/dev/null || echo 0); fi
-        
-        if [ "$HTTP_CODE" = "200" ] && [ "$SIZE" -gt 100 ]; then
-            info "/$slug/ fetched ($SIZE bytes, HTTP 200)"
-            
-            if [ "$slug" = "cashless" ] || [ "$slug" = "faqs" ]; then
-                info "Using FAQ extractor for $slug"
-                if python3 "$SCRIPTS_DIR/_extract_faq.py" "$PAGE_URL" "$DEST" >> "$LOG_FILE" 2>&1; then
-                    DEST_SIZE=$(wc -c < "$DEST" 2>/dev/null || echo 0)
-                    ok "/$slug/ FAQ extracted ($DEST_SIZE bytes)"
-                    echo "      ✅ FAQ extracted ($DEST_SIZE bytes)"
-                    echo "{\"slug\":\"$slug\",\"status\":\"success\",\"detail\":\"FAQ extracted\",\"http_code\":\"$HTTP_CODE\",\"bytes\":$DEST_SIZE}" >> "$TMP_PAGES"
+    # One pass per language. DE scrapes everything the app uses today.
+    # EN only scrapes the sources _build_timetable.py needs to build an
+    # English timetable — cashless/faqs stay German until Round 2 adds
+    # an English Info/FAQ pipeline.
+    run_scrape_pass() {
+        local pass_url="$1" pass_dir="$2" pass_lang="$3"
+        shift 3
+        local pass_pages="$*"
+
+        mkdir -p "$pass_dir"
+        rm -f "$pass_dir"/_manifest.json "$pass_dir"/timetable.json
+
+        info "[$pass_lang] Expected pages: $pass_pages"
+
+        for slug in $pass_pages; do
+            PAGE_URL="$pass_url/$slug/"
+            DEST="$pass_dir/${slug}.json"
+            TMP="$pass_dir/_tmp_${slug}.html"
+
+            echo "   [$pass_lang] Fetching /$slug/ ..."
+            info "[$pass_lang] Fetching /$slug/ from $PAGE_URL"
+
+            HTTP_CODE=$(curl -sfL -o "$TMP" -w "%{http_code}" "$PAGE_URL" 2>/dev/null; echo "") || true
+            HTTP_CODE=$(echo "$HTTP_CODE" | tail -c 4 | head -c 3)
+            if [ ! -f "$TMP" ]; then SIZE=0; else SIZE=$(wc -c < "$TMP" 2>/dev/null || echo 0); fi
+
+            if [ "$HTTP_CODE" = "200" ] && [ "$SIZE" -gt 100 ]; then
+                info "[$pass_lang] /$slug/ fetched ($SIZE bytes, HTTP 200)"
+
+                if [ "$slug" = "cashless" ] || [ "$slug" = "faqs" ]; then
+                    info "[$pass_lang] Using FAQ extractor for $slug"
+                    if python3 "$SCRIPTS_DIR/_extract_faq.py" "$PAGE_URL" "$DEST" >> "$LOG_FILE" 2>&1; then
+                        DEST_SIZE=$(wc -c < "$DEST" 2>/dev/null || echo 0)
+                        ok "[$pass_lang] /$slug/ FAQ extracted ($DEST_SIZE bytes)"
+                        echo "      ✅ FAQ extracted ($DEST_SIZE bytes)"
+                        echo "{\"slug\":\"$pass_lang/$slug\",\"status\":\"success\",\"detail\":\"FAQ extracted\",\"http_code\":\"$HTTP_CODE\",\"bytes\":$DEST_SIZE}" >> "$TMP_PAGES"
+                    else
+                        error "[$pass_lang] /$slug/ FAQ extraction failed (see log)"
+                        echo "      ❌ FAQ extraction failed"
+                        echo "{\"slug\":\"$pass_lang/$slug\",\"status\":\"failed\",\"detail\":\"FAQ extraction failed\",\"http_code\":\"$HTTP_CODE\",\"bytes\":$SIZE}" >> "$TMP_PAGES"
+                    fi
+                elif [ "$slug" = "programm-2026" ]; then
+                    info "[$pass_lang] Using Program extractor for $slug"
+                    if python3 "$SCRIPTS_DIR/_extract_program.py" "$PAGE_URL" "$DEST" "$pass_lang" >> "$LOG_FILE" 2>&1; then
+                        DEST_SIZE=$(wc -c < "$DEST" 2>/dev/null || echo 0)
+                        ok "[$pass_lang] /$slug/ program extracted ($DEST_SIZE bytes)"
+                        echo "      ✅ Program extracted ($DEST_SIZE bytes)"
+                        echo "{\"slug\":\"$pass_lang/$slug\",\"status\":\"success\",\"detail\":\"Program extracted\",\"http_code\":\"$HTTP_CODE\",\"bytes\":$DEST_SIZE}" >> "$TMP_PAGES"
+                    else
+                        error "[$pass_lang] /$slug/ program extraction failed (see log)"
+                        echo "      ❌ Program extraction failed"
+                        echo "{\"slug\":\"$pass_lang/$slug\",\"status\":\"failed\",\"detail\":\"Program extraction failed\",\"http_code\":\"$HTTP_CODE\",\"bytes\":$SIZE}" >> "$TMP_PAGES"
+                    fi
                 else
-                    error "/$slug/ FAQ extraction failed (see log)"
-                    echo "      ❌ FAQ extraction failed"
-                    echo "{\"slug\":\"$slug\",\"status\":\"failed\",\"detail\":\"FAQ extraction failed\",\"http_code\":\"$HTTP_CODE\",\"bytes\":$SIZE}" >> "$TMP_PAGES"
+                    info "[$pass_lang] Using Grid extractor for $slug"
+                    if python3 "$SCRIPTS_DIR/_extract_grid.py" "$PAGE_URL" "$DEST" "$slug" >> "$LOG_FILE" 2>&1; then
+                        DEST_SIZE=$(wc -c < "$DEST" 2>/dev/null || echo 0)
+                        ok "[$pass_lang] /$slug/ grid extracted ($DEST_SIZE bytes)"
+                        echo "      ✅ Grid extracted ($DEST_SIZE bytes)"
+                        echo "{\"slug\":\"$pass_lang/$slug\",\"status\":\"success\",\"detail\":\"Grid extracted\",\"http_code\":\"$HTTP_CODE\",\"bytes\":$DEST_SIZE}" >> "$TMP_PAGES"
+                    else
+                        error "[$pass_lang] /$slug/ grid extraction failed (see log)"
+                        echo "      ❌ Grid extraction failed"
+                        echo "{\"slug\":\"$pass_lang/$slug\",\"status\":\"failed\",\"detail\":\"Grid extraction failed\",\"http_code\":\"$HTTP_CODE\",\"bytes\":$SIZE}" >> "$TMP_PAGES"
+                    fi
                 fi
-            elif [ "$slug" = "programm-2026" ]; then
-                info "Using Program extractor for $slug"
-                if python3 "$SCRIPTS_DIR/_extract_program.py" "$PAGE_URL" "$DEST" >> "$LOG_FILE" 2>&1; then
-                    DEST_SIZE=$(wc -c < "$DEST" 2>/dev/null || echo 0)
-                    ok "/$slug/ program extracted ($DEST_SIZE bytes)"
-                    echo "      ✅ Program extracted ($DEST_SIZE bytes)"
-                    echo "{\"slug\":\"$slug\",\"status\":\"success\",\"detail\":\"Program extracted\",\"http_code\":\"$HTTP_CODE\",\"bytes\":$DEST_SIZE}" >> "$TMP_PAGES"
-                else
-                    error "/$slug/ program extraction failed (see log)"
-                    echo "      ❌ Program extraction failed"
-                    echo "{\"slug\":\"$slug\",\"status\":\"failed\",\"detail\":\"Program extraction failed\",\"http_code\":\"$HTTP_CODE\",\"bytes\":$SIZE}" >> "$TMP_PAGES"
-                fi
+                rm -f "$TMP"
             else
-                info "Using Grid extractor for $slug"
-                if python3 "$SCRIPTS_DIR/_extract_grid.py" "$PAGE_URL" "$DEST" "$slug" >> "$LOG_FILE" 2>&1; then
-                    DEST_SIZE=$(wc -c < "$DEST" 2>/dev/null || echo 0)
-                    ok "/$slug/ grid extracted ($DEST_SIZE bytes)"
-                    echo "      ✅ Grid extracted ($DEST_SIZE bytes)"
-                    echo "{\"slug\":\"$slug\",\"status\":\"success\",\"detail\":\"Grid extracted\",\"http_code\":\"$HTTP_CODE\",\"bytes\":$DEST_SIZE}" >> "$TMP_PAGES"
-                else
-                    error "/$slug/ grid extraction failed (see log)"
-                    echo "      ❌ Grid extraction failed"
-                    echo "{\"slug\":\"$slug\",\"status\":\"failed\",\"detail\":\"Grid extraction failed\",\"http_code\":\"$HTTP_CODE\",\"bytes\":$SIZE}" >> "$TMP_PAGES"
-                fi
-            fi
-            rm -f "$TMP"
-        else
-            error "/$slug/ fetch failed — HTTP $HTTP_CODE, $SIZE bytes"
-            
-            if [ "$HTTP_CODE" = "000" ]; then
-                error "  → Network error (DNS or connection refused)"
-            elif [ "$HTTP_CODE" = "404" ]; then
-                error "  → Page not found — check if /$slug/ exists on $URL"
-            elif [ "$HTTP_CODE" = "403" ]; then
-                error "  → Access forbidden — the site may block curl"
-            elif [ "$SIZE" -le 100 ]; then
-                error "  → Response body empty — may be a redirect or error page"
-            fi
-            
-            echo "      ❌ Failed to fetch /$slug/ (HTTP $HTTP_CODE, $SIZE bytes)"
-            rm -f "$TMP"
-            echo "{\"slug\":\"$slug\",\"status\":\"failed\",\"detail\":\"HTTP $HTTP_CODE\",\"http_code\":\"$HTTP_CODE\",\"bytes\":$SIZE}" >> "$TMP_PAGES"
-        fi
-    done
+                error "[$pass_lang] /$slug/ fetch failed — HTTP $HTTP_CODE, $SIZE bytes"
 
-    info "Building unified timetable"
-    if python3 "$SCRIPTS_DIR/_build_timetable.py" "$DATA_DIR" >> "$LOG_FILE" 2>&1; then
-        ok "Timetable built"
-        echo "      ✅ Timetable built"
-    else
-        warn "Timetable build had issues"
-        echo "      ⚠️ Timetable build had issues"
-    fi
+                if [ "$HTTP_CODE" = "000" ]; then
+                    error "  → Network error (DNS or connection refused)"
+                elif [ "$HTTP_CODE" = "404" ]; then
+                    error "  → Page not found — check if /$slug/ exists on $pass_url"
+                elif [ "$HTTP_CODE" = "403" ]; then
+                    error "  → Access forbidden — the site may block curl"
+                elif [ "$SIZE" -le 100 ]; then
+                    error "  → Response body empty — may be a redirect or error page"
+                fi
+
+                echo "      ❌ Failed to fetch /$slug/ (HTTP $HTTP_CODE, $SIZE bytes)"
+                rm -f "$TMP"
+                echo "{\"slug\":\"$pass_lang/$slug\",\"status\":\"failed\",\"detail\":\"HTTP $HTTP_CODE\",\"http_code\":\"$HTTP_CODE\",\"bytes\":$SIZE}" >> "$TMP_PAGES"
+            fi
+        done
+
+        info "[$pass_lang] Building unified timetable"
+        if python3 "$SCRIPTS_DIR/_build_timetable.py" "$pass_dir" "$pass_lang" >> "$LOG_FILE" 2>&1; then
+            ok "[$pass_lang] Timetable built"
+            echo "      ✅ [$pass_lang] Timetable built"
+        else
+            warn "[$pass_lang] Timetable build had issues"
+            echo "      ⚠️ [$pass_lang] Timetable build had issues"
+        fi
+    }
+
+    run_scrape_pass "$URL" "$DATA_DIR" "de" cashless faqs programm-2026 performances workshops
+    run_scrape_pass "$URL/en" "$DATA_DIR/en" "en" programm-2026 performances workshops
 
     info "Regenerating manifest"
     python3 "$SCRIPTS_DIR/_update_manifest.py" "$DATA_DIR" "Bucht der Träumer*" >> "$LOG_FILE" 2>&1 || warn "Manifest regeneration had issues"

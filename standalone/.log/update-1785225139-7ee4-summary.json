@@ -1,0 +1,69 @@
+{
+  "trace_id": "1785225139-7ee4",
+  "mode": "source",
+  "url": "https://bucht-der-traeumer.de",
+  "timestamp": "2026-07-28T09:52:51+02:00",
+  "total_pages": 8,
+  "success": 8,
+  "failed": 0,
+  "pages": [
+    {
+      "slug": "de/cashless",
+      "status": "success",
+      "detail": "FAQ extracted",
+      "http_code": "200",
+      "bytes": 8933
+    },
+    {
+      "slug": "de/faqs",
+      "status": "success",
+      "detail": "FAQ extracted",
+      "http_code": "200",
+      "bytes": 10144
+    },
+    {
+      "slug": "de/programm-2026",
+      "status": "success",
+      "detail": "Program extracted",
+      "http_code": "200",
+      "bytes": 168943
+    },
+    {
+      "slug": "de/performances",
+      "status": "success",
+      "detail": "Grid extracted",
+      "http_code": "200",
+      "bytes": 10327
+    },
+    {
+      "slug": "de/workshops",
+      "status": "success",
+      "detail": "Grid extracted",
+      "http_code": "200",
+      "bytes": 41483
+    },
+    {
+      "slug": "en/programm-2026",
+      "status": "success",
+      "detail": "Program extracted",
+      "http_code": "200",
+      "bytes": 160743
+    },
+    {
+      "slug": "en/performances",
+      "status": "success",
+      "detail": "Grid extracted",
+      "http_code": "200",
+      "bytes": 10274
+    },
+    {
+      "slug": "en/workshops",
+      "status": "success",
+      "detail": "Grid extracted",
+      "http_code": "200",
+      "bytes": 39896
+    }
+  ],
+  "log_file": ".log/update-1785225139-7ee4.log",
+  "error_file": ".log/update-1785225139-7ee4-errors.log"
+}

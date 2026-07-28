@@ -11,27 +11,27 @@
       },
       {
         "value": "2026-08-13",
-        "label": "Donnerstag"
+        "label": "DO"
       },
       {
         "value": "2026-08-14",
-        "label": "Freitag"
+        "label": "FR"
       },
       {
         "value": "2026-08-15",
-        "label": "Samstag"
+        "label": "SA"
       },
       {
         "value": "2026-08-16",
-        "label": "Sonntag"
+        "label": "SO"
       },
       {
         "value": "2026-06-15",
-        "label": "Montag"
+        "label": "MO"
       },
       {
         "value": "no-day",
-        "label": "Ohne Tag"
+        "label": "…"
       }
     ],
     "stages": [
@@ -466,7 +466,8 @@
       "excerpt": "Das Leben macht mehr Spaß, wenn wir JA sagen statt nein und erkunden statt immer auf Nummer sicher zu gehen. „Sexy Improv“ verbindet die&hellip;",
       "description": "Das Leben macht mehr Spaß, wenn wir JA sagen statt nein und erkunden statt immer auf Nummer sicher zu gehen. „Sexy Improv“ verbindet die grundlegenden (und ja, lebensverändernden) Werkzeuge des Improvisationstheaters mit einer Prise sexueller Energie. Wecke das verspielte Kind in dir, lass den Albernheiten freien Lauf und deine Urteile hinter dir. Und nicht vergessen: bring dein sexiestes Flirt-Game mit!",
       "hosts": [
-        "Anna Gamburg & Sonja Werner"
+        "Sonja Werner",
+        "Anna Gamburg"
       ]
     },
     {
@@ -506,7 +507,7 @@
       ]
     },
     {
-      "title": "Body of pleasure",
+      "title": "Body of Pleasure",
       "day": "2026-08-14",
       "day_label": "Freitag",
       "time": "FR 00:00",
@@ -603,7 +604,7 @@
       "excerpt": "Raves können kraftvolle Räume der Verbindung, des Staunens und der Verwandlung sein. Wir verweben psychologische Erkenntnisse zum Phänomen des Staunens mit yogischer Philosophie. Durch&hellip;",
       "description": "Raves können kraftvolle Räume der Verbindung, des Staunens und der Verwandlung sein. Wir verweben psychologische Erkenntnisse zum Phänomen des Staunens mit yogischer Philosophie. Durch Atemarbeit, somatische Praktiken und achtsame Bewegung erkunden wir, wie Hingabe, Selbsttranszendenz und Einheit auf der Tanzfläche entstehen – und wie diese Erfahrungen Heilung, Integration und tiefere Verbindung über das Festival hinaus unterstützen können.",
       "hosts": [
-        "Juli Hause & Natalie Krug"
+        "Juli Hauser & Natalie Krug"
       ]
     },
     {
@@ -823,11 +824,13 @@
       "excerpt": "Diese Tanzfläche ist zum Tanzen da! Das ist das Credo von Tanzen3000 – eine geführte Aktivierung deiner körperlichen und sozialen Muskeln, gepaart mit einem&hellip;",
       "description": "Diese Tanzfläche ist zum Tanzen da! Das ist das Credo von Tanzen3000 – eine geführte Aktivierung deiner körperlichen und sozialen Muskeln, gepaart mit einem frechen DJ-Mix. Tanzen3000 verwandelt steife Kartoffeln in scharfe Chilis und verspannte Hüften in lebendiges Dynamit. Bring dein fehlendes Rhythmusgefühl und deine Angst vor Social Dancing mit, vergiss dann alles und versuch nur, deine Klamotten anzubehalten – denn wir machen Fiesta.",
       "hosts": [
-        "DJ: Zuzu, Dance Instructor: Toomuch"
+        "Zuzu",
+        "Thomas Scheele",
+        "Toomuch by Tanzen3000"
       ]
     },
     {
-      "title": "Eat the rich – Klassenkampf von unten",
+      "title": "Eat the Rich – Klassenkampf von unten",
       "day": "2026-08-14",
       "day_label": "Freitag",
       "time": "FR 13:30",
@@ -864,12 +867,12 @@
       "excerpt": "Palästina & Israel beschäftigt viele Menschen. Wir möchten das Thema auf empathische Weise besprechbar machen, indem wir einen Raum des Teilens, Reflektierens und des&hellip;",
       "description": "Palästina & Israel beschäftigt viele Menschen. Wir möchten das Thema auf empathische Weise besprechbar machen, indem wir einen Raum des Teilens, Reflektierens und des Zuhörens schaffen, in dem Gedanken und Gefühle Platz haben. Dabei gehen wir den Fragen nach: Wie ist meine Perspektive auf das Thema Palästina-Israel entstanden? Warum wird das Thema Palästina-Israel in Deutschland so kontrovers und emotional diskutiert? Wie kann das “Im Hier Und Jetzt Sein” politisch verstanden werden? Wie drückt sich unsere Ohnmacht in Bezug auf dieses Thema aus – und wie können wir diese in eine Gegenmacht, in eine Handlungsfähigkeit umwandeln?\n\nDer Raum setzt eine Bereitschaft zur Selbstreflexion und zum respektvollen Umgang mit  unterschiedlichen Zugängen und Erfahrungen voraus. Die Teilnahme ist freiwillig.",
       "hosts": [
-        "Christoph Dinkelaker und Ahmad Dakhnous",
-        "Christoph Steinacker"
+        "Ahmad Dakhnous",
+        "Christoph Dinkelacker"
       ]
     },
     {
-      "title": "The Peepshow,",
+      "title": "The Peepshow",
       "day": "2026-08-14",
       "day_label": "Freitag",
       "time": "FR 14:00",
@@ -946,7 +949,7 @@
       "excerpt": "",
       "description": "",
       "hosts": [
-        "Lila Rose Kole"
+        "Florian Henkel & Celine Wulbeck"
       ]
     },
     {
@@ -970,7 +973,7 @@
       ]
     },
     {
-      "title": "Panel: Hedonism vs. Community Activation – How to reconnect (or get active) despite feelings of Powerlessness",
+      "title": "Panel: Hedonism vs. Community Activation – How to reconnect (or get active) despite Feelings of Powerlessness",
       "day": "2026-08-14",
       "day_label": "Freitag",
       "time": "FR 15:00",
@@ -986,6 +989,9 @@
       "excerpt": "",
       "description": "",
       "hosts": [
+        "Zuher Jazmati",
+        "Luise Klingma",
+        "Pauline Jäckels",
         "Emiko Gejic"
       ]
     },
@@ -1011,7 +1017,7 @@
       ]
     },
     {
-      "title": "The Peepshow,",
+      "title": "The Peepshow",
       "day": "2026-08-14",
       "day_label": "Freitag",
       "time": "FR 16:00",
@@ -1031,7 +1037,7 @@
       ]
     },
     {
-      "title": "To grow or not to grow? Ideas for a fair and sustainable future",
+      "title": "To grow or not to grow? Ideas for a fair and sustainable Future",
       "day": "2026-08-14",
       "day_label": "Freitag",
       "time": "FR 16:00",
@@ -1047,7 +1053,7 @@
       "excerpt": "Wir betrachten, wie aktuelle soziale und ökologische Krisen mit unserem Wirtschaftssystem und dessen Wachstumszwang verflochten sind. Wir stellen Degrowth als alternatives Modell für Konsum&hellip;",
       "description": "Wir betrachten, wie aktuelle soziale und ökologische Krisen mit unserem Wirtschaftssystem und dessen Wachstumszwang verflochten sind. Wir stellen Degrowth als alternatives Modell für Konsum und Produktion vor und zeigen, warum bloßes „Grünfärben“ der Wirtschaft nicht ausreicht. Teilnehmende können in ein Thema vertiefen: Feminismus & Care-Arbeit, Depense, Neokolonialismus oder KI-Beschleunigung & Klimawirkungen.",
       "hosts": [
-        "Annemarie Witschas"
+        "Annie Witschas & Valentina Vavalà & Gusztáv Ottrubay"
       ]
     },
     {
@@ -1106,7 +1112,7 @@
       "excerpt": "Hast du Lust, dich auf eine kleine Reise mitnehmen zu lassen, auf der du dich, dein Gegenüber und eure Möglichkeiten der Begegnung neu entdecken&hellip;",
       "description": "Hast du Lust, dich auf eine kleine Reise mitnehmen zu lassen, auf der du dich, dein Gegenüber und eure Möglichkeiten der Begegnung neu entdecken darfst? Wir laden dich ein, spielerisch authentische Begegnungen zu erleben. Wir sind Lara und Crispin, systemische Therapeutin und Zirkuspädagoge. Mit achtsamen Bewegungs- und Partnerübungen schaffen wir einen Raum, um sanft in Kontakt zu kommen und Nähe und Distanz zu gestalten.",
       "hosts": [
-        "Crispin Bade, Lara Pickener"
+        "Crispin Bade & Lara Pickener"
       ]
     },
     {
@@ -1150,7 +1156,7 @@
       ]
     },
     {
-      "title": "A Quarter to Infinity",
+      "title": "Planet Atelier",
       "day": "2026-08-14",
       "day_label": "Freitag",
       "time": "FR 18:00",
@@ -1167,7 +1173,7 @@
       "excerpt": "Ein kreativer und meditativer Workshop, der die Teilnehmer dazu einlädt, aus recycelten Materialien, Texturen und Fundstücken ihre eigenen Miniaturplaneten zu gestalten. Inspiriert vom skulpturalen&hellip;",
       "description": "Ein kreativer und meditativer Workshop, der die Teilnehmer dazu einlädt, aus recycelten Materialien, Texturen und Fundstücken ihre eigenen Miniaturplaneten zu gestalten. Inspiriert vom skulpturalen Universum von „A Quarter to Infinity“ erkundet das Atelier alternative Kosmologien durch intuitive Vorstellungskraft.",
       "hosts": [
-        "Planet Atelier"
+        "A Quarter to Infinity"
       ]
     },
     {
@@ -1329,12 +1335,12 @@
       ]
     },
     {
-      "title": "Sober Speed Dating & Sober Rave Night",
+      "title": "Sober Speed Dating",
       "day": "2026-08-14",
       "day_label": "Freitag",
       "time": "FR 22:30",
       "start_time": "22:30",
-      "end_time": "03:30",
+      "end_time": "23:30",
       "stage": "cuddle-poodle",
       "stage_label": "Cuddle Poodle",
       "type": "interaktiver-workshop",
@@ -1343,7 +1349,7 @@
         "de"
       ],
       "excerpt": "Seid dabei und erlebt flirtigen Dating-Spaß, bei dem die Chemie zwischen faszinierenden, abstinenten (und neugierigen) Menschen sprüht! Angeleitet durch Gesprächsanregungen und Kennenlernspiele – wer&hellip;",
-      "description": "Seid dabei und erlebt flirtigen Dating-Spaß, bei dem die Chemie zwischen faszinierenden, abstinenten (und neugierigen) Menschen sprüht! Angeleitet durch Gesprächsanregungen und Kennenlernspiele – wer weiß, welche herzklopfenden, verspielten, bedeutungsvollen Verbindungen und Romanzen sich daraus entwickeln könnten? Anschließend findet ein von MINJA kuratierter „Sober Rave“ mit mitreißenden Beats statt",
+      "description": "Seid dabei und erlebt flirtigen Dating-Spaß, bei dem die Chemie zwischen faszinierenden, abstinenten (und neugierigen) Menschen sprüht! Angeleitet durch Gesprächsanregungen und Kennenlernspiele – wer weiß, welche herzklopfenden, verspielten, bedeutungsvollen Verbindungen und Romanzen sich daraus entwickeln könnten?",
       "hosts": [
         "Jessie Sonnenschein"
       ]
@@ -1364,6 +1370,27 @@
       "description": "Pinky Promise ist zurück – mit einer provokanten, sinnlichen und queer-erotischen Cabaret-Show voller atemberaubender Performances: Luftartistinnen, Pole-Tanz, Burlesque, Drag und teuflisch-göttliche Abweichungen. Wieder im Zirkus Mond und mit viel viel Glamour, Ekstase und Grenzverschiebung. Kommt früh! Achtung: Viel nackte Haut!",
       "hosts": [
         "Pinky Promise"
+      ]
+    },
+    {
+      "title": "Sober Rave Night",
+      "day": "2026-08-14",
+      "day_label": "Freitag",
+      "time": "FR 23:30",
+      "start_time": "23:30",
+      "end_time": "03:30",
+      "stage": "",
+      "stage_label": "",
+      "type": "",
+      "type_label": "",
+      "langs": [
+        "de",
+        "en"
+      ],
+      "excerpt": "Freut euch aufen einen von MINJA kuratiertern „Sober Rave“ mit mitreißenden Beats 🥰 Line-Up:Minja B2B MaleaLila Veil (live)",
+      "description": "Freut euch aufen einen von MINJA kuratiertern „Sober Rave“ mit mitreißenden Beats 🥰\n\nLine-Up:Minja B2B MaleaLila Veil (live)",
+      "hosts": [
+        "Jessie Sonnenschein"
       ]
     },
     {
@@ -1485,7 +1512,7 @@
       ]
     },
     {
-      "title": "This Is your Moment – The art of being alive",
+      "title": "This Is your Moment – The Art of being alive",
       "day": "2026-08-15",
       "day_label": "Samstag",
       "time": "SA 10:00",
@@ -1496,7 +1523,7 @@
       "type": "interaktiver-workshop",
       "type_label": "Workshop",
       "langs": [
-        "de"
+        "en"
       ],
       "excerpt": "Wann hast du dich das letzte Mal vollkommen präsent gefühlt? Was passiert, wenn du aufhörst zu hetzen und wirklich ankommst? Komm zu diesem Workshop,&hellip;",
       "description": "Wann hast du dich das letzte Mal vollkommen präsent gefühlt? Was passiert, wenn du aufhörst zu hetzen und wirklich ankommst? Komm zu diesem Workshop, um bei dir einzuchecken und den Grundstein für einen schönen Festivalstart zu legen. Durch Stille, bewusstes Atmen, Stimmübungen, sanftes Stretching, Bewegung und Klanglandschaften verbinden wir uns wieder mit uns selbst und dem gegenwärtigen Moment. Präsenz ist eine Praxis der Freiheit.",
@@ -1541,11 +1568,11 @@
       "excerpt": "Eine Reise ausgelöst durch Frequenzen, Vibrationen und Klängen, die dir verhelfen in dich selbst und in den Moment einzutauchen.",
       "description": "",
       "hosts": [
-        "Melanie Sichardt, André Richter"
+        "Melanie Sichardt & André Richter"
       ]
     },
     {
-      "title": "Decisive is the new black",
+      "title": "Decisive is the new Black",
       "day": "2026-08-15",
       "day_label": "Samstag",
       "time": "SA 11:30",
@@ -1702,7 +1729,7 @@
       ]
     },
     {
-      "title": "self Massage: shake, flow, & release",
+      "title": "Self Massage: Shake, Flow, & Release",
       "day": "2026-08-15",
       "day_label": "Samstag",
       "time": "SA 13:30",
@@ -1782,7 +1809,7 @@
       ]
     },
     {
-      "title": "Panel: Money & Power in cultural creation – aktuelle Situation/ Shift in der Kulturszene",
+      "title": "Panel: Money & Power in Cultural Creation – aktuelle Situation/ Shift in der Kulturszene",
       "day": "2026-08-15",
       "day_label": "Samstag",
       "time": "SA 14:00",
@@ -1799,6 +1826,9 @@
       "excerpt": "Wer Kultur finanziert, bestimmt oft auch ihre Handlungsspielräume. In Zeiten von Haushaltskürzungen und wachsender Förderabhängigkeit stellt sich die Frage: Wie frei kann die Kulturszene&hellip;",
       "description": "Wer Kultur finanziert, bestimmt oft auch ihre Handlungsspielräume. In Zeiten von Haushaltskürzungen und wachsender Förderabhängigkeit stellt sich die Frage: Wie frei kann die Kulturszene wirklich sein? Das Panel diskutiert Machtstrukturen in der Kulturförderung und Herausforderungen für eine unabhängige Kulturszene. Welche alternativen Finanzierungsmodelle brauchen wir – und wie entstehen selbstbestimmte Strukturen jenseits staatlicher Förderung?",
       "hosts": [
+        "Thomas Scheele",
+        "Alexander Krüger",
+        "Lindi Delight",
         "Emiko Gejic"
       ]
     },
@@ -1860,7 +1890,7 @@
       "excerpt": "Der Workshop verbindet Graffiti, politischen Ausdruck und gemeinschaftliches Arbeiten. Nach einem gemeinsamen Einstieg tauschen wir uns über die Bedeutung von Street Art und gesellschaftliche&hellip;",
       "description": "Der Workshop verbindet Graffiti, politischen Ausdruck und gemeinschaftliches Arbeiten. Nach einem gemeinsamen Einstieg tauschen wir uns über die Bedeutung von Street Art und gesellschaftliche Anliegen aus. Anschließend gestalten alle Teilnehmenden gemeinsam eine Wand, auf der individuelle Botschaften kreativ sichtbar werden. Im Mittelpunkt stehen Ausdruck, Begegnung und kollektive Kreativität – nicht Perfektion.",
       "hosts": [
-        "Line Kiekbusch und Elias Manzel"
+        "Line Kiekbusch & Elias Manzel"
       ]
     },
     {
@@ -1925,7 +1955,7 @@
       ]
     },
     {
-      "title": "Staying present in conflict",
+      "title": "Staying present in Conflict",
       "day": "2026-08-15",
       "day_label": "Samstag",
       "time": "SA 16:00",
@@ -1945,7 +1975,7 @@
       ]
     },
     {
-      "title": "Neurodiversity, sex and politics",
+      "title": "Neurodiversity, Sex and Politics",
       "day": "2026-08-15",
       "day_label": "Samstag",
       "time": "SA 16:00",
@@ -1956,7 +1986,7 @@
       "type": "interaktiver-workshop",
       "type_label": "Workshop",
       "langs": [
-        "de"
+        "en"
       ],
       "excerpt": "In den letzten Jahren wurde bei immer mehr Menschen Autismus, ADHS oder beides diagnostiziert – und mit dem Aufstieg der extremen Rechten regt sich&hellip;",
       "description": "In den letzten Jahren wurde bei immer mehr Menschen Autismus, ADHS oder beides diagnostiziert – und mit dem Aufstieg der extremen Rechten regt sich Widerstand gegen die Neurodiversitäts-Debatte. Sind wir Teil eines Trends, krank, oder eine Interessengruppe mit eigenen Rechten? Geschlechterpolitik überschneidet sich persönlich mit Neurodiversität, besonders für FLINTA-Personen.\n\nDer Workshop beginnt mit Lauries Vortrag, danach Raum für Diskussion",
@@ -2026,7 +2056,7 @@
       ]
     },
     {
-      "title": "A Quarter to Infinity",
+      "title": "Planet Atelier",
       "day": "2026-08-15",
       "day_label": "Samstag",
       "time": "SA 18:00",
@@ -2043,7 +2073,7 @@
       "excerpt": "Ein kreativer und meditativer Workshop, der die Teilnehmer dazu einlädt, aus recycelten Materialien, Texturen und Fundstücken ihre eigenen Miniaturplaneten zu gestalten. Inspiriert vom skulpturalen&hellip;",
       "description": "Ein kreativer und meditativer Workshop, der die Teilnehmer dazu einlädt, aus recycelten Materialien, Texturen und Fundstücken ihre eigenen Miniaturplaneten zu gestalten. Inspiriert vom skulpturalen Universum von „A Quarter to Infinity“ erkundet das Atelier alternative Kosmologien durch intuitive Vorstellungskraft.",
       "hosts": [
-        "Planet Atelier"
+        "A Quarter to Infinity"
       ]
     },
     {
@@ -2241,7 +2271,8 @@
       "excerpt": "Traust du dich, in deine Fantasien einzutauchen, bei der Bucht der Träumer*? Finde uns am Samstagabend und entdecke dich selbst gemeinsam mit anderen. In&hellip;",
       "description": "Traust du dich, in deine Fantasien einzutauchen, bei der Bucht der Träumer*? Finde uns am Samstagabend und entdecke dich selbst gemeinsam mit anderen. In diesem sexpositiven, musikgeleiteten Cuddle Poodle geben wir unseren Wünschen, Bedürfnissen und Fantasien eine Stimme. Spielerisch und performativ erkunden wir Fantasien als Regisseur:innen, Darsteller:innen oder Zeug:innen – und treffen hoffentlich andere darin.",
       "hosts": [
-        "Sonja Werner & Anna Gamburg"
+        "Sonja Werner",
+        "Anna Gamburg"
       ]
     },
     {
@@ -2317,7 +2348,7 @@
       ]
     },
     {
-      "title": "Temple of love",
+      "title": "Temple of Love",
       "day": "2026-08-16",
       "day_label": "Sonntag",
       "time": "SO 00:00",
@@ -2419,7 +2450,7 @@
       ]
     },
     {
-      "title": "Human Tides: On cyclical life in a linear world",
+      "title": "Human Tides: On a cyclical Life in a linear World",
       "day": "2026-08-16",
       "day_label": "Sonntag",
       "time": "SO 10:00",
@@ -2495,7 +2526,7 @@
       "excerpt": "",
       "description": "",
       "hosts": [
-        "Wieland Evers"
+        "Avy"
       ]
     },
     {
@@ -2519,7 +2550,7 @@
       ]
     },
     {
-      "title": "Lena Prieß",
+      "title": "Being moved by Music",
       "day": "2026-08-16",
       "day_label": "Sonntag",
       "time": "SO 13:00",
@@ -2535,7 +2566,8 @@
       "excerpt": "Lass dich von der Musik mitreißen. Die meisten kennen das: Man steht auf der Tanzfläche, versucht im Takt mitzuwippen – aber wann beginnt der&hellip;",
       "description": "Lass dich von der Musik mitreißen. Die meisten kennen das: Man steht auf der Tanzfläche, versucht im Takt mitzuwippen – aber wann beginnt der Spaß wirklich? Sobald wir aufhören zu denken und die Musik spüren. Wir schließen die Augen und lassen Arme, Hüften, Beine sich bewegen, statt sie zu bewegen – dann spüren wir die Welle der Freude. Begleite uns auf eine Reise, die verändert, wie du dich auf der Tanzfläche fühlst – genau hier, genau jetzt.",
       "hosts": [
-        "Lena Prieß und Zuzu"
+        "Zuzu",
+        "Lena Prieß"
       ]
     },
     {
@@ -2660,7 +2692,7 @@
       ]
     },
     {
-      "title": "The Peepshow,",
+      "title": "The Peepshow",
       "day": "2026-08-16",
       "day_label": "Sonntag",
       "time": "SO 15:00",
@@ -2697,7 +2729,7 @@
       "excerpt": "Bringt Eure Kopfbedeckungen damit wir sie gemeinsam individualisieren! Mit Federn, Stoffen, Bändern, Kleber und Stickern verschönern / verglitzern wir eure selbst mitgebrachten Lieblingshüte und&hellip;",
       "description": "Bringt Eure Kopfbedeckungen damit wir sie gemeinsam individualisieren! Mit Federn, Stoffen, Bändern, Kleber und Stickern verschönern / verglitzern wir eure selbst mitgebrachten Lieblingshüte und Käppis!",
       "hosts": [
-        "Glitzzy Goerlitzzy (Jasna Zajcek)"
+        "Glitzzy Goerlitzzy"
       ]
     },
     {
@@ -2737,7 +2769,7 @@
       "excerpt": "Ein sanfter Landeplatz nach einer intensiven Nacht. Diese Reise unterstützt müde Hüften und den unteren Rücken sowie ein überreiztes Nervensystem mit sanfter Bewegung, tiefen&hellip;",
       "description": "Ein sanfter Landeplatz nach einer intensiven Nacht. Diese Reise unterstützt müde Hüften und den unteren Rücken sowie ein überreiztes Nervensystem mit sanfter Bewegung, tiefen Dehnungen und erdendem Atem – damit du die Nacht integrieren und dein System mit Leichtigkeit nähren kannst. Nach der Körperpraxis gleitest du in einen schamanischen Nidra-Schlaf für tiefe Entspannung und Erholung.",
       "hosts": [
-        "Julia Kefer by juliaflowsgreen"
+        "Julia Kefer"
       ]
     },
     {
@@ -2781,7 +2813,7 @@
       ]
     },
     {
-      "title": "The Peepshow,",
+      "title": "The Peepshow",
       "day": "2026-08-16",
       "day_label": "Sonntag",
       "time": "SO 17:00",
@@ -2817,7 +2849,7 @@
       "excerpt": "In circa 30 Minuten baust du dir deinen ganz persönlichen Flogger – handgemacht und ganz nach deinem Belieben. Als Material nutzen wir alte, ausgediente&hellip;",
       "description": "In circa 30 Minuten baust du dir deinen ganz persönlichen Flogger – handgemacht und ganz nach deinem Belieben. Als Material nutzen wir alte, ausgediente Fahrradschläuche. Der funktioniert richtig gut 😉Dazu gibts ein kleines 1&#215;1 rund um Konsent.Keine Vorerfahrung oder eigenes Material benötig, nur Lust am Selbermachen.",
       "hosts": [
-        "Wieland Evers"
+        "Avy"
       ]
     },
     {
@@ -2876,7 +2908,7 @@
       "excerpt": "Filme schieben?  Sonntag-Nacht heißt es für alle die entspannen wollen nochmal Flimmern lassen in bester Atmossphäre: Ob es die „10 Jahre Pinky Promise“-Doku ist,&hellip;",
       "description": "Filme schieben?  Sonntag-Nacht heißt es für alle die entspannen wollen nochmal Flimmern lassen in bester Atmossphäre: Ob es die „10 Jahre Pinky Promise“-Doku ist, eine Ibiza-DJ-Mockumentary über den sagenumwobenen Heimlich Müller, ein exklusives Behind-the-Scenes zum Making-of der Sissy Bravo oder einfach die schönsten Video-Erinnerungen vom allerersten Mal Feiern: Am Sonntagabend läuft mit süßem Popcorn für alle auf Halbmast ausgewählter Stoff aus der Szene über den heißen Beamer!\n\nOpen Call (online only): Wollt ihr noch was einreichen? Wir freuen uns über eure Beiträge. Deadline 30.07: Bucht-Beitrag einreichen",
       "hosts": [
-        "Bucht der Träumer*"
+        "Cuddle Kino"
       ]
     },
     {
