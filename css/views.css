@@ -39,8 +39,9 @@
     text-align: center;
 
 }
-.app-header h1  {
-        margin-top: 0;
+
+.app-header h1 {
+    margin-top: 0;
 }
 
 .app-header img {
@@ -255,7 +256,7 @@
     justify-content: center;
     margin: 24px 0;
     flex-wrap: wrap;
-    display:none;
+    display: none;
 }
 
 .quick-btn {
@@ -301,7 +302,7 @@
 
 .page-intro {
 
-    display:none;
+    display: none;
     background: var(--wp--preset--color--base, #f3efdf);
     border: 2px solid var(--card-border);
     border-radius: var(--card-radius);
@@ -651,13 +652,13 @@
     font-size: var(--wp--preset--font-size--medium) !important;
     color: var(--wp--preset--color--base) !important;
     text-align: center;
-    display:none;
+    display: none;
 }
 
 /* Day tabs */
 
 .tt-day-tabs {
-    display: flex;
+     display: flex;
     gap: 8px;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
@@ -666,8 +667,9 @@
     z-index: 98;
     margin: 0 -16px 20px;
     padding: 8px 16px;
-    text-align: center;
-    justify-content: center;
+    text-align: start;
+    justify-content: start;
+ 
 }
 
 .tt-day-tabs::-webkit-scrollbar {
@@ -676,7 +678,7 @@
 
 .tt-day-tab {
     flex-shrink: 0;
-    background: var(--bg);
+    background: rgba(73, 69, 184, 1);
     border: 1px solid var(--border);
     border-radius: 50px;
     padding: 8px 18px;
@@ -688,12 +690,30 @@
     letter-spacing: 0.5px;
     text-transform: uppercase;
     transition: all 0.2s;
+
+        flex: 0 0 auto;
+    background: rgba(73, 69, 184, 1);
+    border: none;
+    color: var(--text-muted);
+    border-radius: 20px;
+    padding: 8px 16px;
+    font-family: 'Megan Display';
+    font-weight: 400;
+    font-size: 15px;
+    text-transform: uppercase;
+    cursor: pointer;
+    line-height: 22px;
+    height: 32px;
 }
 
 .tt-day-tab.active {
-    background: var(--accent-pink);
+    background: rgba(242, 184, 176, 1);
     border-color: var(--accent-pink);
     color: #fff;
+    line-height: 17px;
+    color: var(--text);
+    background: rgba(242, 184, 176, 1);
+    border: 2px solid rgba(222, 78, 57, 1);
 }
 
 .tt-day-tab:active {
@@ -1134,23 +1154,28 @@
 
 .gtt-day-tab {
     flex: 0 0 auto;
-    background: var(--bg-card);
-    border: 1px solid var(--border);
+    background: rgba(73, 69, 184, 1);
+    border: none;
     color: var(--text-muted);
     border-radius: 20px;
     padding: 8px 16px;
-    font-family: var(--font-body);
-    font-weight: 700;
-    font-size: 0.8rem;
+    font-family: 'Megan Display';
+    font-weight: 400;
+    font-size: 15px;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
     cursor: pointer;
+    line-height: 22px;
+    height: 32px;
 }
 
 .gtt-day-tab.active {
     color: var(--text);
     background: var(--accent-pink);
     border-color: var(--accent-pink);
+    line-height: 17px;
+    color: var(--text);
+    background: rgba(242, 184, 176, 1);
+    border: 2px solid rgba(222, 78, 57, 1);
 }
 
 .gtt-scroll {
