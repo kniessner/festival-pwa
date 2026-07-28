@@ -21,7 +21,7 @@ def normalize(s):
     return s
 
 
-def build_timetable(data_dir):
+def build_timetable(data_dir, lang='de'):
     # Load source data
     with open(os.path.join(data_dir, 'programm-2026.json')) as f:
         program = json.load(f)
@@ -149,10 +149,11 @@ def build_timetable(data_dir):
     # Default day: festival runs Aug 13-16, 2026. Today is July 10, so default to first day (Aug 13)
     default_day = '2026-08-13'
 
+    title = {'de': 'Kulturprogramm', 'en': 'Culture Program'}[lang]
     timetable = {
         'type': 'timetable',
         'slug': 'timetable',
-        'title': 'Kulturprogramm',
+        'title': title,
         'intro': program.get('intro', ''),
         'default_day': default_day,
         'filters': {
@@ -180,4 +181,5 @@ def build_timetable(data_dir):
 
 if __name__ == '__main__':
     data_dir = sys.argv[1] if len(sys.argv) > 1 else 'data'
-    build_timetable(data_dir)
+    lang = sys.argv[2] if len(sys.argv) > 2 else 'de'
+    build_timetable(data_dir, lang)

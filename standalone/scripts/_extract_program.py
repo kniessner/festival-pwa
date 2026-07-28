@@ -34,7 +34,7 @@ def clean_html(text):
     return decode_entities(text).strip()
 
 
-def extract_events(html):
+def extract_events(html, lang='de'):
     """Extract all festival events from the accordion HTML."""
     events = []
     
@@ -45,21 +45,19 @@ def extract_events(html):
     )
     
     day_map = {
-        '2026-08-13': 'Donnerstag',
-        '2026-08-14': 'Freitag',
-        '2026-08-15': 'Samstag',
-        '2026-08-16': 'Sonntag',
-        '2026-06-15': 'Montag',
-        'no-day': 'Ohne Tag'
-    }
+        'de': {
+            '2026-08-13': 'Donnerstag', '2026-08-14': 'Freitag', '2026-08-15': 'Samstag',
+            '2026-08-16': 'Sonntag', '2026-06-15': 'Montag', 'no-day': 'Ohne Tag'
+        },
+        'en': {
+            '2026-08-13': 'Thursday', '2026-08-14': 'Friday', '2026-08-15': 'Saturday',
+            '2026-08-16': 'Sunday', '2026-06-15': 'Monday', 'no-day': 'No day'
+        }
+    }[lang]
     day_short = {
-        '2026-08-13': 'DO',
-        '2026-08-14': 'FR',
-        '2026-08-15': 'SA',
-        '2026-08-16': 'SO',
-        '2026-06-15': 'MO',
-        'no-day': ''
-    }
+        'de': {'2026-08-13': 'DO', '2026-08-14': 'FR', '2026-08-15': 'SA', '2026-08-16': 'SO', '2026-06-15': 'MO', 'no-day': ''},
+        'en': {'2026-08-13': 'THU', '2026-08-14': 'FRI', '2026-08-15': 'SAT', '2026-08-16': 'SUN', '2026-06-15': 'MON', 'no-day': ''}
+    }[lang]
     
     for day_value, day_content in day_sections:
         day_label = day_map.get(day_value, day_value)
@@ -234,11 +232,12 @@ def extract_filters(html):
 def main():
     url = sys.argv[1] if len(sys.argv) > 1 else 'https://bucht-der-traeumer.de/programm-2026/'
     output = sys.argv[2] if len(sys.argv) > 2 else 'programm.json'
-    
+    lang = sys.argv[3] if len(sys.argv) > 3 else 'de'
+
     print(f"Fetching {url}...")
     html = fetch_html(url)
-    
-    events = extract_events(html)
+
+    events = extract_events(html, lang)
     filters = extract_filters(html)
     
     # Extract intro text
@@ -248,10 +247,11 @@ def main():
     )
     intro = clean_html(intro_match.group(1)) if intro_match else ''
     
+    title = {'de': 'Kulturprogramm', 'en': 'Culture Program'}[lang]
     data = {
         'type': 'program',
         'slug': 'programm',
-        'title': 'Kulturprogramm',
+        'title': title,
         'intro': intro,
         'filters': filters,
         'events': events
