@@ -108,7 +108,7 @@ export function refreshTimetable() {
     scrollToCurrentTime(filters.day);
 }
 
-function renderEventCard(ev) {
+export function renderEventCard(ev) {
     const idx = store.pageData.timetable.events.indexOf(ev);
     const hasDetail = ev.description && ev.description.trim().length > 0 && ev.description !== ev.excerpt;
     const runningClass = isEventRunning(ev, store.ttFilters.day) ? 'running' : '';

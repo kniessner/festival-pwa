@@ -395,7 +395,13 @@
 
 .bottom-nav button .nav-icon {
     font-size: 1.5rem;
-    display:none;
+    display: flex;
+}
+
+.bottom-nav button .nav-icon img {
+    display: block;
+    width: 36px;
+    height: 36px;
 }
 
 .bottom-nav button.active {
@@ -406,70 +412,55 @@
     filter: drop-shadow(0 0 8px rgba(176, 50, 122, 0.5));
 }
 
-/* Install prompt */
+/* Install card */
 
-.install-prompt {
-    position: fixed;
-    bottom: calc(96px + env(safe-area-inset-bottom));
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 300;
-    background: linear-gradient(135deg, var(--accent-pink), var(--accent-purple));
-    border-radius: 50px;
-    padding: 10px 18px 10px 20px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    box-shadow: 0 4px 24px rgba(176, 50, 122, 0.5);
-    border: 1px solid rgba(255, 255, 255, 0.15);
+.install-card {
+    position: relative;
+    margin: 12px 16px;
+    padding: 24px 56px 24px 24px;
+    background: var(--wp--preset--color--base, #f3efdf);
+    border-radius: var(--card-radius);
+    box-shadow: 0 10px 28px rgba(15, 18, 130, 0.25);
+    transition: opacity 0.2s ease;
+}
+
+.install-card.actionable {
     cursor: pointer;
-    font-family: var(--font-body);
+}
+
+.install-card.hidden {
+    display: none;
+}
+
+.install-card h3 {
+    font-family: var(--wp--preset--font-family--megan-display, var(--font-head)), serif;
+    font-size: 1.4rem;
+    line-height: 1.25;
+    color: var(--text);
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
     font-weight: 700;
-    font-size: 0.85rem;
-    color: var(--text);
-    transition: transform 0.2s, opacity 0.3s, bottom 0.3s;
-    max-width: 90vw;
-    white-space: nowrap;
-    backdrop-filter: blur(10px);
+    margin-bottom: 10px;
 }
 
-.install-prompt:active {
-    transform: translateX(-50%) scale(0.96);
+.install-card p {
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: var(--text-on-card);
 }
 
-.install-prompt.hidden {
-    opacity: 0;
-    pointer-events: none;
-    transform: translateX(-50%) translateY(20px);
-}
-
-.install-prompt .install-icon {
-    font-size: 1.1rem;
-}
-
-.install-prompt .install-text {
-    letter-spacing: 0.5px;
-}
-
-.install-prompt .close-btn {
-    background: rgba(255, 255, 255, 0.2);
+.install-card-close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: none;
     border: none;
-    border-radius: 50%;
-    width: 26px;
-    height: 26px;
     color: var(--text);
-    font-size: 0.7rem;
+    font-size: 1.4rem;
+    font-weight: 700;
+    line-height: 1;
     cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-left: 4px;
-    flex-shrink: 0;
-    transition: background 0.2s;
-}
-
-.install-prompt .close-btn:active {
-    background: rgba(255, 255, 255, 0.35);
+    padding: 4px;
 }
 
 .lang-badge {
