@@ -1,8 +1,10 @@
 import { DATA_FILES } from './config.js';
+import { getLang } from './i18n.js';
 
 export const store = {
     currentPage: 0,
     pageData: {},
+    lang: getLang(),
     ttFilters: { stage: 'all', category: 'all', genre: 'all', day: 'all' },
     ttPendingDay: null,
     gridDay: null,
