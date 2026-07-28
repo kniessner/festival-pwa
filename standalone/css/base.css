@@ -47,7 +47,7 @@
 
 @media (display-mode: standalone) {
     body {
-            border: 5px solid #E91E63;
+        border: 5px solid #E91E63;
         background: var(--bg) url(../images/bg.jpg) center center / cover fixed no-repeat;
     }
 
@@ -77,8 +77,10 @@ main {
     height: calc(var(--vh, 1vh) * 100);
     box-shadow: #080943 -1px 0px 5px 0px;
     background: linear-gradient(to bottom, #08094378 70%, transparent);
- 
+
     position: relative;
+    overflow-x: hidden;
+    overflow-y: scroll;
 
 }
 
@@ -94,14 +96,13 @@ video {
 
 .content {
 
-    padding: 0 20px 250px ;
+    padding: 0 20px 250px;
     max-width: 100%;
     margin: 0 auto;
     display: block;
     height: 100%;
     width: 100%;
-    overflow-y: scroll;
-    overflow-x: hidden;
+
 }
 
 .loading,
