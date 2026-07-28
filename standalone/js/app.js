@@ -11,11 +11,13 @@ import { showToast } from './ui.js';
 import { PAGES, pageIdx } from './config.js';
 import { t, setLang } from './i18n.js';
 
+const LANG_LABELS = { de: 'De', en: 'Eng' };
+
 async function init() {
     document.documentElement.lang = store.lang;
     document.getElementById('searchInput').placeholder = t('search.placeholder');
     document.querySelector('.search-modal-header span').textContent = t('search.resultsTitle');
-    updateLangToggleUI();
+    updateLangSwitcherLabel();
     await loadData();
     renderNav();
     goToPage(0);
@@ -49,17 +51,16 @@ function closeSearchBar() {
     closeSearchModal();
 }
 
-function updateLangToggleUI() {
-    document.querySelectorAll('#langToggle button').forEach(b => {
-        b.classList.toggle('active', b.dataset.lang === store.lang);
-    });
+function updateLangSwitcherLabel() {
+    const btn = document.getElementById('langSwitcher');
+    if (btn) btn.textContent = LANG_LABELS[store.lang] || store.lang;
 }
 
 async function setLangAndRefresh(lang) {
     if (lang === store.lang) return;
     setLang(lang);
     store.lang = lang;
-    updateLangToggleUI();
+    updateLangSwitcherLabel();
     document.getElementById('searchInput').placeholder = t('search.placeholder');
     document.querySelector('.search-modal-header span').textContent = t('search.resultsTitle');
     await loadData();
@@ -156,7 +157,7 @@ const actions = {
     'close-grid-detail': () => closeGridEventDetail(),
     'toggle-grid-scroll': () => toggleGridScrollMode(),
     'toggle-faq': el => toggleFaqItem(el),
-    'set-lang': el => setLangAndRefresh(el.dataset.lang),
+    'toggle-lang': () => setLangAndRefresh(store.lang === 'de' ? 'en' : 'de'),
     'switch-info-tab': el => switchInfoTab(el.dataset.tab),
     'toggle-search-bar': () => toggleSearchBar(),
     'close-search-bar': () => closeSearchBar(),
