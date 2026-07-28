@@ -1,55 +1,87 @@
 import { store } from '../store.js';
-import { PAGES, pageIdx } from '../config.js';
+import { PAGES } from '../config.js';
 import { escapeHtml, card } from '../ui.js';
 import { getFavorites, toggleFavorite } from '../favorites.js';
 import { renderNav, loadPage } from '../router.js';
+import { renderEventCard } from './timetable.js';
 import { t } from '../i18n.js';
+
+function emptyStateCard(message) {
+    return `<div class="fav-empty-card">${escapeHtml(message)}</div>`;
+}
 
 export function renderFavorites(container) {
     const favs = getFavorites();
     if (favs.length === 0) {
-        container.innerHTML = `
-            <div class="page-intro"><h3>${t('fav.title')}</h3>
-            <p style="margin-top:12px;">${t('fav.emptyHint')}</p></div>
-            <div class="quick-nav"><button class="quick-btn" data-action="load-page" data-page="${pageIdx('timetable')}">${t('home.quickProgram')}</button></div>`;
+        container.innerHTML = emptyStateCard(t('fav.emptyHint'));
         return;
     }
-    const grouped = {};
+
+    const programByDay = {};
+    const newsItems = [];
     for (const f of favs) {
-        if (!grouped[f.page]) grouped[f.page] = [];
-        const data = store.pageData[f.page];
-        if (data && data.events && data.events[f.index]) {
-            grouped[f.page].push({ ...data.events[f.index], index: f.index, page: f.page });
-        } else if (data && data.items && data.items[f.index]) {
-            grouped[f.page].push({ ...data.items[f.index], index: f.index, page: f.page });
-        } else if (f.page.startsWith('info-') && store.pageData.info) {
-            const sub = f.page.replace('info-', '');
-            const subData = store.pageData.info[sub];
-            if (subData && subData.items && subData.items[f.index]) {
-                grouped[f.page].push({ ...subData.items[f.index], index: f.index, page: f.page });
+        if (f.page === 'timetable') {
+            const ev = store.pageData.timetable?.events?.[f.index];
+            if (ev) {
+                const day = ev.day || 'no-day';
+                if (!programByDay[day]) programByDay[day] = [];
+                programByDay[day].push(ev);
             }
+        } else if (f.page.startsWith('info-')) {
+            const sub = f.page.replace('info-', '');
+            const item = store.pageData.info?.[sub]?.items?.[f.index];
+            if (item) newsItems.push({ item, index: f.index, page: f.page });
         }
     }
-    let html = `<div class="page-intro"><h3>${t('fav.title')}</h3></div>`;
-    for (const [slug, items] of Object.entries(grouped)) {
-        const pageEntry = PAGES.find(p => p.slug === slug);
-        let label = pageEntry ? t(pageEntry.labelKey) : null;
-        if (!label) {
-            if (slug === 'info-news') label = t('info.tabNews');
-            else if (slug === 'info-cashless') label = t('info.tabCashless');
-            else if (slug === 'info-faqs') label = t('info.tabFaqs');
-            else label = slug;
+
+    const programCount = Object.values(programByDay).reduce((n, arr) => n + arr.length, 0);
+    const newsCount = newsItems.length;
+
+    if (store.favTab === 'program' && programCount === 0 && newsCount > 0) store.favTab = 'news';
+    else if (store.favTab === 'news' && newsCount === 0 && programCount > 0) store.favTab = 'program';
+
+    let html = `<div class="fav-tabs">
+        <button class="fav-tab ${store.favTab === 'program' ? 'active' : ''}" data-action="set-fav-tab" data-tab="program">${t('fav.tabProgram')}</button>
+        <button class="fav-tab ${store.favTab === 'news' ? 'active' : ''}" data-action="set-fav-tab" data-tab="news">${t('fav.tabNews')}</button>
+    </div>`;
+
+    if (store.favTab === 'program') {
+        if (programCount === 0) {
+            html += emptyStateCard(t('fav.emptyHint'));
+        } else {
+            const dayOrder = (store.pageData.timetable.filters.days || []).map(d => d.value);
+            const sortedDays = Object.keys(programByDay).sort((a, b) => {
+                const ai = dayOrder.indexOf(a), bi = dayOrder.indexOf(b);
+                if (ai === -1) return 1;
+                if (bi === -1) return -1;
+                return ai - bi;
+            });
+            html += sortedDays.map(day => {
+                const events = programByDay[day];
+                if (!events.length) return '';
+                const dayLabel = store.pageData.timetable.filters.days.find(d => d.value === day)?.label || t('fav.noDay');
+                return `<div class="fav-day-heading">${escapeHtml(dayLabel)}</div>
+                    <div class="tt-events">${events.map(renderEventCard).join('')}</div>`;
+            }).join('');
         }
-        html += `<div class="fav-group"><div class="fav-group-title">${escapeHtml(label)}</div>`;
-        html += items.map(item => {
-            const title = item.title || item.question;
-            const desc = item.desc || item.answer || item.excerpt || '';
-            const meta = item.time ? `<span class="event-meta">${escapeHtml(item.time)} · ${escapeHtml(item.stage_label || '')}</span>` : '';
-            return card({ page: item.page, index: item.index, title, desc, meta });
-        }).join('');
-        html += '</div>';
+    } else {
+        if (newsCount === 0) {
+            html += emptyStateCard(t('fav.emptyHint'));
+        } else {
+            html += `<div class="grid-list">${newsItems.map(({ item, index, page }) => {
+                const title = item.title || item.question;
+                const desc = item.desc || item.answer || item.excerpt || '';
+                return card({ page, index, title, desc });
+            }).join('')}</div>`;
+        }
     }
+
     container.innerHTML = html;
+}
+
+export function setFavTab(tab) {
+    store.favTab = tab;
+    renderFavorites(document.getElementById('content'));
 }
 
 export function toggleFavFromCard(btn, pageSlug, itemIndex) {

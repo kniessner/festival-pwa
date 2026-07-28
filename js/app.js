@@ -5,7 +5,7 @@ import { setDay, toggleFilterPanel, resetFilters, toggleEventDetail } from './vi
 import { setGridDay, openGridEventDetail, closeGridEventDetail, toggleGridScrollMode } from './views/timetable-grid.js';
 import { store } from './store.js';
 import { switchInfoTab } from './views/info.js';
-import { toggleFavFromCard } from './views/favorites.js';
+import { toggleFavFromCard, setFavTab } from './views/favorites.js';
 import { setupInstallPrompt, setupOfflineIndicator } from './install.js';
 import { PAGES, pageIdx } from './config.js';
 import { t, setLang } from './i18n.js';
@@ -138,6 +138,7 @@ function toggleFaqItem(item) {
 const actions = {
     'load-page': el => goToPage(parseInt(el.dataset.page, 10)),
     'toggle-fav': el => toggleFavFromCard(el, el.dataset.page, parseInt(el.dataset.index, 10)),
+    'set-fav-tab': el => setFavTab(el.dataset.tab),
     'set-day': el => setDay(el.dataset.day),
     'toggle-filter': () => toggleFilterPanel(),
     'reset-filters': () => resetFilters(),

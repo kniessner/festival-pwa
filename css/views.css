@@ -16,14 +16,6 @@
     z-index: -1;
 }
 
-.install-prompt {
-    display: none;
-}
-
-.page-home .install-prompt {
-    display: inline-flex
-}
-
 .page-home .app-header {
     display: none;
 }
@@ -401,20 +393,65 @@
     display: block;
 }
 
-/* Favorite group */
+/* My Plan (favorites) */
 
-.fav-group {
-    margin-bottom: 16px;
+.fav-empty-card {
+    width: 100%;
+    min-height: 220px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background-color: var(--wp--preset--color--base, #f3efdf);
+    background-image: url('../images/card_bg.png');
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    background-position: center;
+    border: 6px solid var(--wp--preset--color--accent-4, #0f1282);
+    border-radius: var(--card-radius);
+    padding: 30px 36px;
+    box-shadow: 0 10px 28px rgba(15, 18, 130, 0.35);
+    font-family: var(--wp--preset--font-family--megan-display, var(--font-head)), serif;
+    font-size: 1.3rem;
+    line-height: 1.3;
+    color: var(--text);
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    font-weight: 700;
 }
 
-.fav-group-title {
-    font-family: var(--font-head);
-    font-size: 0.8rem;
-    color: var(--accent-pink);
+.fav-tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.fav-tab {
+    padding: 10px 22px;
+    border: none;
+    border-radius: 50px;
+    background: var(--accent-blue, #0303d5);
+    color: #fff;
+    font-family: var(--font-body);
+    font-weight: 700;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+}
+
+.fav-tab.active {
+    background: var(--accent-pink);
+}
+
+.fav-day-heading {
+    color: var(--wp--preset--color--base, #f3efdf);
+    font-family: var(--wp--preset--font-family--megan-display, var(--font-head)), serif;
+    font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 2px;
-    font-weight: 700;
-    margin: 0 0 10px 4px;
+    font-size: var(--wp--preset--font-size--large, 1.6rem);
+    padding: 12px 0 4px;
 }
 
 /* Program filters */
