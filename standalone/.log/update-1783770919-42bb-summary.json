@@ -1,0 +1,48 @@
+{
+  "trace_id": "1783770919-42bb",
+  "mode": "source",
+  "url": "https://bucht-der-traeumer.de",
+  "timestamp": "2026-07-11T13:55:29+02:00",
+  "total_pages": 5,
+  "success": 5,
+  "failed": 0,
+  "pages": [
+    {
+      "slug": "cashless",
+      "status": "success",
+      "detail": "FAQ extracted",
+      "http_code": "200",
+      "bytes": 11144
+    },
+    {
+      "slug": "faqs",
+      "status": "success",
+      "detail": "FAQ extracted",
+      "http_code": "200",
+      "bytes": 10388
+    },
+    {
+      "slug": "programm-2026",
+      "status": "success",
+      "detail": "Program extracted",
+      "http_code": "200",
+      "bytes": 164262
+    },
+    {
+      "slug": "performances",
+      "status": "success",
+      "detail": "Grid extracted",
+      "http_code": "200",
+      "bytes": 10161
+    },
+    {
+      "slug": "workshops",
+      "status": "success",
+      "detail": "Grid extracted",
+      "http_code": "200",
+      "bytes": 35270
+    }
+  ],
+  "log_file": ".log/update-1783770919-42bb.log",
+  "error_file": ".log/update-1783770919-42bb-errors.log"
+}

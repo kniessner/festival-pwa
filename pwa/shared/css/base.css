@@ -1,0 +1,70 @@
+/* base.css -- resets, base typography, generic layout, utility classes */
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: var(--font-body);
+    background: var(--bg) url('../images/bg.jpg') center top / cover fixed no-repeat;
+    color: var(--text);
+    min-height: 100vh;
+    line-height: 1.5;
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: calc(72px + env(safe-area-inset-bottom));
+}
+
+main {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 0 16px 24px;
+}
+
+.content {
+    padding: 0 16px 24px;
+    max-width: 720px;
+    margin: 0 auto;
+    position: relative;
+}
+
+.loading,
+.empty {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text-muted);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    color: var(--text);
+    font-family: var(--font-head);
+    font-weight: 700;
+    letter-spacing: -0.1px;
+    line-height: 1.125;
+}
+
+h1 { font-size: 1.8rem; }
+h2 { font-size: 1.5rem; }
+h3 { font-size: 1.2rem; }
+
+/* Highlight animation */
+
+.highlight {
+    animation: highlightPulse 2s ease-out;
+}
+
+@keyframes highlightPulse {
+    0% { box-shadow: 0 0 0 4px rgba(176, 50, 122, 0.6); }
+    100% { box-shadow: 0 0 0 0 transparent; }
+}
+
+/* Scrollbar */
+
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-thumb { background: var(--accent-pink); border-radius: 4px; }

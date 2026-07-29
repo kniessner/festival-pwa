@@ -1,0 +1,13 @@
+{
+  "name": "festival-pwa-standalone",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Bucht der Träumer Festival Guide — build-less PWA, served as static files.",
+  "scripts": {
+    "start": "node server.js",
+    "serve": "node server.js"
+  },
+  "engines": {
+    "node": ">=14"
+  }
+}

@@ -1,10 +1,10 @@
 {
-    "name": "Festival Timetable",
-    "short_name": "Festival",
+    "name": "Bucht der Träumer* – Festival Guide",
+    "short_name": "Bucht der Träumer*",
     "start_url": "/pwa/",
     "display": "standalone",
-    "background_color": "#1a0f0a",
-    "theme_color": "#c4703a",
+    "background_color": "#080943",
+    "theme_color": "#080943",
     "orientation": "portrait",
     "scope": "/pwa/",
     "icons": [

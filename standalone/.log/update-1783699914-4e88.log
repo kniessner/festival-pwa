@@ -1,0 +1,35 @@
+[2026-07-10T18:11:54+02:00] [1783699914-4e88] [INFO] Starting update — Trace: 1783699914-4e88, Mode: source, URL: https://bucht-der-traeumer.de
+[2026-07-10T18:11:54+02:00] [1783699914-4e88] [INFO] Dependencies OK: curl ✅, python3 ✅
+[2026-07-10T18:11:54+02:00] [1783699914-4e88] [INFO] Expected pages: cashless performances programm-2026 programm workshops 
+[2026-07-10T18:11:54+02:00] [1783699914-4e88] [INFO] Fetching /cashless/ from https://bucht-der-traeumer.de/cashless/
+[2026-07-10T18:11:55+02:00] [1783699914-4e88] [INFO] /cashless/ fetched (  170050 bytes, HTTP 200)
+[2026-07-10T18:11:55+02:00] [1783699914-4e88] [INFO] Using FAQ extractor for cashless
+Fetching https://bucht-der-traeumer.de/cashless/...
+✅ Extracted 15 FAQ items
+   Saved to: /Users/darius.kniessner/Dev/VaultOS/30-projects-active/2026-festival-pwa/standalone/data/cashless.json
+
+   Sample:
+   Q: Bargeldlos: was heißt das?...
+   A: Bargeldlos heißt, dass weder Bargeld noch Kartenzahlung beim Bezahlen an Bars und Ständen auf dem Fe...
+[2026-07-10T18:11:55+02:00] [1783699914-4e88] [OK] /cashless/ FAQ extracted (   11144 bytes)
+[2026-07-10T18:11:55+02:00] [1783699914-4e88] [INFO] Fetching /performances/ from https://bucht-der-traeumer.de/performances/
+[2026-07-10T18:11:56+02:00] [1783699914-4e88] [INFO] /performances/ fetched (  198318 bytes, HTTP 200)
+[2026-07-10T18:11:56+02:00] [1783699914-4e88] [INFO] Using HTML parser for performances
+[2026-07-10T18:11:56+02:00] [1783699914-4e88] [OK] /performances/ parsed (    1515 bytes)
+[2026-07-10T18:11:56+02:00] [1783699914-4e88] [INFO] Fetching /programm-2026/ from https://bucht-der-traeumer.de/programm-2026/
+[2026-07-10T18:11:56+02:00] [1783699914-4e88] [INFO] /programm-2026/ fetched ( 1116648 bytes, HTTP 200)
+[2026-07-10T18:11:56+02:00] [1783699914-4e88] [INFO] Using HTML parser for programm-2026
+[2026-07-10T18:11:57+02:00] [1783699914-4e88] [OK] /programm-2026/ parsed (   20671 bytes)
+[2026-07-10T18:11:57+02:00] [1783699914-4e88] [INFO] Fetching /programm/ from https://bucht-der-traeumer.de/programm/
+[2026-07-10T18:11:59+02:00] [1783699914-4e88] [INFO] /programm/ fetched ( 1116648 bytes, HTTP 200)
+[2026-07-10T18:11:59+02:00] [1783699914-4e88] [INFO] Using HTML parser for programm
+[2026-07-10T18:11:59+02:00] [1783699914-4e88] [OK] /programm/ parsed (   20666 bytes)
+[2026-07-10T18:11:59+02:00] [1783699914-4e88] [INFO] Fetching /workshops/ from https://bucht-der-traeumer.de/workshops/
+[2026-07-10T18:12:00+02:00] [1783699914-4e88] [INFO] /workshops/ fetched (  256995 bytes, HTTP 200)
+[2026-07-10T18:12:00+02:00] [1783699914-4e88] [INFO] Using HTML parser for workshops
+[2026-07-10T18:12:00+02:00] [1783699914-4e88] [OK] /workshops/ parsed (    4519 bytes)
+[2026-07-10T18:12:00+02:00] [1783699914-4e88] [INFO] Regenerating manifest
+   ✅ Manifest updated: 5 content pages
+[2026-07-10T18:12:00+02:00] [1783699914-4e88] [INFO] Updating standalone.json
+[2026-07-10T18:12:00+02:00] [1783699914-4e88] [INFO] Busting Service Worker cache
+[2026-07-10T18:12:00+02:00] [1783699914-4e88] [OK] Cache renamed to bucht-standalone-v1783699920

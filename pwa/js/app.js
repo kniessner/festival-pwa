@@ -3,7 +3,13 @@
  * Fetches manifest, builds nav, renders pages by type.
  */
 
+import { saveManifest, getManifest, savePage, getPage } from './db.js';
+
 const API_BASE = window.location.origin + '/wp-json/festival/v1';
+
+const APP_NAME = 'bucht-pwa';
+const CACHE_VERSION = '1.3.1';
+const CACHE_NAME = `${APP_NAME}-v${CACHE_VERSION}`;
 
 let pages       = [];   // from manifest
 let currentPage = 0;
@@ -12,7 +18,11 @@ let pageCache   = {};
 // ===== INIT =====
 async function init() {
     try {
+        setupOfflineIndicator();
+        setupInstallPrompt();
+        setupUpdateBanner();
         const manifest = await fetchManifest();
+        console.log('[PWA] manifest', manifest);
         pages = manifest.pages || [];
         if (!pages.length) {
             showError('Keine Seiten ausgewählt. Bitte im Admin-Bereich Seiten aktivieren.');
@@ -22,8 +32,6 @@ async function init() {
         const startSlug = manifest.start_page || '';
         const startIndex = startSlug ? pages.findIndex(p => p.slug === startSlug) : 0;
         await loadPage(startIndex >= 0 ? startIndex : 0);
-        setupOfflineIndicator();
-        setupInstallPrompt();
         registerSW();
     } catch (err) {
         console.error('Init failed', err);
@@ -34,31 +42,96 @@ async function init() {
 }
 
 async function fetchManifest() {
-    const res = await fetch(`${API_BASE}/manifest`);
-    if (!res.ok) throw new Error('Manifest fetch failed');
-    return res.json();
+    try {
+        const res = await fetch(`${API_BASE}/manifest`);
+        if (!res.ok) throw new Error('Manifest fetch failed');
+        const data = await res.json();
+        await saveManifest(data);
+        return data;
+    } catch (err) {
+        console.warn('[PWA] API manifest failed, falling back to IndexedDB', err.message);
+        const cached = await getManifest();
+        if (cached && cached.pages) return cached;
+        throw err;
+    }
 }
 
 async function tryLoadCached() {
-    const cached = await getCachedJson('_manifest.json');
+    // Prefer IndexedDB manifest, fall back to Cache API manifest.
+    let cached = await getManifest();
+    if (!cached) {
+        cached = await getCachedManifest();
+        if (cached) await saveManifest(cached);
+    }
     if (cached && cached.pages) {
         pages = cached.pages;
         renderNav();
         const startSlug = cached.start_page || '';
         const startIndex = startSlug ? pages.findIndex(p => p.slug === startSlug) : 0;
-        loadPage(startIndex >= 0 ? startIndex : 0);
+        await loadPage(startIndex >= 0 ? startIndex : 0);
         setupOfflineIndicator();
         setupInstallPrompt();
+        setupUpdateBanner();
     }
 }
 
-// ===== SERVICE WORKER =====
+// ===== SERVICE WORKER + UPDATE BANNER =====
 function registerSW() {
-    if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/pwa/sw.js')
-            .then(reg => console.log('SW registered'))
-            .catch(err => console.log('SW failed', err));
-    }
+    if (!('serviceWorker' in navigator)) return;
+
+    navigator.serviceWorker.register('/pwa/sw.js')
+        .then(reg => {
+            console.log('[PWA] SW registered');
+
+            // Watch for new service workers waiting to activate.
+            reg.addEventListener('updatefound', () => {
+                const newWorker = reg.installing;
+                if (!newWorker) return;
+                newWorker.addEventListener('statechange', () => {
+                    if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                        showUpdateBanner(newWorker);
+                    }
+                });
+            });
+        })
+        .catch(err => console.log('[PWA] SW failed', err));
+}
+
+function setupUpdateBanner() {
+    // Listen for update messages from the SW (e.g. periodic update checks).
+    navigator.serviceWorker.addEventListener('message', event => {
+        if (event.data?.type === 'UPDATE_AVAILABLE') {
+            showUpdateBanner();
+        }
+    });
+}
+
+let updateWorker = null;
+function showUpdateBanner(worker = null) {
+    if (document.getElementById('sw-update-banner')) return;
+    if (worker) updateWorker = worker;
+
+    const banner = document.createElement('div');
+    banner.id = 'sw-update-banner';
+    banner.innerHTML = `
+        <span>Neue Version verfügbar</span>
+        <button id="sw-update-now">Aktualisieren</button>
+        <button id="sw-update-later">Später</button>
+    `;
+    banner.className = 'update-banner';
+    document.body.appendChild(banner);
+
+    document.getElementById('sw-update-now').addEventListener('click', () => {
+        if (updateWorker) {
+            updateWorker.postMessage({ type: 'SKIP_WAITING' });
+        }
+        banner.remove();
+        window.location.reload();
+    });
+
+    document.getElementById('sw-update-later').addEventListener('click', () => {
+        banner.remove();
+    });
 }
 
 // ===== NAVIGATION =====
@@ -98,35 +171,66 @@ async function loadPage(index) {
         return;
     }
 
+    let data = null;
     try {
         const res = await fetch(`${API_BASE}/pages/${page.slug}`);
+        console.log(`[PWA] /pages/${page.slug} status`, res.status);
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const data = await res.json();
-        pageCache[page.slug] = data;
-        renderContent(data);
+        data = await res.json();
+        await savePage(page.slug, data);
     } catch (err) {
         console.error('Fetch failed, trying cache', err);
-        const cached = await getCachedJson(`${page.slug}.json`);
-        if (cached) {
-            renderContent(cached);
-        } else {
-            showError(`
-                <p>Keine Inhalte für "${escapeHtml(page.label)}" verfügbar.</p>
-                <button onclick="loadPage(${index})"
-                    style="margin-top:20px;padding:12px 24px;border-radius:24px;border:none;
-                           background:linear-gradient(135deg,var(--accent-pink),var(--accent-purple));
-                           color:var(--text);font-weight:700;cursor:pointer;">Erneut versuchen</button>
-            `);
+        data = await getPage(page.slug);
+        if (!data) {
+            // Final fallback: try the Cache API file directly.
+            data = await getCachedJson(`${page.slug}.json`);
         }
+    }
+
+    if (data) {
+        pageCache[page.slug] = data;
+        renderContent(data);
+    } else {
+        showError(`
+            <p>Keine Inhalte für "${escapeHtml(page.label)}" verfügbar.</p>
+            <p style="font-size:0.85em;color:var(--text-muted);margin-top:8px;">
+                Bitte im WordPress-Admin unter „Festival PWA“ die Seiten auswählen und „Sync Content Now“ klicken.
+            </p>
+            <button onclick="loadPage(${index})"
+                style="margin-top:20px;padding:12px 24px;border-radius:24px;border:none;
+                       background:linear-gradient(135deg,var(--accent-pink),var(--accent-purple));
+                       color:var(--text);font-weight:700;cursor:pointer;">Erneut versuchen</button>
+        `);
     }
 }
 
 async function getCachedJson(filename) {
     if (!('caches' in window)) return null;
     try {
-        const cache = await caches.open('bucht-v3');
-        const res   = await cache.match(`/pwa/data/${filename}`);
-        return res ? await res.json() : null;
+        const cacheNames = await caches.keys();
+        const candidates = cacheNames.filter(n => n.startsWith(APP_NAME + '-'));
+        for (const name of [CACHE_NAME, ...candidates]) {
+            const cache = await caches.open(name);
+            const res = await cache.match(`/pwa/data/${filename}`);
+            if (res) return await res.json();
+        }
+        return null;
+    } catch (e) {
+        return null;
+    }
+}
+
+async function getCachedManifest() {
+    if (!('caches' in window)) return null;
+    try {
+        const cacheNames = await caches.keys();
+        const candidates = cacheNames.filter(n => n.startsWith(APP_NAME + '-'));
+        for (const name of [CACHE_NAME, ...candidates]) {
+            const cache = await caches.open(name);
+            const res = await cache.match('/pwa/data/_manifest.json');
+            if (res) return await res.json();
+        }
+        return null;
     } catch (e) {
         return null;
     }
@@ -142,10 +246,117 @@ function renderContent(data) {
     const type = data.type || 'generic';
 
     switch (type) {
+        case 'snapshot': renderSnapshot(container, data); break;
+        case 'raw':     renderRaw(container, data);     break;
         case 'faq':     renderFAQ(container, data);     break;
         case 'grid':    renderGrid(container, data);    break;
         case 'home':    renderHome(container, data);    break;
         default:        renderGeneric(container, data); break;
+    }
+}
+
+function renderSnapshot(container, data) {
+    container.innerHTML = '';
+    const fragmentUrl = data.fragment_url;
+    const fullUrl = data.snapshot_url || `/pwa/snapshots/${encodeURIComponent(data.slug)}.html`;
+
+    const wrapper = document.createElement('div');
+    wrapper.className = 'snapshot-content-host';
+
+    // Use a shadow DOM so the original page styles don't fight the app shell,
+    // but keep the fragment HTML/CSS fully intact.
+    const shadow = wrapper.attachShadow({ mode: 'open' });
+
+    const render = (html) => {
+        shadow.innerHTML = html;
+        if (shadow.querySelector('.festival-accordion') && window.initFestivalTimetable) {
+            window.initFestivalTimetable(shadow);
+        }
+    };
+
+    const showError = (err) => {
+        console.error('[PWA] Failed to load snapshot', err);
+        shadow.innerHTML = `
+            <div style="padding:20px;color:#f3efdf;">
+                <p>Fehler beim Laden des Snapshots.</p>
+                <p style="font-size:0.85em;color:var(--text-muted);">${escapeHtml(err.message)}</p>
+            </div>
+        `;
+    };
+
+    if (fragmentUrl) {
+        fetch(fragmentUrl)
+            .then(res => {
+                if (!res.ok) throw new Error(`Fragment HTTP ${res.status}`);
+                return res.text();
+            })
+            .then(render)
+            .catch(err => {
+                // Fallback to full snapshot HTML if fragment is missing
+                fetch(fullUrl)
+                    .then(res => {
+                        if (!res.ok) throw new Error(`Snapshot HTTP ${res.status}`);
+                        return res.text();
+                    })
+                    .then(render)
+                    .catch(showError);
+            });
+    } else {
+        // Legacy: no fragment_url, load full snapshot
+        fetch(fullUrl)
+            .then(res => {
+                if (!res.ok) throw new Error(`Snapshot HTTP ${res.status}`);
+                return res.text();
+            })
+            .then(render)
+            .catch(showError);
+    }
+
+    container.appendChild(wrapper);
+}
+
+function renderRaw(container, data) {
+    container.innerHTML = '';
+
+    const wrapper = document.createElement('div');
+    wrapper.className = 'raw-content';
+    container.appendChild(wrapper);
+
+    // Use a shadow DOM so the original page styles don't fight the app shell.
+    const shadow = wrapper.attachShadow({ mode: 'open' });
+
+    // Inject saved inline styles first, then link stylesheets.
+    (data.styles || []).forEach(style => {
+        if (style.type === 'inline' && style.css) {
+            const s = document.createElement('style');
+            s.textContent = style.css;
+            shadow.appendChild(s);
+        } else if (style.type === 'link' && style.href) {
+            const l = document.createElement('link');
+            l.rel = 'stylesheet';
+            l.href = style.href;
+            shadow.appendChild(l);
+        }
+    });
+
+    // Add a tiny reset so the raw content sits comfortably inside the shadow host.
+    const reset = document.createElement('style');
+    reset.textContent = `
+        :host { display: block; color: var(--text, #f3efdf); font-family: var(--font-body, 'Lato', sans-serif); }
+        img { max-width: 100%; height: auto; }
+        a { color: inherit; }
+        * { box-sizing: border-box; }
+    `;
+    shadow.appendChild(reset);
+
+    const main = document.createElement('main');
+    main.innerHTML = data.html || '<p>Kein Inhalt verfügbar.</p>';
+    shadow.appendChild(main);
+
+    // If this raw page contains a festival timetable, wire up our own
+    // lightweight filter + accordion controller inside the shadow root.
+    if (main.querySelector('.festival-accordion') && window.initFestivalTimetable) {
+        window.initFestivalTimetable(shadow);
     }
 }
 

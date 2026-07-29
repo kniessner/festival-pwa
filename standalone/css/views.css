@@ -1,0 +1,1587 @@
+/* views.css -- screen-specific styles (hero, info, faq, program/timetable, news), extracted from index.html inline <style> */
+
+/* App shell */
+
+
+.page-home figure {
+    object-fit: cover;
+    max-width: 650px;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    z-index: -1;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    z-index: -1;
+}
+
+.page-home .app-header {
+    display: none;
+}
+
+.page-sub figure {
+    display: none;
+}
+
+/* .page-sub main {
+    background: linear-gradient(to bottom, #8b235fcc 70%, #0b0d72);
+
+} */
+
+
+.app-header {
+    position: relative;
+    top: 0;
+    z-index: 100;
+    /* background: linear-gradient(to bottom, var(--bg) 70%, transparent); */
+    /* padding: 20px 20px 12px; */
+    text-align: left;
+    padding: 0px 20px;
+
+
+}
+
+.app-header-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.app-header h1 {
+    margin-top: 0;
+    font-size: 40px;
+}
+
+.app-header img {
+    max-width: 200px;
+    height: auto;
+    margin-bottom: 8px;
+}
+
+.header-filter-btn {
+    display: none;
+    flex-shrink: 0;
+    align-items: center;
+    gap: 6px;
+    background: rgba(229, 113, 97, 1);
+    border: none;
+    border-radius: 50px;
+    padding: 8px 16px;
+    color: rgba(27, 25, 42, 1);
+    font-family: var(--font-body);
+    font-family: 'Megan Display';
+    font-weight: 400;
+    font-size: 16px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+}
+
+span#headerFilterLabel {
+    margin-top: 4px;
+}
+
+.header-filter-btn img {
+    max-width: none;
+    margin-bottom: 0;
+}
+
+.page-timetable .header-filter-btn {
+    display: flex;
+    margin-top: -30px;
+}
+
+/*   .app-header h1 {
+    font-family: var(--font-head);
+    font-size: 1.1rem;
+    
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}*/
+
+/* Last updated */
+
+.last-updated {
+    text-align: left;
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    margin-top: 4px;
+    letter-spacing: 0.5px;
+}
+
+/* Hero */
+
+.hero {
+    text-align: center;
+    padding: 20px 0 32px;
+
+}
+
+.hero-logo {
+    width: 120px;
+    height: 120px;
+    margin: 0 auto 16px;
+    background: linear-gradient(135deg, var(--accent-pink), var(--accent-purple));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3.5rem;
+    box-shadow: 0 8px 32px rgba(176, 50, 122, 0.3);
+    display: none;
+}
+
+.hero h2 {
+    font-family: var(--font-head);
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 4px;
+    color: var(--text);
+}
+
+.hero h1 {
+    font-family: var(--wp--preset--font-family--megan-display);
+    font-size: var(--wp--preset--font-size--x-large);
+    letter-spacing: 2px !important;
+    line-height: 1.125;
+    text-transform: uppercase;
+    font-style: normal;
+    font-weight: 700;
+}
+
+.hero-sub {
+    color: var(--accent-pink);
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+}
+
+.countdown {
+    font-family: var(--font-head);
+    font-size: 2.4rem;
+    font-weight: 700;
+    color: var(--accent-orange);
+    margin: 16px 0;
+    text-shadow: 0 0 20px rgba(255, 111, 33, 0.3);
+}
+
+.countdown-label {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+/* Next upcoming favorite (home screen) */
+
+.next-event-card {
+    margin: 0 auto;
+    min-height: 168px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--wp--preset--color--base, #f3efdf);
+    background-image: url('../images/card_bg.png');
+    background-size: 120% 120%;
+    background-repeat: no-repeat;
+    background-position: center;
+    border-radius: 22px;
+    padding: 18px 30px;
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    box-shadow: 0 10px 28px rgba(15, 18, 130, 0.35);
+}
+
+.next-event-card:active {
+    transform: scale(0.97);
+    box-shadow: 0 4px 14px rgba(15, 18, 130, 0.3);
+}
+
+.next-event-label {
+    font-size: 0.72rem;
+    color: var(--accent-pink);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.next-event-card h3 {
+    font-family: var(--wp--preset--font-family--megan-display, var(--font-head)), serif;
+    font-size: 1.2rem;
+    line-height: 1.25;
+    color: var(--text);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 6px;
+}
+
+.next-event-meta {
+    font-size: 0.8rem;
+    color: var(--text-on-card);
+    font-family: var(--font-body);
+}
+
+/* Info section */
+
+.info-section {
+    margin-top: 8px;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 20px;
+    display: none;
+
+}
+
+.info-section h3 {
+    font-family: var(--font-head);
+    color: var(--accent-pink);
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 16px;
+    font-weight: 700;
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.info-card {
+    background: var(--wp--preset--color--base, #f3efdf);
+    border: 2px solid var(--card-border);
+    border-radius: var(--card-radius);
+    padding: 20px 16px;
+    text-align: center;
+    transition: border-color 0.2s;
+}
+
+.info-card:active {
+    border-color: var(--accent-pink);
+}
+
+.info-card .icon {
+    font-size: 2rem;
+    margin-bottom: 10px;
+    display: block;
+}
+
+.info-card .label {
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: var(--text);
+    margin-bottom: 4px;
+}
+
+.info-card .desc {
+    font-size: 0.8rem;
+    color: var(--text-on-card);
+    line-height: 1.4;
+}
+
+/* Quick nav buttons */
+
+.quick-nav {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin: 24px 0;
+    flex-wrap: wrap;
+    display: none;
+}
+
+.quick-btn {
+    background: linear-gradient(135deg, var(--accent-pink), var(--accent-purple));
+    border: none;
+    border-radius: 50px;
+
+    color: var(--text);
+    font-family: var(--font-body);
+    font-weight: 700;
+    font-size: 0.9rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+
+    box-shadow: 0 4px 16px rgba(176, 50, 122, 0.3);
+    transition: transform 0.2s, box-shadow 0.2s;
+    padding: 0.5em 1em;
+    gap: 8px;
+    border: none;
+    background: var(--festival-filter-color);
+    border-radius: var(--festival-radius);
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    line-height: 1;
+    color: var(--festival-filter-text);
+    transition: background 0.15s ease, color 0.15s ease;
+}
+
+.quick-btn:active {
+    transform: scale(0.96);
+    box-shadow: 0 2px 8px rgba(176, 50, 122, 0.2);
+}
+
+.quick-btn-accent {
+    background: linear-gradient(135deg, var(--accent-orange), var(--accent-pink));
+}
+
+/* Page intro */
+
+.page-intro {
+
+    display: none;
+    background: var(--wp--preset--color--base, #f3efdf);
+    border: 2px solid var(--card-border);
+    border-radius: var(--card-radius);
+    padding: 20px;
+    margin-bottom: 20px;
+    font-size: 0.95rem;
+    line-height: 1.7;
+    color: var(--text-on-card);
+}
+
+.page-intro p+p {
+    margin-top: 12px;
+}
+
+/* FAQ */
+
+.faq-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.faq-item {
+    background: var(--wp--preset--color--base, #f3efdf);
+    border: 2px solid var(--card-border);
+    border-radius: var(--card-radius);
+    overflow: hidden;
+    cursor: pointer;
+    transition: border-color 0.2s;
+}
+
+.faq-item:hover,
+.faq-item.open {
+    border-color: var(--accent-pink);
+}
+
+.faq-question {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 16px;
+    font-family: var(--wp--preset--font-family--megan-display, var(--font-head)), serif;
+    color: var(--text);
+    font-weight: 700;
+    font-size: 24px;
+    gap: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    line-height: 1.4;
+}
+
+.faq-question span:first-child {
+    flex: 1;
+}
+
+.faq-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.faq-toggle {
+    font-size: 1.6rem;
+    color: var(--accent-pink);
+    font-weight: 400;
+    min-width: 28px;
+    text-align: center;
+    line-height: 1;
+    margin-top: -4px;
+}
+
+.faq-answer {
+    padding: 0 16px 18px;
+    color: var(--text-on-card);
+    font-size: 16px;
+    line-height: 1.6;
+    display: none;
+}
+
+.faq-answer.empty {
+    font-style: italic;
+    opacity: 0.6;
+}
+
+.faq-item.open .faq-answer {
+    display: block;
+}
+
+/* My Plan (favorites) */
+
+.fav-empty-card {
+    width: 100%;
+    min-height: 220px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background-color: var(--wp--preset--color--base, #f3efdf);
+    background-image: url('../images/card_bg.png');
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    background-position: center;
+    border: 6px solid var(--wp--preset--color--accent-4, #0f1282);
+    border-radius: var(--card-radius);
+    padding: 30px 36px;
+    box-shadow: 0 10px 28px rgba(15, 18, 130, 0.35);
+    font-family: var(--wp--preset--font-family--megan-display, var(--font-head)), serif;
+    font-size: 1.3rem;
+    line-height: 1.3;
+    color: var(--text);
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    font-weight: 700;
+}
+
+.fav-tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.fav-tab {
+    /* padding: 10px 22px;
+    border: none;
+    border-radius: 50px;
+    background: var(--accent-blue, #0303d5);
+    color: #fff;
+    font-family: var(--font-body);
+    font-weight: 700;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    cursor: pointer; */
+    
+     flex: 0 0 auto;
+    background: rgba(73, 69, 184, 1);
+    border: none;
+    color: var(--text-muted);
+    border-radius: 20px;
+    padding: 8px 16px;
+    font-family: 'Megan Display';
+    font-weight: 400;
+    font-size: 15px;
+    text-transform: uppercase;
+    cursor: pointer;
+    line-height: 22px;
+    height: 32px;
+}
+
+.fav-tab.active {
+      line-height: 17px;
+    color: var(--text);
+    background: rgba(242, 184, 176, 1);
+    border: 2px solid rgba(222, 78, 57, 1);
+}
+
+.fav-day-heading {
+    color: var(--wp--preset--color--base, #f3efdf);
+    font-family: var(--wp--preset--font-family--megan-display, var(--font-head)), serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-size: var(--wp--preset--font-size--large, 1.6rem);
+    padding: 12px 0 4px;
+}
+
+/* Program filters */
+
+.filter-bar {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+}
+
+.filter-group {
+    flex: 1;
+    min-width: 90px;
+}
+
+.filter-group label {
+    display: block;
+    font-size: 0.65rem;
+    color: var(--accent-pink);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+.filter-group select {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    background: var(--bg-card);
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    outline: none;
+    backdrop-filter: blur(8px);
+}
+
+.filter-group select:focus {
+    border-color: var(--accent-pink);
+}
+
+/* Program list */
+
+.program-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.program-status {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+    text-align: right;
+}
+
+.program-item {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    transition: all 0.2s;
+    backdrop-filter: blur(8px);
+}
+
+.program-item:hover,
+.program-item.open {
+    border-color: var(--accent-pink);
+    background: var(--bg-card-hover);
+}
+
+.program-header {
+    padding: 16px;
+    cursor: pointer;
+}
+
+.program-meta {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    margin-bottom: 6px;
+    flex-wrap: wrap;
+}
+
+.event-time {
+    font-size: 0.75rem;
+    color: var(--accent-orange);
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+.event-type {
+    font-weight: 700;
+    display: inline-block;
+    padding: 0.4em 0.9em;
+    border: none;
+    border-radius: var(--festival-radius);
+    font-family: inherit;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    line-height: 1;
+    color: var(--festival-filter-text);
+    background: var(--accent-purple);
+}
+
+.program-title-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+.program-title-row h3 {
+    font-family: var(--font-head);
+    font-size: 1.05rem;
+    color: var(--text);
+    margin-bottom: 0;
+    flex: 1;
+}
+
+.program-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.program-toggle {
+    font-size: 1.4rem;
+    color: var(--accent-pink);
+    font-weight: 400;
+    min-width: 24px;
+    text-align: center;
+    line-height: 1;
+}
+
+.event-stage {
+    display: inline-block;
+    font-size: 0.75rem;
+    color: var(--accent-pink);
+    font-weight: 700;
+    margin-top: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.event-hosts {
+    display: block;
+    font-size: 0.8rem;
+    color: var(--text-on-card);
+    margin-top: 2px;
+}
+
+.event-excerpt {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-top: 8px;
+    line-height: 1.4;
+}
+
+.program-detail {
+    display: none;
+    border-top: 1px solid var(--border);
+}
+
+.program-detail-inner {
+    padding: 16px;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+    white-space: pre-line;
+}
+
+.program-item.open .program-detail {
+    display: block;
+}
+
+/* Event meta in favorites */
+
+.event-meta {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--accent-orange);
+    font-weight: 700;
+    margin-bottom: 4px;
+    letter-spacing: 0.5px;
+}
+
+/* ── Unified Timetable ── */
+
+.tt-intro {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+    margin-bottom: 16px;
+    font-size: var(--wp--preset--font-size--medium) !important;
+    color: var(--wp--preset--color--base) !important;
+    text-align: center;
+    display: none;
+}
+
+/* Day tabs */
+
+.tt-day-tabs {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    position: relative;
+    z-index: 98;
+    margin: 0 -16px 20px;
+    padding: 8px 16px;
+    text-align: start;
+    justify-content: start;
+
+}
+
+.tt-day-tabs::-webkit-scrollbar {
+    display: none;
+}
+
+.tt-day-tab {
+    /* flex-shrink: 0;
+    background: rgba(73, 69, 184, 1);
+    border: 1px solid var(--border);
+    border-radius: 50px;
+    padding: 8px 18px;
+    color: var(--text-muted);
+    font-family: var(--font-body);
+    font-size: 0.8rem;
+    font-weight: 700;
+    cursor: pointer;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    transition: all 0.2s; */
+
+    flex: 0 0 auto;
+    background: rgba(73, 69, 184, 1);
+    border: none;
+    color: var(--text-muted);
+    border-radius: 20px;
+    padding: 8px 16px;
+    font-family: 'Megan Display';
+    font-weight: 400;
+    font-size: 15px;
+    text-transform: uppercase;
+    cursor: pointer;
+    line-height: 22px;
+    height: 32px;
+}
+
+.tt-day-tab.active {
+ 
+    line-height: 17px;
+    color: var(--text);
+    background: rgba(242, 184, 176, 1);
+    border: 2px solid rgba(222, 78, 57, 1);
+}
+
+.tt-day-tab:active {
+    transform: scale(0.96);
+}
+
+/* Info tabs */
+
+.info-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+}
+
+.info-tabs::-webkit-scrollbar {
+    display: none;
+}
+
+.info-tab {
+
+    flex: 0 0 auto;
+    background: rgba(73, 69, 184, 1);
+    border: none;
+    color: var(--text-muted);
+    border-radius: 20px;
+    padding: 8px 16px;
+    font-family: 'Megan Display';
+    font-weight: 400;
+    font-size: 15px;
+    text-transform: uppercase;
+    cursor: pointer;
+    line-height: 22px;
+    height: 32px;
+}
+
+.info-tab.active {
+
+    line-height: 17px;
+    color: var(--text);
+    background: rgba(242, 184, 176, 1);
+    border: 2px solid rgba(222, 78, 57, 1);
+}
+
+.info-tab:active {
+    transform: scale(0.96);
+}
+
+/* Info panels */
+
+.info-panel {
+    display: none;
+}
+
+.info-panel.active {
+    display: block;
+}
+
+/* News card */
+
+.news-card {
+    background: var(--wp--preset--color--base, #f3efdf);
+    border: 2px solid var(--card-border);
+    border-radius: var(--card-radius);
+    padding: 16px 18px;
+    margin-bottom: 10px;
+    transition: border-color 0.2s;
+    position: relative;
+}
+
+.news-card:hover,
+.news-card.news-highlight {
+    border-color: var(--accent-orange);
+}
+
+.news-card h3 {
+    font-family: var(--wp--preset--font-family--megan-display, var(--font-head)), serif;
+    font-size: 1.1rem;
+    line-height: 1.2;
+    color: var(--text);
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    margin-bottom: 6px;
+    font-weight: 700;
+}
+
+.news-card p {
+    font-size: 0.9rem;
+    color: var(--text-on-card);
+    line-height: 1.5;
+}
+
+.news-date {
+    display: inline-block;
+    font-size: 0.7rem;
+    color: var(--accent-orange);
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+}
+
+/* Events list */
+
+.tt-events {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding-bottom: 80px;
+}
+
+.tt-hour-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.tt-hour-label {
+    letter-spacing: 4px;
+    padding: 8px;
+    z-index: 10;
+    color: var(--wp--preset--color--base);
+    font-family: var(--wp--preset--font-family--megan-display);
+    font-style: normal;
+    font-weight: 700;
+    line-height: 1.125;
+    text-transform: uppercase;
+    font-size: var(--wp--preset--font-size--large);
+}
+
+.tt-hour-events {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.tt-event {
+    background: var(--wp--preset--color--base, #f3efdf);
+    border: 2px solid rgba(15, 18, 130, 0.15);
+    border-radius: 18px;
+    overflow: hidden;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    position: relative;
+}
+
+.tt-event:hover,
+.tt-event.open {
+    border-color: var(--accent-pink);
+}
+
+.tt-event.running {
+    border-color: var(--accent-pink);
+    box-shadow: 0 6px 20px rgba(222, 78, 57, 0.3);
+}
+
+.tt-event-header {
+    padding: 16px 18px;
+    cursor: pointer;
+}
+
+.tt-event-title-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 4px;
+}
+
+.tt-event-title-row h3 {
+    font-family: var(--wp--preset--font-family--megan-display, var(--font-head)), serif;
+    font-size: 1.15rem;
+    line-height: 1.2;
+    color: var(--text);
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    font-weight: 700;
+    margin-bottom: 0;
+    flex: 1;
+}
+
+.tt-event-subline {
+    font-size: 0.85rem;
+    color: var(--text);
+    margin-bottom: 4px;
+}
+
+.tt-event-subline strong {
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.tt-event-meta {
+    display: block;
+    font-size: 0.8rem;
+    color: var(--text-on-card);
+    margin-bottom: 10px;
+}
+
+.tt-event-meta .event-time {
+    color: inherit;
+    font-weight: inherit;
+    letter-spacing: inherit;
+}
+
+.tt-event-footer {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.tt-event-badges {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.tt-event-toggle {
+    font-size: 0.8rem;
+    color: var(--accent-pink);
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    cursor: pointer;
+}
+
+.tt-now-badge {
+    margin-left: auto;
+    flex-shrink: 0;
+    background: var(--accent-pink);
+    color: #fff;
+    font-size: 0.65rem;
+    font-weight: 900;
+    padding: 4px 12px;
+    border-radius: 50px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.tt-event-detail {
+    display: none;
+    border-top: 1px solid rgba(15, 18, 130, 0.15);
+}
+
+.tt-event-detail-inner {
+    padding: 14px 18px 18px;
+    font-size: 0.9rem;
+    color: rgba(27, 25, 42, 0.8);
+    line-height: 1.6;
+    white-space: pre-line;
+}
+
+.tt-event.open .tt-event-detail {
+    display: block;
+}
+
+/* Filter panel (dropup) */
+
+.tt-filter-panel {
+    position: fixed;
+    bottom: calc(72px + env(safe-area-inset-bottom));
+    left: 12px;
+    right: 12px;
+    z-index: 310;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+    box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.5);
+    transform: translateY(120%);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    max-height: 60vh;
+    overflow-y: auto;
+    display: none;
+}
+
+.tt-filter-panel.open {
+    display: block;
+    transform: translateY(0);
+}
+
+.tt-filter-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.tt-filter-head strong {
+    font-family: var(--font-head);
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.tt-filter-close {
+    background: none;
+    border: none;
+    color: var(--text);
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 4px;
+}
+
+.tt-filter-group {
+    margin-bottom: 16px;
+}
+
+.tt-filter-group label {
+    display: block;
+    font-size: 0.65rem;
+    color: var(--accent-pink);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 700;
+    margin-bottom: 6px;
+}
+
+.tt-filter-group select {
+    width: 100%;
+    padding: 12px 14px;
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    background: var(--bg-card);
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    outline: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23f3efdf' viewBox='0 0 16 16'%3E%3Cpath d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 36px;
+}
+
+.tt-filter-group select:focus {
+    border-color: var(--accent-pink);
+}
+
+.tt-filter-reset {
+    width: 100%;
+    padding: 12px;
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--text-muted);
+    font-family: var(--font-body);
+    font-weight: 700;
+    font-size: 0.85rem;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 4px;
+}
+
+.tt-filter-reset:active {
+    background: var(--bg-card-hover);
+    border-color: var(--accent-pink);
+}
+
+.tt-filter-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 305;
+    background: rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+}
+
+.tt-filter-backdrop.open {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* Grid timetable (fusion-festival-style stage/hour grid) */
+
+/* This page needs the full viewport width for the grid to be readable —
+   drop the shared 650px main cap and .content side padding just here. */
+.page-grid main {
+    max-width: 100%;
+}
+
+.page-grid .content {
+    padding-left: 12px;
+    padding-right: 12px;
+}
+
+.gtt-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.gtt-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    padding: 8px 0 12px;
+}
+
+.gtt-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+.gtt-legend-swatch {
+    width: 12px;
+    height: 12px;
+    border-radius: 3px;
+    flex: 0 0 auto;
+}
+
+.gtt-daytabs {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    flex: 1 1 auto;
+    min-width: 0;
+    padding: 4px 0 12px;
+    -webkit-overflow-scrolling: touch;
+}
+
+.gtt-scroll-toggle {
+    flex: 0 0 auto;
+    width: 40px;
+    height: 40px;
+    margin-bottom: 8px;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    background: var(--bg-card);
+    color: var(--text);
+    font-size: 1.1rem;
+    cursor: pointer;
+    display:none;
+}
+
+.gtt-scroll-toggle:active {
+    border-color: var(--accent-pink);
+    background: var(--bg-card-hover);
+}
+
+.gtt-daytabs::-webkit-scrollbar {
+    display: none;
+}
+
+.gtt-day-tab {
+    flex: 0 0 auto;
+    background: rgba(73, 69, 184, 1);
+    border: none;
+    color: var(--text-muted);
+    border-radius: 20px;
+    padding: 8px 16px;
+    font-family: 'Megan Display';
+    font-weight: 400;
+    font-size: 15px;
+    text-transform: uppercase;
+    cursor: pointer;
+    line-height: 22px;
+    height: 32px;
+}
+
+.gtt-day-tab.active {
+
+    line-height: 17px;
+    color: var(--text);
+    background: rgba(242, 184, 176, 1);
+    border: 2px solid rgba(222, 78, 57, 1);
+}
+
+.gtt-scroll {
+    position: relative;
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+    /* Needs a real bounded height (not 100%, which never resolves against an
+       auto-height parent) so this element is itself the scrolling container —
+       .gtt-header/.gtt-stagelabel's position:sticky only takes effect relative
+       to an ancestor that actually scrolls. */
+    height: calc(var(--vh, 1vh) * 100 - 320px);
+    min-height: 320px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--bg-card);
+    position:fixed;
+    left: 0;
+    right: 0;
+    bottom: 74px;
+    border-radius: 0;
+}
+
+/* Single-finger touch drag is constrained to one axis; wheel/trackpad/scrollbar
+   still pan both, since those gestures don't suffer from the diagonal-drag problem. */
+.gtt-scroll.scroll-v {
+    touch-action: pan-y;
+}
+
+.gtt-scroll.scroll-h {
+    touch-action: pan-x;
+}
+
+.gtt-header {
+    display: flex;
+    position: sticky;
+    top: 0;
+    z-index: 3;
+    background: var(--bg);
+}
+
+.gtt-corner {
+    flex: 0 0 auto;
+    width: 52px;
+    position: sticky;
+    left: 0;
+    z-index: 4;
+    background: var(--bg);
+}
+
+.gtt-corner-day {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #a49fe6;
+    color: #14123f;
+    font-family: var(--font-head);
+    font-weight: 700;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.gtt-stagehead {
+    flex: 0 0 auto;
+    padding: 10px 8px;
+    font-family: var(--font-head);
+    font-weight: 700;
+    font-size: 0.75rem;
+    color: var(--stage-color, var(--text));
+    text-align: center;
+    border-right: 1px solid var(--border);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.gtt-track {
+    position: relative;
+}
+
+.gtt-track-v {
+    display: flex;
+}
+
+.gtt-track-h {
+    display: block;
+}
+
+.gtt-timeaxis {
+    flex: 0 0 52px;
+    position: sticky;
+    left: 0;
+    z-index: 2;
+    background: var(--bg);
+    border-right: 1px solid var(--border);
+}
+
+.gtt-hour-label {
+    position: absolute;
+    left: 0;
+    right: 0;
+    transform: translateY(-50%);
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    text-align: center;
+    border-top: 1px dashed var(--border);
+    padding-top: 2px;
+}
+
+.gtt-stagecol {
+    flex: 0 0 auto;
+    position: relative;
+    border-right: 1px solid var(--border);
+    background-image: repeating-linear-gradient(to bottom, transparent 0, transparent 119px, var(--border) 119px, var(--border) 120px);
+}
+
+.gtt-event {
+    position: absolute;
+    box-sizing: border-box;
+    background: var(--event-color, var(--stage-color, var(--accent-pink)));
+    border-radius: 14px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    padding: 6px 8px;
+    overflow: hidden;
+    color: #fff;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 2px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+.gtt-event:active {
+    filter: brightness(1.15);
+}
+
+.gtt-event-time {
+    font-size: 0.65rem;
+    font-weight: 700;
+    opacity: 0.85;
+}
+
+.gtt-event-title {
+    font-size: 0.72rem;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.gtt-now-line {
+    position: absolute;
+    left: 52px;
+    right: 0;
+    height: 2px;
+    background: #ff3b3b;
+    z-index: 1;
+    box-shadow: 0 0 6px #ff3b3b;
+}
+
+/* Horizontal layout: time runs left-to-right, stages are rows */
+
+.gtt-hour-ruler {
+    flex: 0 0 auto;
+    position: relative;
+    height: 56px;
+    background: var(--bg);
+}
+
+.gtt-hour-label-h {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 120px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-right: 1px solid rgba(255, 255, 255, 0.2);
+    font-family: var(--font-head);
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #fff;
+}
+
+.gtt-hour-label-day {
+    width: auto;
+    padding: 4px 10px;
+    margin: 8px 0 8px 4px;
+    background: #a49fe6;
+    color: #14123f;
+    border-radius: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-right: none;
+    z-index: 2;
+}
+
+.gtt-day-divider {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: rgba(255, 255, 255, 0.6);
+    z-index: 1;
+}
+
+.gtt-stagerow-wrap {
+    display: flex;
+    align-items: stretch;
+    background: var(--bg);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.gtt-stagelabel {
+    flex: 0 0 96px;
+    min-width: 0;
+    max-width: 96px;
+    overflow: hidden;
+    overflow-wrap: break-word;
+    position: sticky;
+    left: 0;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 6px;
+    background: var(--bg);
+    color: #fff;
+    font-family: var(--font-head);
+    font-weight: 700;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.gtt-stagelabel.gtt-alt {
+    background: #a49fe6;
+    color: #14123f;
+}
+
+.gtt-stagerow {
+    flex: 0 0 auto;
+    position: relative;
+    /* No background here — .gtt-stagerow is a positioned element (for its
+       .gtt-event children), so an opaque background here would paint on top
+       of the .gtt-hour-tick lines (also positioned, but earlier in the DOM).
+       The row's background lives on .gtt-stagerow-wrap instead, which is
+       unpositioned and always paints behind every positioned element. */
+}
+
+/* One absolutely-positioned line per hour boundary, spanning the whole track —
+   drawn explicitly in JS instead of a repeating CSS background so the ticks
+   stay aligned with real hour boundaries across the gaps between day blocks. */
+.gtt-hour-tick {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: rgba(255, 255, 255, 0.25);
+}
+
+.gtt-now-line-v {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: #ff3b3b;
+    z-index: 1;
+    box-shadow: 0 0 6px #ff3b3b;
+}
+
+.gtt-detail-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 305;
+    background: rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+}
+
+.gtt-detail-backdrop.open {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.gtt-detail {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: -100%;
+    z-index: 306;
+    transition: bottom 0.3s ease-out;
+    max-width: 650px;
+    margin: 0 auto;
+}
+
+.gtt-detail.open {
+    bottom: 0;
+}
+
+.gtt-detail-panel {
+    background: var(--wp--preset--color--base, #f3efdf);
+    border: 2px solid var(--card-border);
+    border-radius: var(--card-radius) var(--card-radius) 0 0;
+    padding: 20px 20px calc(20px + env(safe-area-inset-bottom));
+    max-height: 70vh;
+    overflow-y: auto;
+    position: relative;
+}
+
+.gtt-detail-meta {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    margin-bottom: 6px;
+    flex-wrap: wrap;
+}
+
+.gtt-detail-panel h3 {
+    font-family: var(--wp--preset--font-family--megan-display, var(--font-head)), serif;
+    color: var(--text);
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    margin: 8px 0;
+    font-size: 1.15rem;
+}
+
+.gtt-detail-close {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: none;
+    border: none;
+    color: var(--text-on-card);
+    font-size: 1.1rem;
+    cursor: pointer;
+}
+
+.gtt-detail-actions {
+    margin-top: 12px;
+}

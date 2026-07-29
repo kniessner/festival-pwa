@@ -1,6 +1,29 @@
 {
-    "type": "generic",
-    "slug": "performances",
-    "title": "Performances",
-    "content": ""
+  "type": "grid",
+  "title": "Performances",
+  "intro": "Hier findet ihr Performances.\nDie genauen Zeiten & Orte findet ihr auf dem Festivalgelände.\nViel Spaß beim Entdecken!\n\nDas Musik-Lineup gibt es wie immer erst auf dem Platz 😉",
+  "items": [
+    {"title": "Shenanigames", "desc": "Burghain Hüpfburg"},
+    {"title": "Zirkus Mond", "desc": "Zirkus Mond's „Circ du Rave“"},
+    {"title": "Pinky Promise", "desc": "Pinky Promise Cabaret Show"},
+    {"title": "The Naked Tea Party", "desc": "The Naked Tea Party"},
+    {"title": "WIKABARETT", "desc": "WIKABARETT"},
+    {"title": "Pyramid Party", "desc": "Pyramid Party"},
+    {"title": "Zart Kollektiv", "desc": "Song Bingo by Zart Kollektiv"},
+    {"title": "Dräembot™", "desc": "DRÄEMBOT™"},
+    {"title": "The Anté Dote", "desc": "The Diaspora Speaks"},
+    {"title": "Bucht der Träumer*", "desc": "🎬 Cuddle-Kino: Filmnacht Bucht der Träumer ✨"},
+    {"title": "Happy Acro Friends", "desc": "Cruel Godess by Vale & Uria von Happy Acro Friends"},
+    {"title": "Shady Lady", "desc": "Shady Lady Aerobic"},
+    {"title": "Seifentheater", "desc": "B…B…B…Blabla.fm! by Seifentheater"},
+    {"title": "Ohrenzirkus", "desc": "Ohrenzirkus, das interaktive Audio Erlebnis"},
+    {"title": "Kitty And The Cat", "desc": "RATTE by Kitty and The Cat"},
+    {"title": "ArtEMiss", "desc": "ArtEmiss Walking Act"},
+    {"title": "Raxa", "desc": "Raxa Drag Show"},
+    {"title": "Con-Cent Späti", "desc": "Con-Cent Späti"},
+    {"title": "Hanna & Aron", "desc": "SingSisySing – Hanna & Aron"},
+    {"title": "Down To Clown", "desc": "Weizmann's Universal-Medikament by Down to Clown"},
+    {"title": "Vulvaa Power", "desc": "Body of pleasure – Vulvaa Power Day"},
+    {"title": "Jugger Match – Kampf Der Besten", "desc": "Jugger Match – Kampf der Besten"}
+  ]
 }
