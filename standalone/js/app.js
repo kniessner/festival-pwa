@@ -21,7 +21,11 @@ async function init() {
     updateHeaderFilterLabel();
     await loadData();
     renderNav();
-    goToPage(0);
+    // manifest.json's start_url passes ?page=favorites so launching the
+    // installed home-screen app opens My Plan directly; a plain browser
+    // visit (no query param) still lands on Home as before.
+    const requestedPage = new URLSearchParams(location.search).get('page');
+    goToPage(requestedPage ? Math.max(0, pageIdx(requestedPage)) : 0);
     setupOfflineIndicator();
     setupInstallTracking(refreshInstallCardIfVisible);
     setupUpdateBanner();

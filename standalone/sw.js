@@ -170,7 +170,12 @@ self.addEventListener('activate', e => {
 
 async function cacheFirst(request, fallbackToNetwork = true) {
     const cache = await caches.open(CACHE_NAME);
-    const cached = await cache.match(request);
+    // ignoreSearch: the precached shell entries have no query string, but
+    // real requests do (?v=... cache-busting, and now start_url's
+    // ?page=favorites for the installed-app launch) — without this, an
+    // offline launch from the home-screen icon would miss the cache and
+    // fail instead of falling back to network.
+    const cached = await cache.match(request, { ignoreSearch: true });
     if (cached) return cached;
 
     if (!fallbackToNetwork) {
