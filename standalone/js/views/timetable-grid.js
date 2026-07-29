@@ -440,19 +440,24 @@ export function openGridEventDetail(el) {
     const backdrop = document.getElementById('gttDetailBackdrop');
     const hosts = ev.hosts && ev.hosts.length ? `<span class="event-hosts">${ev.hosts.join(', ')}</span>` : '';
     const desc = ev.description || ev.excerpt || '';
+    const langBadges = ev.langs && ev.langs.length
+        ? `<div class="gtt-detail-badges">${ev.langs.map(l => `<span class="lang-badge">${l.toUpperCase()}</span>`).join('')}</div>`
+        : '';
+    const dayLabel = (store.pageData.timetable.filters.days.find(d => d.value === ev.day)?.label || '').slice(0, 3);
+    const endTime = ev.end_time ? ` – ${ev.end_time}` : '';
 
     detail.innerHTML = `
         <div class="gtt-detail-panel">
-            <button class="gtt-detail-close" data-action="close-grid-detail">✕</button>
-            <div class="gtt-detail-meta">
-                <span class="event-time">${ev.start_time}${ev.end_time ? ` – ${ev.end_time}` : ''}</span>
-                <span class="event-type">${ev.category}</span>
+            <div class="gtt-detail-title-row">
+                <h3>${ev.title}</h3>
+                ${favButton('timetable', idx)}
             </div>
-            <h3>${ev.title}</h3>
-            <span class="event-stage">${ev.stage_label}</span>
+            <div class="gtt-detail-subline"><strong>${ev.stage_label}</strong>, ${ev.title}</div>
+            <div class="gtt-detail-meta">${dayLabel} ${ev.start_time}${endTime}, ${ev.category}</div>
+            ${langBadges}
             ${hosts}
             ${desc ? `<div class="tt-event-detail-inner">${desc}</div>` : ''}
-            <div class="gtt-detail-actions">${favButton('timetable', idx)}</div>
+            <button class="gtt-detail-done" data-action="close-grid-detail">${t('common.done')}</button>
         </div>
     `;
     detail.classList.add('open');

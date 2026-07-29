@@ -4,6 +4,7 @@ const STRINGS = {
         'common.loading': 'Laden...',
         'common.noContent': 'Keine Inhalte verfügbar',
         'common.favorite': 'Favorit',
+        'common.done': 'Fertig',
         'common.detailsSoon': 'Details folgen bald.',
         'common.updatedOn': 'Stand: {{date}}',
         // nav
@@ -85,6 +86,7 @@ const STRINGS = {
         'common.loading': 'Loading...',
         'common.noContent': 'No content available',
         'common.favorite': 'Favorite',
+        'common.done': 'Done',
         'common.detailsSoon': 'Details coming soon.',
         'common.updatedOn': 'Updated: {{date}}',
         'nav.home': 'Home',
