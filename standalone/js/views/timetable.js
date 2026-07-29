@@ -68,7 +68,9 @@ export function refreshTimetable() {
 
     tabsContainer.innerHTML = data.filters.days.map(d => {
         const isActive = d.value === filters.day;
-        return `<button class="tt-day-tab ${isActive ? 'active' : ''}" data-day="${d.value}" data-action="set-day">${d.label}</button>`;
+        // Day labels come back as full names now ("Donnerstag"/"Thursday") —
+        // trim to a 3-letter abbreviation so the tab pills stay compact.
+        return `<button class="tt-day-tab ${isActive ? 'active' : ''}" data-day="${d.value}" data-action="set-day">${d.label.slice(0, 3)}</button>`;
     }).join('');
 
     let events = data.events.filter(ev => {

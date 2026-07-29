@@ -1379,10 +1379,19 @@ span#headerFilterLabel {
     filter: brightness(1.15);
 }
 
-.gtt-event-time {
-    font-size: 0.65rem;
-    font-weight: 700;
-    opacity: 0.85;
+.gtt-event-fav {
+    border: 2px solid #ffd54a;
+    box-shadow: 0 0 0 1px rgba(255, 213, 74, 0.5), 0 2px 8px rgba(0, 0, 0, 0.35);
+}
+
+.gtt-event-fav::after {
+    content: '★';
+    position: absolute;
+    top: 2px;
+    right: 4px;
+    font-size: 0.7rem;
+    color: #ffd54a;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
 }
 
 .gtt-event-title {
@@ -1424,19 +1433,6 @@ span#headerFilterLabel {
     font-size: 1.05rem;
     font-weight: 700;
     color: #fff;
-}
-
-.gtt-hour-label-day {
-    width: auto;
-    padding: 4px 10px;
-    margin: 8px 0 8px 4px;
-    background: #a49fe6;
-    color: #14123f;
-    border-radius: 8px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    border-right: none;
-    z-index: 2;
 }
 
 .gtt-day-divider {
