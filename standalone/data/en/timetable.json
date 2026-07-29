@@ -8,23 +8,23 @@
     "days": [
       {
         "value": "2026-08-13",
-        "label": "THU"
+        "label": "Thursday"
       },
       {
         "value": "2026-08-14",
-        "label": "FRI"
+        "label": "Friday"
       },
       {
         "value": "2026-08-15",
-        "label": "SAT"
+        "label": "Saturday"
       },
       {
         "value": "2026-08-16",
-        "label": "SUN"
+        "label": "Sunday"
       },
       {
         "value": "2026-06-15",
-        "label": "MON"
+        "label": "Monday"
       }
     ],
     "stages": [
@@ -1656,6 +1656,7 @@
       "excerpt": "Freut euch aufen einen von MINJA kuratiertern „Sober Rave“ mit mitreißenden Beats 🥰 Line-Up:Minja B2B MaleaLila Veil (live)",
       "description": "Jessie has lived the highs and lows of 20+ years experience in nightlife and festivals across London and Berlin, and found new depth in sobriety. In the variety of workshops she facilitates, she brings together her passion for connection, creativity, dress up and conscious celebration.",
       "hosts": [
+        "Minja",
         "Jessie Sonnenschein"
       ],
       "source": "program"
@@ -2710,7 +2711,7 @@
       "langs": [
         "en"
       ],
-      "excerpt": "Do you dare to dive into your fantasies at Bucht der Träumer? Come find us Saturday evening and explore yourself with others. In ...",
+      "excerpt": "Do you dare to dive into your fantasies at Bucht der Träumer*? Come find us Saturday evening and explore yourself with others. In ...",
       "description": "My name is Anna Gamburg and I have taken on many shapes and forms: For over 12 years I have been working as a voice actress and actress and explored many roles. In the last 5 years I have breached out into coaching and empowering people to reconnect with their authenticity and joy. Playing improv theater for many years was one of my own first steps into this self expression. Tapping into joy is what I desire to share with the world!",
       "hosts": [
         "Sonja Werner",
@@ -3099,6 +3100,30 @@
     },
     {
       "id": 125,
+      "title": "Landing Softly: A Closing Journey of Reflection & Integration",
+      "day": "2026-08-16",
+      "day_label": "Sunday",
+      "time": "SUN 13:30",
+      "start_time": "13:30",
+      "end_time": "14:30",
+      "stage": "mirage",
+      "stage_label": "Mirage",
+      "type": "interaktiver-workshop",
+      "type_label": "Workshop",
+      "category": "Workshop",
+      "genre": "Workshop",
+      "langs": [
+        "en"
+      ],
+      "excerpt": "How often do beautiful experiences pass before we have truly felt them? A festival is a world of its own, filled with conversations, encounters, music ...",
+      "description": "How often do beautiful experiences pass before we have truly felt them? A festival is a world of its own, filled with conversations, encounters, music and moments that quietly change us. This workshop invites you to pause before you leave – to savor what you have experienced. Through guided meditation, breathing and reflective practices, integrate your experience calmly. Come as you are, leave with deeper gratitude and connection to yourself.",
+      "hosts": [
+        "Isabelle Dikumbi"
+      ],
+      "source": "workshops"
+    },
+    {
+      "id": 126,
       "title": "Reset & Reconnect – Back to the Here and Now in 90 Minutes",
       "day": "2026-08-16",
       "day_label": "Sunday",
@@ -3118,30 +3143,6 @@
       "description": "Between the dancefloor and your return to everyday life, this workshop invites you to a small reset. Learn how your nervous system works, discover simple regulation exercises to come down, and exchange with others. Together we create a bit of calm, connection and a conscious here-and-now right in the middle of the festival.",
       "hosts": [
         "Sophie Victoria Lauber"
-      ],
-      "source": "workshops"
-    },
-    {
-      "id": 126,
-      "title": "Landing Softly: A Closing Journey of Reflection & Integration",
-      "day": "2026-08-16",
-      "day_label": "Sunday",
-      "time": "SUN 14:00",
-      "start_time": "14:00",
-      "end_time": "15:00",
-      "stage": "mirage",
-      "stage_label": "Mirage",
-      "type": "interaktiver-workshop",
-      "type_label": "Workshop",
-      "category": "Workshop",
-      "genre": "Workshop",
-      "langs": [
-        "en"
-      ],
-      "excerpt": "How often do beautiful experiences pass before we have truly felt them? A festival is a world of its own, filled with conversations, encounters, music ...",
-      "description": "How often do beautiful experiences pass before we have truly felt them? A festival is a world of its own, filled with conversations, encounters, music and moments that quietly change us. This workshop invites you to pause before you leave – to savor what you have experienced. Through guided meditation, breathing and reflective practices, integrate your experience calmly. Come as you are, leave with deeper gratitude and connection to yourself.",
-      "hosts": [
-        "Isabelle Dikumbi"
       ],
       "source": "workshops"
     },
@@ -3358,9 +3359,7 @@
       ],
       "excerpt": "When Havali Sergec takes the stage, music doesn't follow a plan – it happens in the moment. With creative ideas, spontaneous flashes and direct exchange ...",
       "description": "When Havali Sergec takes the stage, music doesn't follow a plan – it happens in the moment. With creative ideas, spontaneous flashes and direct exchange with the audience, he produces new sounds and songs live. The boundaries between music, improvisation and comedy blur: the audience is actively involved and experiences how music emerges from small impulses. An interactive experience full of humour and live moments.",
-      "hosts": [
-        "Havali Sergec"
-      ],
+      "hosts": [],
       "source": "workshops"
     },
     {

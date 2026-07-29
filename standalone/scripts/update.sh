@@ -174,10 +174,9 @@ else
     echo "📄 Scraping HTML pages directly from source..."
     echo ""
 
-    # One pass per language. DE scrapes everything the app uses today.
-    # EN only scrapes the sources _build_timetable.py needs to build an
-    # English timetable — cashless/faqs stay German until Round 2 adds
-    # an English Info/FAQ pipeline.
+    # One pass per language — both DE and EN scrape everything the app
+    # needs (timetable sources + cashless/faqs/news), then _build_info.py
+    # merges cashless/faqs/news into that language's info.json.
     run_scrape_pass() {
         local pass_url="$1" pass_dir="$2" pass_lang="$3"
         shift 3
@@ -214,6 +213,18 @@ else
                         error "[$pass_lang] /$slug/ FAQ extraction failed (see log)"
                         echo "      ❌ FAQ extraction failed"
                         echo "{\"slug\":\"$pass_lang/$slug\",\"status\":\"failed\",\"detail\":\"FAQ extraction failed\",\"http_code\":\"$HTTP_CODE\",\"bytes\":$SIZE}" >> "$TMP_PAGES"
+                    fi
+                elif [ "$slug" = "news" ]; then
+                    info "[$pass_lang] Using News extractor for $slug"
+                    if python3 "$SCRIPTS_DIR/_extract_news.py" "$PAGE_URL" "$DEST" >> "$LOG_FILE" 2>&1; then
+                        DEST_SIZE=$(wc -c < "$DEST" 2>/dev/null || echo 0)
+                        ok "[$pass_lang] /$slug/ news extracted ($DEST_SIZE bytes)"
+                        echo "      ✅ News extracted ($DEST_SIZE bytes)"
+                        echo "{\"slug\":\"$pass_lang/$slug\",\"status\":\"success\",\"detail\":\"News extracted\",\"http_code\":\"$HTTP_CODE\",\"bytes\":$DEST_SIZE}" >> "$TMP_PAGES"
+                    else
+                        error "[$pass_lang] /$slug/ news extraction failed (see log)"
+                        echo "      ❌ News extraction failed"
+                        echo "{\"slug\":\"$pass_lang/$slug\",\"status\":\"failed\",\"detail\":\"News extraction failed\",\"http_code\":\"$HTTP_CODE\",\"bytes\":$SIZE}" >> "$TMP_PAGES"
                     fi
                 elif [ "$slug" = "programm-2026" ]; then
                     info "[$pass_lang] Using Program extractor for $slug"
@@ -268,10 +279,19 @@ else
             warn "[$pass_lang] Timetable build had issues"
             echo "      ⚠️ [$pass_lang] Timetable build had issues"
         fi
+
+        info "[$pass_lang] Building merged info.json"
+        if python3 "$SCRIPTS_DIR/_build_info.py" "$pass_dir" >> "$LOG_FILE" 2>&1; then
+            ok "[$pass_lang] info.json built"
+            echo "      ✅ [$pass_lang] info.json built"
+        else
+            warn "[$pass_lang] info.json build had issues"
+            echo "      ⚠️ [$pass_lang] info.json build had issues"
+        fi
     }
 
-    run_scrape_pass "$URL" "$DATA_DIR" "de" cashless faqs programm-2026 performances workshops
-    run_scrape_pass "$URL/en" "$DATA_DIR/en" "en" programm-2026 performances workshops
+    run_scrape_pass "$URL" "$DATA_DIR" "de" cashless faqs news programm-2026 performances workshops
+    run_scrape_pass "$URL/en" "$DATA_DIR/en" "en" cashless faqs news programm-2026 performances workshops
 
     info "Regenerating manifest"
     python3 "$SCRIPTS_DIR/_update_manifest.py" "$DATA_DIR" "Bucht der Träumer" >> "$LOG_FILE" 2>&1 || warn "Manifest regeneration had issues"

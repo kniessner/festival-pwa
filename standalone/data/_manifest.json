@@ -17,12 +17,12 @@
     },
     {
       "slug": "cashless",
-      "label": "Cashless & TOP-UP – Bucht der Träumer",
+      "label": "Cashless & TOP-UP",
       "icon": "📄"
     },
     {
       "slug": "faqs",
-      "label": "FAQs – Bucht der Träumer",
+      "label": "FAQs",
       "icon": "📄"
     },
     {
@@ -32,10 +32,10 @@
     },
     {
       "slug": "news",
-      "label": "News & Updates",
+      "label": "News",
       "icon": "📄"
     }
   ],
   "app_name": "Bucht der Träumer",
-  "synced_at": 1785225171
+  "synced_at": 1785333148
 }

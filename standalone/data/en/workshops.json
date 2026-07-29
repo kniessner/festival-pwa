@@ -1,7 +1,7 @@
 {
   "type": "grid",
   "slug": "workshops",
-  "title": "Workshops – Bucht der Träumer",
+  "title": "Workshops",
   "intro": "",
   "items": [
     {
@@ -69,14 +69,6 @@
       ],
       "image": "https://i0.wp.com/bucht-der-traeumer.de/wp-content/uploads/2026/06/laurie_penny.jpg?resize=600%2C800&amp;ssl=1",
       "desc": "Laurie Penny is a journalist, screenwriter, activist and the author of nine books, including &#8218;Sexual Revolution: Modern Fascism and the Feminist Fightback.'"
-    },
-    {
-      "title": "Havali Sergec",
-      "points": [
-        "Pranks with Music"
-      ],
-      "image": "https://i0.wp.com/bucht-der-traeumer.de/wp-content/uploads/2026/07/15-Sergec-Havali.jpg?resize=600%2C900&amp;ssl=1",
-      "desc": "Havali Sergec is a musician, producer, and content creator who comments on social issues and current debates – often with irony, sometimes directly, always with a clear stance. His focus is on equality, inclusion, and mutual respect. Music forms the foundation of his work and gives his content a distinctive style."
     },
     {
       "title": "Friederike von Aderkas",
@@ -368,14 +360,6 @@
       "desc": "A crafty and meditative workshop inviting participants to create their own miniature planets from recycled materials, textures, and found objects. Inspired by"
     },
     {
-      "title": "Hannah Pascucci",
-      "points": [
-        "Courage Yoga"
-      ],
-      "image": "https://i0.wp.com/bucht-der-traeumer.de/wp-content/uploads/2026/07/efe87b1d81fcee070459d3a0955c473c.jpeg?resize=600%2C900&amp;ssl=1",
-      "desc": "Hannah is a yoga teacher and founder of Courage Yoga – a space for mindful movement, honest feeling, and genuine connection. She sees yoga not as performance, but as a way to reconnect with the body. Based in Berlin, she teaches in studios and through accessible outdoor classes, creating spaces where community and belonging can truly be felt."
-    },
-    {
       "title": "Emiko Gejic",
       "points": [
         "Panel: Hedonism vs. Community Activation – How to reconnect (or get active) despite Feelings of Powerlessness",
@@ -383,6 +367,14 @@
       ],
       "image": "https://i0.wp.com/bucht-der-traeumer.de/wp-content/uploads/2026/07/Emiko-3-Fotograf_-Jannis-Mayr.jpg?resize=600%2C900&amp;ssl=1",
       "desc": "Emiko Gejic is a creative, cultural producer and activist from Berlin. She is the founder of Berlinsidestories, managing director of Urbane Praxis, and official spokesperson of the Berlin Clubcommission. With a background in cultural studies and urban research, she advocates for Berlin's nightlife, subcultures and more equitable urban futures"
+    },
+    {
+      "title": "Hannah Pascucci",
+      "points": [
+        "Courage Yoga"
+      ],
+      "image": "https://i0.wp.com/bucht-der-traeumer.de/wp-content/uploads/2026/07/efe87b1d81fcee070459d3a0955c473c.jpeg?resize=600%2C900&amp;ssl=1",
+      "desc": "Hannah is a yoga teacher and founder of Courage Yoga – a space for mindful movement, honest feeling, and genuine connection. She sees yoga not as performance, but as a way to reconnect with the body. Based in Berlin, she teaches in studios and through accessible outdoor classes, creating spaces where community and belonging can truly be felt."
     },
     {
       "title": "Glitzzy Goerlitzzy",
@@ -426,20 +418,20 @@
       "desc": ""
     },
     {
-      "title": "Lena Prieß",
-      "points": [
-        "Being moved by Music"
-      ],
-      "image": "https://i0.wp.com/bucht-der-traeumer.de/wp-content/uploads/2026/07/lena_priess.jpg?resize=600%2C900&amp;ssl=1",
-      "desc": "Lena ist Osteopathin und ehemalige Geigerin. Sie lebt in Berlin und für die Musik und den Tanz. Sie hat diesen Workshop ins Leben gerufen, um etwas von der Leidenschaft und Freude weiterzugeben, die sie auf so vielen Tanzflächen rund um die Welt erlebt haben."
-    },
-    {
       "title": "Julia Kefer",
       "points": [
         "After Rave Recovery"
       ],
       "image": "https://i0.wp.com/bucht-der-traeumer.de/wp-content/uploads/2026/07/962f0eeb74850a36d896b34b7eee0016.jpeg?resize=600%2C900&amp;ssl=1",
       "desc": "Julia (juliaflowsgeen) aus Wien ist Lehrerin für bewusste, körperbezogene Liebe. In ihren nährenden Räumen erkundest du dich anhand spiritueller und yogischer Prinzipien. Durch sanfte Neugier und somatische Übungen entfalten sich Freiheit, Selbstermächtigung und eine tiefere Verbindung zu dir selbst."
+    },
+    {
+      "title": "Lena Prieß",
+      "points": [
+        "Being moved by Music"
+      ],
+      "image": "https://i0.wp.com/bucht-der-traeumer.de/wp-content/uploads/2026/07/lena_priess.jpg?resize=600%2C900&amp;ssl=1",
+      "desc": "Lena ist Osteopathin und ehemalige Geigerin. Sie lebt in Berlin und für die Musik und den Tanz. Sie hat diesen Workshop ins Leben gerufen, um etwas von der Leidenschaft und Freude weiterzugeben, die sie auf so vielen Tanzflächen rund um die Welt erlebt haben."
     },
     {
       "title": "Nina Javshanashvili & Tekla Tevdorashvili",
@@ -482,14 +474,6 @@
       "desc": "We are a group with a background in graffiti who have explored politically motivated graffiti."
     },
     {
-      "title": "Anuschka Loose",
-      "points": [
-        "Dance Improvisation Class"
-      ],
-      "image": "https://i0.wp.com/bucht-der-traeumer.de/wp-content/uploads/2026/07/rhrn_platzhalter_1-2.png?resize=305%2C424&amp;ssl=1",
-      "desc": "Anuschka Loose (Berlin, 1997) is a performer and maker. Shaped by Fusion Belly Dance, Physical Theatre, the ATE Method and somatic practices, she graduated in 2025 from Fontys Hogeschool voor de Kunsten (NL) with a BA in Dance and Choreography. Her works range from solos to public space interventions"
-    },
-    {
       "title": "Annie Witschas & Valentina Vavalà & Gusztáv Ottrubay",
       "points": [
         "To grow or not to grow? Ideas for a fair and sustainable Future"
@@ -506,6 +490,14 @@
       "desc": "Journey through layers of healing, the spirit and greater consciousness to resolve wounds, access guidance and upgrade your connection to higher dimensions...."
     },
     {
+      "title": "Anuschka Loose",
+      "points": [
+        "Dance Improvisation Class"
+      ],
+      "image": "https://i0.wp.com/bucht-der-traeumer.de/wp-content/uploads/2026/07/rhrn_platzhalter_1-2.png?resize=305%2C424&amp;ssl=1",
+      "desc": "Anuschka Loose (Berlin, 1997) is a performer and maker. Shaped by Fusion Belly Dance, Physical Theatre, the ATE Method and somatic practices, she graduated in 2025 from Fontys Hogeschool voor de Kunsten (NL) with a BA in Dance and Choreography. Her works range from solos to public space interventions"
+    },
+    {
       "title": "Miriam Lütt",
       "points": [
         "Right Here, Right Now – Gentle Yoga Flow",
@@ -515,12 +507,12 @@
       "desc": "Miriam Lütt is a yoga teacher from Berlin, teaching at studios and festivals for more than 6 years. Her classes combine movement, breath, and sound into a vibrant practice. Her goal is to create spaces where connection, balance, and authentic sensation can flourish – right in the midst of the festival."
     },
     {
-      "title": "Zuher Jazmati",
+      "title": "Pauline Jäckels",
       "points": [
         "Panel: Hedonism vs. Community Activation – How to reconnect (or get active) despite Feelings of Powerlessness"
       ],
-      "image": "https://i0.wp.com/bucht-der-traeumer.de/wp-content/uploads/2026/07/c9b282b38d6c2a97c96dde096f4a16c1.png?resize=600%2C900&amp;ssl=1",
-      "desc": "Zuher Jazmati is a political educator, moderator, DJ and podcaster based in Berlin. His work focuses on anti-racism, queer politics, intersectionality and anti-discrimination, combining political education with cultural practice. As co-host of the award-winning BBQ – The Black Brown Queer Podcast and co-founder of the queer-Arab party series ADIRA, he creates spaces that foster dialogue, visibility and community."
+      "image": "https://i0.wp.com/bucht-der-traeumer.de/wp-content/uploads/2026/07/21ab00682ed09349995b0c58c39725d8.jpeg?resize=489%2C408&amp;ssl=1",
+      "desc": "Pauline Jäckels is a journalist, editor and moderator based in Berlin. She writes on international politics, social movements and questions of democracy, with a particular focus on global justice and foreign policy. Alongside her work as an editor at taz, she co-hosts the podcast Weltunordnung, where she discusses current international affairs with experts and activists."
     },
     {
       "title": "Luise Klingma",
@@ -529,6 +521,14 @@
       ],
       "image": "https://i0.wp.com/bucht-der-traeumer.de/wp-content/uploads/2026/07/cf3445e3178a3b8e9be9b6a54b8a8e39.png?resize=600%2C900&amp;ssl=1",
       "desc": "Liese Kingma is a cultural practitioner, strategist and community advocate based in Berlin. Her work explores how culture, participation and community-building can create more accessible and inclusive public spaces. Through research, facilitation and international collaborations, she develops projects that strengthen cultural resilience and social connection."
+    },
+    {
+      "title": "Zuher Jazmati",
+      "points": [
+        "Panel: Hedonism vs. Community Activation – How to reconnect (or get active) despite Feelings of Powerlessness"
+      ],
+      "image": "https://i0.wp.com/bucht-der-traeumer.de/wp-content/uploads/2026/07/c9b282b38d6c2a97c96dde096f4a16c1.png?resize=600%2C900&amp;ssl=1",
+      "desc": "Zuher Jazmati is a political educator, moderator, DJ and podcaster based in Berlin. His work focuses on anti-racism, queer politics, intersectionality and anti-discrimination, combining political education with cultural practice. As co-host of the award-winning BBQ – The Black Brown Queer Podcast and co-founder of the queer-Arab party series ADIRA, he creates spaces that foster dialogue, visibility and community."
     },
     {
       "title": "Alexander Krüger",
@@ -555,14 +555,6 @@
       ],
       "image": "https://i0.wp.com/bucht-der-traeumer.de/wp-content/uploads/2026/07/dad185a2fe9fbf24a23e7287e3096b4a.jpg?resize=600%2C900&amp;ssl=1",
       "desc": "Zuzu ist DJ und tanzt seit vielen Jahren."
-    },
-    {
-      "title": "Pauline Jäckels",
-      "points": [
-        "Panel: Hedonism vs. Community Activation – How to reconnect (or get active) despite Feelings of Powerlessness"
-      ],
-      "image": "https://i0.wp.com/bucht-der-traeumer.de/wp-content/uploads/2026/07/21ab00682ed09349995b0c58c39725d8.jpeg?resize=489%2C408&amp;ssl=1",
-      "desc": "Pauline Jäckels is a journalist, editor and moderator based in Berlin. She writes on international politics, social movements and questions of democracy, with a particular focus on global justice and foreign policy. Alongside her work as an editor at taz, she co-hosts the podcast Weltunordnung, where she discusses current international affairs with experts and activists."
     }
   ]
 }

@@ -26,13 +26,17 @@ async function fetchLocalized(file, lang) {
 }
 
 export async function loadData() {
-    for (const [slug, file] of Object.entries(DATA_FILES)) {
+    // Fetch every data file in parallel instead of one at a time — on a
+    // language switch this halves the wait (previously info.json and
+    // timetable.json were awaited sequentially, adding their round-trips
+    // together instead of overlapping them).
+    await Promise.all(Object.entries(DATA_FILES).map(async ([slug, file]) => {
         try {
             store.pageData[slug] = await fetchLocalized(file, store.lang);
         } catch (e) {
             console.error('Failed to load', file, e);
         }
-    }
+    }));
 }
 
 export async function loadManifest() {

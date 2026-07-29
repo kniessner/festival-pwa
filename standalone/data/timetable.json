@@ -8,23 +8,23 @@
     "days": [
       {
         "value": "2026-08-13",
-        "label": "DO"
+        "label": "Donnerstag"
       },
       {
         "value": "2026-08-14",
-        "label": "FR"
+        "label": "Freitag"
       },
       {
         "value": "2026-08-15",
-        "label": "SA"
+        "label": "Samstag"
       },
       {
         "value": "2026-08-16",
-        "label": "SO"
+        "label": "Sonntag"
       },
       {
         "value": "2026-06-15",
-        "label": "MO"
+        "label": "Montag"
       }
     ],
     "stages": [
@@ -1656,6 +1656,7 @@
       "excerpt": "Freut euch aufen einen von MINJA kuratiertern „Sober Rave“ mit mitreißenden Beats 🥰 Line-Up:Minja B2B MaleaLila Veil (live)",
       "description": "Jessie hat in über 20 Jahren im Nachtleben und bei Festivals in London und Berlin Höhen und Tiefen erlebt und in der Abstinenz eine neue Tiefe gefunden. In den vielfältigen Workshops, die sie leitet, vereint sie ihre Leidenschaft für zwischenmenschliche Verbindungen, Kreativität, Verkleiden und bewusstes Feiern.",
       "hosts": [
+        "Minja",
         "Jessie Sonnenschein"
       ],
       "source": "program"
@@ -2710,7 +2711,7 @@
       "langs": [
         "en"
       ],
-      "excerpt": "Traust du dich, in deine Fantasien einzutauchen, bei der Bucht der Träumer? Finde uns am Samstagabend und entdecke dich selbst gemeinsam mit anderen. In&hellip;",
+      "excerpt": "Traust du dich, in deine Fantasien einzutauchen, bei der Bucht der Träumer*? Finde uns am Samstagabend und entdecke dich selbst gemeinsam mit anderen. In&hellip;",
       "description": "Mein Name ist Anna Gamburg und ich habe schon viele verschiedene Rollen und Facetten angenommen: Seit über 12 Jahren arbeite ich als Synchronsprecherin und Schauspielerin und habe dabei zahlreiche Rollen verkörpert. In den letzten 5 Jahren habe ich mich dem Coaching zugewandt und unterstütze Menschen dabei, wieder zu ihrer Authentizität und Freude zu finden. Das langjährige Improvisationstheater war für mich einer der ersten Schritte auf diesem Weg des Selbstausdrucks. Diese Freude zu entdecken – das ist es, was ich mit der Welt teilen möchte!",
       "hosts": [
         "Sonja Werner",
@@ -3099,6 +3100,30 @@
     },
     {
       "id": 125,
+      "title": "Landing Softly: A Closing Journey of Reflection & Integration",
+      "day": "2026-08-16",
+      "day_label": "Sonntag",
+      "time": "SO 13:30",
+      "start_time": "13:30",
+      "end_time": "14:30",
+      "stage": "mirage",
+      "stage_label": "Mirage",
+      "type": "interaktiver-workshop",
+      "type_label": "Workshop",
+      "category": "Workshop",
+      "genre": "Workshop",
+      "langs": [
+        "en"
+      ],
+      "excerpt": "Wie oft ziehen schöne Erfahrungen an uns vorbei, bevor wir sie wirklich gefühlt haben? Ein Festival ist eine eigene Welt voller Begegnungen, Musik und&hellip;",
+      "description": "Wie oft ziehen schöne Erfahrungen an uns vorbei, bevor wir sie wirklich gefühlt haben? Ein Festival ist eine eigene Welt voller Begegnungen, Musik und Momente, die uns leise verändern. Dieser Workshop lädt dich ein, vor der Abreise innezuhalten – um auszukosten, was du erlebt hast. Durch geführte Meditation, Atmung und reflektierende Übungen integrierst du dein Erlebtes in Ruhe. Komm, wie du bist, geh mit Dankbarkeit und Verbindung zu dir selbst.",
+      "hosts": [
+        "Isabelle Dikumbi"
+      ],
+      "source": "workshops"
+    },
+    {
+      "id": 126,
       "title": "Reset & Reconnect – In 90 Minuten zurück ins Hier und Jetzt",
       "day": "2026-08-16",
       "day_label": "Sonntag",
@@ -3118,30 +3143,6 @@
       "description": "Zwischen Tanzfläche und Rückkehr in den Alltag lädt dich dieser Workshop zu einem kleinen Reset ein. Erfahre, wie dein Nervensystem funktioniert, entdecke einfache Regulationsübungen zum Runterkommen und tausche dich mit anderen aus. Gemeinsam schaffen wir ein wenig Ruhe, Verbundenheit und ein bewusstes Hier und Jetzt mitten im Festivalgeschehen.",
       "hosts": [
         "Sophie Victoria Lauber"
-      ],
-      "source": "workshops"
-    },
-    {
-      "id": 126,
-      "title": "Landing Softly: A Closing Journey of Reflection & Integration",
-      "day": "2026-08-16",
-      "day_label": "Sonntag",
-      "time": "SO 14:00",
-      "start_time": "14:00",
-      "end_time": "15:00",
-      "stage": "mirage",
-      "stage_label": "Mirage",
-      "type": "interaktiver-workshop",
-      "type_label": "Workshop",
-      "category": "Workshop",
-      "genre": "Workshop",
-      "langs": [
-        "en"
-      ],
-      "excerpt": "Wie oft ziehen schöne Erfahrungen an uns vorbei, bevor wir sie wirklich gefühlt haben? Ein Festival ist eine eigene Welt voller Begegnungen, Musik und&hellip;",
-      "description": "Wie oft ziehen schöne Erfahrungen an uns vorbei, bevor wir sie wirklich gefühlt haben? Ein Festival ist eine eigene Welt voller Begegnungen, Musik und Momente, die uns leise verändern. Dieser Workshop lädt dich ein, vor der Abreise innezuhalten – um auszukosten, was du erlebt hast. Durch geführte Meditation, Atmung und reflektierende Übungen integrierst du dein Erlebtes in Ruhe. Komm, wie du bist, geh mit Dankbarkeit und Verbindung zu dir selbst.",
-      "hosts": [
-        "Isabelle Dikumbi"
       ],
       "source": "workshops"
     },
@@ -3358,9 +3359,7 @@
       ],
       "excerpt": "Wenn Havali Sergec die Bühne betritt, entsteht Musik nicht nach Plan, sondern im Moment. Mit kreativen Ideen, spontanen Einfällen und direktem Austausch mit dem&hellip;",
       "description": "Wenn Havali Sergec die Bühne betritt, entsteht Musik nicht nach Plan, sondern im Moment. Mit kreativen Ideen, spontanen Einfällen und direktem Austausch mit dem Publikum produziert er live neue Sounds und Songs. Dabei verschwimmen die Grenzen zwischen Musik, Improvisation und Comedy: Zuschauende werden aktiv einbezogen und erleben, wie aus kleinen Impulsen Musik entsteht. Ein interaktives Erlebnis voller Humor und Live-Momente.",
-      "hosts": [
-        "Havali Sergec"
-      ],
+      "hosts": [],
       "source": "workshops"
     },
     {
