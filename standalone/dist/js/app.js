@@ -1,206 +1,181 @@
-import { loadData, loadManifest } from './store.js';
-import { loadPage, renderNav } from './router.js';
-import { setupSearch, scrollToItem, closeSearchModal } from './search.js';
-import { setDay, toggleFilterPanel, resetFilters, toggleEventDetail } from './views/timetable.js';
-import { setGridDay, openGridEventDetail, closeGridEventDetail, toggleGridScrollMode } from './views/timetable-grid.js';
-import { store } from './store.js';
-import { switchInfoTab } from './views/info.js';
-import { toggleFavFromCard, setFavTab } from './views/favorites.js';
-import { setupInstallTracking, setupOfflineIndicator, dismissInstallCard, triggerInstall } from './install.js';
-import { showToast } from './ui.js';
-import { PAGES, pageIdx } from './config.js';
-import { t, setLang } from './i18n.js';
+var x=[{slug:"home",labelKey:"nav.home",icon:"\u{1F3E0}"},{slug:"favorites",labelKey:"nav.favorites",icon:"plan.svg"},{slug:"timetable",labelKey:"nav.timetable",icon:"program.svg"},{slug:"grid",labelKey:"nav.grid",icon:"timetable.svg"},{slug:"info",labelKey:"nav.info",icon:"info.svg"}],pt={info:"info.json",timetable:"timetable.json"},Q="bucht-favorites",I=["2026-08-13","2026-08-14","2026-08-15","2026-08-16"],vt="2026-08-13T00:00:00";function w(t){return x.findIndex(e=>e.slug===t)}var ht={de:{"common.loading":"Laden...","common.noContent":"Keine Inhalte verf\xFCgbar","common.favorite":"Favorit","common.detailsSoon":"Details folgen bald.","common.updatedOn":"Stand: {{date}}","nav.home":"Home","nav.timetable":"Programm","nav.grid":"Timetable","nav.favorites":"Mein Plan","nav.info":"Info","search.placeholder":"Suchen...","search.resultsTitle":"Suchergebnisse","search.noResults":'Keine Ergebnisse f\xFCr "{{query}}"',"install.cardTitle":"So f\xFCgst du die App deinem Home-Bildschirm hinzu","install.tapToInstall":"Tippe hier, um die App zu installieren","install.updateAvailable":"Neue Version verf\xFCgbar","install.updateNow":"Aktualisieren","install.updateLater":"Sp\xE4ter","install.offline":"Offline \u2014 Inhalte zwischengespeichert","install.installed":"App installiert","install.iosShareHint":"Tippe unten auf \u201ETeilen\u201C, dann auf \u201EZum Home-Bildschirm\u201C","install.androidHint":"Chrome/Edge auf Android: Men\xFC \u2192 Zum Startbildschirm","install.installing":"App wird installiert...","install.cancelled":"Installieren abgebrochen","home.quickProgram":"Programm","home.quickInfo":"Info","home.quickMyPlan":"Mein Plan ({{count}})","home.runningNow":"L\xE4uft gerade","home.nextEvent":"Dein n\xE4chstes Event","home.importantInfo":"Wichtige Infos","home.cultureProgram":"Kulturprogramm","home.eventsAcrossDays":"149+ Events \xFCber alle Tage","home.cashlessFaqs":"Cashless & FAQs","home.everythingAboutFestival":"Alles rund ums Festival","home.newsUpdates":"News & Updates","home.importantInfoUpdates":"Wichtige Infos und Updates","home.myPlan":"Mein Plan","home.savedCount":"{{count}} gespeichert","home.addFavorites":"Favoriten hinzuf\xFCgen","home.countdownToday":"Heute!","home.countdownOver":"Vorbei","tt.loading":"Programm wird geladen\u2026","tt.emptySelection":"Keine Events f\xFCr diese Auswahl","tt.filterButton":"Filter","tt.filterTitle":"Filter","tt.stageLabel":"B\xFChne / Stage","tt.allStages":"Alle B\xFChnen","tt.categoryLabel":"Kategorie","tt.allCategories":"Alle Kategorien","tt.genreLabel":"Genre","tt.allGenres":"Alle Genres","tt.resetFilters":"Filter zur\xFCcksetzen","tt.more":"+ Mehr","tt.less":"\u2212 Weniger","tt.now":"JETZT","grid.empty":"Keine geplanten Acts f\xFCr diesen Tag","grid.toggleTitle":"Ausrichtung wechseln","grid.ariaVertical":"Events laufen von oben nach unten \u2013 zum Wechseln tippen","grid.ariaHorizontal":"Events laufen von links nach rechts \u2013 zum Wechseln tippen","grid.legendSpace":"Spaces","grid.legendMusic":"Musik","grid.legendWorkshop":"Workshop","grid.legendPerformance":"Performance","fav.tabProgram":"Programm","fav.tabNews":"News","fav.noDay":"Ohne Tag","fav.emptyHint":"Du hast deinem Plan noch nichts hinzugef\xFCgt","info.tabNews":"News","info.tabCashless":"Cashless","info.tabFaqs":"FAQs","info.newsEmpty":"Aktuelle News werden hier angezeigt, sobald verf\xFCgbar."},en:{"common.loading":"Loading...","common.noContent":"No content available","common.favorite":"Favorite","common.detailsSoon":"Details coming soon.","common.updatedOn":"Updated: {{date}}","nav.home":"Home","nav.timetable":"Program","nav.grid":"Timetable","nav.favorites":"My Plan","nav.info":"Info","search.placeholder":" Search...","search.resultsTitle":"Search results","search.noResults":'No results for "{{query}}"',"install.cardTitle":"How to add app to your home screen","install.tapToInstall":"Tap here to install the app","install.updateAvailable":"New version available","install.updateNow":"Update","install.updateLater":"Later","install.offline":"Offline \u2014 content cached","install.installed":"App installed","install.iosShareHint":'Tap "Share" button at the bottom, then tap "Add to Home Screen"',"install.androidHint":"Chrome/Edge on Android: Menu \u2192 Add to Home Screen","install.installing":"Installing app...","install.cancelled":"Install cancelled","home.quickProgram":"\u{1F4C5} Program","home.quickInfo":"\u2139\uFE0F Info","home.quickMyPlan":"\u2B50 My Plan ({{count}})","home.runningNow":"\u{1F534} Happening now","home.nextEvent":"\u2B50 Your next event","home.importantInfo":"\u{1F4CD} Important Info","home.cultureProgram":"Culture Program","home.eventsAcrossDays":"149+ events across all days","home.cashlessFaqs":"Cashless & FAQs","home.everythingAboutFestival":"Everything about the festival","home.newsUpdates":"News & Updates","home.importantInfoUpdates":"Important info and updates","home.myPlan":"My Plan","home.savedCount":"{{count}} saved","home.addFavorites":"Add favorites","home.countdownToday":"Today!","home.countdownOver":"Over","tt.loading":"Program is loading\u2026","tt.emptySelection":"No events for this selection","tt.filterButton":" Filter","tt.filterTitle":"Filter","tt.stageLabel":"Stage","tt.allStages":"All stages","tt.categoryLabel":"Category","tt.allCategories":"All categories","tt.genreLabel":"Genre","tt.allGenres":"All genres","tt.resetFilters":"Reset filters","tt.more":"+ More","tt.less":"\u2212 Less","tt.now":"NOW","grid.empty":"No scheduled acts for this day","grid.toggleTitle":"Switch orientation","grid.ariaVertical":"Events run top to bottom \u2013 tap to switch","grid.ariaHorizontal":"Events run left to right \u2013 tap to switch","grid.legendSpace":"Spaces","grid.legendMusic":"Music","grid.legendWorkshop":"Workshop","grid.legendPerformance":"Performance","fav.tabProgram":"Program","fav.tabNews":"News","fav.noDay":"No day","fav.emptyHint":"You don't have anything added to your plan yet","info.tabNews":"News","info.tabCashless":"Cashless","info.tabFaqs":"FAQs","info.newsEmpty":"Current news will be shown here once available."}},J="bucht-lang";function tt(){let t=localStorage.getItem(J);if(t==="de"||t==="en")return t;let e=navigator.language&&navigator.language.toLowerCase().startsWith("en")?"en":"de";return localStorage.setItem(J,e),e}function yt(t){localStorage.setItem(J,t),document.documentElement.lang=t}function i(t,e){let a=ht[tt()]?.[t]??ht.de[t]??t;return e?Object.entries(e).reduce((n,[r,s])=>n.replace(`{{${r}}}`,s),a):a}var l={currentPage:0,pageData:{},lang:tt(),ttFilters:{stage:"all",category:"all",genre:"all",day:"all"},ttPendingDay:null,gridDay:null,gridScrollMode:"horizontal",favTab:"program"};async function te(t,e){if(e!=="de")try{let n=await fetch(`data/${e}/${t}`);if(n.ok)return await n.json()}catch{}return(await fetch(`data/${t}`)).json()}async function et(){for(let[t,e]of Object.entries(pt))try{l.pageData[t]=await te(e,l.lang)}catch(a){console.error("Failed to load",e,a)}}async function bt(){try{return await(await fetch("data/_manifest.json")).json()}catch{return null}}function E(){let t=new Date,e=[t.getFullYear(),String(t.getMonth()+1).padStart(2,"0"),String(t.getDate()).padStart(2,"0")].join("-");return e<I[0]?I[0]:e>I[I.length-1]?I[I.length-1]:I.includes(e)?e:I[0]}function $t(t,e){if(e!==E()||!t.start_time)return!1;let[a,n]=t.start_time.split(":").map(Number),r=a*60+n,s;if(t.end_time){let[d,g]=t.end_time.split(":").map(Number);s=d*60+g}else s=r+90;let o=new Date,c=o.getHours()*60+o.getMinutes();return c>=r&&c<=s}var ee=6;function at(t,e){return t<ee&&(t+=24),t*60+e}function _(){try{return JSON.parse(localStorage.getItem(Q))||[]}catch{return[]}}function xt(t,e){let a=_(),n=a.findIndex(r=>r.page===t&&r.index===e);return n>=0?a.splice(n,1):a.push({page:t,index:e}),localStorage.setItem(Q,JSON.stringify(a)),n<0}function wt(t,e){return _().some(a=>a.page===t&&a.index===e)}function z(){let t=0;for(let e of _())if(e.page==="timetable")l.pageData.timetable?.events?.[e.index]&&t++;else if(e.page.startsWith("info-")){let a=e.page.replace("info-","");l.pageData.info?.[a]?.items?.[e.index]&&t++}return t}function Et(){let t=l.pageData.timetable,e=t?.events;if(!e)return null;let a=t.filters.days.map(c=>c.value),n=a.indexOf(E());if(n===-1)return null;let r=new Date,s=n*1440+at(r.getHours(),r.getMinutes()),o=null;for(let c of _()){if(c.page!=="timetable")continue;let d=e[c.index];if(!d||!d.day||!d.start_time)continue;let g=a.indexOf(d.day);if(g===-1)continue;let[f,h]=d.start_time.split(":").map(Number),m=g*1440+at(f,h),p;if(d.end_time){let[v,L]=d.end_time.split(":").map(Number);p=g*1440+at(v,L),p<=m&&(p+=1440)}else p=m+90;p<s||(!o||m<o.startAbs)&&(o={ev:d,index:c.index,startAbs:m,running:m<=s})}return o}function R(t){return t?y(t).replace(/\n/g,"<br>"):""}function y(t){return t?t.replace(/[&<>"']/g,e=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"})[e]):""}function nt(t){let e=document.querySelector(".toast-message");e&&e.remove();let a=document.createElement("div");a.className="toast-message",a.textContent=t,a.style.cssText="position:fixed;bottom:calc(90px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);z-index:400;background:linear-gradient(135deg,#b0327a,#762c8c);color:#f3efdf;padding:12px 20px;border-radius:24px;font-size:0.85rem;font-weight:700;box-shadow:0 4px 16px rgba(0,0,0,0.3);max-width:90vw;text-align:center;opacity:0;",document.body.appendChild(a),requestAnimationFrame(()=>{a.style.transition="opacity 0.3s ease-out, transform 0.3s ease-out",a.style.opacity="1",a.style.transform="translateX(-50%) translateY(0)"}),setTimeout(()=>{a.style.opacity="0",a.style.transform="translateX(-50%) translateY(20px)",setTimeout(()=>a.remove(),350)},3e3)}function A(t,e){return`<button class="fav-btn ${wt(t,e)?"active":""}" data-action="toggle-fav" data-page="${t}" data-index="${e}" title="${i("common.favorite")}">\u2605</button>`}function Tt({page:t,index:e,title:a,desc:n,meta:r="",maxDesc:s=200}){let o=n?`<p>${y(n.substring(0,s))}${n.length>s?"...":""}</p>`:"";return`<div class="grid-card" data-item-index="${e}">
+        <div class="card-header"><h3>${y(a)}</h3>${A(t,e)}</div>
+        ${r}${o}
+    </div>`}function st(t,e){return'<div class="faq-list">'+t.map((a,n)=>{let r=a.answer&&a.answer.trim()&&a.answer!=="Details folgen bald.";return`<div class="faq-item" data-action="toggle-faq" data-faq="${n}" data-item-index="${n}">
+            <div class="faq-question">
+                <span>${a.question}</span>
+                <div class="faq-actions">
+                    ${A(e,n)}
+                    <span class="faq-toggle">+</span>
+                </div>
+            </div>
+            <div class="faq-answer ${r?"":"empty"}">${r?a.answer:`<em>${i("common.detailsSoon")}</em>`}</div>
+        </div>`}).join("")+"</div>"}var C=null;function ae(){return window.matchMedia("(display-mode: standalone)").matches||window.navigator.standalone===!0}function ne(){return/iPad|iPhone|iPod/.test(navigator.userAgent)&&!window.MSStream}function se(){return!ae()&&sessionStorage.getItem("installCardDismissed")!=="1"}function V(){if(!se())return"";let t=C!==null,e=t?i("install.tapToInstall"):ne()?i("install.iosShareHint"):i("install.androidHint");return`
+    <div class="install-card ${t?"actionable":""}"${t?' data-action="trigger-install"':""}>
+        <button type="button" class="install-card-close" data-action="dismiss-install-card" aria-label="Close">\u2715</button>
+        <h3>${i("install.cardTitle")}</h3>
+        <p>${e}</p>
+    </div>`}function Lt(t){window.addEventListener("beforeinstallprompt",e=>{e.preventDefault(),C=e,t()}),window.addEventListener("appinstalled",()=>{C=null,t()})}async function It(){if(!C)return null;let t=C;C=null,t.prompt();let{outcome:e}=await t.userChoice;return e}function St(){sessionStorage.setItem("installCardDismissed","1")}function Dt(){let t=()=>{let e=document.querySelector(".offline-badge");if(navigator.onLine)e?.remove();else if(!e){let a=document.createElement("div");a.className="offline-badge",a.textContent=i("install.offline"),document.body.prepend(a)}};window.addEventListener("online",t),window.addEventListener("offline",t),t()}function ot(t){let e=z(),a=Et();t.innerHTML=`
+        <div class="hero">
+            <div class="hero-logo">\u{1F30A}</div>
+            <h1>Bucht der Tr\xE4umer</h1>
+            ${V()}
+            <!--  <div class="hero-sub">Festival 2026</div>
+           <div class="countdown" id="countdown">\u2013</div>
+            <div class="countdown-label">Tage bis zum Festival</div>-->
+            <div class="quick-nav">
+                <button class="quick-btn" data-action="load-page" data-page="${w("timetable")}">${i("home.quickProgram")}</button>
+                <button class="quick-btn" data-action="load-page" data-page="${w("info")}">${i("home.quickInfo")}</button>
+                ${e>0?`<button class="quick-btn quick-btn-accent" data-action="load-page" data-page="${w("favorites")}">${i("home.quickMyPlan",{count:e})}</button>`:""}
+            </div>
+            ${a?`
+            <div class="next-event-card" data-action="goto-event" data-index="${a.index}" data-day="${a.ev.day}">
+                <div class="next-event-label">${a.running?i("home.runningNow"):i("home.nextEvent")}</div>
+                <h3>${y(a.ev.title)}</h3>
+                <div class="next-event-meta">${y(a.ev.time)}${a.ev.stage_label?" \xB7 "+y(a.ev.stage_label):""}</div>
+            </div>`:""}
+        </div>
 
-const LANG_LABELS = { de: 'De', en: 'Eng' };
+         <div class="info-section">
+            <h3>${i("home.importantInfo")}</h3>
+            <div class="info-grid">
+                <div class="info-card" data-action="load-page" data-page="${w("timetable")}">
+                    <span class="icon">\u{1F4C5}</span>
+                    <div class="label">${i("home.cultureProgram")}</div>
+                    <div class="desc">${i("home.eventsAcrossDays")}</div>
+                </div>
+                <div class="info-card" data-action="load-page" data-page="${w("info")}">
+                    <span class="icon">\u{1F4B3}</span>
+                    <div class="label">${i("home.cashlessFaqs")}</div>
+                    <div class="desc">${i("home.everythingAboutFestival")}</div>
+                </div>
+                <div class="info-card" data-action="load-page" data-page="${w("info")}">
+                    <span class="icon">\u2139\uFE0F</span>
+                    <div class="label">${i("home.newsUpdates")}</div>
+                    <div class="desc">${i("home.importantInfoUpdates")}</div>
+                </div>
+                <div class="info-card" data-action="load-page" data-page="${w("favorites")}">
+                    <span class="icon">\u2B50</span>
+                    <div class="label">${i("home.myPlan")}</div>
+                    <div class="desc">${e>0?i("home.savedCount",{count:e}):i("home.addFavorites")}</div>
+                </div>
+            </div>
+        </div>
 
-async function init() {
-    document.documentElement.lang = store.lang;
-    document.getElementById('searchInput').placeholder = t('search.placeholder');
-    document.querySelector('.search-modal-header span').textContent = t('search.resultsTitle');
-    updateLangSwitcherLabel();
-    updateHeaderFilterLabel();
-    await loadData();
-    renderNav();
-    goToPage(0);
-    setupOfflineIndicator();
-    setupInstallTracking(refreshInstallCardIfVisible);
-    setupUpdateBanner();
-    showLastUpdated();
-    wireDelegation();
-}
+    `;let n=new Date(vt),s=Math.ceil((n-new Date)/(1e3*60*60*24)),o=document.getElementById("countdown");o&&(o.textContent=s>0?s:s===0?i("home.countdownToday"):i("home.countdownOver"))}function Mt(t){let e=l.pageData.timetable;if(!e||!e.events){t.innerHTML=`<div class="empty">${i("tt.loading")}</div>`;return}l.ttFilters.day=E(),t.innerHTML=`
+        <div class="tt-intro">${R(e.intro)}</div>
 
-// The install card only ever renders on Home/My Plan — re-rendering any
-// other page just to refresh install state would needlessly reset it
-// (open filter panel, scroll position, etc.).
-function refreshInstallCardIfVisible() {
-    if (['home', 'favorites'].includes(PAGES[store.currentPage]?.slug)) goToPage(store.currentPage);
-}
-
-function toggleSearchBar() {
-    const bar = document.getElementById('searchBar');
-    const isOpen = bar.classList.toggle('open');
-    if (isOpen) {
-        setTimeout(() => document.getElementById('searchInput').focus(), 260);
-    } else {
-        closeSearchBar();
-    }
-}
-
-function closeSearchBar() {
-    document.getElementById('searchBar').classList.remove('open');
-    document.getElementById('searchInput').value = '';
-    closeSearchModal();
-}
-
-function updateLangSwitcherLabel() {
-    const btn = document.getElementById('langSwitcher');
-    if (btn) btn.textContent = LANG_LABELS[store.lang] || store.lang;
-}
-
-function updateHeaderFilterLabel() {
-    const label = document.getElementById('headerFilterLabel');
-    if (label) label.textContent = t('tt.filterButton');
-}
-
-async function setLangAndRefresh(lang) {
-    if (lang === store.lang) return;
-    setLang(lang);
-    store.lang = lang;
-    updateLangSwitcherLabel();
-    updateHeaderFilterLabel();
-    document.getElementById('searchInput').placeholder = t('search.placeholder');
-    document.querySelector('.search-modal-header span').textContent = t('search.resultsTitle');
-    await loadData();
-    renderNav();
-    goToPage(store.currentPage);
-}
-
-function setupUpdateBanner() {
-    if (!('serviceWorker' in navigator)) return;
-
-    navigator.serviceWorker.addEventListener('message', event => {
-        if (event.data?.type === 'UPDATE_AVAILABLE') {
-            showUpdateBanner();
-        }
-    });
-
-    navigator.serviceWorker.register('sw.js').then(reg => {
-        reg.addEventListener('updatefound', () => {
-            const newWorker = reg.installing;
-            if (!newWorker) return;
-            newWorker.addEventListener('statechange', () => {
-                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                    showUpdateBanner(newWorker);
-                }
-            });
-        });
-    }).catch(() => {});
-}
-
-let updateWorker = null;
-function showUpdateBanner(worker = null) {
-    if (document.getElementById('sw-update-banner')) return;
-    if (worker) updateWorker = worker;
-
-    const banner = document.createElement('div');
-    banner.id = 'sw-update-banner';
-    banner.className = 'update-banner';
-    banner.innerHTML = `
-        <span>${t('install.updateAvailable')}</span>
-        <button id="sw-update-now">${t('install.updateNow')}</button>
-        <button id="sw-update-later">${t('install.updateLater')}</button>
-    `;
-    document.body.appendChild(banner);
-
-    document.getElementById('sw-update-now').addEventListener('click', () => {
-        if (updateWorker) updateWorker.postMessage({ type: 'SKIP_WAITING' });
-        banner.remove();
-        window.location.reload();
-    });
-    document.getElementById('sw-update-later').addEventListener('click', () => banner.remove());
-}
-
-// setupSearch() guards against double-binding its listener, so calling it
-// on every navigation is a harmless no-op once #searchInput is already wired.
-function goToPage(index) {
-    loadPage(index);
-    setupSearch();
-}
-
-async function showLastUpdated() {
-    const el = document.getElementById('lastUpdated');
-    if (!el) return;
-    const m = await loadManifest();
-    if (m && m.synced_at) {
-        const date = new Date(m.synced_at * 1000).toLocaleDateString(store.lang === 'en' ? 'en-GB' : 'de-DE');
-        el.textContent = t('common.updatedOn', { date });
-    }
-}
-
-// Single accordion toggle for both FAQ panels and timetable events use their own handlers.
-function toggleFaqItem(item) {
-    const isOpen = item.classList.contains('open');
-    const scope = item.closest('.info-panel') || item.closest('.faq-list') || document;
-    scope.querySelectorAll('.faq-item.open').forEach(f => {
-        f.classList.remove('open');
-        const t = f.querySelector('.faq-toggle'); if (t) t.textContent = '+';
-    });
-    if (!isOpen) {
-        item.classList.add('open');
-        const t = item.querySelector('.faq-toggle'); if (t) t.textContent = '−';
-    }
-}
-
-const actions = {
-    'load-page': el => goToPage(parseInt(el.dataset.page, 10)),
-    'toggle-fav': el => toggleFavFromCard(el, el.dataset.page, parseInt(el.dataset.index, 10)),
-    'set-fav-tab': el => setFavTab(el.dataset.tab),
-    'set-day': el => setDay(el.dataset.day),
-    'toggle-filter': () => toggleFilterPanel(),
-    'reset-filters': () => resetFilters(),
-    'toggle-event': el => toggleEventDetail(el),
-    'set-grid-day': el => setGridDay(el.dataset.day),
-    'toggle-grid-event': el => openGridEventDetail(el),
-    'close-grid-detail': () => closeGridEventDetail(),
-    'toggle-grid-scroll': () => toggleGridScrollMode(),
-    'toggle-faq': el => toggleFaqItem(el),
-    'toggle-lang': () => setLangAndRefresh(store.lang === 'de' ? 'en' : 'de'),
-    'switch-info-tab': el => switchInfoTab(el.dataset.tab),
-    'toggle-search-bar': () => toggleSearchBar(),
-    'close-search-bar': () => closeSearchBar(),
-    'dismiss-install-card': () => { dismissInstallCard(); refreshInstallCardIfVisible(); },
-    'trigger-install': async () => {
-        const outcome = await triggerInstall();
-        if (outcome === 'accepted') showToast(t('install.installing'));
-        else if (outcome === 'dismissed') showToast(t('install.cancelled'));
-        refreshInstallCardIfVisible();
-    },
-    'search-jump': el => {
-        const idx = parseInt(el.dataset.pageIdx, 10);
-        const itemIndex = parseInt(el.dataset.index, 10);
-        const tab = el.dataset.infoTab;
-        closeSearchBar();
-        goToPage(idx);
-        if (tab) setTimeout(() => { switchInfoTab(tab); scrollToItem(PAGES[idx].slug, itemIndex); }, 400);
-        else setTimeout(() => scrollToItem(PAGES[idx].slug, itemIndex), 300);
-    },
-    'close-search': () => closeSearchModal(),
-    'goto-event': el => {
-        const itemIndex = parseInt(el.dataset.index, 10);
-        if (el.dataset.day) store.ttPendingDay = el.dataset.day;
-        const idx = pageIdx('timetable');
-        goToPage(idx);
-        setTimeout(() => scrollToItem('timetable', itemIndex), 300);
-    }
-};
-
-function wireDelegation() {
-    document.addEventListener('click', e => {
-        const el = e.target.closest('[data-action]');
-        if (!el) return;
-        const fn = actions[el.dataset.action];
-        if (fn) { e.stopPropagation(); fn(el); }
-    });
-}
-
-init();
+        <div class="tt-day-tabs" id="ttDayTabs"></div>
+        <div class="tt-events" id="ttEvents"></div>
+        <div class="tt-filter-panel" id="ttFilterPanel">
+            <div class="tt-filter-head">
+                <strong>${i("tt.filterTitle")}</strong>
+                <button class="tt-filter-close" data-action="toggle-filter">\u2715</button>
+            </div>
+            <div class="tt-filter-group">
+                <label>${i("tt.stageLabel")}</label>
+                <select id="filter-stage"><option value="all">${i("tt.allStages")}</option></select>
+            </div>
+            <div class="tt-filter-group">
+                <label>${i("tt.categoryLabel")}</label>
+                <select id="filter-category"><option value="all">${i("tt.allCategories")}</option></select>
+            </div>
+            <div class="tt-filter-group">
+                <label>${i("tt.genreLabel")}</label>
+                <select id="filter-genre"><option value="all">${i("tt.allGenres")}</option></select>
+            </div>
+            <button class="tt-filter-reset" data-action="reset-filters">${i("tt.resetFilters")}</button>
+        </div>
+        <div class="tt-filter-backdrop" id="ttFilterBackdrop" data-action="toggle-filter"></div>
+    `;let a=document.getElementById("filter-stage");e.filters.stages.forEach(s=>{let o=document.createElement("option");o.value=s.value,o.textContent=s.label,a.appendChild(o)});let n=document.getElementById("filter-category");e.filters.categories.forEach(s=>{let o=document.createElement("option");o.value=s.value,o.textContent=s.label,n.appendChild(o)});let r=document.getElementById("filter-genre");e.filters.genres.forEach(s=>{let o=document.createElement("option");o.value=s.value,o.textContent=s.label,r.appendChild(o)}),a.value=l.ttFilters.stage,n.value=l.ttFilters.category,r.value=l.ttFilters.genre,a.addEventListener("change",()=>{l.ttFilters.stage=a.value,B()}),n.addEventListener("change",()=>{l.ttFilters.category=n.value,B()}),r.addEventListener("change",()=>{l.ttFilters.genre=r.value,B()}),B()}function B(){let t=l.pageData.timetable,e=l.ttFilters,a=document.getElementById("ttEvents"),n=document.getElementById("ttDayTabs");if(!a||!n)return;n.innerHTML=t.filters.days.map(c=>`<button class="tt-day-tab ${c.value===e.day?"active":""}" data-day="${c.value}" data-action="set-day">${c.label}</button>`).join("");let r=t.events.filter(c=>!(e.day!=="all"&&c.day!==e.day||e.stage!=="all"&&c.stage!==e.stage||e.category!=="all"&&c.type!==e.category||e.genre!=="all"&&c.genre!==e.genre));if(r.length===0){a.innerHTML=`<div class="empty" style="padding:40px 20px;">${i("tt.emptySelection")}</div>`;return}let s={};r.forEach(c=>{let d=c.start_time?c.start_time.slice(0,2)+":00":"Ohne Zeit";s[d]||(s[d]=[]),s[d].push(c)});let o=Object.keys(s).sort((c,d)=>c==="Ohne Zeit"?1:d==="Ohne Zeit"?-1:c.localeCompare(d));a.innerHTML=o.map(c=>`
+        <div class="tt-hour-group" data-hour="${c}">
+            <div class="tt-hour-label">${c}</div>
+            <div class="tt-hour-events">${s[c].map(it).join("")}</div>
+        </div>
+    `).join(""),oe(e.day)}function it(t){let e=l.pageData.timetable.events.indexOf(t),a=t.description&&t.description.trim().length>0&&t.description!==t.excerpt,n=$t(t,l.ttFilters.day)?"running":"",r=t.langs&&t.langs.length?t.langs.map(o=>`<span class="lang-badge">${o.toUpperCase()}</span>`).join(""):"",s=t.end_time?` \u2013 ${t.end_time}`:"";return`
+    <div class="tt-event ${a?"has-detail":""} ${n}" data-item-index="${e}">
+        <div class="tt-event-header" data-action="toggle-event">
+            <div class="tt-event-title-row">
+                <h3>${t.title}</h3>
+                ${A("timetable",e)}
+            </div>
+            <div class="tt-event-subline"><strong>${t.stage_label}</strong>, ${t.title}</div>
+            <div class="tt-event-meta"><span class="event-time">${t.time}${s}</span>, ${t.category}</div>
+            <div class="tt-event-footer">
+                <div class="tt-event-badges">${r}</div>
+                ${a?`<span class="tt-event-toggle">${i("tt.more")}</span>`:"<span></span>"}
+                ${n?`<span class="tt-now-badge">${i("tt.now")}</span>`:""}
+            </div>
+        </div>
+        ${a?`<div class="tt-event-detail"><div class="tt-event-detail-inner">${t.description}</div></div>`:""}
+    </div>`}function At(t){l.ttFilters.day=t,B()}function Ft(t){let e=t.closest(".tt-event"),a=e.querySelector(".tt-event-detail"),n=t.querySelector(".tt-event-toggle");if(!a)return;e.classList.contains("open")?(e.classList.remove("open"),a.style.display="none",n&&(n.textContent=i("tt.more"))):(e.classList.add("open"),a.style.display="block",n&&(n.textContent=i("tt.less")))}function Ht(){let t=document.getElementById("ttFilterPanel"),e=document.getElementById("ttFilterBackdrop"),a=t.classList.contains("open");t.classList.toggle("open",!a),e.classList.toggle("open",!a)}function _t(){l.ttFilters.stage="all",l.ttFilters.category="all",l.ttFilters.genre="all",document.getElementById("filter-stage").value="all",document.getElementById("filter-category").value="all",document.getElementById("filter-genre").value="all",B()}function oe(t){let e=new Date;if(t!==E())return;let a=e.getHours(),n=String(a).padStart(2,"0")+":00",r=document.querySelectorAll(".tt-hour-group"),s=null;for(let o of r){let c=o.dataset.hour;if(c==="Ohne Zeit")continue;parseInt(c.split(":")[0],10)<=a&&(s=o)}s&&setTimeout(()=>{s.scrollIntoView({behavior:"smooth",block:"start"});let o=s.querySelectorAll(".tt-event"),c=null,d=1/0;for(let g of o){let f=g.querySelector(".event-time");if(!f)continue;let h=f.textContent.trim().split("\u2013")[0].trim();if(h){let[m,p]=h.split(":"),v=parseInt(m)*60+parseInt(p),L=e.getHours()*60+e.getMinutes(),$=Math.abs(v-L);$<d&&(d=$,c=g)}}c&&(c.classList.add("highlight"),setTimeout(()=>c.classList.remove("highlight"),4e3))},200)}var T=2,U=130,ie=52,k=96,K=60,lt=28,Y=6,le=Y*60,re=(24+Y)*60,ce={"community-corner dezentral":"#5a5ad1","cuddle-poodle":"#b0327a",dezentral:"#0303d5",mirage:"#ff6f21","neuro-divers":"#1fb6a4",schweissperle:"#e0b400",skalahara:"#3ac16e",strandflitzer:"#c23b6b","walking-act":"#762c8c","zirkus-mond":"#e85d75"};function Ct(t){return ce[t]||"#b0327a"}var de={Space:"#e0847a",Music:"#ef8a2c",Workshop:"#e0b400",Performance:"#2ea88a",Talk:"#5a5ad1"};function P(t){return de[t]||"#b0327a"}function Bt(t){let[e,a]=t.split(":").map(Number);return e<Y&&(e+=24),e*60+a}var F=[];function qt(t){let e=l.pageData.timetable;if(!e||!e.events){t.innerHTML=`<div class="empty">${i("tt.loading")}</div>`;return}l.gridDay||(l.gridDay=E());let a=e.filters.days;t.innerHTML=`
+        <div class="gtt-toolbar">
+            <div class="gtt-daytabs" id="gttDayTabs"></div>
+            <button class="gtt-scroll-toggle" id="gttScrollToggle" data-action="toggle-grid-scroll"></button>
+        </div>
+        <div class="gtt-legend">
+            <span class="gtt-legend-item"><span class="gtt-legend-swatch" style="background:${P("Space")}"></span>${i("grid.legendSpace")}</span>
+            <span class="gtt-legend-item"><span class="gtt-legend-swatch" style="background:${P("Music")}"></span>${i("grid.legendMusic")}</span>
+            <span class="gtt-legend-item"><span class="gtt-legend-swatch" style="background:${P("Workshop")}"></span>${i("grid.legendWorkshop")}</span>
+            <span class="gtt-legend-item"><span class="gtt-legend-swatch" style="background:${P("Performance")}"></span>${i("grid.legendPerformance")}</span>
+        </div>
+        <div class="gtt-scroll" id="gttScroll">
+            <div class="gtt-header" id="gttHeader"></div>
+            <div class="gtt-track" id="gttTrack"></div>
+        </div>
+        <div class="gtt-detail-backdrop" id="gttDetailBackdrop" data-action="close-grid-detail"></div>
+        <div class="gtt-detail" id="gttDetail"></div>
+    `;let n=document.getElementById("gttDayTabs");n.innerHTML=a.map(r=>`<button class="gtt-day-tab ${r.value===l.gridDay?"active":""}" data-day="${r.value}" data-action="set-grid-day">${r.label}</button>`).join(""),Nt(),rt()}function Ot(){l.gridScrollMode=l.gridScrollMode==="vertical"?"horizontal":"vertical",Nt(),rt()}function Nt(){let t=document.getElementById("gttScroll"),e=document.getElementById("gttScrollToggle");if(!t||!e)return;let a=l.gridScrollMode==="vertical";t.classList.toggle("scroll-v",a),t.classList.toggle("scroll-h",!a),e.textContent=a?"\u2195":"\u2194",e.title=i("grid.toggleTitle"),e.setAttribute("aria-label",a?i("grid.ariaVertical"):i("grid.ariaHorizontal"))}function jt(t){if(l.gridDay=t,l.gridScrollMode==="horizontal"){let e=F.find(n=>n.day===t),a=document.getElementById("gttScroll");e&&a&&(a.scrollLeft=Math.max(0,e.offset-8))}else rt();document.querySelectorAll("#gttDayTabs .gtt-day-tab").forEach(e=>{e.classList.toggle("active",e.dataset.day===t)})}function kt(t,e){let a=t.events.filter(g=>g.day===e&&g.start_time&&g.end_time&&g.stage);if(a.length===0)return null;a.forEach(g=>{g._start=Bt(g.start_time),g._end=Bt(g.end_time),g._end<=g._start&&(g._end+=1440)});let n=Math.min(le,Math.floor(Math.min(...a.map(g=>g._start))/60)*60),r=Math.max(re,Math.ceil(Math.max(...a.map(g=>g._end))/60)*60),s=t.filters.stages.map(g=>g.value),o=new Map;a.forEach(g=>{o.has(g.stage)||o.set(g.stage,[]),o.get(g.stage).push(g)});let c=[...o.keys()].sort((g,f)=>s.indexOf(g)-s.indexOf(f)),d=new Map;return c.forEach(g=>{let f=o.get(g).sort((m,p)=>m._start-p._start),h=[];f.forEach(m=>{let p=h.findIndex(v=>v<=m._start);p===-1&&(p=h.length),h[p]=m._end,m._lane=p}),d.set(g,h.length)}),{dayValue:e,gridMin:n,gridMax:r,byStage:o,stages:c,stageLanes:d}}function rt(){let t=l.pageData.timetable,e=document.getElementById("gttHeader"),a=document.getElementById("gttTrack");if(!(!e||!a))if(l.gridScrollMode==="horizontal"){let n=t.filters.days.map(r=>kt(t,r.value)).filter(Boolean);if(n.length===0){e.innerHTML="",a.innerHTML=`<div class="empty" style="padding:40px 20px;">${i("grid.empty")}</div>`;return}ue({data:t,header:e,track:a,blocks:n})}else{let n=kt(t,l.gridDay);if(!n){e.innerHTML="",a.innerHTML=`<div class="empty" style="padding:40px 20px;">${i("grid.empty")}</div>`;return}ge({data:t,header:e,track:a,...n})}}function ge({data:t,header:e,track:a,stages:n,byStage:r,stageLanes:s,gridMin:o,gridMax:c}){let d=(c-o)*T,g=ie+n.length*U;e.innerHTML='<div class="gtt-corner"></div>'+n.map(v=>{let L=t.filters.stages.find($=>$.value===v)?.label||v;return`<div class="gtt-stagehead" style="width:${U}px;--stage-color:${Ct(v)}">${L}</div>`}).join("");let f=[];for(let v=o;v<=c;v+=60)f.push(`<div class="gtt-hour-label" style="top:${(v-o)*T}px">${String(Math.floor(v/60)%24).padStart(2,"0")}:00</div>`);let h=n.map(v=>{let L=s.get(v),$=r.get(v).map(j=>fe(j,o,L)).join("");return`<div class="gtt-stagecol" style="width:${U}px;height:${d}px;--stage-color:${Ct(v)}">${$}</div>`}).join(""),m="";if(l.gridDay===E()){let v=Gt();v>=o&&v<=c&&(m=`<div class="gtt-now-line" style="top:${(v-o)*T}px"></div>`)}e.style.width=g+"px",a.className="gtt-track gtt-track-v",a.style.width=g+"px",a.style.height=d+"px",a.innerHTML=`
+        <div class="gtt-timeaxis" style="height:${d}px">${f.join("")}</div>
+        ${h}
+        ${m}
+    `;let p=document.getElementById("gttScroll");p&&(p.scrollLeft=0),l.gridDay===E()&&Rt("vertical")}function ue({data:t,header:e,track:a,blocks:n}){let r=0;n.forEach(u=>{u._offset=r,u._width=(u.gridMax-u.gridMin)*T,r+=u._width+lt});let s=r-lt,o=k+s,c=t.filters.stages.map(u=>u.value),d=new Set;n.forEach(u=>u.stages.forEach(b=>d.add(b)));let g=[...d].sort((u,b)=>c.indexOf(u)-c.indexOf(b)),f=[],h=[];n.forEach(u=>{let b=t.filters.days.find(D=>D.value===u.dayValue)?.label||"",S=!0;for(let D=u.gridMin;D<=u.gridMax;D+=60){let G=u._offset+(D-u.gridMin)*T,M=`${String(Math.floor(D/60)%24).padStart(2,"0")}:00`,W=S?`${b} ${M}`:M;f.push(`<div class="gtt-hour-label-h ${S?"gtt-hour-label-day":""}" style="left:${G}px">${W}</div>`),S||h.push(`<div class="gtt-hour-tick" style="left:${k+G}px"></div>`),S=!1}}),e.innerHTML=`
+        <div class="gtt-corner gtt-corner-day" id="gttCornerDay" style="width:${k}px"></div>
+        <div class="gtt-hour-ruler" style="width:${s}px">${f.join("")}</div>
+    `;let m=g.map(u=>{let b=Math.max(1,...n.map(S=>S.stageLanes.get(u)||0));return Math.max(K,b*K)}),p=m.reduce((u,b)=>u+b,0),v=g.map((u,b)=>{let S=t.filters.stages.find(M=>M.value===u)?.label||u,D=m[b],G=n.map(M=>{let W=M.byStage.get(u);return W?W.map(Jt=>me(Jt,M.gridMin,M._offset)).join(""):""}).join("");return`
+        <div class="gtt-stagerow-wrap" style="height:${D}px">
+            <div class="gtt-stagelabel ${b%2===1?"gtt-alt":""}">${S}</div>
+            <div class="gtt-stagerow" style="width:${s}px">${G}</div>
+        </div>`}).join(""),L=n.slice(1).map(u=>`<div class="gtt-day-divider" style="left:${k+u._offset-lt/2}px"></div>`).join(""),$=n.find(u=>u.dayValue===E()),j="";if($){let u=Gt();u>=$.gridMin&&u<=$.gridMax&&(j=`<div class="gtt-now-line-v" style="left:${k+$._offset+(u-$.gridMin)*T}px"></div>`)}e.style.width=o+"px",a.className="gtt-track gtt-track-h",a.style.width=o+"px",a.style.height=p+"px",a.innerHTML=h.join("")+v+L+j,F=n.map(u=>({day:u.dayValue,offset:u._offset}));let H=document.getElementById("gttScroll");if(H)if(H._gttScrollBound||(H.addEventListener("scroll",Pt),H._gttScrollBound=!0),H.scrollTop=0,l.gridDay===E()&&$)Rt("horizontal");else{let u=F.find(b=>b.day===l.gridDay)||F[0];u&&(H.scrollLeft=Math.max(0,u.offset-8))}Pt()}function Pt(){let t=document.getElementById("gttScroll"),e=document.getElementById("gttCornerDay");if(!t||!e||!F.length)return;let a=t.scrollLeft+8,n=F[0];for(let s of F)if(a>=s.offset)n=s;else break;let r=l.pageData.timetable?.filters.days.find(s=>s.value===n.day)?.label||"";e.textContent=r,l.gridDay!==n.day&&(l.gridDay=n.day,document.querySelectorAll("#gttDayTabs .gtt-day-tab").forEach(s=>{s.classList.toggle("active",s.dataset.day===n.day)}))}function Gt(){let t=new Date,e=t.getHours()*60+t.getMinutes();return t.getHours()<Y&&(e+=1440),e}function fe(t,e,a){let n=l.pageData.timetable.events.indexOf(t),r=(t._start-e)*T,s=Math.max(24,(t._end-t._start)*T),o=U/a,c=t._lane*o;return`
+    <div class="gtt-event" data-item-index="${n}" data-action="toggle-grid-event" style="top:${r}px;height:${s}px;left:${c}px;width:${o-4}px;--event-color:${P(t.category)}">
+        <span class="gtt-event-time">${t.start_time}</span>
+        <span class="gtt-event-title">${t.title}</span>
+    </div>`}function me(t,e,a){let n=l.pageData.timetable.events.indexOf(t),r=a+(t._start-e)*T,s=Math.max(40,(t._end-t._start)*T),o=t._lane*K;return`
+    <div class="gtt-event" data-item-index="${n}" data-action="toggle-grid-event" style="left:${r}px;width:${s}px;top:${o}px;height:${K-6}px;--event-color:${P(t.category)}">
+        <span class="gtt-event-time">${t.start_time}</span>
+        <span class="gtt-event-title">${t.title}</span>
+    </div>`}function Wt(t){let e=parseInt(t.dataset.itemIndex,10),a=l.pageData.timetable.events[e];if(!a)return;let n=document.getElementById("gttDetail"),r=document.getElementById("gttDetailBackdrop"),s=a.hosts&&a.hosts.length?`<span class="event-hosts">${a.hosts.join(", ")}</span>`:"",o=a.description||a.excerpt||"";n.innerHTML=`
+        <div class="gtt-detail-panel">
+            <button class="gtt-detail-close" data-action="close-grid-detail">\u2715</button>
+            <div class="gtt-detail-meta">
+                <span class="event-time">${a.start_time}${a.end_time?` \u2013 ${a.end_time}`:""}</span>
+                <span class="event-type">${a.category}</span>
+            </div>
+            <h3>${a.title}</h3>
+            <span class="event-stage">${a.stage_label}</span>
+            ${s}
+            ${o?`<div class="tt-event-detail-inner">${o}</div>`:""}
+            <div class="gtt-detail-actions">${A("timetable",e)}</div>
+        </div>
+    `,n.classList.add("open"),r.classList.add("open")}function zt(){let t=document.getElementById("gttDetail"),e=document.getElementById("gttDetailBackdrop");t&&t.classList.remove("open"),e&&e.classList.remove("open")}function Rt(t){setTimeout(()=>{let e=document.getElementById("gttScroll");if(e)if(t==="horizontal"){let a=document.querySelector(".gtt-now-line-v");if(!a)return;e.scrollLeft=Math.max(0,a.offsetLeft-k-40)}else{let a=document.querySelector(".gtt-now-line");if(!a)return;let n=document.getElementById("gttHeader")?.offsetHeight||0;e.scrollTop=Math.max(0,a.offsetTop-n-80)}},150)}function Vt(t){let e=l.pageData.info,a=e?e.cashless:null,n=e?e.faqs:null,r=e?e.news:null,s='<div class="info-tabs" id="infoTabs">';s+=`<button class="info-tab active" data-tab="news" data-action="switch-info-tab">${i("info.tabNews")}</button>`,s+=`<button class="info-tab" data-tab="cashless" data-action="switch-info-tab">${i("info.tabCashless")}</button>`,s+=`<button class="info-tab" data-tab="faqs" data-action="switch-info-tab">${i("info.tabFaqs")}</button>`,s+="</div>",s+='<div class="info-panel active" id="panel-news">',r&&r.items&&r.items.length?s+=r.items.map((o,c)=>{let d=o.date?`<span class="news-date">${y(o.date)}</span>`:"";return`<div class="news-card ${o.highlight?"news-highlight":""}" data-item-index="${c}">
+                <div class="card-header"><h3>${y(o.question)}</h3>
+                ${A("info-news",c)}</div>
+                ${d}
+                <p>${y(o.answer)}</p>
+            </div>`}).join(""):s+=`<div class="page-intro" style="margin-top:0">${i("info.newsEmpty")}</div>`,s+="</div>",s+='<div class="info-panel" id="panel-cashless">',a&&(s+=`<div class="page-intro" style="margin-top:0">${R(a.intro)}</div>`,s+=st(a.items,"info-cashless")),s+="</div>",s+='<div class="info-panel" id="panel-faqs">',n&&n.items&&(s+=st(n.items,"info-faqs")),s+="</div>",t.innerHTML=s}function ct(t){document.querySelectorAll(".info-tab").forEach(e=>e.classList.toggle("active",e.dataset.tab===t)),document.querySelectorAll(".info-panel").forEach(e=>e.classList.toggle("active",e.id==="panel-"+t))}function dt(t){return`<div class="fav-empty-card">${y(t)}</div>`}function gt(t){let e=V(),a=_();if(a.length===0){t.innerHTML=e+dt(i("fav.emptyHint"));return}let n={},r=[];for(let d of a)if(d.page==="timetable"){let g=l.pageData.timetable?.events?.[d.index];if(g){let f=g.day||"no-day";n[f]||(n[f]=[]),n[f].push(g)}}else if(d.page.startsWith("info-")){let g=d.page.replace("info-",""),f=l.pageData.info?.[g]?.items?.[d.index];f&&r.push({item:f,index:d.index,page:d.page})}let s=Object.values(n).reduce((d,g)=>d+g.length,0),o=r.length;l.favTab==="program"&&s===0&&o>0?l.favTab="news":l.favTab==="news"&&o===0&&s>0&&(l.favTab="program");let c=`<div class="fav-tabs">
+        <button class="fav-tab ${l.favTab==="program"?"active":""}" data-action="set-fav-tab" data-tab="program">${i("fav.tabProgram")}</button>
+        <button class="fav-tab ${l.favTab==="news"?"active":""}" data-action="set-fav-tab" data-tab="news">${i("fav.tabNews")}</button>
+    </div>`;if(l.favTab==="program")if(s===0)c+=dt(i("fav.emptyHint"));else{let d=(l.pageData.timetable.filters.days||[]).map(f=>f.value),g=Object.keys(n).sort((f,h)=>{let m=d.indexOf(f),p=d.indexOf(h);return m===-1?1:p===-1?-1:m-p});c+=g.map(f=>{let h=n[f];if(!h.length)return"";let m=l.pageData.timetable.filters.days.find(p=>p.value===f)?.label||i("fav.noDay");return`<div class="fav-day-heading">${y(m)}</div>
+                    <div class="tt-events">${h.map(it).join("")}</div>`}).join("")}else o===0?c+=dt(i("fav.emptyHint")):c+=`<div class="grid-list">${r.map(({item:d,index:g,page:f})=>{let h=d.title||d.question,m=d.desc||d.answer||d.excerpt||"";return Tt({page:f,index:g,title:h,desc:m})}).join("")}</div>`;t.innerHTML=e+c}function Ut(t){l.favTab=t,gt(document.getElementById("content"))}function Kt(t,e,a){let n=xt(e,a);t.classList.toggle("active",n),q(),x[l.currentPage].slug==="favorites"&&Z(l.currentPage)}function q(){let t=document.getElementById("pageNav"),e=z();t.innerHTML=x.map((a,n)=>{let r=a.slug==="favorites"&&e>0?`<span class="nav-badge">${e}</span>`:"",s=a.icon.endsWith(".svg")?`<span class="nav-icon-mask" style="-webkit-mask-image:url(images/${a.icon});mask-image:url(images/${a.icon})"></span>`:a.icon;return`<button class="${n===l.currentPage?"active":""}" data-action="load-page" data-page="${n}" data-slug="${a.slug}">
+            <span class="nav-icon">${s}${r}</span>
+            <span class="nav-label">${i(a.labelKey)}</span>
+        </button>`}).join("")}function Z(t){l.currentPage=t;let e=x[t];document.body.className=`page-${e.slug} ${e.slug!=="home"?"page-sub":""}`;let a=document.getElementById("content");e.slug==="home"&&ot(a);let n=document.getElementById("pageTitle");n.textContent=i(e.labelKey),a.innerHTML="",e.slug==="home"?ot(a):e.slug==="favorites"?gt(a):e.slug==="timetable"?Mt(a):e.slug==="grid"?qt(a):e.slug==="info"?Vt(a):a.innerHTML=`<div class="empty">${i("common.noContent")}</div>`,q()}function Yt(){let t=document.getElementById("searchInput");!t||t.dataset.searchBound||(t.dataset.searchBound="true",t.addEventListener("input",e=>{let a=e.target.value.trim().toLowerCase();if(a.length<2){N();return}ve(a)}),document.addEventListener("keydown",e=>{e.key==="Escape"&&N()}))}function N(){let t=document.getElementById("searchModal");t&&t.classList.remove("open");let e=document.getElementById("searchResults");e&&(e.innerHTML="")}function pe(){let t=document.getElementById("searchModal");t&&t.classList.add("open")}function ve(t){let e=[];for(let[a,n]of Object.entries(l.pageData)){if(!n)continue;let r=x.find(o=>o.slug===a),s=r?i(r.labelKey):a;if(n.events&&n.events.forEach((o,c)=>{`${o.title||""} ${o.excerpt||""} ${o.description||""} ${o.stage_label||""} ${o.type_label||""} ${o.hosts?.join(" ")||""}`.toLowerCase().includes(t)&&e.push({page:a,pageLabel:s,index:c,item:o,isEvent:!0})}),a==="info"){["news","cashless","faqs"].forEach(o=>{let c=n[o];!c||!c.items||c.items.forEach((d,g)=>{`${d.question||""} ${d.title||""} ${d.desc||""}`.toLowerCase().includes(t)&&e.push({page:a,pageLabel:`${s} \xB7 ${o}`,index:g,item:d,infoTab:o})})});continue}n.items&&n.items.forEach((o,c)=>{`${o.question||""} ${o.title||""} ${o.desc||""}`.toLowerCase().includes(t)&&e.push({page:a,pageLabel:s,index:c,item:o})})}he(e,t)}function he(t,e){let a=document.getElementById("searchResults");if(a){if(pe(),t.length===0){a.innerHTML=`<div class="empty">${i("search.noResults",{query:y(e)})}</div>`;return}a.innerHTML=t.map(n=>{let r=n.item.title||n.item.question||"Item",s=n.item.desc||n.item.answer||n.item.excerpt||"",o=n.item.time?`${y(n.item.time)} \xB7 ${y(n.item.stage_label||"")}`:"",c=n.infoTab?` data-info-tab="${n.infoTab}"`:"";return`
+        <div class="grid-card search-card" data-action="search-jump" data-page-idx="${w(n.page)}" data-index="${n.index}"${c}>
+            <div class="search-meta">${y(n.pageLabel)}${o?" \xB7 "+o:""}</div>
+            <h3>${y(r)}</h3>
+            ${s?`<p>${y(s.substring(0,120))}${s.length>120?"...":""}</p>`:""}
+        </div>`}).join("")}}function X(t,e){let a=document.querySelectorAll(`#content [data-item-index="${e}"]`),n=null;for(let r of a)if(r.offsetParent!==null){n=r;break}n||(n=a[0]),n&&(n.scrollIntoView({behavior:"smooth",block:"center"}),n.classList.add("highlight"),setTimeout(()=>n.classList.remove("highlight"),2e3))}var ye={de:"De",en:"Eng"};async function be(){document.documentElement.lang=l.lang,document.getElementById("searchInput").placeholder=i("search.placeholder"),document.querySelector(".search-modal-header span").textContent=i("search.resultsTitle"),Xt(),Qt(),await et(),q(),O(0),Dt(),Lt(ft),we(),Ee(),Ie()}function ft(){["home","favorites"].includes(x[l.currentPage]?.slug)&&O(l.currentPage)}function $e(){document.getElementById("searchBar").classList.toggle("open")?setTimeout(()=>document.getElementById("searchInput").focus(),260):mt()}function mt(){document.getElementById("searchBar").classList.remove("open"),document.getElementById("searchInput").value="",N()}function Xt(){let t=document.getElementById("langSwitcher");t&&(t.textContent=ye[l.lang]||l.lang)}function Qt(){let t=document.getElementById("headerFilterLabel");t&&(t.textContent=i("tt.filterButton"))}async function xe(t){t!==l.lang&&(yt(t),l.lang=t,Xt(),Qt(),document.getElementById("searchInput").placeholder=i("search.placeholder"),document.querySelector(".search-modal-header span").textContent=i("search.resultsTitle"),await et(),q(),O(l.currentPage))}function we(){"serviceWorker"in navigator&&(navigator.serviceWorker.addEventListener("message",t=>{t.data?.type==="UPDATE_AVAILABLE"&&Zt()}),navigator.serviceWorker.register("sw.js").then(t=>{t.addEventListener("updatefound",()=>{let e=t.installing;e&&e.addEventListener("statechange",()=>{e.state==="installed"&&navigator.serviceWorker.controller&&Zt(e)})})}).catch(()=>{}))}var ut=null;function Zt(t=null){if(document.getElementById("sw-update-banner"))return;t&&(ut=t);let e=document.createElement("div");e.id="sw-update-banner",e.className="update-banner",e.innerHTML=`
+        <span>${i("install.updateAvailable")}</span>
+        <button id="sw-update-now">${i("install.updateNow")}</button>
+        <button id="sw-update-later">${i("install.updateLater")}</button>
+    `,document.body.appendChild(e),document.getElementById("sw-update-now").addEventListener("click",()=>{ut&&ut.postMessage({type:"SKIP_WAITING"}),e.remove(),window.location.reload()}),document.getElementById("sw-update-later").addEventListener("click",()=>e.remove())}function O(t){Z(t),Yt()}async function Ee(){let t=document.getElementById("lastUpdated");if(!t)return;let e=await bt();if(e&&e.synced_at){let a=new Date(e.synced_at*1e3).toLocaleDateString(l.lang==="en"?"en-GB":"de-DE");t.textContent=i("common.updatedOn",{date:a})}}function Te(t){let e=t.classList.contains("open");if((t.closest(".info-panel")||t.closest(".faq-list")||document).querySelectorAll(".faq-item.open").forEach(n=>{n.classList.remove("open");let r=n.querySelector(".faq-toggle");r&&(r.textContent="+")}),!e){t.classList.add("open");let n=t.querySelector(".faq-toggle");n&&(n.textContent="\u2212")}}var Le={"load-page":t=>O(parseInt(t.dataset.page,10)),"toggle-fav":t=>Kt(t,t.dataset.page,parseInt(t.dataset.index,10)),"set-fav-tab":t=>Ut(t.dataset.tab),"set-day":t=>At(t.dataset.day),"toggle-filter":()=>Ht(),"reset-filters":()=>_t(),"toggle-event":t=>Ft(t),"set-grid-day":t=>jt(t.dataset.day),"toggle-grid-event":t=>Wt(t),"close-grid-detail":()=>zt(),"toggle-grid-scroll":()=>Ot(),"toggle-faq":t=>Te(t),"toggle-lang":()=>xe(l.lang==="de"?"en":"de"),"switch-info-tab":t=>ct(t.dataset.tab),"toggle-search-bar":()=>$e(),"close-search-bar":()=>mt(),"dismiss-install-card":()=>{St(),ft()},"trigger-install":async()=>{let t=await It();t==="accepted"?nt(i("install.installing")):t==="dismissed"&&nt(i("install.cancelled")),ft()},"search-jump":t=>{let e=parseInt(t.dataset.pageIdx,10),a=parseInt(t.dataset.index,10),n=t.dataset.infoTab;mt(),O(e),n?setTimeout(()=>{ct(n),X(x[e].slug,a)},400):setTimeout(()=>X(x[e].slug,a),300)},"close-search":()=>N(),"goto-event":t=>{let e=parseInt(t.dataset.index,10);t.dataset.day&&(l.ttPendingDay=t.dataset.day);let a=w("timetable");O(a),setTimeout(()=>X("timetable",e),300)}};function Ie(){document.addEventListener("click",t=>{let e=t.target.closest("[data-action]");if(!e)return;let a=Le[e.dataset.action];a&&(t.stopPropagation(),a(e))})}be();
