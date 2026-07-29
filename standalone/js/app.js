@@ -1,7 +1,7 @@
 import { loadData, loadManifest } from './store.js';
 import { loadPage, renderNav } from './router.js';
 import { setupSearch, scrollToItem, closeSearchModal } from './search.js';
-import { setDay, toggleFilterPanel, resetFilters, toggleEventDetail } from './views/timetable.js';
+import { setDay, toggleFilterPanel, resetFilters, toggleEventDetail, setFilterValue } from './views/timetable.js';
 import { setGridDay, openGridEventDetail, closeGridEventDetail, toggleGridScrollMode } from './views/timetable-grid.js';
 import { store } from './store.js';
 import { switchInfoTab } from './views/info.js';
@@ -158,6 +158,7 @@ const actions = {
     'set-day': el => setDay(el.dataset.day),
     'toggle-filter': () => toggleFilterPanel(),
     'reset-filters': () => resetFilters(),
+    'set-filter': el => setFilterValue(el.dataset.facet, el.dataset.value),
     'toggle-event': el => toggleEventDetail(el),
     'set-grid-day': el => setGridDay(el.dataset.day),
     'toggle-grid-event': el => openGridEventDetail(el),

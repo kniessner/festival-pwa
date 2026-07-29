@@ -1601,6 +1601,14 @@ span#headerFilterLabel {
     color: var(--text);
 }
 
+.gtt-detail-panel .fav-btn {
+    color: var(--wp--preset--color--beige, #f3efdf);
+}
+
+.gtt-detail-panel .fav-btn.active {
+    color: #FFEB3B;
+}
+
 .gtt-detail-panel .tt-event-detail-inner {
     padding: 0;
     margin-bottom: 4px;
