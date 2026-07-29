@@ -1209,6 +1209,7 @@ span#headerFilterLabel {
     color: var(--text);
     font-size: 1.1rem;
     cursor: pointer;
+    display:none;
 }
 
 .gtt-scroll-toggle:active {

@@ -43,28 +43,7 @@ if command -v python3 >/dev/null 2>&1; then
 elif command -v python >/dev/null 2>&1; then
     cd "$ROOT_DIR" && python -m SimpleHTTPServer "$PORT"
 elif command -v node >/dev/null 2>&1; then
-    cd "$ROOT_DIR" && node -e "
-        const http = require('http');
-        const fs = require('fs');
-        const path = require('path');
-        const port = $PORT;
-        const mime = {
-            '.html': 'text/html', '.js': 'application/javascript',
-            '.css': 'text/css', '.json': 'application/json',
-            '.png': 'image/png', '.jpg': 'image/jpeg',
-            '.svg': 'image/svg+xml', '.ico': 'image/x-icon'
-        };
-        http.createServer((req, res) => {
-            let file = path.join(process.cwd(), req.url === '/' ? 'index.html' : req.url);
-            if (fs.existsSync(file) && fs.statSync(file).isFile()) {
-                const ext = path.extname(file);
-                res.writeHead(200, { 'Content-Type': mime[ext] || 'application/octet-stream' });
-                fs.createReadStream(file).pipe(res);
-            } else {
-                res.writeHead(404); res.end('Not found');
-            }
-        }).listen(port, () => console.log('Server running on http://localhost:' + port));
-    "
+    cd "$ROOT_DIR" && PORT="$PORT" node server.js
 else
     echo "❌ No Python or Node found. Cannot start server."
     exit 1
