@@ -662,8 +662,13 @@
 
 .onboarding-privacy {
     padding: 16px 18px;
-    background: rgba(176, 50, 122, 0.12);
-    border: 1px solid rgba(176, 50, 122, 0.35);
+    /* Pink accent tint. color-mix keeps the animation in sync with the
+       --accent-pink token; rgba() fallback for anything pre-Baseline 2023.
+       The fallback value matches --accent-pink at 12% / 35% alpha. */
+    background: rgba(222, 78, 57, 0.12);
+    background: color-mix(in srgb, var(--accent-pink) 12%, transparent);
+    border: 1px solid rgba(222, 78, 57, 0.35);
+    border: 1px solid color-mix(in srgb, var(--accent-pink) 35%, transparent);
     border-radius: var(--card-radius);
     text-align: center;
 }
@@ -756,9 +761,15 @@
 }
 
 @keyframes gtt-stage-pulse-ring {
-    0%   { box-shadow: 0 0 0 0 rgba(222, 78, 57, 0.55); }
-    70%  { box-shadow: 0 0 0 8px rgba(222, 78, 57, 0); }
-    100% { box-shadow: 0 0 0 0 rgba(222, 78, 57, 0); }
+    /* Ring color derived from --accent-pink via color-mix; rgba()
+       fallback provided for older browsers. The rgba() fallback matches
+       --accent-pink's RGB (222, 78, 57) at the specified alpha. */
+    0%   {
+        box-shadow: 0 0 0 0 rgba(222, 78, 57, 0.55);
+        box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent-pink) 55%, transparent);
+    }
+    70%  { box-shadow: 0 0 0 8px transparent; }
+    100% { box-shadow: 0 0 0 0 transparent; }
 }
 
 @media (prefers-reduced-motion: reduce) {
