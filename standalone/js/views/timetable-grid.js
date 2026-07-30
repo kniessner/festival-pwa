@@ -533,12 +533,17 @@ function scrollGridToNowTime() {
         if (orientation === 'horizontal') {
             const line = document.querySelector('.gtt-now-line-v');
             if (!line) return;
-            scroll.scrollLeft = Math.max(0, line.offsetLeft - STAGE_LABEL_WIDTH - 40);
+            const target = Math.max(0, line.offsetLeft - STAGE_LABEL_WIDTH - 40);
+            // Smooth-scroll rather than direct assignment — the initial jump
+            // felt brutal on a first-open grid. scrollend (or the 1s fallback
+            // in scrollGridToNowAndUserStage) then chains into step 2.
+            scroll.scrollTo({ left: target, behavior: 'smooth' });
         } else {
             const line = document.querySelector('.gtt-now-line');
             if (!line) return;
             const headerHeight = document.getElementById('gttHeader')?.offsetHeight || 0;
-            scroll.scrollTop = Math.max(0, line.offsetTop - headerHeight - 80);
+            const target = Math.max(0, line.offsetTop - headerHeight - 80);
+            scroll.scrollTo({ top: target, behavior: 'smooth' });
         }
     }, 150);
 }
@@ -556,12 +561,14 @@ function scrollGridToUserStage() {
     if (store.gridScrollMode === 'vertical') {
         const head = document.querySelector(`.gtt-stagehead[data-stage="${stage}"]`);
         if (!head) return;
-        scroll.scrollLeft = Math.max(0, head.offsetLeft - AXIS_WIDTH - 40);
+        const target = Math.max(0, head.offsetLeft - AXIS_WIDTH - 40);
+        scroll.scrollTo({ left: target, behavior: 'smooth' });
     } else {
         const row = document.querySelector(`.gtt-stagerow-wrap[data-stage="${stage}"]`);
         if (!row) return;
         const headerHeight = document.getElementById('gttHeader')?.offsetHeight || 0;
-        scroll.scrollTop = Math.max(0, row.offsetTop - headerHeight - 20);
+        const target = Math.max(0, row.offsetTop - headerHeight - 20);
+        scroll.scrollTo({ top: target, behavior: 'smooth' });
     }
 }
 
