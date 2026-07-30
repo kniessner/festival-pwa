@@ -497,7 +497,7 @@ export function openGridEventDetail(el) {
     const langBadges = ev.langs && ev.langs.length
         ? `<div class="gtt-detail-badges">${ev.langs.map(l => `<span class="lang-badge">${l.toUpperCase()}</span>`).join('')}</div>`
         : '';
-    const dayLabel = (store.pageData.timetable.filters.days.find(d => d.value === ev.day)?.label || '').slice(0, 3);
+    const dayLabel = (store.pageData.timetable?.filters?.days?.find(d => d.value === ev.day)?.label || '').slice(0, 3);
     const endTime = ev.end_time ? ` – ${ev.end_time}` : '';
 
     detail.innerHTML = `
