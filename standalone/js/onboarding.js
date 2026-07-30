@@ -64,20 +64,29 @@ export async function showLocationPromptIfNeeded() {
     });
 }
 
+function setText(id, key) {
+    const el = document.getElementById(id);
+    if (el) el.textContent = t(key);
+}
+
 function localiseAndOpen() {
-    document.getElementById('onboardingHeadline').textContent = t('onb.headline');
-    document.getElementById('onboardingIntro').textContent = t('onb.intro');
-    document.getElementById('onboardingFeatureTimetable').textContent = t('onb.featureTimetable');
-    document.getElementById('onboardingDisclaimer').textContent = t('onb.disclaimer');
-    document.getElementById('onboardingPrivacyTitle').textContent = t('onb.privacyTitle');
-    document.getElementById('onboardingPrivacyBody').textContent = t('onb.privacyBody');
-    document.getElementById('onboardingBtnAllow').textContent = t('onb.buttonAllow');
-    document.getElementById('onboardingBtnNotNow').textContent = t('onb.buttonNotNow');
-    document.getElementById('onboardingModal').classList.add('open');
+    // Null-guard each lookup so a future edit that drops one of these
+    // IDs from index.html leaves the modal in a half-localised state
+    // instead of throwing mid-init(). Users still see the modal (with
+    // one missing string), and the flow completes.
+    setText('onboardingHeadline', 'onb.headline');
+    setText('onboardingIntro', 'onb.intro');
+    setText('onboardingFeatureTimetable', 'onb.featureTimetable');
+    setText('onboardingDisclaimer', 'onb.disclaimer');
+    setText('onboardingPrivacyTitle', 'onb.privacyTitle');
+    setText('onboardingPrivacyBody', 'onb.privacyBody');
+    setText('onboardingBtnAllow', 'onb.buttonAllow');
+    setText('onboardingBtnNotNow', 'onb.buttonNotNow');
+    document.getElementById('onboardingModal')?.classList.add('open');
 }
 
 function closeOverlay() {
-    document.getElementById('onboardingModal').classList.remove('open');
+    document.getElementById('onboardingModal')?.classList.remove('open');
     setLocationPromptCompleted();
     if (pendingResolve) {
         const r = pendingResolve;
