@@ -10,6 +10,7 @@ import { setupInstallTracking, setupOfflineIndicator, dismissInstallCard, trigge
 import { showToast } from './ui.js';
 import { PAGES, pageIdx } from './config.js';
 import { t, setLang } from './i18n.js';
+import { maybeShowNotifications, closeNotifications } from './notifications.js';
 
 const LANG_LABELS = { de: 'De', en: 'Eng' };
 
@@ -17,6 +18,8 @@ async function init() {
     document.documentElement.lang = store.lang;
     document.getElementById('searchInput').placeholder = t('search.placeholder');
     document.querySelector('.search-modal-header span').textContent = t('search.resultsTitle');
+    document.getElementById('notificationsTitle').textContent = t('notifications.title');
+    document.getElementById('notificationsDoneBtn').textContent = t('common.done');
     updateLangSwitcherLabel();
     updateHeaderFilterLabel();
     await loadData();
@@ -31,6 +34,7 @@ async function init() {
     setupUpdateBanner();
     showLastUpdated();
     wireDelegation();
+    maybeShowNotifications();
 }
 
 // The install card only ever renders on Home/My Plan — re-rendering any
@@ -190,6 +194,7 @@ const actions = {
         else setTimeout(() => scrollToItem(PAGES[idx].slug, itemIndex), 300);
     },
     'close-search': () => closeSearchModal(),
+    'close-notifications': () => closeNotifications(),
     'goto-event': el => {
         const itemIndex = parseInt(el.dataset.index, 10);
         if (el.dataset.day) store.ttPendingDay = el.dataset.day;

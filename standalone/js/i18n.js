@@ -77,7 +77,9 @@ const STRINGS = {
         'info.tabNews': 'News',
         'info.tabCashless': 'Cashless',
         'info.tabFaqs': 'FAQs',
-        'info.newsEmpty': 'Aktuelle News werden hier angezeigt, sobald verfügbar.'
+        'info.newsEmpty': 'Aktuelle News werden hier angezeigt, sobald verfügbar.',
+        // notifications
+        'notifications.title': 'Neuigkeiten'
     },
     en: {
         'common.loading': 'Loading...',
@@ -148,7 +150,9 @@ const STRINGS = {
         'info.tabNews': 'News',
         'info.tabCashless': 'Cashless',
         'info.tabFaqs': 'FAQs',
-        'info.newsEmpty': 'Current news will be shown here once available.'
+        'info.newsEmpty': 'Current news will be shown here once available.',
+        // notifications
+        'notifications.title': 'News'
     }
 };
 
