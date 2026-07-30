@@ -1174,18 +1174,19 @@ span#headerFilterLabel {
 }
 
 .gtt-toolbar {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    display:none;
+    /* Dead 'display: flex' + related declarations removed here — they
+       were overridden by 'display: none' below and had no effect.
+       If the toolbar should be visible again, delete the 'display: none'
+       and restore the flex layout. */
+    display: none;
 }
 
 .gtt-legend {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 14px;
-    padding: 8px 0 12px;
-    display:none;
+    /* Dead 'display: flex' + related declarations removed here — they
+       were overridden by 'display: none' below and had no effect.
+       If the legend should be visible again, delete the 'display: none'
+       and restore the flex layout. */
+    display: none;
 }
 
 .gtt-legend-item {
@@ -1268,7 +1269,6 @@ span#headerFilterLabel {
        auto-height parent) so this element is itself the scrolling container —
        .gtt-header/.gtt-stagelabel's position:sticky only takes effect relative
        to an ancestor that actually scrolls. */
-    height: calc(var(--vh, 1vh) * 100 - 320px);
     height: calc(var(--vh, 1vh) * 100 - 200px);
     min-height: 320px;
     border: 1px solid var(--border);
@@ -1626,7 +1626,6 @@ span#headerFilterLabel {
 }
 
 .gtt-detail-panel .fav-btn.active {
-    color: #FFEB3B;
     color: var(--accent-pink);
 }
 
