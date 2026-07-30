@@ -7,7 +7,7 @@
  *   - Cross-origin assets        → Cache-First only for CORS/basic responses
  */
 
-const CACHE_VERSION = '1785402231';
+const CACHE_VERSION = '1785403500';
 const APP_NAME = 'bucht-standalone';
 const CACHE_NAME = `${APP_NAME}-v${CACHE_VERSION}`;
 
@@ -192,6 +192,22 @@ async function cacheFirst(request, fallbackToNetwork = true) {
     }
 }
 
+// Notifications are meant to feel current (that's the whole point of an
+// "alert") — stale-while-revalidate would show last visit's list first and
+// only pick up new ones on the visit *after* that. Try the network first
+// instead; fall back to cache only when actually offline.
+async function networkFirst(request, ms = 6000) {
+    const cache = await caches.open(CACHE_NAME);
+    try {
+        const res = await fetchWithTimeout(request, ms);
+        if (res.ok) await putCache(request, res.clone());
+        return res;
+    } catch (err) {
+        const cached = await cache.match(request, { ignoreSearch: true });
+        return cached || new Response('Offline and not cached', { status: 503 });
+    }
+}
+
 async function staleWhileRevalidate(request, event) {
     const cache = await caches.open(CACHE_NAME);
     const cached = await cache.match(request);
@@ -239,7 +255,9 @@ self.addEventListener('fetch', e => {
 
     // Local app assets + Google Fonts
     if (isLocalAsset(url)) {
-        if (url.pathname.includes('/data/')) {
+        if (url.pathname.endsWith('notifications.json')) {
+            e.respondWith(networkFirst(request));
+        } else if (url.pathname.includes('/data/')) {
             e.respondWith(staleWhileRevalidate(request, e));
         } else {
             e.respondWith(cacheFirst(request));

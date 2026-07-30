@@ -10,7 +10,7 @@ import { setupInstallTracking, setupOfflineIndicator, dismissInstallCard, trigge
 import { showToast } from './ui.js';
 import { PAGES, pageIdx } from './config.js';
 import { t, setLang } from './i18n.js';
-import { maybeShowNotifications, closeNotifications } from './notifications.js';
+import { maybeShowNotifications, closeNotifications, setupNotificationsRefresh } from './notifications.js';
 
 const LANG_LABELS = { de: 'De', en: 'Eng' };
 
@@ -35,6 +35,7 @@ async function init() {
     showLastUpdated();
     wireDelegation();
     maybeShowNotifications();
+    setupNotificationsRefresh();
 }
 
 // The install card only ever renders on Home/My Plan — re-rendering any

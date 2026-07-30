@@ -1,6 +1,7 @@
 import { store } from '../store.js';
 import { escapeHtml, textToHtml, favButton, renderFaqList } from '../ui.js';
 import { t } from '../i18n.js';
+import { formatNotificationDate } from '../notifications.js';
 
 export function renderInfo(container) {
     const info = store.pageData.info;
@@ -21,7 +22,7 @@ export function renderInfo(container) {
     html += '<div class="info-panel active" id="panel-news">';
     if (news && news.items && news.items.length) {
         html += news.items.map((item, i) => {
-            const date = item.date ? `<span class="news-date">${escapeHtml(item.date)}</span>` : '';
+            const date = item.date ? `<span class="news-date">${escapeHtml(formatNotificationDate(item))}</span>` : '';
             const highlight = item.highlight ? 'news-highlight' : '';
             return `<div class="news-card ${highlight}" data-item-index="${i}">
                 <div class="card-header"><h3>${escapeHtml(item.question)}</h3>

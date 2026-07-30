@@ -12,7 +12,7 @@ export const store = {
     favTab: 'program'
 };
 
-async function fetchLocalized(file, lang) {
+export async function fetchLocalized(file, lang) {
     if (lang !== 'de') {
         try {
             const res = await fetch(`data/${lang}/${file}`);

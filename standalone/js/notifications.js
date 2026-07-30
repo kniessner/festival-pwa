@@ -1,5 +1,5 @@
-import { store } from './store.js';
-import { NOTIFICATIONS_SEEN_KEY } from './config.js';
+import { store, fetchLocalized } from './store.js';
+import { NOTIFICATIONS_SEEN_KEY, DATA_FILES } from './config.js';
 import { escapeHtml } from './ui.js';
 
 // Notifications are authored via the WP plugin's "PWA Push" post type and
@@ -58,4 +58,26 @@ export function closeNotifications() {
     const modal = document.getElementById('notificationsModal');
     if (modal) modal.classList.remove('open');
     markAllNotificationsSeen();
+}
+
+// Re-fetches just notifications.json (not the full page data) and re-checks
+// for unseen entries — the service worker serves this one network-first, so
+// this actually gets whatever was most recently published, not last visit's
+// cached copy.
+export async function refreshNotifications() {
+    try {
+        store.pageData.notifications = await fetchLocalized(DATA_FILES.notifications, store.lang);
+        maybeShowNotifications();
+    } catch (e) {
+        console.error('Failed to refresh notifications', e);
+    }
+}
+
+// Catches "app was closed/backgrounded, a notification got published,
+// app is opened/foregrounded again" — without this, the initial load's
+// result would just sit there until a full reload.
+export function setupNotificationsRefresh() {
+    document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'visible') refreshNotifications();
+    });
 }
