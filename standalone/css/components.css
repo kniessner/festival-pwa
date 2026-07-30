@@ -739,7 +739,7 @@
  */
 .gtt-stagehead.gtt-current-stage {
     position: relative;
-    animation: gtt-stage-pulse-wash 1.6s ease-in-out infinite;
+    animation: gtt-stage-pulse-wash 2s ease-in-out infinite;
 }
 
 .gtt-stagerow-wrap.gtt-current-stage {
@@ -750,13 +750,23 @@
 }
 
 .gtt-current-stage .gtt-stagelabel {
-    /* Color pulse via 'inset box-shadow' (large-radius pink wash that
-       fades in/out) instead of 'filter: brightness()' — the filter was
-       invisible on very dark cell backgrounds (var(--bg) navy) and on
-       dark per-stage colors (dezentral's #0303d5). Box-shadow overlay
-       is a fixed-color tint that stays visible regardless of the
-       underlying cell luminance. */
-    animation: gtt-stage-pulse-wash 1.6s ease-in-out infinite;
+    /* Color pulse cycles between two accent colors (pink ↔ purple) via
+       inset box-shadow — ported from fusion's floorPulse, adapted to
+       Bucht's palette. Uses box-shadow overlay rather than 'filter:
+       brightness()' because filter was invisible on dark cell
+       backgrounds AND cascaded down to every child (making event
+       blocks pulse too, which was wrong — event blocks vibrate
+       instead, see .gtt-current-stage .gtt-event below). */
+    animation: gtt-stage-pulse-wash 2s ease-in-out infinite;
+}
+
+/* Event blocks within the current stage's row/column vibrate (shake +
+ * rotate) rather than pulse — mirrors fusion's gigVibrate. Selector
+ * lands children of both .gtt-stagerow-wrap (horizontal mode) and
+ * .gtt-stagecol (vertical mode); both get .gtt-current-stage from
+ * applyStagePulseClasses. */
+.gtt-current-stage .gtt-event {
+    animation: gtt-gig-vibrate 2s ease-in-out infinite;
 }
 
 .gtt-stagehead.gtt-current-stage::after,
@@ -768,19 +778,45 @@
     border-radius: inherit;
     pointer-events: none;
     box-shadow: 0 0 0 0 var(--accent-pink);
-    animation: gtt-stage-pulse-ring 1.6s ease-out infinite;
+    animation: gtt-stage-pulse-ring 2s ease-out infinite;
 }
 
 @keyframes gtt-stage-pulse-wash {
-    /* 999px inset radius floods the whole box regardless of cell size.
-       35% alpha reads clearly on both the darkest navy AND the lightest
-       lavender label backgrounds. rgba() fallback line matches
-       --accent-pink's RGB for browsers pre-Baseline 2023 color-mix. */
-    0%, 100% { box-shadow: inset 0 0 0 999px transparent; }
-    50%      {
-        box-shadow: inset 0 0 0 999px rgba(222, 78, 57, 0.35);
-        box-shadow: inset 0 0 0 999px color-mix(in srgb, var(--accent-pink) 35%, transparent);
+    /* Cycle between accent-pink and accent-purple as an inset wash —
+       ported from fusion's floorPulse which cycles background between
+       primary and secondary. 999px inset radius floods the whole box
+       regardless of cell size. 55% alpha reads clearly on both the
+       darkest navy AND the lightest lavender label backgrounds. rgba()
+       fallback lines match --accent-pink and --accent-purple's RGB for
+       browsers pre-Baseline 2023 color-mix. */
+    0%, 100% {
+        box-shadow: inset 0 0 0 999px rgba(222, 78, 57, 0.55);
+        box-shadow: inset 0 0 0 999px color-mix(in srgb, var(--accent-pink) 55%, transparent);
     }
+    50% {
+        box-shadow: inset 0 0 0 999px rgba(118, 44, 140, 0.55);
+        box-shadow: inset 0 0 0 999px color-mix(in srgb, var(--accent-purple) 55%, transparent);
+    }
+}
+
+@keyframes gtt-gig-vibrate {
+    /* Ported from fusion's gigVibrate (see pwa_test/src/TimetableFlat/
+       animations.ts). Shakes horizontally with a small rotation for the
+       first third of the cycle, then rests — the pause is what makes it
+       feel like a heartbeat rather than a robot. Amplitude dampens over
+       the shake so it decays naturally. */
+    0%     { transform: translateX(0)      rotate(0deg); }
+    3.33%  { transform: translateX(-3px)   rotate(-1deg); }
+    6.67%  { transform: translateX(3px)    rotate(1deg); }
+    10%    { transform: translateX(-3px)   rotate(-1deg); }
+    13.33% { transform: translateX(3px)    rotate(1deg); }
+    16.67% { transform: translateX(-2px)   rotate(-0.5deg); }
+    20%    { transform: translateX(2px)    rotate(0.5deg); }
+    23.33% { transform: translateX(-1px)   rotate(-0.25deg); }
+    26.67% { transform: translateX(1px)    rotate(0.25deg); }
+    30%    { transform: translateX(-0.5px) rotate(-0.1deg); }
+    33.33% { transform: translateX(0)      rotate(0deg); }
+    100%   { transform: translateX(0)      rotate(0deg); }
 }
 
 @keyframes gtt-stage-pulse-ring {
@@ -798,13 +834,14 @@
 @media (prefers-reduced-motion: reduce) {
     .gtt-stagehead.gtt-current-stage,
     .gtt-current-stage .gtt-stagelabel,
+    .gtt-current-stage .gtt-event,
     .gtt-stagerow-wrap.gtt-current-stage {
         animation: none;
     }
     .gtt-stagehead.gtt-current-stage,
     .gtt-current-stage .gtt-stagelabel {
-        box-shadow: inset 0 0 0 999px rgba(222, 78, 57, 0.25);
-        box-shadow: inset 0 0 0 999px color-mix(in srgb, var(--accent-pink) 25%, transparent);
+        box-shadow: inset 0 0 0 999px rgba(222, 78, 57, 0.4);
+        box-shadow: inset 0 0 0 999px color-mix(in srgb, var(--accent-pink) 40%, transparent);
     }
     .gtt-stagehead.gtt-current-stage::after,
     .gtt-stagerow-wrap.gtt-current-stage::after {

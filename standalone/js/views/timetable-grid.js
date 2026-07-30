@@ -613,11 +613,18 @@ document.addEventListener('stagechange', handleStageChangeForScroll);
 // stage → null transitions are silent — buzzing on app open would be
 // startling.
 function applyStagePulseClasses(current) {
-    document.querySelectorAll('.gtt-stagehead.gtt-current-stage, .gtt-stagerow-wrap.gtt-current-stage')
+    // Clear pulse markers from both header and event-container elements.
+    // Vertical mode: .gtt-stagehead (label) + .gtt-stagecol (event container).
+    // Horizontal mode: .gtt-stagerow-wrap (both label AND event container in one).
+    document.querySelectorAll('.gtt-current-stage')
         .forEach(el => el.classList.remove('gtt-current-stage'));
     if (!current) return;
+    // Vertical: label header + column (events live inside .gtt-stagecol).
     const head = document.querySelector(`.gtt-stagehead[data-stage="${current}"]`);
     if (head) head.classList.add('gtt-current-stage');
+    const col = document.querySelector(`.gtt-stagecol[data-stage="${current}"]`);
+    if (col) col.classList.add('gtt-current-stage');
+    // Horizontal: single wrapper contains both label and events.
     const row = document.querySelector(`.gtt-stagerow-wrap[data-stage="${current}"]`);
     if (row) row.classList.add('gtt-current-stage');
 }
