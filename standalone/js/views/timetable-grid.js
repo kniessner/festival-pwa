@@ -22,6 +22,9 @@ const stageHysteresis = createStageHysteresis({
 
 function handleLocationChange(e) {
     const detail = e.detail || {};
+    // Location watcher signals error/no-fix by omitting coords. Clear
+    // the resolved stage. The `error` field may carry the specific
+    // reason ('denied' | timeout message) for future diagnostics.
     if (detail.error) {
         stageHysteresis.feed(null);
         return;
@@ -46,6 +49,10 @@ const AXIS_WIDTH = 52;      // vertical mode: time-axis / corner column width
 const STAGE_LABEL_WIDTH = 96; // horizontal mode: stage-label column width
 const LANE_HEIGHT = 60;     // horizontal mode: overlap-lane height within a stage row
 const DAY_GAP = 28;         // horizontal mode: gap between consecutive day blocks
+
+// Haptic feedback pattern for a real stage-to-stage transition. Three
+// short pulses give a distinct-from-notification feel; adjust here.
+const STAGE_TRANSITION_VIBRATE_MS = [50, 30, 50];
 
 // Stage acts run around the clock, so hours before this cutoff belong to the
 // previous festival night rather than a new calendar day.
@@ -297,7 +304,7 @@ function renderVerticalLayout({ data, header, track, stages, byStage, stageLanes
 
     const scroll = document.getElementById('gttScroll');
     if (scroll) scroll.scrollLeft = 0;
-    if (store.gridDay === getEffectiveFestivalDay()) scrollGridToNowAndUserStage('vertical');
+    if (store.gridDay === getEffectiveFestivalDay()) scrollGridToNowAndUserStage();
     applyStagePulseClasses(store.userStage);
 }
 
@@ -403,7 +410,7 @@ function renderHorizontalLayout({ data, header, track, blocks }) {
         }
         scroll.scrollTop = 0;
         if (store.gridDay === getEffectiveFestivalDay() && todayBlock) {
-            scrollGridToNowAndUserStage('horizontal');
+            scrollGridToNowAndUserStage();
         } else {
             const target = gridDayOffsets.find(o => o.day === store.gridDay) || gridDayOffsets[0];
             if (target) scroll.scrollLeft = Math.max(0, target.offset - 8);
@@ -509,7 +516,8 @@ export function closeGridEventDetail() {
     if (backdrop) backdrop.classList.remove('open');
 }
 
-function scrollGridToNowTime(orientation) {
+function scrollGridToNowTime() {
+    const orientation = store.gridScrollMode;
     setTimeout(() => {
         const scroll = document.getElementById('gttScroll');
         if (!scroll) return;
@@ -531,12 +539,12 @@ function scrollGridToNowTime(orientation) {
 // denied, off-site, in the gap between polygons). Defensively queries
 // the DOM — handler is bound at module scope so it can fire when the
 // grid isn't rendered; every getElementById can legitimately be null.
-function scrollGridToUserStage(orientation) {
+function scrollGridToUserStage() {
     const stage = store.userStage;
     if (!stage) return;
     const scroll = document.getElementById('gttScroll');
     if (!scroll) return;
-    if (orientation === 'vertical') {
+    if (store.gridScrollMode === 'vertical') {
         const head = document.querySelector(`.gtt-stagehead[data-stage="${stage}"]`);
         if (!head) return;
         scroll.scrollLeft = Math.max(0, head.offsetLeft - AXIS_WIDTH - 40);
@@ -550,22 +558,23 @@ function scrollGridToUserStage(orientation) {
 
 // Two-step sequence: run time-scroll first, wait for its animation to
 // settle, then stage-scroll. Ported from fusion's TimetableFlat.tsx
-// pattern (scrollend + fallback in case reduced-motion skips it).
-function scrollGridToNowAndUserStage(orientation) {
-    scrollGridToNowTime(orientation);
+// pattern (scrollend + fallback in case reduced-motion / no smooth scroll
+// / no actual scroll needed keeps scrollend from firing).
+function scrollGridToNowAndUserStage() {
+    scrollGridToNowTime();
     const scroll = document.getElementById('gttScroll');
     if (!scroll) return;
     let done = false;
     const finish = () => {
         if (done) return;
         done = true;
-        scroll.removeEventListener('scrollend', finish);
-        scrollGridToUserStage(orientation);
+        scrollGridToUserStage();
     };
+    // `once: true` auto-removes the listener after first fire; the 1s
+    // fallback below covers the case where scrollend never comes
+    // (reduced-motion, no scroll needed, unsupported browser). `done`
+    // guards against a delayed scrollend firing after the fallback ran.
     scroll.addEventListener('scrollend', finish, { once: true });
-    // 1s fallback: covers reduced-motion (no smooth-scroll animation),
-    // browsers without scrollend, and the case where step 1 already had
-    // the grid at the right position and no scroll fired.
     setTimeout(finish, 1000);
 }
 
@@ -573,7 +582,7 @@ function scrollGridToNowAndUserStage(orientation) {
 // load; safe when the grid view isn't rendered because
 // scrollGridToUserStage/scrollGridToNowTime bail out on null DOM.
 function handleStageChangeForScroll() {
-    scrollGridToNowAndUserStage(store.gridScrollMode);
+    scrollGridToNowAndUserStage();
 }
 document.addEventListener('stagechange', handleStageChangeForScroll);
 
@@ -603,7 +612,7 @@ function handleStageChangeForPulse(e) {
     // Vibrate only on real stage-to-stage transitions. navigator.vibrate
     // returns false silently on unsupported platforms (iOS Safari, etc.).
     if (detail.previous && detail.current && detail.previous !== detail.current && navigator.vibrate) {
-        navigator.vibrate([50, 30, 50]);
+        navigator.vibrate(STAGE_TRANSITION_VIBRATE_MS);
     }
 }
 document.addEventListener('stagechange', handleStageChangeForPulse);

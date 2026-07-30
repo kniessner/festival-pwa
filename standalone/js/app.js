@@ -28,11 +28,12 @@ async function init() {
     // Parallel-load timetable/info data and stage polygons — they're
     // independent files, no reason to serialise the round-trips.
     await Promise.all([loadData(), loadStages()]);
-    mergeMusicIntoTimetable();
-    // Boot-time sanity check: catches drift between timetable.json's
-    // stage slugs and stages.geojson polygon names before it silently
-    // breaks the auto-scroll in prod. See helpers/get-stage.js.
+    // Boot-time sanity check: warn about drift between timetable.json's
+    // stage slugs and stages.geojson polygon names before the nav is
+    // interactive, so a fast user who navigates straight to the grid
+    // still hits the warning in their console. See helpers/get-stage.js.
     warnStageNameMismatches(store.pageData.timetable?.filters);
+    mergeMusicIntoTimetable();
     renderNav();
     // manifest.json's start_url passes ?page=favorites so launching the
     // installed home-screen app opens My Plan directly; a plain browser
