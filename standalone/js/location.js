@@ -36,13 +36,16 @@ export function startLocationWatch() {
             }));
         },
         (error) => {
+            const message = error.code === 1 ? 'denied' : error.message;
             store.userLocation = {
                 longitude: null,
                 latitude: null,
                 accuracy: null,
-                error: error.code === 1 ? 'denied' : error.message,
+                error: message,
             };
-            document.dispatchEvent(new CustomEvent('locationchange', { detail: { error: true } }));
+            document.dispatchEvent(new CustomEvent('locationchange', {
+                detail: { error: message },
+            }));
         },
         // maximumAge: 0 forces a fresh fix on every poll — matches the
         // fusion rationale (Android otherwise served stale lastKnownLocation

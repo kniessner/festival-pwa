@@ -11,8 +11,10 @@ export const store = {
     gridScrollMode: 'horizontal',
     favTab: 'program',
     // Populated by js/location.js after the user grants location permission.
-    // { longitude, latitude, accuracy, error } | null. accuracy is metres
-    // (68% confidence radius); error is 'denied' | 'unsupported' | a message.
+    // Always an object once populated: { longitude, latitude, accuracy, error }.
+    // longitude/latitude/accuracy are numbers on a successful fix, null on
+    // error. error is null on success, 'denied' | 'unsupported' | a message
+    // string on failure. Stays null before the first fix / error arrives.
     userLocation: null,
     // Populated by the stage-hysteresis in js/views/timetable-grid.js after
     // a GPS fix resolves to a polygon in stages.geojson. Stage slug or null.

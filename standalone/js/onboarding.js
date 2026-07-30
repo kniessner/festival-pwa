@@ -103,15 +103,20 @@ export function onboardingAllow() {
                 document.dispatchEvent(new CustomEvent('locationchange', {
                     detail: { longitude, latitude, accuracy },
                 }));
-                startLocationWatch();
             },
             () => {
                 // Hard-deny in the OS dialog, or transient error. Silent —
                 // the timetable auto-scroll step 2 will just no-op.
-                // startLocationWatch would fail the same way; skip it.
             },
             { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 },
         );
+        // Start the watcher NOW rather than waiting for getCurrentPosition
+        // to resolve. On a slow first fix the user might already have
+        // navigated to the grid by the time success fires; without the
+        // eager start the watcher isn't running and step 2 stays cold
+        // until they navigate again. startLocationWatch is idempotent, so
+        // an eventual second call from anywhere is a no-op.
+        startLocationWatch();
     }
     // Close optimistically. The OS dialog renders on its own layer;
     // the user's response fires the callback above asynchronously.
