@@ -60,6 +60,29 @@
       </div>
     </div>
 
+    <!-- Location-permission onboarding overlay. Pre-rendered here (matches
+         #notificationsModal / #searchModal pattern); js/onboarding.js
+         localises the strings and toggles the .open class on first launch. -->
+    <div class="onboarding-modal" id="onboardingModal">
+      <div class="onboarding-modal-panel">
+        <h2 class="onboarding-headline" id="onboardingHeadline"></h2>
+        <p class="onboarding-intro" id="onboardingIntro"></p>
+        <div class="onboarding-feature">
+          <div class="onboarding-feature-badge">1</div>
+          <p id="onboardingFeatureTimetable"></p>
+        </div>
+        <p class="onboarding-disclaimer" id="onboardingDisclaimer"></p>
+        <div class="onboarding-privacy">
+          <h3 id="onboardingPrivacyTitle"></h3>
+          <p id="onboardingPrivacyBody"></p>
+        </div>
+        <div class="onboarding-actions">
+          <button type="button" class="onboarding-btn onboarding-btn-secondary" data-action="onboarding-not-now" id="onboardingBtnNotNow"></button>
+          <button type="button" class="onboarding-btn onboarding-btn-primary" data-action="onboarding-allow" id="onboardingBtnAllow"></button>
+        </div>
+      </div>
+    </div>
+
     <div class="app-header" id="app-header">
       <div class="last-updated" id="lastUpdated"></div>
       <div class="app-header-row">

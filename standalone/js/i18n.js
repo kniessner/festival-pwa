@@ -79,7 +79,16 @@ const STRINGS = {
         'info.tabFaqs': 'FAQs',
         'info.newsEmpty': 'Aktuelle News werden hier angezeigt, sobald verfügbar.',
         // notifications
-        'notifications.title': 'Neuigkeiten'
+        'notifications.title': 'Neuigkeiten',
+        // onboarding (location-permission opt-in)
+        'onb.headline': 'Wer spielt hier gerade?',
+        'onb.intro': 'Aktiviere GPS und dein Timetable öffnet sich automatisch auf der Bühne, an der du gerade stehst.',
+        'onb.featureTimetable': 'Automatischer Sprung zu der Bühne auf der du dich gerade befindest, um schneller erfahren zu können wer gerade spielt.',
+        'onb.disclaimer': 'Diese Funktion funktioniert nur, wenn du der App Zugriff auf deinen Standort erlaubst und GPS aktiviert ist.',
+        'onb.privacyTitle': 'Infos zum Datenschutz',
+        'onb.privacyBody': 'Kein Tracking. Keine Datenweitergabe. Dein Standort bleibt nur lokal auf deinem Gerät.',
+        'onb.buttonAllow': 'GPS aktivieren',
+        'onb.buttonNotNow': 'Nicht jetzt'
     },
     en: {
         'common.loading': 'Loading...',
@@ -152,7 +161,16 @@ const STRINGS = {
         'info.tabFaqs': 'FAQs',
         'info.newsEmpty': 'Current news will be shown here once available.',
         // notifications
-        'notifications.title': 'News'
+        'notifications.title': 'News',
+        // onboarding (location-permission opt-in)
+        'onb.headline': "Who's playing here right now?",
+        'onb.intro': 'Enable GPS and your timetable jumps straight to the stage you\'re standing at.',
+        'onb.featureTimetable': "Automatic jump to the stage you're currently standing at, so you can find out faster who's playing right now.",
+        'onb.disclaimer': 'This feature only works if you allow the app to access your location and have GPS enabled.',
+        'onb.privacyTitle': 'Privacy info',
+        'onb.privacyBody': 'No tracking. No data sharing. Your location stays on your device.',
+        'onb.buttonAllow': 'Enable GPS',
+        'onb.buttonNotNow': 'Not now'
     }
 };
 
