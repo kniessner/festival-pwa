@@ -47,7 +47,6 @@
 
 @media (display-mode: standalone) {
     body {
-        border: 5px solid #E91E63;
         background: var(--bg);
     }
 
