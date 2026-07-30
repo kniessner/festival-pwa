@@ -51,6 +51,35 @@ export function getLoadedStages() {
 }
 
 /**
+ * Console-warn any drift between stages.geojson polygon names and the
+ * stage slugs in data/timetable.json (filters.stages[].value). A silent
+ * typo here is the classic failure mode: someone renames a stage in one
+ * file and forgets the other, and step 2 of the auto-scroll quietly
+ * no-ops forever. Warning at boot catches it in dev before it ships.
+ *
+ * Call after both loadData() and loadStages() have resolved.
+ *
+ * @param timetableFilters store.pageData.timetable.filters — the object
+ *        with `.stages` (array of { value, label }). Passed in rather
+ *        than imported to keep this module dependency-free of store.js.
+ */
+export function warnStageNameMismatches(timetableFilters) {
+    if (!timetableFilters || !Array.isArray(timetableFilters.stages)) return;
+    const polygonNames = new Set(getLoadedStages().map(f => f.properties.name));
+    const timetableSlugs = new Set(
+        timetableFilters.stages.map(s => s.value).filter(v => v !== 'walking-act'),
+    );
+    const missingPolygons = [...timetableSlugs].filter(s => !polygonNames.has(s));
+    const orphanPolygons = [...polygonNames].filter(p => !timetableSlugs.has(p));
+    if (missingPolygons.length) {
+        console.warn('[stages] timetable slugs without polygons:', missingPolygons);
+    }
+    if (orphanPolygons.length) {
+        console.warn('[stages] polygons without matching timetable slugs:', orphanPolygons);
+    }
+}
+
+/**
  * Determine which stage the given GPS fix falls into.
  *
  * @param location { longitude, latitude, accuracy? } | null | false.
