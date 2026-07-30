@@ -1415,11 +1415,10 @@ span#headerFilterLabel {
     font-weight: 700;
     line-height: 1.2;
     position: sticky;
-    left: 0;
+    left: 100px;
     z-index: 3;
     display: inline-flex;
     width: max-content;
-    background: rgba(0, 0, 0, 0.14);
     padding-right: 2px;
     margin-left: -8px;
 }
