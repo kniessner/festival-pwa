@@ -7,7 +7,7 @@
  *   - Cross-origin assets        → Cache-First only for CORS/basic responses
  */
 
-const CACHE_VERSION = '1785406833';
+const CACHE_VERSION = '1785413843';
 const APP_NAME = 'bucht-standalone';
 const CACHE_NAME = `${APP_NAME}-v${CACHE_VERSION}`;
 
@@ -39,8 +39,16 @@ const SHELL_ASSETS = [
     './js/install.js',
     './js/notifications.js',
     './js/music.js',
+    './js/onboarding.js',
+    './js/location.js',
+    './js/helpers/point-in-polygon.js',
+    './js/helpers/get-stage.js',
+    './js/helpers/geolocation-permission.js',
+    './js/helpers/prompt-storage.js',
+    './js/helpers/stage-hysteresis.js',
     './js/views/home.js',
     './js/views/timetable.js',
+    './js/views/timetable-grid.js',
     './js/views/info.js',
     './js/views/favorites.js',
     './manifest.json',
@@ -50,6 +58,7 @@ const SHELL_ASSETS = [
     './images/datum.png',
     './data/info.json',
     './data/timetable.json',
+    './data/stages.geojson',
     './data/en/timetable.json',
     './data/_manifest.json'
 ];
