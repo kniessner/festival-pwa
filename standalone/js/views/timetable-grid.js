@@ -260,7 +260,7 @@ function renderVerticalLayout({ data, header, track, stages, byStage, stageLanes
 
     header.innerHTML = '<div class="gtt-corner"></div>' + stages.map(stage => {
         const label = data.filters.stages.find(s => s.value === stage)?.label || stage;
-        return `<div class="gtt-stagehead" style="width:${COL_WIDTH}px;--stage-color:${stageColor(stage)}">${label}</div>`;
+        return `<div class="gtt-stagehead" data-stage="${stage}" style="width:${COL_WIDTH}px;--stage-color:${stageColor(stage)}">${label}</div>`;
     }).join('');
 
     const hourLabels = [];
@@ -271,7 +271,7 @@ function renderVerticalLayout({ data, header, track, stages, byStage, stageLanes
     const stageColumns = stages.map(stage => {
         const numLanes = stageLanes.get(stage);
         const blocks = byStage.get(stage).map(ev => renderEventBlockV(ev, gridMin, numLanes)).join('');
-        return `<div class="gtt-stagecol" style="width:${COL_WIDTH}px;height:${gridHeight}px;--stage-color:${stageColor(stage)}">${blocks}</div>`;
+        return `<div class="gtt-stagecol" data-stage="${stage}" style="width:${COL_WIDTH}px;height:${gridHeight}px;--stage-color:${stageColor(stage)}">${blocks}</div>`;
     }).join('');
 
     let nowLine = '';
@@ -297,7 +297,7 @@ function renderVerticalLayout({ data, header, track, stages, byStage, stageLanes
 
     const scroll = document.getElementById('gttScroll');
     if (scroll) scroll.scrollLeft = 0;
-    if (store.gridDay === getEffectiveFestivalDay()) scrollGridToNow('vertical');
+    if (store.gridDay === getEffectiveFestivalDay()) scrollGridToNowAndUserStage('vertical');
 }
 
 // The continuous, "endless" strip: every festival day laid out left-to-right in
@@ -363,7 +363,7 @@ function renderHorizontalLayout({ data, header, track, blocks }) {
             return evs ? evs.map(ev => renderEventBlockH(ev, b.gridMin, b._offset)).join('') : '';
         }).join('');
         return `
-        <div class="gtt-stagerow-wrap" style="height:${height}px">
+        <div class="gtt-stagerow-wrap" data-stage="${stage}" style="height:${height}px">
             <div class="gtt-stagelabel ${i % 2 === 1 ? 'gtt-alt' : ''}">${label}</div>
             <div class="gtt-stagerow" style="width:${gridWidth}px">${blocksHtml}</div>
         </div>`;
@@ -402,7 +402,7 @@ function renderHorizontalLayout({ data, header, track, blocks }) {
         }
         scroll.scrollTop = 0;
         if (store.gridDay === getEffectiveFestivalDay() && todayBlock) {
-            scrollGridToNow('horizontal');
+            scrollGridToNowAndUserStage('horizontal');
         } else {
             const target = gridDayOffsets.find(o => o.day === store.gridDay) || gridDayOffsets[0];
             if (target) scroll.scrollLeft = Math.max(0, target.offset - 8);
@@ -507,7 +507,7 @@ export function closeGridEventDetail() {
     if (backdrop) backdrop.classList.remove('open');
 }
 
-function scrollGridToNow(orientation) {
+function scrollGridToNowTime(orientation) {
     setTimeout(() => {
         const scroll = document.getElementById('gttScroll');
         if (!scroll) return;
@@ -523,3 +523,54 @@ function scrollGridToNow(orientation) {
         }
     }, 150);
 }
+
+// Step 2: scroll the cross-axis to bring the user's current stage into
+// view. No-op if hysteresis hasn't resolved a stage yet (permission
+// denied, off-site, in the gap between polygons). Defensively queries
+// the DOM — handler is bound at module scope so it can fire when the
+// grid isn't rendered; every getElementById can legitimately be null.
+function scrollGridToUserStage(orientation) {
+    const stage = store.userStage;
+    if (!stage) return;
+    const scroll = document.getElementById('gttScroll');
+    if (!scroll) return;
+    if (orientation === 'vertical') {
+        const head = document.querySelector(`.gtt-stagehead[data-stage="${stage}"]`);
+        if (!head) return;
+        scroll.scrollLeft = Math.max(0, head.offsetLeft - AXIS_WIDTH - 40);
+    } else {
+        const row = document.querySelector(`.gtt-stagerow-wrap[data-stage="${stage}"]`);
+        if (!row) return;
+        const headerHeight = document.getElementById('gttHeader')?.offsetHeight || 0;
+        scroll.scrollTop = Math.max(0, row.offsetTop - headerHeight - 20);
+    }
+}
+
+// Two-step sequence: run time-scroll first, wait for its animation to
+// settle, then stage-scroll. Ported from fusion's TimetableFlat.tsx
+// pattern (scrollend + fallback in case reduced-motion skips it).
+function scrollGridToNowAndUserStage(orientation) {
+    scrollGridToNowTime(orientation);
+    const scroll = document.getElementById('gttScroll');
+    if (!scroll) return;
+    let done = false;
+    const finish = () => {
+        if (done) return;
+        done = true;
+        scroll.removeEventListener('scrollend', finish);
+        scrollGridToUserStage(orientation);
+    };
+    scroll.addEventListener('scrollend', finish, { once: true });
+    // 1s fallback: covers reduced-motion (no smooth-scroll animation),
+    // browsers without scrollend, and the case where step 1 already had
+    // the grid at the right position and no scroll fired.
+    setTimeout(finish, 1000);
+}
+
+// Rebinds scroll refresh on every stage commit. Bound once at module
+// load; safe when the grid view isn't rendered because
+// scrollGridToUserStage/scrollGridToNowTime bail out on null DOM.
+function handleStageChangeForScroll() {
+    scrollGridToNowAndUserStage(store.gridScrollMode);
+}
+document.addEventListener('stagechange', handleStageChangeForScroll);
