@@ -1380,6 +1380,13 @@ span#headerFilterLabel {
 .gtt-event {
     position: absolute;
     box-sizing: border-box;
+    /* Explicit z-index (below .gtt-stagelabel's z-index: 2) so the sticky
+       .gtt-event-title inside — which is pinned at left: 100px — hides
+       behind the sticky floor label when the block scrolls into the
+       label region, instead of appearing painted on top of it. Without
+       this, .gtt-event stayed at z-index: auto and sticky descendants
+       could paint over the label on iOS Safari. */
+    z-index: 1;
     background: var(--event-color, var(--stage-color, var(--accent-pink)));
     border-radius: 14px;
     border: 2px solid rgba(255, 255, 255, 0.3);
