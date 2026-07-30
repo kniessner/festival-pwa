@@ -1381,7 +1381,7 @@ span#headerFilterLabel {
     border-radius: 14px;
     border: 2px solid rgba(255, 255, 255, 0.3);
     padding: 6px 8px;
-    overflow: hidden;
+    overflow: visible;
     color: #fff;
     cursor: pointer;
     display: flex;
@@ -1414,6 +1414,14 @@ span#headerFilterLabel {
     font-size: 0.72rem;
     font-weight: 700;
     line-height: 1.2;
+    position: sticky;
+    left: 0;
+    z-index: 3;
+    display: inline-flex;
+    width: max-content;
+    background: rgba(0, 0, 0, 0.14);
+    padding-right: 2px;
+    margin-left: -8px;
 }
 
 .gtt-now-line {
@@ -1470,7 +1478,7 @@ span#headerFilterLabel {
 .gtt-stagelabel {
     flex: 0 0 96px;
     min-width: 0;
-    max-width: 96px;
+    max-width: 120px;
     overflow: hidden;
     overflow-wrap: break-word;
     position: sticky;
@@ -1483,11 +1491,12 @@ span#headerFilterLabel {
     padding: 6px;
     background: var(--bg);
     color: #fff;
-    font-family: var(--font-head);
+    font-family: 'Megan Display';
     font-weight: 700;
-    font-size: 0.72rem;
+    font-size: 13px;
     text-transform: uppercase;
     letter-spacing: 0.5px;
+
 }
 
 .gtt-stagelabel.gtt-alt {
@@ -1542,19 +1551,17 @@ span#headerFilterLabel {
 }
 
 .gtt-detail {
-    position: fixed;
-    left: 0;
-    right: 0;
+     position: fixed;
+    left: -3px;
+    right: -3px;
     bottom: -100%;
     z-index: 306;
     transition: bottom 0.3s ease-out;
-    max-width: 650px;
     margin: 0 auto;
-    padding: 0 16px calc(16px + env(safe-area-inset-bottom));
 }
 
 .gtt-detail.open {
-    bottom: 0;
+       bottom: -10px;
 }
 
 .gtt-detail-panel {
@@ -1567,6 +1574,7 @@ span#headerFilterLabel {
     overflow-y: auto;
     position: relative;
     box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.45);
+        padding-bottom: 30px;
 }
 
 .gtt-detail-title-row {
@@ -1620,6 +1628,7 @@ span#headerFilterLabel {
 
 .gtt-detail-panel .fav-btn.active {
     color: #FFEB3B;
+    color: var(--accent-pink);
 }
 
 .gtt-detail-panel .tt-event-detail-inner {
