@@ -737,10 +737,26 @@
  * (row labels). Vibration matches the visual on real stage-to-stage
  * moves — see handleStageChangeForPulse.
  */
-.gtt-stagehead.gtt-current-stage,
+.gtt-stagehead.gtt-current-stage {
+    position: relative;
+    animation: gtt-stage-pulse-wash 1.6s ease-in-out infinite;
+}
+
 .gtt-stagerow-wrap.gtt-current-stage {
     position: relative;
-    animation: gtt-stage-pulse 1.6s ease-in-out infinite;
+    /* No wash here — sticky .gtt-stagelabel paints on top of us, so the
+       wash goes on the label instead (rule below). The ring on ::after
+       spans the full row width, tying label and event area together. */
+}
+
+.gtt-current-stage .gtt-stagelabel {
+    /* Color pulse via 'inset box-shadow' (large-radius pink wash that
+       fades in/out) instead of 'filter: brightness()' — the filter was
+       invisible on very dark cell backgrounds (var(--bg) navy) and on
+       dark per-stage colors (dezentral's #0303d5). Box-shadow overlay
+       is a fixed-color tint that stays visible regardless of the
+       underlying cell luminance. */
+    animation: gtt-stage-pulse-wash 1.6s ease-in-out infinite;
 }
 
 .gtt-stagehead.gtt-current-stage::after,
@@ -755,9 +771,16 @@
     animation: gtt-stage-pulse-ring 1.6s ease-out infinite;
 }
 
-@keyframes gtt-stage-pulse {
-    0%, 100% { filter: brightness(1); }
-    50%      { filter: brightness(1.25); }
+@keyframes gtt-stage-pulse-wash {
+    /* 999px inset radius floods the whole box regardless of cell size.
+       35% alpha reads clearly on both the darkest navy AND the lightest
+       lavender label backgrounds. rgba() fallback line matches
+       --accent-pink's RGB for browsers pre-Baseline 2023 color-mix. */
+    0%, 100% { box-shadow: inset 0 0 0 999px transparent; }
+    50%      {
+        box-shadow: inset 0 0 0 999px rgba(222, 78, 57, 0.35);
+        box-shadow: inset 0 0 0 999px color-mix(in srgb, var(--accent-pink) 35%, transparent);
+    }
 }
 
 @keyframes gtt-stage-pulse-ring {
@@ -774,8 +797,14 @@
 
 @media (prefers-reduced-motion: reduce) {
     .gtt-stagehead.gtt-current-stage,
+    .gtt-current-stage .gtt-stagelabel,
     .gtt-stagerow-wrap.gtt-current-stage {
         animation: none;
+    }
+    .gtt-stagehead.gtt-current-stage,
+    .gtt-current-stage .gtt-stagelabel {
+        box-shadow: inset 0 0 0 999px rgba(222, 78, 57, 0.25);
+        box-shadow: inset 0 0 0 999px color-mix(in srgb, var(--accent-pink) 25%, transparent);
     }
     .gtt-stagehead.gtt-current-stage::after,
     .gtt-stagerow-wrap.gtt-current-stage::after {
