@@ -29,6 +29,15 @@ function handleLocationChange(e) {
         stageHysteresis.feed(null);
         return;
     }
+    // Explicit coord-present check: getStage would eventually return
+    // false on {undefined, undefined} via the ray-casting NaN path,
+    // but running the polygon loop against NaN inputs is wasted work
+    // and hides intent. A future 'locationchange' dispatched with an
+    // unfamiliar detail shape should still short-circuit here.
+    if (detail.longitude == null || detail.latitude == null) {
+        stageHysteresis.feed(null);
+        return;
+    }
     stageHysteresis.feed(getStage({
         longitude: detail.longitude,
         latitude: detail.latitude,
@@ -581,7 +590,14 @@ function scrollGridToNowAndUserStage() {
 // Rebinds scroll refresh on every stage commit. Bound once at module
 // load; safe when the grid view isn't rendered because
 // scrollGridToUserStage/scrollGridToNowTime bail out on null DOM.
+//
+// UX guard: only auto-scroll when the user is viewing today's grid.
+// If they're intentionally browsing another day's lineup and walk
+// between stages, yanking them back to today is intrusive. The pulse
+// still moves on the day-independent header (see
+// handleStageChangeForPulse) so they still see the visual signal.
 function handleStageChangeForScroll() {
+    if (store.gridDay !== getEffectiveFestivalDay()) return;
     scrollGridToNowAndUserStage();
 }
 document.addEventListener('stagechange', handleStageChangeForScroll);
