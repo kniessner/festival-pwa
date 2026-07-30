@@ -9,6 +9,13 @@ import { escapeHtml } from './ui.js';
 // so "new since last visit" is surfaced as an in-app popup instead, which
 // needs nothing beyond what's already here.
 
+// Shared by the popup here and the Info page's News tab (js/views/info.js),
+// which both render the same notifications.items entries.
+export function formatNotificationDate(item) {
+    if (!item.date) return '';
+    return item.time ? `${item.date} · ${item.time}` : item.date;
+}
+
 function getSeenIds() {
     try { return new Set(JSON.parse(localStorage.getItem(NOTIFICATIONS_SEEN_KEY)) || []); }
     catch { return new Set(); }
@@ -39,7 +46,7 @@ export function maybeShowNotifications() {
     list.innerHTML = unseen.map(item => `
         <div class="news-card ${item.highlight ? 'news-highlight' : ''}">
             <div class="card-header"><h3>${escapeHtml(item.question)}</h3></div>
-            ${item.date ? `<span class="news-date">${escapeHtml(item.date)}</span>` : ''}
+            ${item.date ? `<span class="news-date">${escapeHtml(formatNotificationDate(item))}</span>` : ''}
             <p>${escapeHtml(item.answer)}</p>
         </div>
     `).join('');

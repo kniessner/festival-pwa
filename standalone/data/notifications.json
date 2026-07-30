@@ -1,7 +1,16 @@
 {
-  "type": "notifications",
-  "slug": "notifications",
-  "title": "Notifications",
-  "intro": "",
-  "items": []
+    "type": "notifications",
+    "slug": "notifications",
+    "title": "Notifications",
+    "intro": "",
+    "items": [
+        {
+            "id": 7079,
+            "question": "New New Alert",
+            "answer": "",
+            "date": "2026-07-30",
+            "highlight": true,
+            "push": true
+        }
+    ]
 }

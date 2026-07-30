@@ -6,7 +6,10 @@ export function renderInfo(container) {
     const info = store.pageData.info;
     const cashless = info ? info.cashless : null;
     const faqs = info ? info.faqs : null;
-    const news = info ? info.news : null;
+    // The News tab shows admin-authored notifications ("PWA Push" CPT) instead
+    // of the scraped /news/ page content — that scrape still runs and info.news
+    // still exists in the data, it's just not what's displayed here anymore.
+    const news = store.pageData.notifications;
 
     let html = '<div class="info-tabs" id="infoTabs">';
     html += `<button class="info-tab active" data-tab="news" data-action="switch-info-tab">${t('info.tabNews')}</button>`;
@@ -22,7 +25,7 @@ export function renderInfo(container) {
             const highlight = item.highlight ? 'news-highlight' : '';
             return `<div class="news-card ${highlight}" data-item-index="${i}">
                 <div class="card-header"><h3>${escapeHtml(item.question)}</h3>
-                ${favButton('info-news', i)}</div>
+                ${favButton('notifications', i)}</div>
                 ${date}
                 <p>${escapeHtml(item.answer)}</p>
             </div>`;

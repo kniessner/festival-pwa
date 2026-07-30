@@ -140,6 +140,7 @@ class Festival_PWA_Notifications {
                 'question'  => get_the_title($post),
                 'answer'    => trim(wp_strip_all_tags(apply_filters('the_content', $post->post_content))),
                 'date'      => get_the_date('Y-m-d', $post),
+                'time'      => get_the_date('H:i', $post),
                 'highlight' => get_post_meta($post->ID, '_pwa_highlight', true) === '1',
                 'push'      => get_post_meta($post->ID, '_pwa_send_push', true) === '1',
             ];
