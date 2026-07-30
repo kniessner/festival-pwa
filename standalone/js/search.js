@@ -45,15 +45,28 @@ function doSearch(query) {
                 if (text.includes(query)) results.push({ page: slug, pageLabel, index: i, item: ev, isEvent: true });
             });
         }
-        // Info view sub-sections (news, cashless, faqs)
+        // Info view sub-sections (cashless, faqs — news is handled separately
+        // below since it now comes from notifications.json, not info.news)
         if (slug === 'info') {
-            ['news', 'cashless', 'faqs'].forEach(sub => {
+            ['cashless', 'faqs'].forEach(sub => {
                 const subData = data[sub];
                 if (!subData || !subData.items) return;
                 subData.items.forEach((item, i) => {
                     const text = `${item.question || ''} ${item.title || ''} ${item.desc || ''}`.toLowerCase();
                     if (text.includes(query)) results.push({ page: slug, pageLabel: `${pageLabel} · ${sub}`, index: i, item, infoTab: sub });
                 });
+            });
+            continue;
+        }
+        // Notifications ("PWA Push") — shown in the Info page's News tab,
+        // so search results should jump there, not to a nonexistent
+        // "notifications" page.
+        if (slug === 'notifications') {
+            const infoEntry = PAGES.find(p => p.slug === 'info');
+            const infoLabel = infoEntry ? t(infoEntry.labelKey) : 'info';
+            (data.items || []).forEach((item, i) => {
+                const text = `${item.question || ''} ${item.answer || ''}`.toLowerCase();
+                if (text.includes(query)) results.push({ page: 'info', pageLabel: `${infoLabel} · news`, index: i, item, infoTab: 'news' });
             });
             continue;
         }

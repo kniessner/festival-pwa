@@ -1,0 +1,97 @@
+{
+  "trace_id": "1785332978-4e1e",
+  "mode": "source",
+  "url": "https://bucht-der-traeumer.de",
+  "timestamp": "2026-07-29T15:52:28+02:00",
+  "total_pages": 12,
+  "success": 12,
+  "failed": 0,
+  "pages": [
+    {
+      "slug": "de/cashless",
+      "status": "success",
+      "detail": "FAQ extracted",
+      "http_code": "200",
+      "bytes": 8909
+    },
+    {
+      "slug": "de/faqs",
+      "status": "success",
+      "detail": "FAQ extracted",
+      "http_code": "200",
+      "bytes": 10120
+    },
+    {
+      "slug": "de/news",
+      "status": "success",
+      "detail": "News extracted",
+      "http_code": "200",
+      "bytes": 26434
+    },
+    {
+      "slug": "de/programm-2026",
+      "status": "success",
+      "detail": "Program extracted",
+      "http_code": "200",
+      "bytes": 168929
+    },
+    {
+      "slug": "de/performances",
+      "status": "success",
+      "detail": "Grid extracted",
+      "http_code": "200",
+      "bytes": 10303
+    },
+    {
+      "slug": "de/workshops",
+      "status": "success",
+      "detail": "Grid extracted",
+      "http_code": "200",
+      "bytes": 40876
+    },
+    {
+      "slug": "en/cashless",
+      "status": "success",
+      "detail": "FAQ extracted",
+      "http_code": "200",
+      "bytes": 7986
+    },
+    {
+      "slug": "en/faqs",
+      "status": "success",
+      "detail": "FAQ extracted",
+      "http_code": "200",
+      "bytes": 9509
+    },
+    {
+      "slug": "en/news",
+      "status": "success",
+      "detail": "News extracted",
+      "http_code": "200",
+      "bytes": 26330
+    },
+    {
+      "slug": "en/programm-2026",
+      "status": "success",
+      "detail": "Program extracted",
+      "http_code": "200",
+      "bytes": 160729
+    },
+    {
+      "slug": "en/performances",
+      "status": "success",
+      "detail": "Grid extracted",
+      "http_code": "200",
+      "bytes": 10250
+    },
+    {
+      "slug": "en/workshops",
+      "status": "success",
+      "detail": "Grid extracted",
+      "http_code": "200",
+      "bytes": 39305
+    }
+  ],
+  "log_file": ".log/update-1785332978-4e1e.log",
+  "error_file": ".log/update-1785332978-4e1e-errors.log"
+}

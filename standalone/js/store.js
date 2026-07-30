@@ -12,7 +12,7 @@ export const store = {
     favTab: 'program'
 };
 
-async function fetchLocalized(file, lang) {
+export async function fetchLocalized(file, lang) {
     if (lang !== 'de') {
         try {
             const res = await fetch(`data/${lang}/${file}`);
@@ -22,17 +22,26 @@ async function fetchLocalized(file, lang) {
         }
     }
     const res = await fetch(`data/${file}`);
+    // The service worker's networkFirst() returns a plain-text 503 (not
+    // JSON) when both the network and its cache come up empty — check
+    // res.ok so that surfaces as a clear "fetch failed" error to callers
+    // instead of a confusing JSON-parse exception.
+    if (!res.ok) throw new Error(`Fetch failed for ${file}: HTTP ${res.status}`);
     return res.json();
 }
 
 export async function loadData() {
-    for (const [slug, file] of Object.entries(DATA_FILES)) {
+    // Fetch every data file in parallel instead of one at a time — on a
+    // language switch this halves the wait (previously info.json and
+    // timetable.json were awaited sequentially, adding their round-trips
+    // together instead of overlapping them).
+    await Promise.all(Object.entries(DATA_FILES).map(async ([slug, file]) => {
         try {
             store.pageData[slug] = await fetchLocalized(file, store.lang);
         } catch (e) {
             console.error('Failed to load', file, e);
         }
-    }
+    }));
 }
 
 export async function loadManifest() {

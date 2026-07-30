@@ -2,6 +2,7 @@ import { store } from '../store.js';
 import { favButton } from '../ui.js';
 import { getEffectiveFestivalDay } from '../festival.js';
 import { t } from '../i18n.js';
+import { isFavorite } from '../favorites.js';
 
 const PX_PER_MIN = 2;
 const COL_WIDTH = 130;      // vertical mode: fixed width for every stage column
@@ -90,8 +91,10 @@ export function renderGridTimetable(container) {
     `;
 
     const tabsContainer = document.getElementById('gttDayTabs');
+    // Day labels come back as full names now ("Donnerstag"/"Thursday") —
+    // trim to a 3-letter abbreviation so the tab pills stay compact.
     tabsContainer.innerHTML = days.map(d =>
-        `<button class="gtt-day-tab ${d.value === store.gridDay ? 'active' : ''}" data-day="${d.value}" data-action="set-grid-day">${d.label}</button>`
+        `<button class="gtt-day-tab ${d.value === store.gridDay ? 'active' : ''}" data-day="${d.value}" data-action="set-grid-day">${d.label.slice(0, 3)}</button>`
     ).join('');
 
     updateScrollToggleButton();
@@ -280,8 +283,10 @@ function renderHorizontalLayout({ data, header, track, blocks }) {
     blocks.forEach(b => b.stages.forEach(s => stageSet.add(s)));
     const stages = [...stageSet].sort((a, b) => stageOrder.indexOf(a) - stageOrder.indexOf(b));
 
-    // Hour ticks, continuous across the whole strip — the first tick of each day
-    // carries that day's label as a small badge instead of a separate marker row.
+    // Hour ticks, continuous across the whole strip. The day itself is shown
+    // by the sticky corner badge (see onGridScroll) and the day dividers
+    // below, so these labels are just plain times — no day name repeated
+    // at the start of every day block.
     // Vertical gridlines (one per tick) are collected separately and drawn once
     // across the full track height, rather than as a per-row CSS repeating
     // background — a repeating pattern can't restart its phase at each day's
@@ -290,13 +295,11 @@ function renderHorizontalLayout({ data, header, track, blocks }) {
     const hourLabels = [];
     const hourTicks = [];
     blocks.forEach(b => {
-        const dayLabel = data.filters.days.find(d => d.value === b.dayValue)?.label || '';
         let first = true;
         for (let m = b.gridMin; m <= b.gridMax; m += 60) {
             const rulerLeft = b._offset + (m - b.gridMin) * PX_PER_MIN;
             const hourText = `${String(Math.floor(m / 60) % 24).padStart(2, '0')}:00`;
-            const text = first ? `${dayLabel} ${hourText}` : hourText;
-            hourLabels.push(`<div class="gtt-hour-label-h ${first ? 'gtt-hour-label-day' : ''}" style="left:${rulerLeft}px">${text}</div>`);
+            hourLabels.push(`<div class="gtt-hour-label-h" style="left:${rulerLeft}px">${hourText}</div>`);
             // Ticks live inside .gtt-track, not the ruler, so they need the stage-label
             // column's width added to line up with the ruler/row content above/below them.
             if (!first) hourTicks.push(`<div class="gtt-hour-tick" style="left:${STAGE_LABEL_WIDTH + rulerLeft}px"></div>`);
@@ -386,7 +389,7 @@ function onGridScroll() {
     }
 
     const label = store.pageData.timetable?.filters.days.find(d => d.value === current.day)?.label || '';
-    corner.textContent = label;
+    corner.textContent = label.slice(0, 3);
 
     if (store.gridDay !== current.day) {
         store.gridDay = current.day;
@@ -409,9 +412,9 @@ function renderEventBlockV(ev, gridMin, numLanes) {
     const height = Math.max(24, (ev._end - ev._start) * PX_PER_MIN);
     const laneWidth = COL_WIDTH / numLanes;
     const left = ev._lane * laneWidth;
+    const fav = isFavorite('timetable', idx) ? ' gtt-event-fav' : '';
     return `
-    <div class="gtt-event" data-item-index="${idx}" data-action="toggle-grid-event" style="top:${top}px;height:${height}px;left:${left}px;width:${laneWidth - 4}px;--event-color:${categoryColor(ev.category)}">
-        <span class="gtt-event-time">${ev.start_time}</span>
+    <div class="gtt-event${fav}" data-item-index="${idx}" data-action="toggle-grid-event" style="top:${top}px;height:${height}px;left:${left}px;width:${laneWidth - 4}px;--event-color:${categoryColor(ev.category)}">
         <span class="gtt-event-title">${ev.title}</span>
     </div>`;
 }
@@ -421,9 +424,9 @@ function renderEventBlockH(ev, gridMin, dayOffset) {
     const left = dayOffset + (ev._start - gridMin) * PX_PER_MIN;
     const width = Math.max(40, (ev._end - ev._start) * PX_PER_MIN);
     const top = ev._lane * LANE_HEIGHT;
+    const fav = isFavorite('timetable', idx) ? ' gtt-event-fav' : '';
     return `
-    <div class="gtt-event" data-item-index="${idx}" data-action="toggle-grid-event" style="left:${left}px;width:${width}px;top:${top}px;height:${LANE_HEIGHT - 6}px;--event-color:${categoryColor(ev.category)}">
-        <span class="gtt-event-time">${ev.start_time}</span>
+    <div class="gtt-event${fav}" data-item-index="${idx}" data-action="toggle-grid-event" style="left:${left}px;width:${width}px;top:${top}px;height:${LANE_HEIGHT - 6}px;--event-color:${categoryColor(ev.category)}">
         <span class="gtt-event-title">${ev.title}</span>
     </div>`;
 }
@@ -437,19 +440,24 @@ export function openGridEventDetail(el) {
     const backdrop = document.getElementById('gttDetailBackdrop');
     const hosts = ev.hosts && ev.hosts.length ? `<span class="event-hosts">${ev.hosts.join(', ')}</span>` : '';
     const desc = ev.description || ev.excerpt || '';
+    const langBadges = ev.langs && ev.langs.length
+        ? `<div class="gtt-detail-badges">${ev.langs.map(l => `<span class="lang-badge">${l.toUpperCase()}</span>`).join('')}</div>`
+        : '';
+    const dayLabel = (store.pageData.timetable.filters.days.find(d => d.value === ev.day)?.label || '').slice(0, 3);
+    const endTime = ev.end_time ? ` – ${ev.end_time}` : '';
 
     detail.innerHTML = `
         <div class="gtt-detail-panel">
-            <button class="gtt-detail-close" data-action="close-grid-detail">✕</button>
-            <div class="gtt-detail-meta">
-                <span class="event-time">${ev.start_time}${ev.end_time ? ` – ${ev.end_time}` : ''}</span>
-                <span class="event-type">${ev.category}</span>
+            <div class="gtt-detail-title-row">
+                <h3>${ev.title}</h3>
+                ${favButton('timetable', idx, { icon: true })}
             </div>
-            <h3>${ev.title}</h3>
-            <span class="event-stage">${ev.stage_label}</span>
+            <div class="gtt-detail-subline"><strong>${ev.stage_label}</strong>, ${ev.title}</div>
+            <div class="gtt-detail-meta">${dayLabel} ${ev.start_time}${endTime}, ${ev.category}</div>
+            ${langBadges}
             ${hosts}
             ${desc ? `<div class="tt-event-detail-inner">${desc}</div>` : ''}
-            <div class="gtt-detail-actions">${favButton('timetable', idx)}</div>
+            <button class="gtt-detail-done" data-action="close-grid-detail">${t('common.done')}</button>
         </div>
     `;
     detail.classList.add('open');

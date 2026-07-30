@@ -39,27 +39,22 @@ echo "   Target: $BUILD_DIR"
 [ "$ZIP" = true ] && echo "   Output: ${BUILD_DIR}.zip"
 echo ""
 
-# Clean + create build dir
-rm -rf "$BUILD_DIR"
-mkdir -p "$BUILD_DIR"
-
-# Copy all needed files
-cp "$ROOT_DIR/index.html" "$BUILD_DIR/"
-cp "$ROOT_DIR/manifest.json" "$BUILD_DIR/"
-cp "$ROOT_DIR/sw.js" "$BUILD_DIR/"
-cp -r "$ROOT_DIR/js" "$BUILD_DIR/"
-cp -r "$ROOT_DIR/css" "$BUILD_DIR/"
-cp -r "$ROOT_DIR/data" "$BUILD_DIR/"
-cp -r "$ROOT_DIR/images" "$BUILD_DIR/"
-cp -r "$ROOT_DIR/icons" "$BUILD_DIR/"
-
-# Optional: create a simple version marker
-DATE=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
-echo "Built: $DATE" > "$BUILD_DIR/BUILD.txt"
+# Bundles + minifies JS/CSS, compresses images, and writes the result to
+# $BUILD_DIR (see scripts/build.js) — this replaces a plain file copy so the
+# deployed/pushed output is always the optimized build, not a raw copy.
+if ! command -v node >/dev/null 2>&1; then
+    echo "❌ Node is required to build (npm install && node scripts/build.js). See package.json."
+    exit 1
+fi
+if [ ! -d "$ROOT_DIR/node_modules" ]; then
+    echo "📥 Installing build dependencies (esbuild, sharp)..."
+    (cd "$ROOT_DIR" && npm install)
+fi
+node "$ROOT_DIR/scripts/build.js" "$BUILD_DIR"
 
 # Verify
 FILE_COUNT=$(find "$BUILD_DIR" -type f | wc -l)
-echo "   ✅ Copied $FILE_COUNT files"
+echo "   ✅ Wrote $FILE_COUNT files"
 
 # Create zip if requested
 if [ "$ZIP" = true ]; then

@@ -14,6 +14,10 @@ export function renderTimetable(container) {
     // the day from the actual current date so it stays correct across days.
     store.ttFilters.day = getEffectiveFestivalDay();
 
+    const filterPills = (facet, options) => options.map(opt =>
+        `<button class="tt-filter-pill" data-action="set-filter" data-facet="${facet}" data-value="${opt.value}">${opt.label}</button>`
+    ).join('');
+
     container.innerHTML = `
         <div class="tt-intro">${textToHtml(data.intro)}</div>
 
@@ -22,40 +26,41 @@ export function renderTimetable(container) {
         <div class="tt-filter-panel" id="ttFilterPanel">
             <div class="tt-filter-head">
                 <strong>${t('tt.filterTitle')}</strong>
-                <button class="tt-filter-close" data-action="toggle-filter">✕</button>
-            </div>
-            <div class="tt-filter-group">
-                <label>${t('tt.stageLabel')}</label>
-                <select id="filter-stage"><option value="all">${t('tt.allStages')}</option></select>
+                <button class="tt-filter-reset" data-action="reset-filters">${t('tt.resetFilters')}</button>
             </div>
             <div class="tt-filter-group">
                 <label>${t('tt.categoryLabel')}</label>
-                <select id="filter-category"><option value="all">${t('tt.allCategories')}</option></select>
+                <div class="tt-filter-pills">${filterPills('category', data.filters.categories)}</div>
+            </div>
+            <div class="tt-filter-group">
+                <label>${t('tt.stageLabel')}</label>
+                <div class="tt-filter-pills">${filterPills('stage', data.filters.stages)}</div>
             </div>
             <div class="tt-filter-group">
                 <label>${t('tt.genreLabel')}</label>
-                <select id="filter-genre"><option value="all">${t('tt.allGenres')}</option></select>
+                <div class="tt-filter-pills">${filterPills('genre', data.filters.genres)}</div>
             </div>
-            <button class="tt-filter-reset" data-action="reset-filters">${t('tt.resetFilters')}</button>
+            <button class="tt-filter-done" data-action="toggle-filter">${t('common.done')}</button>
         </div>
         <div class="tt-filter-backdrop" id="ttFilterBackdrop" data-action="toggle-filter"></div>
     `;
 
-    const stageSel = document.getElementById('filter-stage');
-    data.filters.stages.forEach(s => { const o = document.createElement('option'); o.value = s.value; o.textContent = s.label; stageSel.appendChild(o); });
-    const catSel = document.getElementById('filter-category');
-    data.filters.categories.forEach(c => { const o = document.createElement('option'); o.value = c.value; o.textContent = c.label; catSel.appendChild(o); });
-    const genSel = document.getElementById('filter-genre');
-    data.filters.genres.forEach(g => { const o = document.createElement('option'); o.value = g.value; o.textContent = g.label; genSel.appendChild(o); });
+    syncFilterPills();
+    refreshTimetable();
+}
 
-    stageSel.value = store.ttFilters.stage;
-    catSel.value = store.ttFilters.category;
-    genSel.value = store.ttFilters.genre;
+// Keeps the filter pills' active state in sync with store.ttFilters —
+// cheaper than re-rendering the whole panel on every filter change.
+function syncFilterPills() {
+    document.querySelectorAll('.tt-filter-pill').forEach(btn => {
+        const isActive = store.ttFilters[btn.dataset.facet] === btn.dataset.value;
+        btn.classList.toggle('active', isActive);
+    });
+}
 
-    stageSel.addEventListener('change', () => { store.ttFilters.stage = stageSel.value; refreshTimetable(); });
-    catSel.addEventListener('change', () => { store.ttFilters.category = catSel.value; refreshTimetable(); });
-    genSel.addEventListener('change', () => { store.ttFilters.genre = genSel.value; refreshTimetable(); });
-
+export function setFilterValue(facet, value) {
+    store.ttFilters[facet] = store.ttFilters[facet] === value ? 'all' : value;
+    syncFilterPills();
     refreshTimetable();
 }
 
@@ -68,7 +73,9 @@ export function refreshTimetable() {
 
     tabsContainer.innerHTML = data.filters.days.map(d => {
         const isActive = d.value === filters.day;
-        return `<button class="tt-day-tab ${isActive ? 'active' : ''}" data-day="${d.value}" data-action="set-day">${d.label}</button>`;
+        // Day labels come back as full names now ("Donnerstag"/"Thursday") —
+        // trim to a 3-letter abbreviation so the tab pills stay compact.
+        return `<button class="tt-day-tab ${isActive ? 'active' : ''}" data-day="${d.value}" data-action="set-day">${d.label.slice(0, 3)}</button>`;
     }).join('');
 
     let events = data.events.filter(ev => {
@@ -167,9 +174,7 @@ export function resetFilters() {
     store.ttFilters.stage = 'all';
     store.ttFilters.category = 'all';
     store.ttFilters.genre = 'all';
-    document.getElementById('filter-stage').value = 'all';
-    document.getElementById('filter-category').value = 'all';
-    document.getElementById('filter-genre').value = 'all';
+    syncFilterPills();
     refreshTimetable();
 }
 

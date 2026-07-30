@@ -7,7 +7,7 @@
  *   - Cross-origin assets        → Cache-First only for CORS/basic responses
  */
 
-const CACHE_VERSION = '1.5.12';
+const CACHE_VERSION = '1785406833';
 const APP_NAME = 'bucht-standalone';
 const CACHE_NAME = `${APP_NAME}-v${CACHE_VERSION}`;
 
@@ -29,6 +29,8 @@ const SHELL_ASSETS = [
     './js/router.js',
     './js/search.js',
     './js/install.js',
+    './js/notifications.js',
+    './js/music.js',
     './js/views/home.js',
     './js/views/timetable.js',
     './js/views/info.js',
@@ -170,7 +172,12 @@ self.addEventListener('activate', e => {
 
 async function cacheFirst(request, fallbackToNetwork = true) {
     const cache = await caches.open(CACHE_NAME);
-    const cached = await cache.match(request);
+    // ignoreSearch: the precached shell entries have no query string, but
+    // real requests do (?v=... cache-busting, and now start_url's
+    // ?page=favorites for the installed-app launch) — without this, an
+    // offline launch from the home-screen icon would miss the cache and
+    // fail instead of falling back to network.
+    const cached = await cache.match(request, { ignoreSearch: true });
     if (cached) return cached;
 
     if (!fallbackToNetwork) {
@@ -183,6 +190,26 @@ async function cacheFirst(request, fallbackToNetwork = true) {
         return res.clone();
     } catch (err) {
         return new Response('Network error and asset not cached', { status: 503 });
+    }
+}
+
+// Notifications and music are both meant to feel current — new lineup
+// announcements and alerts are exactly the content where staleness is most
+// noticeable. Stale-while-revalidate would show last visit's list first and
+// only pick up changes on the visit *after* that. Try the network first
+// instead; fall back to cache only when actually offline.
+// 12s, not the 6s this started as — cellular round-trips (no wifi, weak
+// signal) routinely exceeded a shorter timeout, silently falling back to
+// stale cache instead of showing what was actually just published.
+async function networkFirst(request, ms = 12000) {
+    const cache = await caches.open(CACHE_NAME);
+    try {
+        const res = await fetchWithTimeout(request, ms);
+        if (res.ok) await putCache(request, res.clone());
+        return res;
+    } catch (err) {
+        const cached = await cache.match(request, { ignoreSearch: true });
+        return cached || new Response('Offline and not cached', { status: 503 });
     }
 }
 
@@ -233,7 +260,9 @@ self.addEventListener('fetch', e => {
 
     // Local app assets + Google Fonts
     if (isLocalAsset(url)) {
-        if (url.pathname.includes('/data/')) {
+        if (url.pathname.endsWith('notifications.json') || url.pathname.endsWith('music.json')) {
+            e.respondWith(networkFirst(request));
+        } else if (url.pathname.includes('/data/')) {
             e.respondWith(staleWhileRevalidate(request, e));
         } else {
             e.respondWith(cacheFirst(request));

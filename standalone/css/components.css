@@ -199,6 +199,79 @@
     gap: 10px;
 }
 
+/* Notifications popup ("PWA Push" content, shown for anything unseen) */
+
+.notifications-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 1000001;
+}
+
+.notifications-modal.open {
+    display: block;
+}
+
+.notifications-modal-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(4, 4, 30, 0.7);
+    backdrop-filter: blur(2px);
+}
+
+.notifications-modal-panel {
+    position: relative;
+    margin: 12vh auto 0;
+    width: calc(100% - 32px);
+    max-width: 480px;
+    max-height: 70vh;
+    background: var(--bg);
+    border: 2px solid var(--accent-pink);
+    border-radius: var(--card-radius);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.notifications-modal-header {
+    padding: 18px 20px 10px;
+    color: var(--wp--preset--color--beige, #f3efdf);
+    font-family: var(--wp--preset--font-family--megan-display, var(--font-head)), serif;
+    font-size: 1.3rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    flex-shrink: 0;
+}
+
+.notifications-list {
+    overflow-y: auto;
+    padding: 4px 20px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.notifications-done {
+    flex-shrink: 0;
+    margin: 4px 20px 20px;
+    background: var(--accent-pink);
+    color: var(--text);
+    border: none;
+    border-radius: 50px;
+    padding: 14px;
+    font-family: var(--wp--preset--font-family--megan-display, var(--font-head)), serif;
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.notifications-done:active {
+    transform: scale(0.98);
+}
+
 /* Grid */
 
 .grid-list {
@@ -278,6 +351,19 @@
 
 .fav-btn:active {
     transform: scale(0.9);
+}
+
+.fav-star-icon {
+    display: block;
+    width: 22px;
+    height: 22px;
+    background-color: currentColor;
+    -webkit-mask-size: contain;
+    mask-size: contain;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    mask-position: center;
 }
 
 /* Search results */

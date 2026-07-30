@@ -1390,6 +1390,7 @@
       "excerpt": "Freut euch aufen einen von MINJA kuratiertern „Sober Rave“ mit mitreißenden Beats 🥰 Line-Up:Minja B2B MaleaLila Veil (live)",
       "description": "Freut euch aufen einen von MINJA kuratiertern „Sober Rave“ mit mitreißenden Beats 🥰\n\nLine-Up:Minja B2B MaleaLila Veil (live)",
       "hosts": [
+        "Minja",
         "Jessie Sonnenschein"
       ]
     },
@@ -2268,8 +2269,8 @@
       "langs": [
         "en"
       ],
-      "excerpt": "Traust du dich, in deine Fantasien einzutauchen, bei der Bucht der Träumer? Finde uns am Samstagabend und entdecke dich selbst gemeinsam mit anderen. In&hellip;",
-      "description": "Traust du dich, in deine Fantasien einzutauchen, bei der Bucht der Träumer? Finde uns am Samstagabend und entdecke dich selbst gemeinsam mit anderen. In diesem sexpositiven, musikgeleiteten Cuddle Poodle geben wir unseren Wünschen, Bedürfnissen und Fantasien eine Stimme. Spielerisch und performativ erkunden wir Fantasien als Regisseur:innen, Darsteller:innen oder Zeug:innen – und treffen hoffentlich andere darin.",
+      "excerpt": "Traust du dich, in deine Fantasien einzutauchen, bei der Bucht der Träumer*? Finde uns am Samstagabend und entdecke dich selbst gemeinsam mit anderen. In&hellip;",
+      "description": "Traust du dich, in deine Fantasien einzutauchen, bei der Bucht der Träumer*? Finde uns am Samstagabend und entdecke dich selbst gemeinsam mit anderen. In diesem sexpositiven, musikgeleiteten Cuddle Poodle geben wir unseren Wünschen, Bedürfnissen und Fantasien eine Stimme. Spielerisch und performativ erkunden wir Fantasien als Regisseur:innen, Darsteller:innen oder Zeug:innen – und treffen hoffentlich andere darin.",
       "hosts": [
         "Sonja Werner",
         "Anna Gamburg"
@@ -2591,6 +2592,26 @@
       ]
     },
     {
+      "title": "Landing Softly: A Closing Journey of Reflection & Integration",
+      "day": "2026-08-16",
+      "day_label": "Sonntag",
+      "time": "SO 13:30",
+      "start_time": "13:30",
+      "end_time": "14:30",
+      "stage": "mirage",
+      "stage_label": "Mirage",
+      "type": "interaktiver-workshop",
+      "type_label": "Workshop",
+      "langs": [
+        "en"
+      ],
+      "excerpt": "Wie oft ziehen schöne Erfahrungen an uns vorbei, bevor wir sie wirklich gefühlt haben? Ein Festival ist eine eigene Welt voller Begegnungen, Musik und&hellip;",
+      "description": "Wie oft ziehen schöne Erfahrungen an uns vorbei, bevor wir sie wirklich gefühlt haben? Ein Festival ist eine eigene Welt voller Begegnungen, Musik und Momente, die uns leise verändern. Dieser Workshop lädt dich ein, vor der Abreise innezuhalten – um auszukosten, was du erlebt hast. Durch geführte Meditation, Atmung und reflektierende Übungen integrierst du dein Erlebtes in Ruhe. Komm, wie du bist, geh mit Dankbarkeit und Verbindung zu dir selbst.",
+      "hosts": [
+        "Isabelle Dikumbi"
+      ]
+    },
+    {
       "title": "Reset & Reconnect – In 90 Minuten zurück ins Hier und Jetzt",
       "day": "2026-08-16",
       "day_label": "Sonntag",
@@ -2608,26 +2629,6 @@
       "description": "Zwischen Tanzfläche und Rückkehr in den Alltag lädt dich dieser Workshop zu einem kleinen Reset ein. Erfahre, wie dein Nervensystem funktioniert, entdecke einfache Regulationsübungen zum Runterkommen und tausche dich mit anderen aus. Gemeinsam schaffen wir ein wenig Ruhe, Verbundenheit und ein bewusstes Hier und Jetzt mitten im Festivalgeschehen.",
       "hosts": [
         "Sophie Victoria Lauber"
-      ]
-    },
-    {
-      "title": "Landing Softly: A Closing Journey of Reflection & Integration",
-      "day": "2026-08-16",
-      "day_label": "Sonntag",
-      "time": "SO 14:00",
-      "start_time": "14:00",
-      "end_time": "15:00",
-      "stage": "mirage",
-      "stage_label": "Mirage",
-      "type": "interaktiver-workshop",
-      "type_label": "Workshop",
-      "langs": [
-        "en"
-      ],
-      "excerpt": "Wie oft ziehen schöne Erfahrungen an uns vorbei, bevor wir sie wirklich gefühlt haben? Ein Festival ist eine eigene Welt voller Begegnungen, Musik und&hellip;",
-      "description": "Wie oft ziehen schöne Erfahrungen an uns vorbei, bevor wir sie wirklich gefühlt haben? Ein Festival ist eine eigene Welt voller Begegnungen, Musik und Momente, die uns leise verändern. Dieser Workshop lädt dich ein, vor der Abreise innezuhalten – um auszukosten, was du erlebt hast. Durch geführte Meditation, Atmung und reflektierende Übungen integrierst du dein Erlebtes in Ruhe. Komm, wie du bist, geh mit Dankbarkeit und Verbindung zu dir selbst.",
-      "hosts": [
-        "Isabelle Dikumbi"
       ]
     },
     {
@@ -2808,9 +2809,7 @@
       ],
       "excerpt": "Wenn Havali Sergec die Bühne betritt, entsteht Musik nicht nach Plan, sondern im Moment. Mit kreativen Ideen, spontanen Einfällen und direktem Austausch mit dem&hellip;",
       "description": "Wenn Havali Sergec die Bühne betritt, entsteht Musik nicht nach Plan, sondern im Moment. Mit kreativen Ideen, spontanen Einfällen und direktem Austausch mit dem Publikum produziert er live neue Sounds und Songs. Dabei verschwimmen die Grenzen zwischen Musik, Improvisation und Comedy: Zuschauende werden aktiv einbezogen und erleben, wie aus kleinen Impulsen Musik entsteht. Ein interaktives Erlebnis voller Humor und Live-Momente.",
-      "hosts": [
-        "Havali Sergec"
-      ]
+      "hosts": []
     },
     {
       "title": "The Peepshow",

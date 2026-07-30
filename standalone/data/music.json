@@ -1,0 +1,67 @@
+{
+  "type": "music",
+  "slug": "music",
+  "events": [],
+  "stages": [
+    {
+      "value": "atlantis",
+      "label": "Atlantis"
+    },
+    {
+      "value": "porto-loco",
+      "label": "Porto Loco"
+    },
+    {
+      "value": "seeblick",
+      "label": "Seeblick"
+    },
+    {
+      "value": "schlupfloch",
+      "label": "Schlupfloch"
+    },
+    {
+      "value": "stroboklo",
+      "label": "Stroboklo"
+    },
+    {
+      "value": "waldtraut",
+      "label": "Waldtraut"
+    },
+    {
+      "value": "unterholz",
+      "label": "Unterholz"
+    },
+    {
+      "value": "neustockland",
+      "label": "Neustockland"
+    },
+    {
+      "value": "mirage-outdoor",
+      "label": "Mirage Outdoor"
+    },
+    {
+      "value": "mirage-indoor",
+      "label": "Mirage Indoor"
+    },
+    {
+      "value": "schweissperle",
+      "label": "Schweißperle"
+    },
+    {
+      "value": "strandflitzer",
+      "label": "Strandflitzer"
+    },
+    {
+      "value": "zirkus-mond-draussen",
+      "label": "Zirkus Mond draußen"
+    },
+    {
+      "value": "zirkus-mond-drinnen",
+      "label": "Zirkus Mond drinnen"
+    },
+    {
+      "value": "sektamt",
+      "label": "Sektamt"
+    }
+  ]
+}

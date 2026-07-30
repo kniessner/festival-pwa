@@ -4,6 +4,7 @@ const STRINGS = {
         'common.loading': 'Laden...',
         'common.noContent': 'Keine Inhalte verfügbar',
         'common.favorite': 'Favorit',
+        'common.done': 'Fertig',
         'common.detailsSoon': 'Details folgen bald.',
         'common.updatedOn': 'Stand: {{date}}',
         // nav
@@ -51,12 +52,9 @@ const STRINGS = {
         'tt.emptySelection': 'Keine Events für diese Auswahl',
         'tt.filterButton': 'Filter',
         'tt.filterTitle': 'Filter',
-        'tt.stageLabel': 'Bühne / Stage',
-        'tt.allStages': 'Alle Bühnen',
-        'tt.categoryLabel': 'Kategorie',
-        'tt.allCategories': 'Alle Kategorien',
-        'tt.genreLabel': 'Genre',
-        'tt.allGenres': 'Alle Genres',
+        'tt.stageLabel': 'Bühnen',
+        'tt.categoryLabel': 'Kategorien',
+        'tt.genreLabel': 'Genres',
         'tt.resetFilters': 'Filter zurücksetzen',
         'tt.more': '+ Mehr',
         'tt.less': '− Weniger',
@@ -79,12 +77,15 @@ const STRINGS = {
         'info.tabNews': 'News',
         'info.tabCashless': 'Cashless',
         'info.tabFaqs': 'FAQs',
-        'info.newsEmpty': 'Aktuelle News werden hier angezeigt, sobald verfügbar.'
+        'info.newsEmpty': 'Aktuelle News werden hier angezeigt, sobald verfügbar.',
+        // notifications
+        'notifications.title': 'Neuigkeiten'
     },
     en: {
         'common.loading': 'Loading...',
         'common.noContent': 'No content available',
         'common.favorite': 'Favorite',
+        'common.done': 'Done',
         'common.detailsSoon': 'Details coming soon.',
         'common.updatedOn': 'Updated: {{date}}',
         'nav.home': 'Home',
@@ -127,12 +128,9 @@ const STRINGS = {
         'tt.emptySelection': 'No events for this selection',
         'tt.filterButton': ' Filter',
         'tt.filterTitle': 'Filter',
-        'tt.stageLabel': 'Stage',
-        'tt.allStages': 'All stages',
-        'tt.categoryLabel': 'Category',
-        'tt.allCategories': 'All categories',
-        'tt.genreLabel': 'Genre',
-        'tt.allGenres': 'All genres',
+        'tt.stageLabel': 'Stages',
+        'tt.categoryLabel': 'Categories',
+        'tt.genreLabel': 'Genres',
         'tt.resetFilters': 'Reset filters',
         'tt.more': '+ More',
         'tt.less': '− Less',
@@ -152,7 +150,9 @@ const STRINGS = {
         'info.tabNews': 'News',
         'info.tabCashless': 'Cashless',
         'info.tabFaqs': 'FAQs',
-        'info.newsEmpty': 'Current news will be shown here once available.'
+        'info.newsEmpty': 'Current news will be shown here once available.',
+        // notifications
+        'notifications.title': 'News'
     }
 };
 

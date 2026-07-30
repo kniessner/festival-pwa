@@ -41,6 +41,8 @@ export function countValidFavorites() {
     for (const f of getFavorites()) {
         if (f.page === 'timetable') {
             if (store.pageData.timetable?.events?.[f.index]) count++;
+        } else if (f.page === 'notifications') {
+            if (store.pageData.notifications?.items?.[f.index]) count++;
         } else if (f.page.startsWith('info-')) {
             const sub = f.page.replace('info-', '');
             if (store.pageData.info?.[sub]?.items?.[f.index]) count++;

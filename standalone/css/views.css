@@ -1032,19 +1032,21 @@ span#headerFilterLabel {
 
 .tt-filter-panel {
     position: fixed;
-    bottom: calc(72px + env(safe-area-inset-bottom));
-    left: 12px;
-    right: 12px;
+    bottom: 0;
+    left: 0;
+    right: 0;
     z-index: 310;
     background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 16px;
+    border-top: 2px solid var(--accent-pink);
+    border-radius: 24px 24px 0 0;
+    padding: 24px 20px calc(20px + env(safe-area-inset-bottom));
     box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.5);
-    transform: translateY(120%);
+    transform: translateY(100%);
     transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    max-height: 60vh;
+    max-height: 85vh;
     overflow-y: auto;
+    max-width: 650px;
+    margin: 0 auto;
     display: none;
 }
 
@@ -1057,79 +1059,90 @@ span#headerFilterLabel {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 16px;
+    margin-bottom: 24px;
 }
 
 .tt-filter-head strong {
-    font-family: var(--font-head);
-    font-size: 1rem;
+    font-family: var(--wp--preset--font-family--megan-display, var(--font-head)), serif;
+    color: var(--wp--preset--color--beige, #f3efdf);
+    font-size: 1.6rem;
     text-transform: uppercase;
-    letter-spacing: 1px;
+    letter-spacing: 0.5px;
 }
 
-.tt-filter-close {
+.tt-filter-reset {
     background: none;
     border: none;
-    color: var(--text);
-    font-size: 1.2rem;
+    color: var(--accent-pink);
+    font-family: var(--font-body);
+    font-weight: 700;
+    font-size: 0.9rem;
     cursor: pointer;
     padding: 4px;
 }
 
 .tt-filter-group {
-    margin-bottom: 16px;
+    margin-bottom: 20px;
 }
 
 .tt-filter-group label {
     display: block;
-    font-size: 0.65rem;
-    color: var(--accent-pink);
+    font-family: var(--wp--preset--font-family--megan-display, var(--font-head)), serif;
+    color: var(--wp--preset--color--beige, #f3efdf);
+    font-size: 1.1rem;
     text-transform: uppercase;
-    letter-spacing: 1px;
-    font-weight: 700;
-    margin-bottom: 6px;
+    letter-spacing: 0.5px;
+    margin-bottom: 12px;
 }
 
-.tt-filter-group select {
-    width: 100%;
-    padding: 12px 14px;
-    border-radius: var(--radius);
-    border: 1px solid var(--border);
-    background: var(--bg-card);
-    color: var(--text);
+.tt-filter-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.tt-filter-pill {
+    background: rgba(73, 69, 184, 1);
+    border: 2px solid transparent;
+    border-radius: 20px;
+    padding: 10px 18px;
+    color: var(--wp--preset--color--beige, #f3efdf);
     font-family: var(--font-body);
+    font-weight: 700;
     font-size: 0.9rem;
-    outline: none;
-    appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23f3efdf' viewBox='0 0 16 16'%3E%3Cpath d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 12px center;
-    padding-right: 36px;
-}
-
-.tt-filter-group select:focus {
-    border-color: var(--accent-pink);
-}
-
-.tt-filter-reset {
-    width: 100%;
-    padding: 12px;
-    background: transparent;
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    color: var(--text-muted);
-    font-family: var(--font-body);
-    font-weight: 700;
-    font-size: 0.85rem;
     cursor: pointer;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-top: 4px;
+    transition: background 0.15s, border-color 0.15s, color 0.15s;
 }
 
-.tt-filter-reset:active {
-    background: var(--bg-card-hover);
+.tt-filter-pill.active {
+    background: transparent;
     border-color: var(--accent-pink);
+    color: var(--accent-pink);
+}
+
+.tt-filter-pill:active {
+    transform: scale(0.97);
+}
+
+.tt-filter-done {
+    display: block;
+    width: 100%;
+    margin-top: 8px;
+    background: var(--accent-pink);
+    color: var(--text);
+    border: none;
+    border-radius: 50px;
+    padding: 14px;
+    font-family: var(--wp--preset--font-family--megan-display, var(--font-head)), serif;
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.tt-filter-done:active {
+    transform: scale(0.98);
 }
 
 .tt-filter-backdrop {
@@ -1164,6 +1177,7 @@ span#headerFilterLabel {
     display: flex;
     align-items: center;
     gap: 8px;
+    display:none;
 }
 
 .gtt-legend {
@@ -1171,6 +1185,7 @@ span#headerFilterLabel {
     flex-wrap: wrap;
     gap: 14px;
     padding: 8px 0 12px;
+    display:none;
 }
 
 .gtt-legend-item {
@@ -1254,6 +1269,7 @@ span#headerFilterLabel {
        .gtt-header/.gtt-stagelabel's position:sticky only takes effect relative
        to an ancestor that actually scrolls. */
     height: calc(var(--vh, 1vh) * 100 - 320px);
+    height: calc(var(--vh, 1vh) * 100 - 200px);
     min-height: 320px;
     border: 1px solid var(--border);
     border-radius: var(--radius);
@@ -1365,7 +1381,7 @@ span#headerFilterLabel {
     border-radius: 14px;
     border: 2px solid rgba(255, 255, 255, 0.3);
     padding: 6px 8px;
-    overflow: hidden;
+    overflow: visible;
     color: #fff;
     cursor: pointer;
     display: flex;
@@ -1379,16 +1395,32 @@ span#headerFilterLabel {
     filter: brightness(1.15);
 }
 
-.gtt-event-time {
-    font-size: 0.65rem;
-    font-weight: 700;
-    opacity: 0.85;
+.gtt-event-fav {
+    border: 2px solid #ffd54a;
+    box-shadow: 0 0 0 1px rgba(255, 213, 74, 0.5), 0 2px 8px rgba(0, 0, 0, 0.35);
+}
+
+.gtt-event-fav::after {
+    content: '★';
+    position: absolute;
+    top: 2px;
+    right: 4px;
+    font-size: 0.7rem;
+    color: #ffd54a;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
 }
 
 .gtt-event-title {
     font-size: 0.72rem;
     font-weight: 700;
     line-height: 1.2;
+    position: sticky;
+    left: 100px;
+    z-index: 3;
+    display: inline-flex;
+    width: max-content;
+    padding-right: 2px;
+    margin-left: -8px;
 }
 
 .gtt-now-line {
@@ -1426,19 +1458,6 @@ span#headerFilterLabel {
     color: #fff;
 }
 
-.gtt-hour-label-day {
-    width: auto;
-    padding: 4px 10px;
-    margin: 8px 0 8px 4px;
-    background: #a49fe6;
-    color: #14123f;
-    border-radius: 8px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    border-right: none;
-    z-index: 2;
-}
-
 .gtt-day-divider {
     position: absolute;
     top: 0;
@@ -1458,7 +1477,7 @@ span#headerFilterLabel {
 .gtt-stagelabel {
     flex: 0 0 96px;
     min-width: 0;
-    max-width: 96px;
+    max-width: 120px;
     overflow: hidden;
     overflow-wrap: break-word;
     position: sticky;
@@ -1471,11 +1490,12 @@ span#headerFilterLabel {
     padding: 6px;
     background: var(--bg);
     color: #fff;
-    font-family: var(--font-head);
+    font-family: 'Megan Display';
     font-weight: 700;
-    font-size: 0.72rem;
+    font-size: 13px;
     text-transform: uppercase;
     letter-spacing: 0.5px;
+
 }
 
 .gtt-stagelabel.gtt-alt {
@@ -1530,58 +1550,113 @@ span#headerFilterLabel {
 }
 
 .gtt-detail {
-    position: fixed;
-    left: 0;
-    right: 0;
+     position: fixed;
+    left: -3px;
+    right: -3px;
     bottom: -100%;
     z-index: 306;
     transition: bottom 0.3s ease-out;
-    max-width: 650px;
     margin: 0 auto;
 }
 
 .gtt-detail.open {
-    bottom: 0;
+       bottom: -10px;
 }
 
 .gtt-detail-panel {
-    background: var(--wp--preset--color--base, #f3efdf);
-    border: 2px solid var(--card-border);
-    border-radius: var(--card-radius) var(--card-radius) 0 0;
-    padding: 20px 20px calc(20px + env(safe-area-inset-bottom));
-    max-height: 70vh;
+    background: var(--bg);
+    color: var(--wp--preset--color--beige, #f3efdf);
+    border: 2px solid var(--accent-pink);
+    border-radius: var(--card-radius);
+    padding: 20px;
+    max-height: 75vh;
     overflow-y: auto;
     position: relative;
+    box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.45);
+        padding-bottom: 30px;
 }
 
-.gtt-detail-meta {
+.gtt-detail-title-row {
     display: flex;
-    gap: 8px;
-    align-items: center;
-    margin-bottom: 6px;
-    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 4px;
 }
 
 .gtt-detail-panel h3 {
     font-family: var(--wp--preset--font-family--megan-display, var(--font-head)), serif;
-    color: var(--text);
+    color: var(--wp--preset--color--beige, #f3efdf);
     text-transform: uppercase;
     letter-spacing: 0.3px;
-    margin: 8px 0;
-    font-size: 1.15rem;
+    margin: 0;
+    font-size: 1.3rem;
+    line-height: 1.2;
 }
 
-.gtt-detail-close {
-    position: absolute;
-    top: 12px;
-    right: 12px;
-    background: none;
+.gtt-detail-subline {
+    font-size: 0.9rem;
+    margin-bottom: 6px;
+}
+
+.gtt-detail-subline strong {
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.gtt-detail-meta {
+    font-size: 0.85rem;
+    color: rgba(243, 239, 223, 0.7);
+    margin-bottom: 12px;
+}
+
+.gtt-detail-badges {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 14px;
+}
+
+.gtt-detail-panel .lang-badge {
+    background: var(--wp--preset--color--beige, #f3efdf);
+    color: var(--text);
+}
+
+.gtt-detail-panel .fav-btn {
+    color: var(--wp--preset--color--beige, #f3efdf);
+}
+
+.gtt-detail-panel .fav-btn.active {
+    color: #FFEB3B;
+    color: var(--accent-pink);
+}
+
+.gtt-detail-panel .tt-event-detail-inner {
+    padding: 0;
+    margin-bottom: 4px;
+    color: rgba(243, 239, 223, 0.85);
+}
+
+.gtt-detail-panel .event-hosts {
+    color: rgba(243, 239, 223, 0.7);
+}
+
+.gtt-detail-done {
+    display: block;
+    width: 100%;
+    margin-top: 18px;
+    background: var(--accent-pink);
+    color: var(--text);
     border: none;
-    color: var(--text-on-card);
-    font-size: 1.1rem;
+    border-radius: 50px;
+    padding: 14px;
+    font-family: var(--wp--preset--font-family--megan-display, var(--font-head)), serif;
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 700;
     cursor: pointer;
 }
 
-.gtt-detail-actions {
-    margin-top: 12px;
+.gtt-detail-done:active {
+    transform: scale(0.98);
 }

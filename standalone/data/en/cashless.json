@@ -1,0 +1,60 @@
+{
+  "type": "faq",
+  "slug": "cashless",
+  "title": "Cashless & TOP-UP",
+  "intro": "Here you can find out how to top up your wristband online, request refunds, and more.\n\nThe Bucht der Träumer* Festival is 100% cashless. This means that you pay for everything with your chip on your festival wristband and can therefore move around the site without any money or valuables.",
+  "items": [
+    {
+      "question": "Cashless: what does it mean?",
+      "answer": "Cashless means that neither cash nor card payments are used for transactions at bars and stands within the festival area. Instead, all transactions are conducted electronically through the festival wristband. Bucht der Träumer* has been using the cashless system since its first festival."
+    },
+    {
+      "question": "How do I load credit onto my festival wristband?",
+      "answer": "You have two options: \n\n1. Online (Pre-) Top-Up: \n\nCreate a personal account with our cashless provider Weezevent, link your ticket using the barcode, and choose your desired amount and payment method. Once your payment has been completed, the balance will automatically be stored in your account. When you arrive at the festival entrance and your ticket is scanned, you will receive your wristband with the preloaded balance.\n\nOnline top-up for the Bucht der Träumer* Festival 2026 is available from Monday, July 27, 2026, 8:00 AM until Monday, August 17, 2026, 1:00 AM.\n\nYou can create your personal account here:\n\nOnline (Pre-) Top-Up!"
+    },
+    {
+      "question": "How do I create a personal account?",
+      "answer": "Creating your personal account is very easy.\n\nSign up at \n\nPersönlicher Account!"
+    },
+    {
+      "question": "How do I link my personal account to my festival ticket?",
+      "answer": "Once you've registered, you can link your ticket to your personal account. To do so, enter your ticket's barcode, and your account will be linked to your ticket. Your prepaid balance will then be automatically loaded onto your festival wristband at the entrance."
+    },
+    {
+      "question": "Is it necessary to create a Cashless account?",
+      "answer": "DO I HAVE TO CREATE A CASHLESS ACCOUNT?\n\nNo, you don't need an account to add credit at the Cashless Point or at a vending machine on the festival grounds. \n\nYou will need a personal account at the latest if you want to request your refund online.\n\nPlease note, however, that if you do not have an account and lose your festival wristband, you may receive a replacement wristband, but your remaining balance cannot be recovered.\n\nWith an account, your balance can be easily transferred to the new wristband."
+    },
+    {
+      "question": "How can I check my remaining credit balance?",
+      "answer": "Whenever you make a purchase using your chip at the festival, you can ask our staff to show you your current credit balance. Alternatively, you can check your credit balance at the Cashless Point or the kiosks on the festival grounds. If you have an account, you can check your balance there and also view all your past transactions."
+    },
+    {
+      "question": "Where can I use my Cashless credit for payments?",
+      "answer": "Throughout the entire festival grounds, with the exception of the trash deposit (cash only, payable on-site at check-in), neither cash nor other payment methods are accepted. Payment is made exclusively using the cashless chip attached to your festival wristband. You can use it to pay at all bars and booths."
+    },
+    {
+      "question": "I have created a personal account and linked it to my ticket. However, I cannot attend Bucht der Träumer* Festival, so I am reselling my ticket through TixForGigs. What happens to my credit?",
+      "answer": "Your cashless balance is linked to your personal account.\n\nIf you do not want your balance to be transferred to the person receiving your ticket, please contact cashless@bucht-der-traeumer.de and provide the following information:\n\n– First name\n\n– Last name\n\n– The email address associated with your cashless account\n\n– The amount you would like to have refunded\n\n– Your original payment method\n\n– Your IBAN and BIC\n\n–&gt; Please note that refunds may take up to 14 business days to process. &lt;–\n\nIMPORTANT:\n\nIf you have not received a confirmation email from us stating that your refund has been processed (or is being processed), but you transfer your ticket to someone else in the meantime, the new ticket holder will receive access to your balance and it will no longer be possible to refund it to you.\n\n–&gt; Sending us an email does not mean the refund process has started.\n\n–&gt; The process begins only once you receive a confirmation email from our team.\n\nPLEASE EXPECT DELAYS DURING THE FESTIVAL\n\nPlease keep in mind that from Thursday, August 13, through Monday, August 17, 2026, our team will be busy running the festival. During this time, we cannot guarantee a prompt response to emails sent to cashless@bucht-der-traeumer.de.\n\nTICKET RESALE VIA TIXFORGIGS:\n\nIf you sell your ticket through the official TixforGigs resale platform, the buyer will receive a completely new ticket. This means your cashless balance is not transferred as part of the resale."
+    },
+    {
+      "question": "I have already set up an account from last year - do I need to do this again?",
+      "answer": "Yes. You'll need to create a new account so we can link your new ticket to this year's event. You can use the same login details (email address and password) as before.\n\nHow much does using the cashless system cost?\n\n–&gt; There are no fees for using the cashless payment system."
+    },
+    {
+      "question": "What happens if I lose my wristband or the chip no longer works?",
+      "answer": "If your chip stops working or you lose your wristband, please visit the Cashless Point and ask for a replacement wristband.\n\nYou'll be asked to present a valid photo ID and will then receive a new wristband.\n\nIf you created a personal account before the festival and we can clearly identify it, your remaining balance will be automatically transferred to your new chip.\n\nIf you did not create a personal account, it is not possible to block your chip, as we have no way of uniquely identifying it.\n\nBucht der Träumer* cannot be held responsible for any remaining balance spent between the time your wristband is lost and the time a replacement wristband is issued."
+    },
+    {
+      "question": "Can I tip using the cashless system?",
+      "answer": "You can of course also tip at bars and stalls. To do this, simply say a higher amount as usual (€0.50, €1 or €2) and the bar staff can then add the money to their tip account."
+    },
+    {
+      "question": "What happens to my data when I create a Cashless account?",
+      "answer": "We retain your personal data only for as long as necessary to fulfill the purposes for which it was collected (e.g. processing refunds).\n\nWe also maintain appropriate administrative and technical safeguards to protect the personal data in our care against loss, theft, unauthorized access, misuse, alteration, or disclosure. We have implemented measures to ensure that all personal data under our management and control is kept secure.\n\nWhat data does Bucht der Träumer* collect when I create a personal account?\n\nIf you create a personal account before the event, we collect the following information:\n\n– Your first name\n\n– Your last name\n\n– Your email address\n\n– Your ticket barcode\n\n– Your account balance"
+    },
+    {
+      "question": "Will someone help me if I get stuck?",
+      "answer": "On the festival grounds (August 13–18, 2026):\n\nYes! During the festival, the Weezevent team will be available at the Cashless Point to assist you with any cashless payment questions or issues.\n\nAfter the festival:\n\nPlease send your questions to cashless@bucht-der-traeumer.de."
+    }
+  ]
+}

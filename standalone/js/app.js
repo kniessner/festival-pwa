@@ -1,7 +1,7 @@
 import { loadData, loadManifest } from './store.js';
 import { loadPage, renderNav } from './router.js';
 import { setupSearch, scrollToItem, closeSearchModal } from './search.js';
-import { setDay, toggleFilterPanel, resetFilters, toggleEventDetail } from './views/timetable.js';
+import { setDay, toggleFilterPanel, resetFilters, toggleEventDetail, setFilterValue } from './views/timetable.js';
 import { setGridDay, openGridEventDetail, closeGridEventDetail, toggleGridScrollMode } from './views/timetable-grid.js';
 import { store } from './store.js';
 import { switchInfoTab } from './views/info.js';
@@ -10,6 +10,8 @@ import { setupInstallTracking, setupOfflineIndicator, dismissInstallCard, trigge
 import { showToast } from './ui.js';
 import { PAGES, pageIdx } from './config.js';
 import { t, setLang } from './i18n.js';
+import { maybeShowNotifications, closeNotifications, setupNotificationsRefresh } from './notifications.js';
+import { mergeMusicIntoTimetable, refreshMusic } from './music.js';
 
 const LANG_LABELS = { de: 'De', en: 'Eng' };
 
@@ -17,16 +19,42 @@ async function init() {
     document.documentElement.lang = store.lang;
     document.getElementById('searchInput').placeholder = t('search.placeholder');
     document.querySelector('.search-modal-header span').textContent = t('search.resultsTitle');
+    document.getElementById('notificationsTitle').textContent = t('notifications.title');
+    document.getElementById('notificationsDoneBtn').textContent = t('common.done');
     updateLangSwitcherLabel();
     updateHeaderFilterLabel();
     await loadData();
+    mergeMusicIntoTimetable();
     renderNav();
-    goToPage(0);
+    // manifest.json's start_url passes ?page=favorites so launching the
+    // installed home-screen app opens My Plan directly; a plain browser
+    // visit (no query param) still lands on Home as before.
+    const requestedPage = new URLSearchParams(location.search).get('page');
+    goToPage(requestedPage ? Math.max(0, pageIdx(requestedPage)) : 0);
     setupOfflineIndicator();
     setupInstallTracking(refreshInstallCardIfVisible);
     setupUpdateBanner();
     showLastUpdated();
     wireDelegation();
+    maybeShowNotifications();
+    setupNotificationsRefresh();
+    setupMusicRefresh();
+}
+
+// Merging fresh music into store.pageData.timetable doesn't by itself update
+// whatever's already on screen — the Program list / grid Timetable render
+// once from a snapshot. If the user is looking at either when new music
+// data comes in, re-render so it actually becomes visible without them
+// having to navigate away and back.
+function setupMusicRefresh() {
+    document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState !== 'visible') return;
+        refreshMusic().then(ok => {
+            if (ok && ['timetable', 'grid'].includes(PAGES[store.currentPage]?.slug)) {
+                goToPage(store.currentPage);
+            }
+        });
+    });
 }
 
 // The install card only ever renders on Home/My Plan — re-rendering any
@@ -71,6 +99,7 @@ async function setLangAndRefresh(lang) {
     document.getElementById('searchInput').placeholder = t('search.placeholder');
     document.querySelector('.search-modal-header span').textContent = t('search.resultsTitle');
     await loadData();
+    mergeMusicIntoTimetable();
     renderNav();
     goToPage(store.currentPage);
 }
@@ -158,6 +187,7 @@ const actions = {
     'set-day': el => setDay(el.dataset.day),
     'toggle-filter': () => toggleFilterPanel(),
     'reset-filters': () => resetFilters(),
+    'set-filter': el => setFilterValue(el.dataset.facet, el.dataset.value),
     'toggle-event': el => toggleEventDetail(el),
     'set-grid-day': el => setGridDay(el.dataset.day),
     'toggle-grid-event': el => openGridEventDetail(el),
@@ -185,6 +215,7 @@ const actions = {
         else setTimeout(() => scrollToItem(PAGES[idx].slug, itemIndex), 300);
     },
     'close-search': () => closeSearchModal(),
+    'close-notifications': () => closeNotifications(),
     'goto-event': el => {
         const itemIndex = parseInt(el.dataset.index, 10);
         if (el.dataset.day) store.ttPendingDay = el.dataset.day;

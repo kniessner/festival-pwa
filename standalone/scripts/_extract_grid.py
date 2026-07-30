@@ -140,8 +140,10 @@ def main():
     # Extract title from HTML <title>
     title_match = re.search(r'<title[^>]*>([^<]+)', html, re.I)
     title = title_match.group(1).strip() if title_match else slug.title()
-    title = re.sub(r'\s*[\|\-–]\s*Bucht der Träumer.*$', '', title, flags=re.I)
+    # Decode entities first — the raw <title> text still has "&#8211;" etc.
+    # at this point, which the suffix-stripping regex below can't match.
     title = decode_entities(title).strip()
+    title = re.sub(r'\s*[\|\-–]\s*Bucht der Träumer.*$', '', title, flags=re.I).strip()
 
     data = {
         'type': 'grid',

@@ -29,6 +29,9 @@ export function renderFavorites(container) {
                 if (!programByDay[day]) programByDay[day] = [];
                 programByDay[day].push(ev);
             }
+        } else if (f.page === 'notifications') {
+            const item = store.pageData.notifications?.items?.[f.index];
+            if (item) newsItems.push({ item, index: f.index, page: f.page });
         } else if (f.page.startsWith('info-')) {
             const sub = f.page.replace('info-', '');
             const item = store.pageData.info?.[sub]?.items?.[f.index];

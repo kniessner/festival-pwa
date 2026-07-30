@@ -31,9 +31,13 @@ export function showToast(message) {
     }, 3000);
 }
 
-export function favButton(pageSlug, index) {
-    const active = isFavorite(pageSlug, index) ? 'active' : '';
-    return `<button class="fav-btn ${active}" data-action="toggle-fav" data-page="${pageSlug}" data-index="${index}" title="${t('common.favorite')}">★</button>`;
+export function favButton(pageSlug, index, { icon = false } = {}) {
+    const isActive = isFavorite(pageSlug, index);
+    const active = isActive ? 'active' : '';
+    const content = icon
+        ? `<span class="fav-star-icon" style="-webkit-mask-image:url(images/${isActive ? 'star.svg' : 'star-outline.svg'});mask-image:url(images/${isActive ? 'star.svg' : 'star-outline.svg'})"></span>`
+        : '★';
+    return `<button class="fav-btn ${active}" data-action="toggle-fav" data-page="${pageSlug}" data-index="${index}" title="${t('common.favorite')}">${content}</button>`;
 }
 
 export function card({ page, index, title, desc, meta = '', maxDesc = 200 }) {

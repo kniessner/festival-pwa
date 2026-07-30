@@ -1,7 +1,7 @@
 {
   "name": "Bucht der Träumer – Festival Guide",
   "short_name": "Bucht der Träumer",
-  "start_url": "./",
+  "start_url": "./?page=favorites",
   "display": "standalone",
   "background_color": "#080943",
   "theme_color": "#080943",
