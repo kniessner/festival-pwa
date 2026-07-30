@@ -1281,14 +1281,17 @@ span#headerFilterLabel {
     border-radius: 0;
 }
 
-/* Single-finger touch drag is constrained to one axis; wheel/trackpad/scrollbar
-   still pan both, since those gestures don't suffer from the diagonal-drag problem. */
-.gtt-scroll.scroll-v {
-    touch-action: pan-y;
-}
-
+/* Allow single-finger touch drags on both axes. The original design
+ * (kniessner, 8c5f4a34) constrained touch to one axis per mode to avoid
+ * diagonal-drag ambiguity, but with .gtt-toolbar hidden the mode toggle
+ * is unreachable — leaving mobile users unable to scroll the other axis
+ * at all. Explicit 'pan-x pan-y' opts out of any browser-side gesture
+ * hijacking (pinch-zoom, pull-to-refresh) while allowing both scroll
+ * axes; wheel/trackpad were unaffected already. Restore the one-axis
+ * lock (pan-y / pan-x per mode) if the mode toggle is un-hidden. */
+.gtt-scroll.scroll-v,
 .gtt-scroll.scroll-h {
-    touch-action: pan-x;
+    touch-action: pan-x pan-y;
 }
 
 .gtt-header {
