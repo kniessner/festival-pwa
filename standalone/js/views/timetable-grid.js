@@ -298,6 +298,7 @@ function renderVerticalLayout({ data, header, track, stages, byStage, stageLanes
     const scroll = document.getElementById('gttScroll');
     if (scroll) scroll.scrollLeft = 0;
     if (store.gridDay === getEffectiveFestivalDay()) scrollGridToNowAndUserStage('vertical');
+    applyStagePulseClasses(store.userStage);
 }
 
 // The continuous, "endless" strip: every festival day laid out left-to-right in
@@ -408,6 +409,7 @@ function renderHorizontalLayout({ data, header, track, blocks }) {
             if (target) scroll.scrollLeft = Math.max(0, target.offset - 8);
         }
     }
+    applyStagePulseClasses(store.userStage);
     onGridScroll();
 }
 
@@ -574,3 +576,34 @@ function handleStageChangeForScroll() {
     scrollGridToNowAndUserStage(store.gridScrollMode);
 }
 document.addEventListener('stagechange', handleStageChangeForScroll);
+
+// Visual pulse on the stage header the user is currently standing at.
+// Adds .gtt-current-stage to the header cell whose data-stage matches
+// store.userStage, removes it from any others. Defensive: no-op when
+// the grid view isn't rendered.
+//
+// Vibration: only fires when the user *transitions* from one real
+// stage to a different real stage (both `previous` and `current` are
+// truthy strings and they differ). First fix (null → stage) and
+// stage → null transitions are silent — buzzing on app open would be
+// startling.
+function applyStagePulseClasses(current) {
+    document.querySelectorAll('.gtt-stagehead.gtt-current-stage, .gtt-stagerow-wrap.gtt-current-stage')
+        .forEach(el => el.classList.remove('gtt-current-stage'));
+    if (!current) return;
+    const head = document.querySelector(`.gtt-stagehead[data-stage="${current}"]`);
+    if (head) head.classList.add('gtt-current-stage');
+    const row = document.querySelector(`.gtt-stagerow-wrap[data-stage="${current}"]`);
+    if (row) row.classList.add('gtt-current-stage');
+}
+
+function handleStageChangeForPulse(e) {
+    const detail = e.detail || {};
+    applyStagePulseClasses(detail.current);
+    // Vibrate only on real stage-to-stage transitions. navigator.vibrate
+    // returns false silently on unsupported platforms (iOS Safari, etc.).
+    if (detail.previous && detail.current && detail.previous !== detail.current && navigator.vibrate) {
+        navigator.vibrate([50, 30, 50]);
+    }
+}
+document.addEventListener('stagechange', handleStageChangeForPulse);

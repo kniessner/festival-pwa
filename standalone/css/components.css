@@ -723,3 +723,52 @@
 .onboarding-btn-secondary:active {
     background: rgba(255, 255, 255, 0.05);
 }
+
+/* ── Current-stage pulse ─────────────────────────────────────────────
+ * Highlights whichever stage the user is standing on, applied by
+ * js/views/timetable-grid.js on 'stagechange' (and on grid mount for
+ * fixes that arrived before mount). Two-sided: vertical layout uses
+ * .gtt-stagehead (column headers), horizontal uses .gtt-stagerow-wrap
+ * (row labels). Vibration matches the visual on real stage-to-stage
+ * moves — see handleStageChangeForPulse.
+ */
+.gtt-stagehead.gtt-current-stage,
+.gtt-stagerow-wrap.gtt-current-stage {
+    position: relative;
+    animation: gtt-stage-pulse 1.6s ease-in-out infinite;
+}
+
+.gtt-stagehead.gtt-current-stage::after,
+.gtt-stagerow-wrap.gtt-current-stage::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border: 2px solid var(--accent-pink);
+    border-radius: inherit;
+    pointer-events: none;
+    box-shadow: 0 0 0 0 var(--accent-pink);
+    animation: gtt-stage-pulse-ring 1.6s ease-out infinite;
+}
+
+@keyframes gtt-stage-pulse {
+    0%, 100% { filter: brightness(1); }
+    50%      { filter: brightness(1.25); }
+}
+
+@keyframes gtt-stage-pulse-ring {
+    0%   { box-shadow: 0 0 0 0 rgba(222, 78, 57, 0.55); }
+    70%  { box-shadow: 0 0 0 8px rgba(222, 78, 57, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(222, 78, 57, 0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .gtt-stagehead.gtt-current-stage,
+    .gtt-stagerow-wrap.gtt-current-stage {
+        animation: none;
+    }
+    .gtt-stagehead.gtt-current-stage::after,
+    .gtt-stagerow-wrap.gtt-current-stage::after {
+        animation: none;
+        box-shadow: 0 0 0 2px var(--accent-pink);
+    }
+}
