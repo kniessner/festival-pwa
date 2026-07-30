@@ -3,6 +3,42 @@ import { favButton } from '../ui.js';
 import { getEffectiveFestivalDay } from '../festival.js';
 import { t } from '../i18n.js';
 import { isFavorite } from '../favorites.js';
+import { getStage } from '../helpers/get-stage.js';
+import { createStageHysteresis } from '../helpers/stage-hysteresis.js';
+
+// Module-scoped hysteresis: one instance survives every renderGridTimetable
+// call (view remounts don't reset it). On commit, mirrors the new stage to
+// store.userStage and dispatches 'stagechange' — the grid mount handler
+// and the pulse toggle both listen to that event.
+const stageHysteresis = createStageHysteresis({
+    onCommit: (stage) => {
+        const previous = store.userStage;
+        store.userStage = stage;
+        document.dispatchEvent(new CustomEvent('stagechange', {
+            detail: { previous, current: stage },
+        }));
+    },
+});
+
+function handleLocationChange(e) {
+    const detail = e.detail || {};
+    if (detail.error) {
+        stageHysteresis.feed(null);
+        return;
+    }
+    stageHysteresis.feed(getStage({
+        longitude: detail.longitude,
+        latitude: detail.latitude,
+        accuracy: detail.accuracy,
+    }));
+}
+
+// Module-load binding: fixes may arrive before the grid view mounts
+// (returning user whose location watch started in app.js init), so we
+// listen from the moment this module is imported. Firing 'stagechange'
+// with no listener is harmless — store.userStage still gets updated,
+// and the grid picks it up on first render.
+document.addEventListener('locationchange', handleLocationChange);
 
 const PX_PER_MIN = 2;
 const COL_WIDTH = 130;      // vertical mode: fixed width for every stage column
