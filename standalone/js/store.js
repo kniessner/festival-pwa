@@ -22,6 +22,11 @@ export async function fetchLocalized(file, lang) {
         }
     }
     const res = await fetch(`data/${file}`);
+    // The service worker's networkFirst() returns a plain-text 503 (not
+    // JSON) when both the network and its cache come up empty — check
+    // res.ok so that surfaces as a clear "fetch failed" error to callers
+    // instead of a confusing JSON-parse exception.
+    if (!res.ok) throw new Error(`Fetch failed for ${file}: HTTP ${res.status}`);
     return res.json();
 }
 

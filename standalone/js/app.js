@@ -11,6 +11,7 @@ import { showToast } from './ui.js';
 import { PAGES, pageIdx } from './config.js';
 import { t, setLang } from './i18n.js';
 import { maybeShowNotifications, closeNotifications, setupNotificationsRefresh } from './notifications.js';
+import { mergeMusicIntoTimetable, refreshMusic } from './music.js';
 
 const LANG_LABELS = { de: 'De', en: 'Eng' };
 
@@ -23,6 +24,7 @@ async function init() {
     updateLangSwitcherLabel();
     updateHeaderFilterLabel();
     await loadData();
+    mergeMusicIntoTimetable();
     renderNav();
     // manifest.json's start_url passes ?page=favorites so launching the
     // installed home-screen app opens My Plan directly; a plain browser
@@ -36,6 +38,23 @@ async function init() {
     wireDelegation();
     maybeShowNotifications();
     setupNotificationsRefresh();
+    setupMusicRefresh();
+}
+
+// Merging fresh music into store.pageData.timetable doesn't by itself update
+// whatever's already on screen — the Program list / grid Timetable render
+// once from a snapshot. If the user is looking at either when new music
+// data comes in, re-render so it actually becomes visible without them
+// having to navigate away and back.
+function setupMusicRefresh() {
+    document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState !== 'visible') return;
+        refreshMusic().then(ok => {
+            if (ok && ['timetable', 'grid'].includes(PAGES[store.currentPage]?.slug)) {
+                goToPage(store.currentPage);
+            }
+        });
+    });
 }
 
 // The install card only ever renders on Home/My Plan — re-rendering any
@@ -80,6 +99,7 @@ async function setLangAndRefresh(lang) {
     document.getElementById('searchInput').placeholder = t('search.placeholder');
     document.querySelector('.search-modal-header span').textContent = t('search.resultsTitle');
     await loadData();
+    mergeMusicIntoTimetable();
     renderNav();
     goToPage(store.currentPage);
 }

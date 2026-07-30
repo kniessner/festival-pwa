@@ -30,11 +30,12 @@ if [ "$1" = "--dry-run" ]; then
     echo "🧪 Dry run — no files will actually be transferred"
 fi
 
-# The WP plugin's "PWA Push" post type writes data/notifications.json
-# directly on the server (see includes/class-notifications.php) — excluded
-# here so a deploy never overwrites that live content with the local repo's
-# copy (which is just a blank placeholder for local dev/offline fallback).
-RSYNC_FLAGS+=(--exclude=data/notifications.json)
+# The WP plugin's "PWA Push" and "Music" post types write data/notifications.json
+# and data/music.json directly on the server (see includes/class-notifications.php
+# and includes/class-music.php) — excluded here so a deploy never overwrites
+# that live content with the local repo's copies (which are just blank
+# placeholders for local dev/offline fallback).
+RSYNC_FLAGS+=(--exclude=data/notifications.json --exclude=data/music.json)
 
 # Runtime files the app actually needs. Mirrors deploy.sh's dist/ build list
 # (index.html, manifest.json, sw.js, js/, css/, data/, images/, icons/) —

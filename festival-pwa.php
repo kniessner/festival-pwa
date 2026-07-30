@@ -17,6 +17,7 @@ require_once FESTIVAL_PWA_DIR . 'includes/class-content-sync.php';
 require_once FESTIVAL_PWA_DIR . 'includes/class-rest-api.php';
 require_once FESTIVAL_PWA_DIR . 'includes/class-pwa-frontend.php';
 require_once FESTIVAL_PWA_DIR . 'includes/class-notifications.php';
+require_once FESTIVAL_PWA_DIR . 'includes/class-music.php';
 
 class Festival_PWA {
     /**
