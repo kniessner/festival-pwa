@@ -9,7 +9,14 @@ export const store = {
     ttPendingDay: null,
     gridDay: null,
     gridScrollMode: 'horizontal',
-    favTab: 'program'
+    favTab: 'program',
+    // Populated by js/location.js after the user grants location permission.
+    // { longitude, latitude, accuracy, error } | null. accuracy is metres
+    // (68% confidence radius); error is 'denied' | 'unsupported' | a message.
+    userLocation: null,
+    // Populated by the stage-hysteresis in js/views/timetable-grid.js after
+    // a GPS fix resolves to a polygon in stages.geojson. Stage slug or null.
+    userStage: null
 };
 
 export async function fetchLocalized(file, lang) {
