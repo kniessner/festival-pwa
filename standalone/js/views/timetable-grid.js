@@ -464,6 +464,18 @@ function currentContinuousMinutes() {
     return nowMin;
 }
 
+// True iff the given event is happening RIGHT NOW on today's festival
+// day. Used to mark event blocks with .gtt-event-now so the vibrate
+// animation lands only on the currently-playing act (rather than every
+// event in the user's stage row/column). Relies on ev._start / ev._end
+// being populated by buildDayBlock — always true for anything we
+// actually render.
+function isEventPlayingNow(ev) {
+    if (ev.day !== getEffectiveFestivalDay()) return false;
+    const nowMin = currentContinuousMinutes();
+    return nowMin >= ev._start && nowMin <= ev._end;
+}
+
 function renderEventBlockV(ev, gridMin, numLanes) {
     const idx = store.pageData.timetable.events.indexOf(ev);
     const top = (ev._start - gridMin) * PX_PER_MIN;
@@ -471,8 +483,9 @@ function renderEventBlockV(ev, gridMin, numLanes) {
     const laneWidth = COL_WIDTH / numLanes;
     const left = ev._lane * laneWidth;
     const fav = isFavorite('timetable', idx) ? ' gtt-event-fav' : '';
+    const now = isEventPlayingNow(ev) ? ' gtt-event-now' : '';
     return `
-    <div class="gtt-event${fav}" data-item-index="${idx}" data-action="toggle-grid-event" style="top:${top}px;height:${height}px;left:${left}px;width:${laneWidth - 4}px;--event-color:${categoryColor(ev.category)}">
+    <div class="gtt-event${fav}${now}" data-item-index="${idx}" data-action="toggle-grid-event" style="top:${top}px;height:${height}px;left:${left}px;width:${laneWidth - 4}px;--event-color:${categoryColor(ev.category)}">
         <span class="gtt-event-title">${ev.title}</span>
     </div>`;
 }
@@ -483,8 +496,9 @@ function renderEventBlockH(ev, gridMin, dayOffset) {
     const width = Math.max(40, (ev._end - ev._start) * PX_PER_MIN);
     const top = ev._lane * LANE_HEIGHT;
     const fav = isFavorite('timetable', idx) ? ' gtt-event-fav' : '';
+    const now = isEventPlayingNow(ev) ? ' gtt-event-now' : '';
     return `
-    <div class="gtt-event${fav}" data-item-index="${idx}" data-action="toggle-grid-event" style="left:${left}px;width:${width}px;top:${top}px;height:${LANE_HEIGHT - 6}px;--event-color:${categoryColor(ev.category)}">
+    <div class="gtt-event${fav}${now}" data-item-index="${idx}" data-action="toggle-grid-event" style="left:${left}px;width:${width}px;top:${top}px;height:${LANE_HEIGHT - 6}px;--event-color:${categoryColor(ev.category)}">
         <span class="gtt-event-title">${ev.title}</span>
     </div>`;
 }

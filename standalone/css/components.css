@@ -760,12 +760,17 @@
     animation: gtt-stage-pulse-wash 2s ease-in-out infinite;
 }
 
-/* Event blocks within the current stage's row/column vibrate (shake +
- * rotate) rather than pulse — mirrors fusion's gigVibrate. Selector
- * lands children of both .gtt-stagerow-wrap (horizontal mode) and
- * .gtt-stagecol (vertical mode); both get .gtt-current-stage from
+/* Only the CURRENTLY-PLAYING event in the user's stage vibrates — not
+ * every event block in that row. Compound selector: must be inside a
+ * .gtt-current-stage container AND carry the .gtt-event-now marker
+ * class (added by isEventPlayingNow() at render time). This is the
+ * visual answer to "who's playing here right now?", so it's a single
+ * event, not a whole row's worth. Mirrors fusion's gigVibrate; the
+ * class-driven scoping is our addition. Selector lands children of
+ * both .gtt-stagerow-wrap (horizontal mode) and .gtt-stagecol
+ * (vertical mode); both get .gtt-current-stage from
  * applyStagePulseClasses. */
-.gtt-current-stage .gtt-event {
+.gtt-current-stage .gtt-event.gtt-event-now {
     animation: gtt-gig-vibrate 2s ease-in-out infinite;
 }
 
@@ -834,7 +839,7 @@
 @media (prefers-reduced-motion: reduce) {
     .gtt-stagehead.gtt-current-stage,
     .gtt-current-stage .gtt-stagelabel,
-    .gtt-current-stage .gtt-event,
+    .gtt-current-stage .gtt-event.gtt-event-now,
     .gtt-stagerow-wrap.gtt-current-stage {
         animation: none;
     }
