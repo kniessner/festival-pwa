@@ -10,7 +10,9 @@
       "end_time": "23:30",
       "stage": "porto-loco",
       "stage_label": "Porto Loco",
-      "category": "Music"
+      "type": "music",
+      "category": "Music",
+      "genre": "Music"
     }
   ],
   "stages": [

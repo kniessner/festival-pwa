@@ -45,6 +45,24 @@ class Festival_PWA_Notifications {
         add_action('rest_api_init', [$this, 'register_routes']);
         add_action('admin_menu', [$this, 'admin_menu']);
         add_action('admin_init', [$this, 'register_settings']);
+        add_action('admin_head', [$this, 'admin_menu_icon_color']);
+    }
+
+    // register_post_type()'s menu_icon is recolored by WP to match whatever
+    // admin color scheme is active, so baking a specific color into the
+    // dashicon/SVG itself doesn't stick — overriding the glyph's own CSS
+    // color on the auto-generated .menu-icon-{post_type} class is the
+    // standard way to actually pin it to a specific color.
+    public function admin_menu_icon_color() {
+        $type = self::POST_TYPE;
+        echo "<style>
+            #adminmenu .menu-icon-{$type} div.wp-menu-image:before,
+            #adminmenu .menu-icon-{$type}:hover div.wp-menu-image:before,
+            #adminmenu .menu-icon-{$type}.wp-has-current-submenu div.wp-menu-image:before,
+            #adminmenu .menu-icon-{$type}.current div.wp-menu-image:before {
+                color: #de4e39;
+            }
+        </style>";
     }
 
     public function register_post_type() {

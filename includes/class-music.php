@@ -56,18 +56,40 @@ class Festival_PWA_Music {
         add_action('untrashed_post', [$this, 'on_status_change']);
         add_action('before_delete_post', [$this, 'on_status_change']);
         add_action('rest_api_init', [$this, 'register_routes']);
+        add_action('admin_head', [$this, 'admin_menu_icon_color']);
+        add_filter('manage_' . self::POST_TYPE . '_posts_columns', [$this, 'add_columns']);
+        add_action('manage_' . self::POST_TYPE . '_posts_custom_column', [$this, 'render_column'], 10, 2);
+        add_filter('manage_edit-' . self::POST_TYPE . '_sortable_columns', [$this, 'sortable_columns']);
+        add_action('pre_get_posts', [$this, 'sort_columns']);
+    }
+
+    // register_post_type()'s menu_icon is recolored by WP to match whatever
+    // admin color scheme is active, so baking a specific color into the
+    // dashicon/SVG itself doesn't stick — overriding the glyph's own CSS
+    // color on the auto-generated .menu-icon-{post_type} class is the
+    // standard way to actually pin it to a specific color.
+    public function admin_menu_icon_color() {
+        $type = self::POST_TYPE;
+        echo "<style>
+            #adminmenu .menu-icon-{$type} div.wp-menu-image:before,
+            #adminmenu .menu-icon-{$type}:hover div.wp-menu-image:before,
+            #adminmenu .menu-icon-{$type}.wp-has-current-submenu div.wp-menu-image:before,
+            #adminmenu .menu-icon-{$type}.current div.wp-menu-image:before {
+                color: #de4e39;
+            }
+        </style>";
     }
 
     public function register_post_type() {
         register_post_type(self::POST_TYPE, [
             'labels' => [
-                'name'          => 'Music',
+                'name'          => 'PWA Music',
                 'singular_name' => 'Music Event',
                 'add_new'       => 'Add Music Event',
                 'add_new_item'  => 'Add New Music Event',
                 'edit_item'     => 'Edit Music Event',
                 'all_items'     => 'All Music Events',
-                'menu_name'     => 'Music',
+                'menu_name'     => 'PWA Music',
             ],
             'public'       => false,
             'show_ui'      => true,
@@ -140,7 +162,79 @@ class Festival_PWA_Music {
         $this->rebuild_json();
     }
 
+    /* ── Admin list table: Stage + Time columns, both sortable ──────────── */
+
+    public function add_columns($columns) {
+        $new = [];
+        foreach ($columns as $key => $label) {
+            $new[$key] = $label;
+            // Right after Title, before Date/whatever else WP adds.
+            if ($key === 'title') {
+                $new['pwa_music_stage'] = 'Stage';
+                $new['pwa_music_time'] = 'Time';
+            }
+        }
+        return $new;
+    }
+
+    public function render_column($column, $post_id) {
+        if ($column === 'pwa_music_stage') {
+            $value = get_post_meta($post_id, '_pwa_music_stage', true);
+            echo $value ? esc_html($this->stage_label($value)) : '—';
+        } elseif ($column === 'pwa_music_time') {
+            $start = get_post_meta($post_id, '_pwa_music_start', true);
+            $end   = get_post_meta($post_id, '_pwa_music_end', true);
+            echo esc_html($this->format_time_range($start, $end));
+        }
+    }
+
+    public function sortable_columns($columns) {
+        $columns['pwa_music_stage'] = 'pwa_music_stage';
+        $columns['pwa_music_time'] = 'pwa_music_time';
+        return $columns;
+    }
+
+    public function sort_columns($query) {
+        if (!is_admin() || !$query->is_main_query() || $query->get('post_type') !== self::POST_TYPE) return;
+
+        $orderby = $query->get('orderby');
+        if ($orderby === 'pwa_music_stage') {
+            $query->set('meta_key', '_pwa_music_stage');
+            $query->set('orderby', 'meta_value');
+        } elseif ($orderby === 'pwa_music_time') {
+            // datetime-local values sort correctly as plain strings
+            // (YYYY-MM-DDTHH:MM), no need for meta_value_num.
+            $query->set('meta_key', '_pwa_music_start');
+            $query->set('orderby', 'meta_value');
+        }
+    }
+
+    private function format_time_range($start, $end) {
+        if (!$start) return '—';
+        try {
+            $startDt = new DateTime($start);
+        } catch (Exception $e) {
+            return '—';
+        }
+        $out = $startDt->format('Y-m-d H:i');
+        if ($end) {
+            try {
+                $out .= ' – ' . (new DateTime($end))->format('H:i');
+            } catch (Exception $e) {
+                // leave it as just the start
+            }
+        }
+        return $out;
+    }
+
     /* ── JSON generation ──────────────────────────────────────────────── */
+
+    private function stage_label($value) {
+        foreach (self::STAGES as $label) {
+            if (sanitize_title($label) === $value) return $label;
+        }
+        return $value;
+    }
 
     private function derive_day($datetime_local) {
         if (!$datetime_local) return '';
@@ -165,11 +259,6 @@ class Festival_PWA_Music {
             'order'          => 'ASC',
         ]);
 
-        $stageLabelByValue = [];
-        foreach (self::STAGES as $label) {
-            $stageLabelByValue[sanitize_title($label)] = $label;
-        }
-
         $events = [];
         foreach ($posts as $post) {
             $start = get_post_meta($post->ID, '_pwa_music_start', true);
@@ -191,8 +280,15 @@ class Festival_PWA_Music {
                 'start_time'  => $startDt->format('H:i'),
                 'end_time'    => $endDt ? $endDt->format('H:i') : '',
                 'stage'       => $stageValue,
-                'stage_label' => $stageLabelByValue[$stageValue] ?? $stageValue,
+                'stage_label' => $this->stage_label($stageValue),
+                // 'type' (lowercase slug) is what the Program list's category
+                // filter actually compares against — 'category' is just the
+                // display label. Scraped events set both; music events need
+                // to as well or they silently vanish the moment any category
+                // filter is active.
+                'type'        => 'music',
                 'category'    => 'Music',
+                'genre'       => 'Music',
             ];
         }
 
