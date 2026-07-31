@@ -10,6 +10,11 @@ import { store } from './store.js';
 // Bucht has exactly one location-consuming surface — the grid timetable —
 // so gating adds complexity for no meaningful battery gain: users who
 // grant permission are almost always on the timetable anyway.
+//
+// There is no stopLocationWatch counterpart: the app has no revoke-
+// permission surface and the watcher is cheap to keep running for the
+// session. Browsers clear the underlying navigator.geolocation.watchPosition
+// on page navigation / tab close automatically.
 
 let watchId = null;
 
@@ -52,15 +57,4 @@ export function startLocationWatch() {
         // fixes stamped acc:1 kilometres away from the actual position).
         { enableHighAccuracy: true, maximumAge: 0, timeout: 10000 },
     );
-}
-
-/**
- * Stop the watcher. Currently unused — kept for symmetry and for a
- * future "revoke location permission" affordance.
- */
-export function stopLocationWatch() {
-    if (watchId != null) {
-        navigator.geolocation.clearWatch(watchId);
-        watchId = null;
-    }
 }

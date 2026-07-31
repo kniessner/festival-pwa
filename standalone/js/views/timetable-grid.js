@@ -266,6 +266,12 @@ export function refreshGridTimetable() {
         }
         renderVerticalLayout({ data, header, track, ...block });
     }
+    // Post-render finalisation: paint the current-stage pulse on whichever
+    // layout was just rendered. Consolidated here (rather than duplicated
+    // at the end of both render helpers) since both layouts always want it.
+    // Safe even if store.userStage is null — applyStagePulseClasses no-ops
+    // when passed null after clearing any prior markers.
+    applyStagePulseClasses(store.userStage);
 }
 
 function renderVerticalLayout({ data, header, track, stages, byStage, stageLanes, gridMin, gridMax }) {
@@ -314,7 +320,6 @@ function renderVerticalLayout({ data, header, track, stages, byStage, stageLanes
     const scroll = document.getElementById('gttScroll');
     if (scroll) scroll.scrollLeft = 0;
     if (store.gridDay === getEffectiveFestivalDay()) scrollGridToNowAndUserStage();
-    applyStagePulseClasses(store.userStage);
 }
 
 // The continuous, "endless" strip: every festival day laid out left-to-right in
@@ -425,7 +430,6 @@ function renderHorizontalLayout({ data, header, track, blocks }) {
             if (target) scroll.scrollLeft = Math.max(0, target.offset - 8);
         }
     }
-    applyStagePulseClasses(store.userStage);
     onGridScroll();
 }
 
@@ -603,6 +607,13 @@ function scrollGridToNowAndUserStage() {
 // between stages, yanking them back to today is intrusive. The pulse
 // still moves on the day-independent header (see
 // handleStageChangeForPulse) so they still see the visual signal.
+// Two module-scoped listeners share the 'stagechange' event and are
+// bound at module load (below). Registration order matters and is
+// deliberate: handleStageChangeForScroll runs first (starts the smooth-
+// scroll animation, up to ~1s), then handleStageChangeForPulse (adds
+// .gtt-current-stage class + fires vibrate on real transitions). Both
+// are cheap and idempotent; splitting them keeps each responsibility
+// isolated.
 function handleStageChangeForScroll() {
     if (store.gridDay !== getEffectiveFestivalDay()) return;
     scrollGridToNowAndUserStage();
