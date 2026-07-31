@@ -157,20 +157,7 @@
 }
 
 .search-modal-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 14px 18px;
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-bottom: none;
-    border-radius: var(--radius) var(--radius) 0 0;
-    color: var(--text);
-    font-family: var(--font-head);
-    font-weight: 700;
-    font-size: 0.85rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
+    display: none;
 }
 
 .search-modal-close {
@@ -191,8 +178,7 @@
     overflow-y: auto;
     background: var(--bg);
     border: 1px solid var(--border);
-    border-top: none;
-    border-radius: 0 0 var(--radius) var(--radius);
+    border-radius: var(--radius);
     padding: 12px;
     display: flex;
     flex-direction: column;

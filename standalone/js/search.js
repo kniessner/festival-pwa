@@ -32,52 +32,38 @@ function openSearchModal() {
     if (modal) modal.classList.add('open');
 }
 
+// Deliberately an allowlist, not "iterate everything in store.pageData" —
+// search is scoped to exactly Program (+ merged-in music events), FAQ, and
+// News, matching only each item's title (and stage for Program events), not
+// full descriptions/excerpts/hosts. Cashless and any other page are out of
+// scope on purpose.
 function doSearch(query) {
     const results = [];
-    for (const [slug, data] of Object.entries(store.pageData)) {
-        if (!data) continue;
-        const pageEntry = PAGES.find(p => p.slug === slug);
-        const pageLabel = pageEntry ? t(pageEntry.labelKey) : slug;
-        // Timetable events
-        if (data.events) {
-            data.events.forEach((ev, i) => {
-                const text = `${ev.title || ''} ${ev.excerpt || ''} ${ev.description || ''} ${ev.stage_label || ''} ${ev.type_label || ''} ${ev.hosts?.join(' ') || ''}`.toLowerCase();
-                if (text.includes(query)) results.push({ page: slug, pageLabel, index: i, item: ev, isEvent: true });
-            });
-        }
-        // Info view sub-sections (cashless, faqs — news is handled separately
-        // below since it now comes from notifications.json, not info.news)
-        if (slug === 'info') {
-            ['cashless', 'faqs'].forEach(sub => {
-                const subData = data[sub];
-                if (!subData || !subData.items) return;
-                subData.items.forEach((item, i) => {
-                    const text = `${item.question || ''} ${item.title || ''} ${item.desc || ''}`.toLowerCase();
-                    if (text.includes(query)) results.push({ page: slug, pageLabel: `${pageLabel} · ${sub}`, index: i, item, infoTab: sub });
-                });
-            });
-            continue;
-        }
-        // Notifications ("PWA Push") — shown in the Info page's News tab,
-        // so search results should jump there, not to a nonexistent
-        // "notifications" page.
-        if (slug === 'notifications') {
-            const infoEntry = PAGES.find(p => p.slug === 'info');
-            const infoLabel = infoEntry ? t(infoEntry.labelKey) : 'info';
-            (data.items || []).forEach((item, i) => {
-                const text = `${item.question || ''} ${item.answer || ''}`.toLowerCase();
-                if (text.includes(query)) results.push({ page: 'info', pageLabel: `${infoLabel} · news`, index: i, item, infoTab: 'news' });
-            });
-            continue;
-        }
-        // Direct items (old format fallback)
-        if (data.items) {
-            data.items.forEach((item, i) => {
-                const text = `${item.question || ''} ${item.title || ''} ${item.desc || ''}`.toLowerCase();
-                if (text.includes(query)) results.push({ page: slug, pageLabel, index: i, item });
-            });
-        }
-    }
+
+    const timetableEntry = PAGES.find(p => p.slug === 'timetable');
+    const timetableLabel = timetableEntry ? t(timetableEntry.labelKey) : 'timetable';
+    const infoEntry = PAGES.find(p => p.slug === 'info');
+    const infoLabel = infoEntry ? t(infoEntry.labelKey) : 'info';
+
+    // Program — store.pageData.timetable.events already includes music.json's
+    // events (merged client-side, see js/music.js).
+    (store.pageData.timetable?.events || []).forEach((ev, i) => {
+        const text = `${ev.title || ''} ${ev.stage_label || ''}`.toLowerCase();
+        if (text.includes(query)) results.push({ page: 'timetable', pageLabel: timetableLabel, index: i, item: ev, isEvent: true });
+    });
+
+    // FAQ
+    (store.pageData.info?.faqs?.items || []).forEach((item, i) => {
+        const text = `${item.question || ''}`.toLowerCase();
+        if (text.includes(query)) results.push({ page: 'info', pageLabel: `${infoLabel} · faqs`, index: i, item, infoTab: 'faqs' });
+    });
+
+    // News — notifications.json, shown in the Info page's News tab.
+    (store.pageData.notifications?.items || []).forEach((item, i) => {
+        const text = `${item.question || ''}`.toLowerCase();
+        if (text.includes(query)) results.push({ page: 'info', pageLabel: `${infoLabel} · news`, index: i, item, infoTab: 'news' });
+    });
+
     renderSearchResults(results, query);
 }
 

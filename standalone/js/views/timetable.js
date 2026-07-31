@@ -82,7 +82,10 @@ export function refreshTimetable() {
         if (filters.day !== 'all' && ev.day !== filters.day) return false;
         if (filters.stage !== 'all' && ev.stage !== filters.stage) return false;
         if (filters.category !== 'all' && ev.type !== filters.category) return false;
-        if (filters.genre !== 'all' && ev.genre !== filters.genre) return false;
+        // ev.genre is a capitalized label ("Space"), but the filter pill's
+        // value is the lowercase slug ("space") — same convention mismatch
+        // ev.type/ev.category already had, fixed the same way there.
+        if (filters.genre !== 'all' && (ev.genre || '').toLowerCase() !== filters.genre) return false;
         return true;
     });
 
@@ -120,6 +123,9 @@ export function renderEventCard(ev) {
     const runningClass = isEventRunning(ev, store.ttFilters.day) ? 'running' : '';
     const langBadges = ev.langs && ev.langs.length ? ev.langs.map(l => `<span class="lang-badge">${l.toUpperCase()}</span>`).join('') : '';
     const endTime = ev.end_time ? ` – ${ev.end_time}` : '';
+    // ev.time is a pre-formatted "DO 10:00"-style string the scraper builds;
+    // sources that don't produce it (e.g. music.json) still have start_time.
+    const displayTime = ev.time || ev.start_time || '';
 
     return `
     <div class="tt-event ${hasDetail ? 'has-detail' : ''} ${runningClass}" data-item-index="${idx}">
@@ -129,7 +135,7 @@ export function renderEventCard(ev) {
                 ${favButton('timetable', idx)}
             </div>
             <div class="tt-event-subline"><strong>${ev.stage_label}</strong>, ${ev.title}</div>
-            <div class="tt-event-meta"><span class="event-time">${ev.time}${endTime}</span>, ${ev.category}</div>
+            <div class="tt-event-meta"><span class="event-time">${displayTime}${endTime}</span>, ${ev.category}</div>
             <div class="tt-event-footer">
                 <div class="tt-event-badges">${langBadges}</div>
                 ${hasDetail ? `<span class="tt-event-toggle">${t('tt.more')}</span>` : '<span></span>'}
