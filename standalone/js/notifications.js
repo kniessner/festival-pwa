@@ -32,7 +32,14 @@ function markAllNotificationsSeen() {
     const items = store.pageData.notifications?.items || [];
     const seen = getSeenIds();
     items.forEach(item => seen.add(item.id));
-    localStorage.setItem(NOTIFICATIONS_SEEN_KEY, JSON.stringify([...seen]));
+    try {
+        localStorage.setItem(NOTIFICATIONS_SEEN_KEY, JSON.stringify([...seen]));
+    } catch {
+        // Safari private mode / quota exceeded / etc. Swallow silently
+        // — matches the pattern in helpers/prompt-storage.js. Worst case
+        // the user sees the same notifications again on next launch,
+        // which is acceptable.
+    }
 }
 
 export function maybeShowNotifications() {

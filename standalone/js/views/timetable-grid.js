@@ -3,6 +3,54 @@ import { favButton } from '../ui.js';
 import { getEffectiveFestivalDay } from '../festival.js';
 import { t } from '../i18n.js';
 import { isFavorite } from '../favorites.js';
+import { getStage } from '../helpers/get-stage.js';
+import { createStageHysteresis } from '../helpers/stage-hysteresis.js';
+
+// Module-scoped hysteresis: one instance survives every renderGridTimetable
+// call (view remounts don't reset it). On commit, mirrors the new stage to
+// store.userStage and dispatches 'stagechange' — the grid mount handler
+// and the pulse toggle both listen to that event.
+const stageHysteresis = createStageHysteresis({
+    onCommit: (stage) => {
+        const previous = store.userStage;
+        store.userStage = stage;
+        document.dispatchEvent(new CustomEvent('stagechange', {
+            detail: { previous, current: stage },
+        }));
+    },
+});
+
+function handleLocationChange(e) {
+    const detail = e.detail || {};
+    // Location watcher signals error/no-fix by omitting coords. Clear
+    // the resolved stage. The `error` field may carry the specific
+    // reason ('denied' | timeout message) for future diagnostics.
+    if (detail.error) {
+        stageHysteresis.feed(null);
+        return;
+    }
+    // Explicit coord-present check: getStage would eventually return
+    // false on {undefined, undefined} via the ray-casting NaN path,
+    // but running the polygon loop against NaN inputs is wasted work
+    // and hides intent. A future 'locationchange' dispatched with an
+    // unfamiliar detail shape should still short-circuit here.
+    if (detail.longitude == null || detail.latitude == null) {
+        stageHysteresis.feed(null);
+        return;
+    }
+    stageHysteresis.feed(getStage({
+        longitude: detail.longitude,
+        latitude: detail.latitude,
+        accuracy: detail.accuracy,
+    }));
+}
+
+// Module-load binding: fixes may arrive before the grid view mounts
+// (returning user whose location watch started in app.js init), so we
+// listen from the moment this module is imported. Firing 'stagechange'
+// with no listener is harmless — store.userStage still gets updated,
+// and the grid picks it up on first render.
+document.addEventListener('locationchange', handleLocationChange);
 
 const PX_PER_MIN = 2;
 const COL_WIDTH = 130;      // vertical mode: fixed width for every stage column
@@ -10,6 +58,10 @@ const AXIS_WIDTH = 52;      // vertical mode: time-axis / corner column width
 const STAGE_LABEL_WIDTH = 96; // horizontal mode: stage-label column width
 const LANE_HEIGHT = 60;     // horizontal mode: overlap-lane height within a stage row
 const DAY_GAP = 28;         // horizontal mode: gap between consecutive day blocks
+
+// Haptic feedback pattern for a real stage-to-stage transition. Three
+// short pulses give a distinct-from-notification feel; adjust here.
+const STAGE_TRANSITION_VIBRATE_MS = [50, 30, 50];
 
 // Stage acts run around the clock, so hours before this cutoff belong to the
 // previous festival night rather than a new calendar day.
@@ -214,6 +266,12 @@ export function refreshGridTimetable() {
         }
         renderVerticalLayout({ data, header, track, ...block });
     }
+    // Post-render finalisation: paint the current-stage pulse on whichever
+    // layout was just rendered. Consolidated here (rather than duplicated
+    // at the end of both render helpers) since both layouts always want it.
+    // Safe even if store.userStage is null — applyStagePulseClasses no-ops
+    // when passed null after clearing any prior markers.
+    applyStagePulseClasses(store.userStage);
 }
 
 function renderVerticalLayout({ data, header, track, stages, byStage, stageLanes, gridMin, gridMax }) {
@@ -224,7 +282,7 @@ function renderVerticalLayout({ data, header, track, stages, byStage, stageLanes
 
     header.innerHTML = '<div class="gtt-corner"></div>' + stages.map(stage => {
         const label = data.filters.stages.find(s => s.value === stage)?.label || stage;
-        return `<div class="gtt-stagehead" style="width:${COL_WIDTH}px;--stage-color:${stageColor(stage)}">${label}</div>`;
+        return `<div class="gtt-stagehead" data-stage="${stage}" style="width:${COL_WIDTH}px;--stage-color:${stageColor(stage)}">${label}</div>`;
     }).join('');
 
     const hourLabels = [];
@@ -235,7 +293,7 @@ function renderVerticalLayout({ data, header, track, stages, byStage, stageLanes
     const stageColumns = stages.map(stage => {
         const numLanes = stageLanes.get(stage);
         const blocks = byStage.get(stage).map(ev => renderEventBlockV(ev, gridMin, numLanes)).join('');
-        return `<div class="gtt-stagecol" style="width:${COL_WIDTH}px;height:${gridHeight}px;--stage-color:${stageColor(stage)}">${blocks}</div>`;
+        return `<div class="gtt-stagecol" data-stage="${stage}" style="width:${COL_WIDTH}px;height:${gridHeight}px;--stage-color:${stageColor(stage)}">${blocks}</div>`;
     }).join('');
 
     let nowLine = '';
@@ -261,7 +319,7 @@ function renderVerticalLayout({ data, header, track, stages, byStage, stageLanes
 
     const scroll = document.getElementById('gttScroll');
     if (scroll) scroll.scrollLeft = 0;
-    if (store.gridDay === getEffectiveFestivalDay()) scrollGridToNow('vertical');
+    if (store.gridDay === getEffectiveFestivalDay()) scrollGridToNowAndUserStage();
 }
 
 // The continuous, "endless" strip: every festival day laid out left-to-right in
@@ -327,7 +385,7 @@ function renderHorizontalLayout({ data, header, track, blocks }) {
             return evs ? evs.map(ev => renderEventBlockH(ev, b.gridMin, b._offset)).join('') : '';
         }).join('');
         return `
-        <div class="gtt-stagerow-wrap" style="height:${height}px">
+        <div class="gtt-stagerow-wrap" data-stage="${stage}" style="height:${height}px">
             <div class="gtt-stagelabel ${i % 2 === 1 ? 'gtt-alt' : ''}">${label}</div>
             <div class="gtt-stagerow" style="width:${gridWidth}px">${blocksHtml}</div>
         </div>`;
@@ -366,7 +424,7 @@ function renderHorizontalLayout({ data, header, track, blocks }) {
         }
         scroll.scrollTop = 0;
         if (store.gridDay === getEffectiveFestivalDay() && todayBlock) {
-            scrollGridToNow('horizontal');
+            scrollGridToNowAndUserStage();
         } else {
             const target = gridDayOffsets.find(o => o.day === store.gridDay) || gridDayOffsets[0];
             if (target) scroll.scrollLeft = Math.max(0, target.offset - 8);
@@ -406,6 +464,26 @@ function currentContinuousMinutes() {
     return nowMin;
 }
 
+// True iff the given event is happening RIGHT NOW on today's festival
+// day. Used to mark event blocks with .gtt-event-now so the vibrate
+// animation lands only on the currently-playing act (rather than every
+// event in the user's stage row/column). Relies on ev._start / ev._end
+// being populated by buildDayBlock — always true for anything we
+// actually render.
+function isEventPlayingNow(ev) {
+    if (ev.day !== getEffectiveFestivalDay()) return false;
+    const nowMin = currentContinuousMinutes();
+    return nowMin >= ev._start && nowMin <= ev._end;
+}
+
+// Boxes narrower than this get .gtt-event-narrow, which switches the
+// title from sticky-scroll mode to ellipsis-truncation mode (see the
+// CSS side in views.css). Threshold picked as roughly "wider than the
+// scrollable area on a mobile viewport after the sticky floor label"
+// — below that, sticky positioning has nothing to pin against
+// (the whole box is already in view) so ellipsis is the right posture.
+const NARROW_BOX_WIDTH_PX = 260;
+
 function renderEventBlockV(ev, gridMin, numLanes) {
     const idx = store.pageData.timetable.events.indexOf(ev);
     const top = (ev._start - gridMin) * PX_PER_MIN;
@@ -413,8 +491,13 @@ function renderEventBlockV(ev, gridMin, numLanes) {
     const laneWidth = COL_WIDTH / numLanes;
     const left = ev._lane * laneWidth;
     const fav = isFavorite('timetable', idx) ? ' gtt-event-fav' : '';
+    const now = isEventPlayingNow(ev) ? ' gtt-event-now' : '';
+    // Vertical mode lays out one stage per column of fixed width; the
+    // per-lane width can shrink well below 260px on stages with many
+    // overlapping acts, so honour the same threshold here.
+    const narrow = (laneWidth - 4) < NARROW_BOX_WIDTH_PX ? ' gtt-event-narrow' : '';
     return `
-    <div class="gtt-event${fav}" data-item-index="${idx}" data-action="toggle-grid-event" style="top:${top}px;height:${height}px;left:${left}px;width:${laneWidth - 4}px;--event-color:${categoryColor(ev.category)}">
+    <div class="gtt-event${fav}${now}${narrow}" data-item-index="${idx}" data-action="toggle-grid-event" style="top:${top}px;height:${height}px;left:${left}px;width:${laneWidth - 4}px;--event-color:${categoryColor(ev.category)}">
         <span class="gtt-event-title">${ev.title}</span>
     </div>`;
 }
@@ -425,8 +508,10 @@ function renderEventBlockH(ev, gridMin, dayOffset) {
     const width = Math.max(40, (ev._end - ev._start) * PX_PER_MIN);
     const top = ev._lane * LANE_HEIGHT;
     const fav = isFavorite('timetable', idx) ? ' gtt-event-fav' : '';
+    const now = isEventPlayingNow(ev) ? ' gtt-event-now' : '';
+    const narrow = width < NARROW_BOX_WIDTH_PX ? ' gtt-event-narrow' : '';
     return `
-    <div class="gtt-event${fav}" data-item-index="${idx}" data-action="toggle-grid-event" style="left:${left}px;width:${width}px;top:${top}px;height:${LANE_HEIGHT - 6}px;--event-color:${categoryColor(ev.category)}">
+    <div class="gtt-event${fav}${now}${narrow}" data-item-index="${idx}" data-action="toggle-grid-event" style="left:${left}px;width:${width}px;top:${top}px;height:${LANE_HEIGHT - 6}px;--event-color:${categoryColor(ev.category)}">
         <span class="gtt-event-title">${ev.title}</span>
     </div>`;
 }
@@ -443,7 +528,7 @@ export function openGridEventDetail(el) {
     const langBadges = ev.langs && ev.langs.length
         ? `<div class="gtt-detail-badges">${ev.langs.map(l => `<span class="lang-badge">${l.toUpperCase()}</span>`).join('')}</div>`
         : '';
-    const dayLabel = (store.pageData.timetable.filters.days.find(d => d.value === ev.day)?.label || '').slice(0, 3);
+    const dayLabel = (store.pageData.timetable?.filters?.days?.find(d => d.value === ev.day)?.label || '').slice(0, 3);
     const endTime = ev.end_time ? ` – ${ev.end_time}` : '';
 
     detail.innerHTML = `
@@ -471,19 +556,131 @@ export function closeGridEventDetail() {
     if (backdrop) backdrop.classList.remove('open');
 }
 
-function scrollGridToNow(orientation) {
+function scrollGridToNowTime() {
+    const orientation = store.gridScrollMode;
     setTimeout(() => {
         const scroll = document.getElementById('gttScroll');
         if (!scroll) return;
         if (orientation === 'horizontal') {
             const line = document.querySelector('.gtt-now-line-v');
             if (!line) return;
-            scroll.scrollLeft = Math.max(0, line.offsetLeft - STAGE_LABEL_WIDTH - 40);
+            const target = Math.max(0, line.offsetLeft - STAGE_LABEL_WIDTH - 40);
+            // Smooth-scroll rather than direct assignment — the initial jump
+            // felt brutal on a first-open grid. scrollend (or the 1s fallback
+            // in scrollGridToNowAndUserStage) then chains into step 2.
+            scroll.scrollTo({ left: target, behavior: 'smooth' });
         } else {
             const line = document.querySelector('.gtt-now-line');
             if (!line) return;
             const headerHeight = document.getElementById('gttHeader')?.offsetHeight || 0;
-            scroll.scrollTop = Math.max(0, line.offsetTop - headerHeight - 80);
+            const target = Math.max(0, line.offsetTop - headerHeight - 80);
+            scroll.scrollTo({ top: target, behavior: 'smooth' });
         }
     }, 150);
 }
+
+// Step 2: scroll the cross-axis to bring the user's current stage into
+// view. No-op if hysteresis hasn't resolved a stage yet (permission
+// denied, off-site, in the gap between polygons). Defensively queries
+// the DOM — handler is bound at module scope so it can fire when the
+// grid isn't rendered; every getElementById can legitimately be null.
+function scrollGridToUserStage() {
+    const stage = store.userStage;
+    if (!stage) return;
+    const scroll = document.getElementById('gttScroll');
+    if (!scroll) return;
+    if (store.gridScrollMode === 'vertical') {
+        const head = document.querySelector(`.gtt-stagehead[data-stage="${stage}"]`);
+        if (!head) return;
+        const target = Math.max(0, head.offsetLeft - AXIS_WIDTH - 40);
+        scroll.scrollTo({ left: target, behavior: 'smooth' });
+    } else {
+        const row = document.querySelector(`.gtt-stagerow-wrap[data-stage="${stage}"]`);
+        if (!row) return;
+        const headerHeight = document.getElementById('gttHeader')?.offsetHeight || 0;
+        const target = Math.max(0, row.offsetTop - headerHeight - 20);
+        scroll.scrollTo({ top: target, behavior: 'smooth' });
+    }
+}
+
+// Two-step sequence: run time-scroll first, wait for its animation to
+// settle, then stage-scroll. Ported from fusion's TimetableFlat.tsx
+// pattern (scrollend + fallback in case reduced-motion / no smooth scroll
+// / no actual scroll needed keeps scrollend from firing).
+function scrollGridToNowAndUserStage() {
+    scrollGridToNowTime();
+    const scroll = document.getElementById('gttScroll');
+    if (!scroll) return;
+    let done = false;
+    const finish = () => {
+        if (done) return;
+        done = true;
+        scrollGridToUserStage();
+    };
+    // `once: true` auto-removes the listener after first fire; the 1s
+    // fallback below covers the case where scrollend never comes
+    // (reduced-motion, no scroll needed, unsupported browser). `done`
+    // guards against a delayed scrollend firing after the fallback ran.
+    scroll.addEventListener('scrollend', finish, { once: true });
+    setTimeout(finish, 1000);
+}
+
+// Rebinds scroll refresh on every stage commit. Bound once at module
+// load; safe when the grid view isn't rendered because
+// scrollGridToUserStage/scrollGridToNowTime bail out on null DOM.
+//
+// UX guard: only auto-scroll when the user is viewing today's grid.
+// If they're intentionally browsing another day's lineup and walk
+// between stages, yanking them back to today is intrusive. The pulse
+// still moves on the day-independent header (see
+// handleStageChangeForPulse) so they still see the visual signal.
+// Two module-scoped listeners share the 'stagechange' event and are
+// bound at module load (below). Registration order matters and is
+// deliberate: handleStageChangeForScroll runs first (starts the smooth-
+// scroll animation, up to ~1s), then handleStageChangeForPulse (adds
+// .gtt-current-stage class + fires vibrate on real transitions). Both
+// are cheap and idempotent; splitting them keeps each responsibility
+// isolated.
+function handleStageChangeForScroll() {
+    if (store.gridDay !== getEffectiveFestivalDay()) return;
+    scrollGridToNowAndUserStage();
+}
+document.addEventListener('stagechange', handleStageChangeForScroll);
+
+// Visual pulse on the stage header the user is currently standing at.
+// Adds .gtt-current-stage to the header cell whose data-stage matches
+// store.userStage, removes it from any others. Defensive: no-op when
+// the grid view isn't rendered.
+//
+// Vibration: only fires when the user *transitions* from one real
+// stage to a different real stage (both `previous` and `current` are
+// truthy strings and they differ). First fix (null → stage) and
+// stage → null transitions are silent — buzzing on app open would be
+// startling.
+function applyStagePulseClasses(current) {
+    // Clear pulse markers from both header and event-container elements.
+    // Vertical mode: .gtt-stagehead (label) + .gtt-stagecol (event container).
+    // Horizontal mode: .gtt-stagerow-wrap (both label AND event container in one).
+    document.querySelectorAll('.gtt-current-stage')
+        .forEach(el => el.classList.remove('gtt-current-stage'));
+    if (!current) return;
+    // Vertical: label header + column (events live inside .gtt-stagecol).
+    const head = document.querySelector(`.gtt-stagehead[data-stage="${current}"]`);
+    if (head) head.classList.add('gtt-current-stage');
+    const col = document.querySelector(`.gtt-stagecol[data-stage="${current}"]`);
+    if (col) col.classList.add('gtt-current-stage');
+    // Horizontal: single wrapper contains both label and events.
+    const row = document.querySelector(`.gtt-stagerow-wrap[data-stage="${current}"]`);
+    if (row) row.classList.add('gtt-current-stage');
+}
+
+function handleStageChangeForPulse(e) {
+    const detail = e.detail || {};
+    applyStagePulseClasses(detail.current);
+    // Vibrate only on real stage-to-stage transitions. navigator.vibrate
+    // returns false silently on unsupported platforms (iOS Safari, etc.).
+    if (detail.previous && detail.current && detail.previous !== detail.current && navigator.vibrate) {
+        navigator.vibrate(STAGE_TRANSITION_VIBRATE_MS);
+    }
+}
+document.addEventListener('stagechange', handleStageChangeForPulse);

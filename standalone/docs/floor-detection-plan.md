@@ -1,0 +1,244 @@
+# Feature: Auto-scroll timetable to user's current stage
+
+**Status:** planned, not yet executing. Waiting on user go for Phase 0.
+
+**Branch:** `feature/stage-autoscroll`, based on `origin/v1` (Darius's active
+branch; PR will target `v1`, not `main`).
+
+**Ported from:** fusion (`~/dev/maya/pwa_test`) `getFloor` + hysteresis + two-step
+scroll pattern. See fusion files for reference implementations:
+
+- `src/TimetableFlat/get-floor.utils.ts` — accuracy gate + floor polygon lookup
+- `src/TimetableFlat/TimetableFlat.tsx` (~lines 297–685) — hysteresis + two-step scroll
+- `src/components/LocationTracker.tsx` — `watchPosition` lifecycle
+- `src/LocationPrompt/LocationPrompt.tsx` — onboarding overlay
+- `src/helper/geolocationPermission.ts` — permission query with Safari fallbacks
+- `src/helper/locationPromptStorage.ts` — sticky localStorage flag
+- `src/Map/helpers/pointInPolygon.ts` — ray-casting
+- `src/Map/data/floors.json` — 43 hand-drawn floor polygons
+
+## Locked decisions
+
+| # | Decision |
+|---|---|
+| Headline copy | **"Wer spielt hier gerade?"** (DE) / **"Who's playing here right now?"** (EN) |
+| Body copy | Fusion's DE/EN, minus the safety bullet |
+| Privacy copy | Punchier Bucht-tuned version (see phase 5 below) |
+| Polygons v1 | 9 hand-coded dummy rectangles in a 3×3 grid near Helenesee, later replaced |
+| Skipped stage | `walking-act` (roaming, no location) |
+| GeoJSON path | `standalone/data/stages.geojson` |
+| Polygon key | `properties.name` = slug |
+| Function name | `getStage` (Bucht convention); patterns identical to fusion's `getFloor` |
+| Return type | `string \| false` (matches fusion) |
+| Accuracy gate | 40 m |
+| Hysteresis | 3 s state machine, first-fix immediate, factory with injectable clock |
+| Watcher | `watchPosition({enableHighAccuracy: true, maximumAge: 0})`, starts after permission grant, session-lived |
+| Consent | Pre-rendered modal in `index.html` (mirrors `#notificationsModal`), first launch only, sticky localStorage flag |
+| Storage key | `bucht-2026-location-prompt-completed` (kebab-case matching `bucht-favorites`, `bucht-notifications-seen`), exported from `config.js` as `LOCATION_PROMPT_KEY` |
+| iOS-PWA fix | `getCurrentPosition` inside the "Enable GPS" click handler |
+| Re-ask banner | Not in v1 |
+| Auto-scroll | Two-step: step 1 (time) always fires; step 2 (stage) only if resolved. Re-fires on stage change AND on grid orientation toggle. |
+| Highlight | Pulse on current stage's header cell |
+| Vibrate | Only on stage-to-stage transition; first fix silent |
+| Sanity check | On app boot, `console.warn` any `stages.geojson` ↔ `timetable.json` name mismatches |
+| Tests | Node native runner (`node --test`), pure functions only |
+
+## v1-specific context (differences from main)
+
+Darius's `origin/v1` is 21 commits ahead of `main`. Things we take advantage of:
+
+- **`fetchLocalized` is now exported from `store.js`.** We can reuse or match the pattern.
+- **`loadData()` uses `Promise.all`** — parallel data loading. Our `loadStages()` joins that.
+- **`config.js` exports `NOTIFICATIONS_SEEN_KEY`.** Our storage key follows the same style.
+- **`app.js:init()` calls `maybeShowNotifications()` at the end** — this is the slot our onboarding wants, but we must run FIRST to avoid two stacked modals.
+- **`index.html` pre-renders `#notificationsModal`** as a hidden element toggled by `.open` class. Our onboarding modal follows the same shape.
+- **Delegation-based modal actions** (`data-action="close-notifications"`). Our onboarding buttons use `data-action="onboarding-allow"` / `"onboarding-not-now"`.
+- **`scripts/build.js`** bundles `js/app.js` via esbuild. New files transitively imported from `app.js` are picked up automatically. `standalone/tests/` is NOT included in the bundle. `data/stages.geojson` is auto-copied (and JSON-minified) by `copyJsonDir`.
+- **`CACHE_VERSION`** is now a Unix timestamp, not semver. We generate a fresh timestamp at deploy time.
+
+Things we work around:
+
+- **Modal collision risk (R10):** `showLocationPromptIfNeeded()` must be `await`ed before `maybeShowNotifications()`.
+- **Pre-existing bug (R7):** `SHELL_ASSETS` still misses `js/views/timetable-grid.js`. Opportunistic fix in Phase 8 (one-liner, we're editing the file anyway).
+
+## Execution phases
+
+### Phase 0 — Pre-work (~10 min)
+
+- **P0.1** — Create `standalone/tests/smoke.test.js` with a minimal
+  `import { test } from 'node:test'` case. Verify `node --test standalone/tests/smoke.test.js`
+  passes before we invest in real tests.
+- **P0.2** — Prepend a doc comment to `sw.js`'s `SHELL_ASSETS` array explaining
+  the rule: "when adding a new source file, list it here AND bump `CACHE_VERSION`
+  to a fresh Unix timestamp." (The rule is currently in a comment in `scripts/build.js`
+  but not near the array itself, and the missing `timetable-grid.js` shows the drift.)
+- **P0.3** — Add a "dist/ invariant" section to this plan.md: never edit `dist/`,
+  it is regenerated by `scripts/build.js`.
+- **P0.4** — Commit `plan.md` + smoke test + sw.js comment as the first commit
+  on the branch, so subsequent commits per phase are clean.
+
+### Phase 1 — Dummy polygons
+- Hand-write `standalone/data/stages.geojson` with 9 rectangular polygons.
+- 3×3 grid centred near the Bucht PNG position (`14.49504, 52.27349`). Each
+  ~150 m × 150 m, with ~50 m gaps.
+- Slugs in the order they appear in `data/timetable.json` (excluding `walking-act`):
+  `community-corner dezentral`, `cuddle-poodle`, `dezentral`, `mirage`,
+  `neuro-divers`, `schweissperle`, `skalahara`, `strandflitzer`, `zirkus-mond`.
+- Note: the JSON minifier in `scripts/build.js` will minify `.geojson` since
+  it endsWith `.json` — harmless (still valid GeoJSON).
+
+### Phase 2 — Pure helpers (~45 min)
+- `standalone/js/helpers/point-in-polygon.js` — ray-casting (~15 LOC).
+- `standalone/js/helpers/get-stage.js` — 40 m accuracy gate + iteration.
+  Exports `loadStages()` (idempotent, cached in module scope) and
+  `getStage({lng, lat, accuracy}) → string | false`.
+- `standalone/js/helpers/geolocation-permission.js` — port of fusion's helper
+  with Safari fallbacks (~30 LOC).
+- `standalone/js/helpers/prompt-storage.js` — `get/setLocationPromptCompleted()`
+  on the `LOCATION_PROMPT_KEY` exported from `config.js` (~20 LOC).
+- `standalone/js/helpers/stage-hysteresis.js` — factory
+  `createStageHysteresis({ now, setTimeout, clearTimeout, thresholdMs, onCommit })`;
+  state machine with immediate first-commit and 3 s stability requirement
+  for changes (~60 LOC).
+
+### Phase 3 — Location tracker (~30 min)
+- `standalone/js/location.js`. Exports `startLocationWatch()` / `stopLocationWatch()`.
+- Uses `navigator.geolocation.watchPosition` with `{ enableHighAccuracy: true, maximumAge: 0 }`.
+- Writes to `store.userLocation = { lng, lat, accuracy, error }`.
+- Emits `locationchange` `CustomEvent` on `document` on every fix.
+- Idempotent start: safe to call multiple times (matches `setupNotificationsRefresh`
+  style — bind once, no-op on re-entry).
+
+### Phase 4 — Stage resolution + hysteresis wiring (~30 min)
+- Inside `js/views/timetable-grid.js` (module scope, above `renderGridTimetable`):
+  - Instantiate hysteresis once at module load with `onCommit = (stage) => {
+    store.userStage = stage; document.dispatchEvent(new CustomEvent('stagechange', ...)); }`.
+  - Bind a `document.addEventListener('locationchange', …)` inside
+    `renderGridTimetable`, guarded with `document._buchtLocationListenerBound = true`
+    (double-bind pattern, matches `#gttScroll._gttScrollBound`).
+- Boot-time sanity check: after `loadData()` and `loadStages()` resolve
+  (in `app.js:init()`), `console.warn` any stage-name mismatches between
+  `timetable.json`'s `filters.stages[].value` and `stages.geojson`'s
+  `features[].properties.name`.
+
+### Phase 5 — Onboarding (~1 h)
+- **`index.html`**: pre-render an `<div class="onboarding-modal" id="onboardingModal">…</div>`
+  matching the shape of `#notificationsModal`. Contains headline, intro,
+  feature bullet, disclaimer, privacy box, and two buttons with
+  `data-action="onboarding-allow"` / `data-action="onboarding-not-now"`.
+- **`standalone/js/onboarding.js`** (~80 LOC, less than originally estimated
+  now that DOM lives in index.html). Exports `showLocationPromptIfNeeded()`
+  that returns a `Promise<void>`:
+  1. If `getLocationPromptCompleted()` true → resolve immediately.
+  2. Else query permission state. `granted`/`denied` → set flag, resolve.
+  3. Else set localized text via `t()`, add `.open` class to modal, return
+     a Promise that resolves when a button is clicked.
+- **`js/app.js`**: register `onboarding-allow` and `onboarding-not-now` in the
+  `actions` map. Handlers:
+  - `onboarding-allow` → `navigator.geolocation.getCurrentPosition` inside
+    the handler (iOS-PWA gesture-essential), populate `store.userLocation`,
+    set flag, remove `.open` class, resolve the pending promise.
+  - `onboarding-not-now` → set flag, remove `.open`, resolve.
+- **CSS**: `standalone/css/onboarding.css` (~80 LOC) in Bucht's palette.
+  Loaded from `index.html` alongside the other CSS files.
+- **i18n keys** added to `js/i18n.js` DE + EN:
+  - `onb.headline` — "Wer spielt hier gerade?" / "Who's playing here right now?"
+  - `onb.intro` — bridging line explaining the feature
+  - `onb.featureTimetable` — the "Automatischer Sprung zu der Bühne …" line
+    (kept from fusion)
+  - `onb.disclaimer` — "Diese Funktion funktioniert nur, wenn du der App
+    Zugriff auf deinen Standort erlaubst und GPS aktiviert ist." (singular)
+  - `onb.privacyTitle` — "Infos zum Datenschutz" / "Privacy info"
+  - `onb.privacyBody` — DE: "Kein Tracking. Keine Datenweitergabe. Dein
+    Standort bleibt nur lokal auf deinem Gerät." / EN: "No tracking. No
+    data sharing. Your location stays on your device."
+  - `onb.buttonAllow` — "GPS aktivieren" / "Enable GPS"
+  - `onb.buttonNotNow` — "Nicht jetzt" / "Not now"
+- Add `LOCATION_PROMPT_KEY = 'bucht-2026-location-prompt-completed'` to
+  `config.js` (next to `NOTIFICATIONS_SEEN_KEY`).
+
+### Phase 6 — Two-step auto-scroll (~45 min)
+- Extend `js/views/timetable-grid.js`:
+  - Rename existing `scrollGridToNow` to `scrollGridToNowTime` (step 1 only,
+    unchanged behaviour).
+  - Add `scrollGridToUserStage(orientation)` (step 2, no-op if `!store.userStage`).
+  - Sequence: step 1 fires, wait for `scrollend` (with 1 s fallback), then step 2.
+  - Bind step 2 to fire on: grid mount, `stagechange` event, orientation toggle.
+
+### Phase 7 — Pulse + vibrate (~20 min)
+- **CSS** (in `css/components.css` or a new `css/stage-pulse.css`):
+  `.gtt-current-stage` pulse animation on the stage header cell.
+- **JS** (in `timetable-grid.js`): on `stagechange`, remove class from old
+  header cell, add to new. Query fresh each fire (matches `onGridScroll` style).
+- On `oldStage → newStage` (both truthy strings, i.e. a genuine
+  stage-to-stage move), call `navigator.vibrate([50, 30, 50])`. First fix
+  (`null → stage`) and stage-to-null transitions are silent.
+
+### Phase 8 — Wire everything into boot (~10 min)
+- **`js/app.js:init()`** changes:
+  - Import `showLocationPromptIfNeeded`, `loadStages`.
+  - Replace `await loadData();` with
+    `await Promise.all([loadData(), loadStages()]);`.
+  - After the render sequence, `await showLocationPromptIfNeeded();`
+    (blocking, before notifications).
+  - Then `maybeShowNotifications()` continues as before.
+- **`sw.js`** changes:
+  - Add to `SHELL_ASSETS`: `./js/helpers/point-in-polygon.js`, `./js/helpers/get-stage.js`,
+    `./js/helpers/geolocation-permission.js`, `./js/helpers/prompt-storage.js`,
+    `./js/helpers/stage-hysteresis.js`, `./js/location.js`, `./js/onboarding.js`,
+    `./css/onboarding.css`, `./data/stages.geojson`.
+  - Opportunistic (R7 fix): also add missing `./js/views/timetable-grid.js`.
+  - Bump `CACHE_VERSION` to a fresh Unix timestamp.
+- **`index.html`** changes:
+  - Add `<link rel="stylesheet" href="css/onboarding.css?v={timestamp}" />`.
+  - Add `#onboardingModal` block (see Phase 5).
+  - Bump `?v=` cache-busters on the assets we're touching.
+
+### Phase 9 — Tests + QA (~45 min)
+- `standalone/tests/get-stage.test.js` — hit inside polygon, hit outside, low
+  accuracy, missing accuracy, multiple polygons.
+- `standalone/tests/stage-hysteresis.test.js` — first fix commits, same-stage
+  no-op, new candidate held for full window, candidate flap resets, coord-null
+  clears, `cancel()` clears pending.
+- Run with `node --test standalone/tests/*.test.js`.
+- Manual QA:
+  - Grant/deny paths, DevTools Sensors spoofing to each polygon centre,
+    gap between polygons, low-accuracy fix.
+  - **First-launch modal ordering**: verify onboarding appears BEFORE
+    notifications modal (R10 regression check).
+  - **Language switch**: verify `loadStages()` is not called a second time
+    (module-cached — R1 in the analysis).
+
+## Effort estimate
+
+| Phase | Time |
+|---|---|
+| 0 — pre-work | 10 min |
+| 1 — polygons | 15 min |
+| 2 — helpers | 45 min |
+| 3 — tracker | 30 min |
+| 4 — resolution + sanity check | 30 min |
+| 5 — onboarding | 1 h |
+| 6 — auto-scroll | 45 min |
+| 7 — pulse + vibrate | 20 min |
+| 8 — wire-up (app + sw + index) | 10 min |
+| 9 — tests + QA | 45 min |
+
+Total: **~5.5 h** end-to-end. Real polygons replace Phase 1 output later.
+
+## Invariants and non-obvious rules
+
+- **`dist/` is regenerated by `scripts/build.js` on deploy.** Never edit files
+  under `dist/`. Any change there will be overwritten on the next build.
+- **New source files must be listed in `sw.js SHELL_ASSETS`** for offline
+  precache to work. Bump `CACHE_VERSION` (fresh Unix timestamp) on every deploy.
+- **iOS-PWA gesture rule**: `getCurrentPosition` MUST be called inside the
+  click handler on the "Enable GPS" button. Calling it later (e.g. from a
+  post-navigation useEffect) suppresses the native dialog on installed PWAs.
+- **First-launch modal ordering**: `showLocationPromptIfNeeded()` must be
+  awaited before `maybeShowNotifications()`.
+- **Stage-name matching**: `stages.geojson` `properties.name` values must
+  match `timetable.json` `filters.stages[].value` (slugs). Enforced by the
+  boot-time sanity check.
+- **Testing**: `node --test standalone/tests/*.test.js`. `standalone/tests/`
+  is NOT copied to `dist/` by the build script — safe location.

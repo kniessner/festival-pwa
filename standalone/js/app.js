@@ -12,6 +12,8 @@ import { PAGES, pageIdx } from './config.js';
 import { t, setLang } from './i18n.js';
 import { maybeShowNotifications, closeNotifications, setupNotificationsRefresh } from './notifications.js';
 import { mergeMusicIntoTimetable, refreshMusic } from './music.js';
+import { showLocationPromptIfNeeded, onboardingAllow, onboardingNotNow } from './onboarding.js';
+import { loadStages, warnStageNameMismatches } from './helpers/get-stage.js';
 
 const LANG_LABELS = { de: 'De', en: 'Eng' };
 
@@ -23,7 +25,14 @@ async function init() {
     document.getElementById('notificationsDoneBtn').textContent = t('common.done');
     updateLangSwitcherLabel();
     updateHeaderFilterLabel();
-    await loadData();
+    // Parallel-load timetable/info data and stage polygons — they're
+    // independent files, no reason to serialise the round-trips.
+    await Promise.all([loadData(), loadStages()]);
+    // Boot-time sanity check: warn about drift between timetable.json's
+    // stage slugs and stages.geojson polygon names before the nav is
+    // interactive, so a fast user who navigates straight to the grid
+    // still hits the warning in their console. See helpers/get-stage.js.
+    warnStageNameMismatches(store.pageData.timetable?.filters);
     mergeMusicIntoTimetable();
     renderNav();
     // manifest.json's start_url passes ?page=favorites so launching the
@@ -36,6 +45,10 @@ async function init() {
     setupUpdateBanner();
     showLastUpdated();
     wireDelegation();
+    // Onboarding awaited BEFORE notifications so first-launch users
+    // don't see both modals stacked. Returning users go through this
+    // instantly (sticky flag or already-granted permission).
+    await showLocationPromptIfNeeded();
     maybeShowNotifications();
     setupNotificationsRefresh();
     setupMusicRefresh();
@@ -216,6 +229,8 @@ const actions = {
     },
     'close-search': () => closeSearchModal(),
     'close-notifications': () => closeNotifications(),
+    'onboarding-allow': () => onboardingAllow(),
+    'onboarding-not-now': () => onboardingNotNow(),
     'goto-event': el => {
         const itemIndex = parseInt(el.dataset.index, 10);
         if (el.dataset.day) store.ttPendingDay = el.dataset.day;

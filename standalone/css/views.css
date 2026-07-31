@@ -1174,18 +1174,19 @@ span#headerFilterLabel {
 }
 
 .gtt-toolbar {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    display:none;
+    /* Dead 'display: flex' + related declarations removed here — they
+       were overridden by 'display: none' below and had no effect.
+       If the toolbar should be visible again, delete the 'display: none'
+       and restore the flex layout. */
+    display: none;
 }
 
 .gtt-legend {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 14px;
-    padding: 8px 0 12px;
-    display:none;
+    /* Dead 'display: flex' + related declarations removed here — they
+       were overridden by 'display: none' below and had no effect.
+       If the legend should be visible again, delete the 'display: none'
+       and restore the flex layout. */
+    display: none;
 }
 
 .gtt-legend-item {
@@ -1268,7 +1269,6 @@ span#headerFilterLabel {
        auto-height parent) so this element is itself the scrolling container —
        .gtt-header/.gtt-stagelabel's position:sticky only takes effect relative
        to an ancestor that actually scrolls. */
-    height: calc(var(--vh, 1vh) * 100 - 320px);
     height: calc(var(--vh, 1vh) * 100 - 200px);
     min-height: 320px;
     border: 1px solid var(--border);
@@ -1281,14 +1281,17 @@ span#headerFilterLabel {
     border-radius: 0;
 }
 
-/* Single-finger touch drag is constrained to one axis; wheel/trackpad/scrollbar
-   still pan both, since those gestures don't suffer from the diagonal-drag problem. */
-.gtt-scroll.scroll-v {
-    touch-action: pan-y;
-}
-
+/* Allow single-finger touch drags on both axes. The original design
+ * (kniessner, 8c5f4a34) constrained touch to one axis per mode to avoid
+ * diagonal-drag ambiguity, but with .gtt-toolbar hidden the mode toggle
+ * is unreachable — leaving mobile users unable to scroll the other axis
+ * at all. Explicit 'pan-x pan-y' opts out of any browser-side gesture
+ * hijacking (pinch-zoom, pull-to-refresh) while allowing both scroll
+ * axes; wheel/trackpad were unaffected already. Restore the one-axis
+ * lock (pan-y / pan-x per mode) if the mode toggle is un-hidden. */
+.gtt-scroll.scroll-v,
 .gtt-scroll.scroll-h {
-    touch-action: pan-x;
+    touch-action: pan-x pan-y;
 }
 
 .gtt-header {
@@ -1377,6 +1380,13 @@ span#headerFilterLabel {
 .gtt-event {
     position: absolute;
     box-sizing: border-box;
+    /* Explicit z-index (below .gtt-stagelabel's z-index: 2) so the sticky
+       .gtt-event-title inside — which is pinned at left: 100px — hides
+       behind the sticky floor label when the block scrolls into the
+       label region, instead of appearing painted on top of it. Without
+       this, .gtt-event stayed at z-index: auto and sticky descendants
+       could paint over the label on iOS Safari. */
+    z-index: 1;
     background: var(--event-color, var(--stage-color, var(--accent-pink)));
     border-radius: 14px;
     border: 2px solid rgba(255, 255, 255, 0.3);
@@ -1414,13 +1424,38 @@ span#headerFilterLabel {
     font-size: 0.72rem;
     font-weight: 700;
     line-height: 1.2;
+    z-index: 3;
+    /* --- Default (WIDE boxes: long-form installations, De Loite's 11h
+       Space, etc.) ---
+       Sticky-left so the title stays pinned near the visible left edge
+       as the block scrolls under it. This is the behaviour that was
+       there originally — you can always see which act you're looking
+       at even when the box extends way past the viewport. */
     position: sticky;
     left: 100px;
-    z-index: 3;
-    display: inline-flex;
+    display: inline-block;
     width: max-content;
     padding-right: 2px;
-    margin-left: -8px;
+    /* 0.5rem breathing room from box's left/right borders (was
+       margin-left: -8px, which pinned against the border). */
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+    white-space: nowrap;
+}
+
+/* --- Narrow boxes (30-60min sets, etc.) ---
+   Sticky helps nothing when the box is narrower than the visible
+   scroll area to begin with; instead, truncate cleanly with an
+   ellipsis so long titles don't spill into the neighbouring lane's
+   space. The .gtt-event-narrow class is applied at render time by
+   isNarrowBox() in views/timetable-grid.js. */
+.gtt-event-narrow .gtt-event-title {
+    position: static;
+    display: block;
+    width: auto;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .gtt-now-line {
@@ -1626,7 +1661,6 @@ span#headerFilterLabel {
 }
 
 .gtt-detail-panel .fav-btn.active {
-    color: #FFEB3B;
     color: var(--accent-pink);
 }
 

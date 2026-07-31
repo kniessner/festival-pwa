@@ -7,11 +7,19 @@
  *   - Cross-origin assets        → Cache-First only for CORS/basic responses
  */
 
-const CACHE_VERSION = '1785406833';
+const CACHE_VERSION = '1785496155';
 const APP_NAME = 'bucht-standalone';
 const CACHE_NAME = `${APP_NAME}-v${CACHE_VERSION}`;
 
 // All local assets required for the app shell to work offline.
+//
+// MAINTENANCE: when adding a new source file (js/*.js, css/*.css, images/*,
+// data/*.json), also list it here so it precaches on install — otherwise a
+// user who installs the PWA and then goes offline will see a broken app the
+// first time that file is requested. Bump CACHE_VERSION above (fresh Unix
+// timestamp) on the same commit so the service worker rebuilds its cache
+// instead of serving the stale list. scripts/build.js reminds you about
+// CACHE_VERSION but does not touch this list.
 const SHELL_ASSETS = [
     './',
     './index.html',
@@ -27,6 +35,7 @@ const SHELL_ASSETS = [
     './images/datum.png',
     './data/info.json',
     './data/timetable.json',
+    './data/stages.geojson',
     './data/en/timetable.json',
     './data/_manifest.json'
 ];

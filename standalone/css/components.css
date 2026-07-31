@@ -566,3 +566,291 @@
     color: var(--festival-filter-text);
     background: var(--festival-filter-active);
 }
+
+/* ── Onboarding modal ─────────────────────────────────────────────────
+ * Full-screen first-launch overlay for the location-permission opt-in.
+ * Content localised and toggled by js/onboarding.js. Mirrors the layout
+ * of .notifications-modal so styling stays consistent across the app.
+ * z-index sits above notifications so a returning user with both unseen
+ * notifications AND (impossibly, after Phase 8 ordering) a pending
+ * onboarding wouldn't see notifications first.
+ */
+.onboarding-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 1000010;
+    background: var(--bg);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.onboarding-modal.open {
+    display: block;
+}
+
+.onboarding-modal-panel {
+    max-width: 480px;
+    margin: 0 auto;
+    padding: max(48px, env(safe-area-inset-top, 0px) + 24px) 24px
+             max(32px, env(safe-area-inset-bottom, 0px) + 24px);
+    color: var(--text-muted);
+    font-family: var(--font-body), sans-serif;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    min-height: 100%;
+    box-sizing: border-box;
+}
+
+.onboarding-headline {
+    font-family: var(--wp--preset--font-family--megan-display, var(--font-head)), serif;
+    font-size: 1.9rem;
+    line-height: 1.15;
+    margin: 0;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.onboarding-intro {
+    margin: 0;
+    font-size: 1rem;
+    line-height: 1.5;
+    opacity: 0.9;
+}
+
+.onboarding-feature {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 16px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border);
+    border-radius: var(--card-radius);
+}
+
+.onboarding-feature-badge {
+    flex: 0 0 auto;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--accent-pink);
+    color: var(--text-muted);
+    font-weight: 700;
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    margin-top: 2px;
+}
+
+.onboarding-feature p {
+    margin: 0;
+    font-size: 0.95rem;
+    line-height: 1.45;
+}
+
+.onboarding-disclaimer {
+    margin: 0;
+    font-size: 0.9rem;
+    line-height: 1.45;
+    font-weight: 700;
+    opacity: 0.85;
+}
+
+.onboarding-privacy {
+    padding: 16px 18px;
+    /* Pink accent tint. color-mix keeps the animation in sync with the
+       --accent-pink token; rgba() fallback for anything pre-Baseline 2023.
+       The fallback value matches --accent-pink at 12% / 35% alpha. */
+    background: rgba(222, 78, 57, 0.12);
+    background: color-mix(in srgb, var(--accent-pink) 12%, transparent);
+    border: 1px solid rgba(222, 78, 57, 0.35);
+    border: 1px solid color-mix(in srgb, var(--accent-pink) 35%, transparent);
+    border-radius: var(--card-radius);
+    text-align: center;
+}
+
+.onboarding-privacy h3 {
+    margin: 0 0 6px;
+    font-family: var(--wp--preset--font-family--megan-display, var(--font-head)), serif;
+    font-size: 1rem;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+}
+
+.onboarding-privacy p {
+    margin: 0;
+    font-size: 0.9rem;
+    line-height: 1.45;
+    opacity: 0.9;
+}
+
+.onboarding-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: auto;
+    padding-top: 12px;
+}
+
+.onboarding-btn {
+    padding: 14px 20px;
+    border: none;
+    border-radius: 50px;
+    font-family: var(--wp--preset--font-family--megan-display, var(--font-head)), serif;
+    font-size: 1rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.onboarding-btn-primary {
+    background: var(--accent-pink);
+    color: var(--text-muted);
+}
+
+.onboarding-btn-primary:active {
+    opacity: 0.85;
+}
+
+.onboarding-btn-secondary {
+    background: transparent;
+    color: var(--text-muted);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.onboarding-btn-secondary:active {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+/* ── Current-stage pulse ─────────────────────────────────────────────
+ * Highlights whichever stage the user is standing on, applied by
+ * js/views/timetable-grid.js on 'stagechange' (and on grid mount for
+ * fixes that arrived before mount). Two-sided: vertical layout uses
+ * .gtt-stagehead (column headers), horizontal uses .gtt-stagerow-wrap
+ * (row labels). Vibration matches the visual on real stage-to-stage
+ * moves — see handleStageChangeForPulse.
+ */
+.gtt-stagehead.gtt-current-stage {
+    position: relative;
+    animation: gtt-stage-pulse-wash 2s ease-in-out infinite;
+}
+
+.gtt-stagerow-wrap.gtt-current-stage {
+    position: relative;
+    /* No wash here — sticky .gtt-stagelabel paints on top of us, so the
+       wash goes on the label instead (rule below). The ring on ::after
+       spans the full row width, tying label and event area together. */
+}
+
+.gtt-current-stage .gtt-stagelabel {
+    /* Color pulse cycles between two accent colors (pink ↔ purple) via
+       inset box-shadow — ported from fusion's floorPulse, adapted to
+       Bucht's palette. Uses box-shadow overlay rather than 'filter:
+       brightness()' because filter was invisible on dark cell
+       backgrounds AND cascaded down to every child (making event
+       blocks pulse too, which was wrong — event blocks vibrate
+       instead, see .gtt-current-stage .gtt-event below). */
+    animation: gtt-stage-pulse-wash 2s ease-in-out infinite;
+}
+
+/* Only the CURRENTLY-PLAYING event in the user's stage vibrates — not
+ * every event block in that row. Compound selector: must be inside a
+ * .gtt-current-stage container AND carry the .gtt-event-now marker
+ * class (added by isEventPlayingNow() at render time). This is the
+ * visual answer to "who's playing here right now?", so it's a single
+ * event, not a whole row's worth. Mirrors fusion's gigVibrate; the
+ * class-driven scoping is our addition. Selector lands children of
+ * both .gtt-stagerow-wrap (horizontal mode) and .gtt-stagecol
+ * (vertical mode); both get .gtt-current-stage from
+ * applyStagePulseClasses. */
+.gtt-current-stage .gtt-event.gtt-event-now {
+    animation: gtt-gig-vibrate 2s ease-in-out infinite;
+}
+
+.gtt-stagehead.gtt-current-stage::after,
+.gtt-stagerow-wrap.gtt-current-stage::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border: 2px solid var(--accent-pink);
+    border-radius: inherit;
+    pointer-events: none;
+    box-shadow: 0 0 0 0 var(--accent-pink);
+    animation: gtt-stage-pulse-ring 2s ease-out infinite;
+}
+
+@keyframes gtt-stage-pulse-wash {
+    /* Cycle between accent-pink and accent-purple as an inset wash —
+       ported from fusion's floorPulse which cycles background between
+       primary and secondary. 999px inset radius floods the whole box
+       regardless of cell size. 55% alpha reads clearly on both the
+       darkest navy AND the lightest lavender label backgrounds. rgba()
+       fallback lines match --accent-pink and --accent-purple's RGB for
+       browsers pre-Baseline 2023 color-mix. */
+    0%, 100% {
+        box-shadow: inset 0 0 0 999px rgba(222, 78, 57, 0.55);
+        box-shadow: inset 0 0 0 999px color-mix(in srgb, var(--accent-pink) 55%, transparent);
+    }
+    50% {
+        box-shadow: inset 0 0 0 999px rgba(118, 44, 140, 0.55);
+        box-shadow: inset 0 0 0 999px color-mix(in srgb, var(--accent-purple) 55%, transparent);
+    }
+}
+
+@keyframes gtt-gig-vibrate {
+    /* Ported from fusion's gigVibrate (see pwa_test/src/TimetableFlat/
+       animations.ts). Shakes horizontally with a small rotation for the
+       first third of the cycle, then rests — the pause is what makes it
+       feel like a heartbeat rather than a robot. Amplitude dampens over
+       the shake so it decays naturally. */
+    0%     { transform: translateX(0)      rotate(0deg); }
+    3.33%  { transform: translateX(-3px)   rotate(-1deg); }
+    6.67%  { transform: translateX(3px)    rotate(1deg); }
+    10%    { transform: translateX(-3px)   rotate(-1deg); }
+    13.33% { transform: translateX(3px)    rotate(1deg); }
+    16.67% { transform: translateX(-2px)   rotate(-0.5deg); }
+    20%    { transform: translateX(2px)    rotate(0.5deg); }
+    23.33% { transform: translateX(-1px)   rotate(-0.25deg); }
+    26.67% { transform: translateX(1px)    rotate(0.25deg); }
+    30%    { transform: translateX(-0.5px) rotate(-0.1deg); }
+    33.33% { transform: translateX(0)      rotate(0deg); }
+    100%   { transform: translateX(0)      rotate(0deg); }
+}
+
+@keyframes gtt-stage-pulse-ring {
+    /* Ring color derived from --accent-pink via color-mix; rgba()
+       fallback provided for older browsers. The rgba() fallback matches
+       --accent-pink's RGB (222, 78, 57) at the specified alpha. */
+    0%   {
+        box-shadow: 0 0 0 0 rgba(222, 78, 57, 0.55);
+        box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent-pink) 55%, transparent);
+    }
+    70%  { box-shadow: 0 0 0 8px transparent; }
+    100% { box-shadow: 0 0 0 0 transparent; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .gtt-stagehead.gtt-current-stage,
+    .gtt-current-stage .gtt-stagelabel,
+    .gtt-current-stage .gtt-event.gtt-event-now,
+    .gtt-stagerow-wrap.gtt-current-stage {
+        animation: none;
+    }
+    .gtt-stagehead.gtt-current-stage,
+    .gtt-current-stage .gtt-stagelabel {
+        box-shadow: inset 0 0 0 999px rgba(222, 78, 57, 0.4);
+        box-shadow: inset 0 0 0 999px color-mix(in srgb, var(--accent-pink) 40%, transparent);
+    }
+    .gtt-stagehead.gtt-current-stage::after,
+    .gtt-stagerow-wrap.gtt-current-stage::after {
+        animation: none;
+        box-shadow: 0 0 0 2px var(--accent-pink);
+    }
+}
