@@ -1,6 +1,6 @@
 {
   "type": "FeatureCollection",
-  "_note": "DUMMY POLYGONS v1 for the stage-autoscroll feature. 3x3 grid of 150m x 150m rectangles centred near the Bucht PNG position at Helenesee (14.49504, 52.27349). Row 0 = north, row 2 = south; column 0 = west, column 2 = east. Slug order matches data/timetable.json filters.stages, excluding walking-act (roaming performers, no fixed location). These are stand-ins to unblock development and DevTools location spoofing; they will be replaced with real surveyed polygons when field data becomes available. Feature spec: standalone/docs/floor-detection-plan.md.",
+  "_note": "DUMMY POLYGONS v1 for the stage-autoscroll feature. Nine 30m x 30m squares strung west-to-east along the north shore of Helenesee (all at ~52.283 N, on solid ground ~200m north of the water). Positioned this way so each is easy to spot on a Google Maps satellite view and safely off-water for GPS spoofing tests. Slug order matches data/timetable.json filters.stages, excluding walking-act (roaming performers, no fixed location). The consumers (getStage, hysteresis, auto-scroll) don't care about the geometry values; final polygons will be surveyed on-site later. Feature spec: standalone/docs/floor-detection-plan.md.",
   "features": [
     {
       "type": "Feature",
@@ -8,11 +8,11 @@
       "geometry": {
         "type": "Polygon",
         "coordinates": [[
-          [14.490998, 52.275961],
-          [14.493202, 52.275961],
-          [14.493202, 52.274613],
-          [14.490998, 52.274613],
-          [14.490998, 52.275961]
+          [14.475780, 52.283135],
+          [14.476220, 52.283135],
+          [14.476220, 52.282865],
+          [14.475780, 52.282865],
+          [14.475780, 52.283135]
         ]]
       }
     },
@@ -22,11 +22,11 @@
       "geometry": {
         "type": "Polygon",
         "coordinates": [[
-          [14.493938, 52.275961],
-          [14.496142, 52.275961],
-          [14.496142, 52.274613],
-          [14.493938, 52.274613],
-          [14.493938, 52.275961]
+          [14.478780, 52.283135],
+          [14.479220, 52.283135],
+          [14.479220, 52.282865],
+          [14.478780, 52.282865],
+          [14.478780, 52.283135]
         ]]
       }
     },
@@ -36,11 +36,11 @@
       "geometry": {
         "type": "Polygon",
         "coordinates": [[
-          [14.496878, 52.275961],
-          [14.499082, 52.275961],
-          [14.499082, 52.274613],
-          [14.496878, 52.274613],
-          [14.496878, 52.275961]
+          [14.481780, 52.283135],
+          [14.482220, 52.283135],
+          [14.482220, 52.282865],
+          [14.481780, 52.282865],
+          [14.481780, 52.283135]
         ]]
       }
     },
@@ -50,11 +50,11 @@
       "geometry": {
         "type": "Polygon",
         "coordinates": [[
-          [14.490998, 52.274164],
-          [14.493202, 52.274164],
-          [14.493202, 52.272816],
-          [14.490998, 52.272816],
-          [14.490998, 52.274164]
+          [14.484780, 52.283135],
+          [14.485220, 52.283135],
+          [14.485220, 52.282865],
+          [14.484780, 52.282865],
+          [14.484780, 52.283135]
         ]]
       }
     },
@@ -64,11 +64,11 @@
       "geometry": {
         "type": "Polygon",
         "coordinates": [[
-          [14.493938, 52.274164],
-          [14.496142, 52.274164],
-          [14.496142, 52.272816],
-          [14.493938, 52.272816],
-          [14.493938, 52.274164]
+          [14.487780, 52.283135],
+          [14.488220, 52.283135],
+          [14.488220, 52.282865],
+          [14.487780, 52.282865],
+          [14.487780, 52.283135]
         ]]
       }
     },
@@ -78,11 +78,11 @@
       "geometry": {
         "type": "Polygon",
         "coordinates": [[
-          [14.496878, 52.274164],
-          [14.499082, 52.274164],
-          [14.499082, 52.272816],
-          [14.496878, 52.272816],
-          [14.496878, 52.274164]
+          [14.490780, 52.283135],
+          [14.491220, 52.283135],
+          [14.491220, 52.282865],
+          [14.490780, 52.282865],
+          [14.490780, 52.283135]
         ]]
       }
     },
@@ -92,11 +92,11 @@
       "geometry": {
         "type": "Polygon",
         "coordinates": [[
-          [14.490998, 52.272367],
-          [14.493202, 52.272367],
-          [14.493202, 52.271019],
-          [14.490998, 52.271019],
-          [14.490998, 52.272367]
+          [14.493780, 52.283135],
+          [14.494220, 52.283135],
+          [14.494220, 52.282865],
+          [14.493780, 52.282865],
+          [14.493780, 52.283135]
         ]]
       }
     },
@@ -106,11 +106,11 @@
       "geometry": {
         "type": "Polygon",
         "coordinates": [[
-          [14.493938, 52.272367],
-          [14.496142, 52.272367],
-          [14.496142, 52.271019],
-          [14.493938, 52.271019],
-          [14.493938, 52.272367]
+          [14.496780, 52.283135],
+          [14.497220, 52.283135],
+          [14.497220, 52.282865],
+          [14.496780, 52.282865],
+          [14.496780, 52.283135]
         ]]
       }
     },
@@ -120,11 +120,11 @@
       "geometry": {
         "type": "Polygon",
         "coordinates": [[
-          [14.496878, 52.272367],
-          [14.499082, 52.272367],
-          [14.499082, 52.271019],
-          [14.496878, 52.271019],
-          [14.496878, 52.272367]
+          [14.499780, 52.283135],
+          [14.500220, 52.283135],
+          [14.500220, 52.282865],
+          [14.499780, 52.282865],
+          [14.499780, 52.283135]
         ]]
       }
     }

@@ -19,22 +19,23 @@ test('point strictly outside a unit square', () => {
     assert.equal(isPointInPolygon([0.5, 2], unitSquare), false);
 });
 
-test('a real bucht polygon: schweissperle from stages.geojson', async () => {
-    // Row 1 col 2 of the 3x3 dummy grid: 14.496878..14.499082, 52.272816..52.274164.
-    // Centre is (14.49798, 52.27349), which is where we position the Bucht PNG.
+test('a real bucht polygon: schweissperle from stages.geojson', () => {
+    // schweissperle in the current geojson is one of nine 30m x 30m squares
+    // strung along the north shore of Helenesee (all at ~52.283 N).
+    // Centre is (14.491, 52.283).
     const schweissperle = [
-        [14.496878, 52.274164],
-        [14.499082, 52.274164],
-        [14.499082, 52.272816],
-        [14.496878, 52.272816],
-        [14.496878, 52.274164],
+        [14.490780, 52.283135],
+        [14.491220, 52.283135],
+        [14.491220, 52.282865],
+        [14.490780, 52.282865],
+        [14.490780, 52.283135],
     ];
     // Dead centre — inside.
-    assert.equal(isPointInPolygon([14.49798, 52.27349], schweissperle), true);
-    // North of the polygon — outside.
-    assert.equal(isPointInPolygon([14.49798, 52.280000], schweissperle), false);
-    // In the ~50 m gap between schweissperle and cuddle-poodle — outside.
-    assert.equal(isPointInPolygon([14.49798, 52.274500], schweissperle), false);
+    assert.equal(isPointInPolygon([14.491, 52.283], schweissperle), true);
+    // Well outside the polygon (way north) — outside.
+    assert.equal(isPointInPolygon([14.491, 52.290000], schweissperle), false);
+    // Just to the east of this polygon (in the gap before skalahara) — outside.
+    assert.equal(isPointInPolygon([14.4925, 52.283], schweissperle), false);
 });
 
 test('degenerate polygon (fewer than 3 unique vertices) never contains anything', () => {
