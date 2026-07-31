@@ -1427,10 +1427,23 @@ span#headerFilterLabel {
     position: sticky;
     left: 100px;
     z-index: 3;
-    display: inline-flex;
-    width: max-content;
+    /* Long titles previously grew to width: max-content and just spilled
+       past the box's right edge. Constrain to the box width and clip
+       with an ellipsis so tight blocks (30-min sets, narrow lanes) stay
+       tidy. display: block + max-width: 100% is the shrink-to-fit
+       trick that plays nicely with position: sticky above; white-space:
+       nowrap keeps titles on one line so text-overflow: ellipsis can
+       kick in. */
+    display: block;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
     padding-right: 2px;
-    margin-left: -8px;
+    /* 0.5rem breathing room on both sides (was margin-left: -8px, which
+       pinned the title against the border). */
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
 }
 
 .gtt-now-line {
