@@ -1,0 +1,132 @@
+{
+  "type": "FeatureCollection",
+  "_note": "DUMMY POLYGONS v1 for the stage-autoscroll feature. Nine 200m x 200m squares strung west-to-east along the north shore of Helenesee (all at 52.283 N, safely on land ~200m north of the water). Larger size so approximate GPS-spoof apps (that only let you pan-drag a map, not enter exact lat/lng) still land inside a polygon. Center-to-center spacing is 0.004° longitude (~272m at this latitude) so there's a ~72m visible gap between adjacent stages. Slug order matches data/timetable.json filters.stages, excluding walking-act (roaming performers, no fixed location). Final polygons will be surveyed on-site later. Feature spec: standalone/docs/floor-detection-plan.md.",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": { "name": "community-corner dezentral" },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [14.4765, 52.2839],
+          [14.4795, 52.2839],
+          [14.4795, 52.2821],
+          [14.4765, 52.2821],
+          [14.4765, 52.2839]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "cuddle-poodle" },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [14.4805, 52.2839],
+          [14.4835, 52.2839],
+          [14.4835, 52.2821],
+          [14.4805, 52.2821],
+          [14.4805, 52.2839]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "dezentral" },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [14.4845, 52.2839],
+          [14.4875, 52.2839],
+          [14.4875, 52.2821],
+          [14.4845, 52.2821],
+          [14.4845, 52.2839]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "mirage" },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [14.4885, 52.2839],
+          [14.4915, 52.2839],
+          [14.4915, 52.2821],
+          [14.4885, 52.2821],
+          [14.4885, 52.2839]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "neuro-divers" },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [14.4925, 52.2839],
+          [14.4955, 52.2839],
+          [14.4955, 52.2821],
+          [14.4925, 52.2821],
+          [14.4925, 52.2839]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "schweissperle" },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [14.4965, 52.2839],
+          [14.4995, 52.2839],
+          [14.4995, 52.2821],
+          [14.4965, 52.2821],
+          [14.4965, 52.2839]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "skalahara" },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [14.5005, 52.2839],
+          [14.5035, 52.2839],
+          [14.5035, 52.2821],
+          [14.5005, 52.2821],
+          [14.5005, 52.2839]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "strandflitzer" },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [14.5045, 52.2839],
+          [14.5075, 52.2839],
+          [14.5075, 52.2821],
+          [14.5045, 52.2821],
+          [14.5045, 52.2839]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "zirkus-mond" },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [14.5085, 52.2839],
+          [14.5115, 52.2839],
+          [14.5115, 52.2821],
+          [14.5085, 52.2821],
+          [14.5085, 52.2839]
+        ]]
+      }
+    }
+  ]
+}
