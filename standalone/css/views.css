@@ -1424,26 +1424,38 @@ span#headerFilterLabel {
     font-size: 0.72rem;
     font-weight: 700;
     line-height: 1.2;
+    z-index: 3;
+    /* --- Default (WIDE boxes: long-form installations, De Loite's 11h
+       Space, etc.) ---
+       Sticky-left so the title stays pinned near the visible left edge
+       as the block scrolls under it. This is the behaviour that was
+       there originally — you can always see which act you're looking
+       at even when the box extends way past the viewport. */
     position: sticky;
     left: 100px;
-    z-index: 3;
-    /* Long titles previously grew to width: max-content and just spilled
-       past the box's right edge. Constrain to the box width and clip
-       with an ellipsis so tight blocks (30-min sets, narrow lanes) stay
-       tidy. display: block + max-width: 100% is the shrink-to-fit
-       trick that plays nicely with position: sticky above; white-space:
-       nowrap keeps titles on one line so text-overflow: ellipsis can
-       kick in. */
+    display: inline-block;
+    width: max-content;
+    padding-right: 2px;
+    /* 0.5rem breathing room from box's left/right borders (was
+       margin-left: -8px, which pinned against the border). */
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+    white-space: nowrap;
+}
+
+/* --- Narrow boxes (30-60min sets, etc.) ---
+   Sticky helps nothing when the box is narrower than the visible
+   scroll area to begin with; instead, truncate cleanly with an
+   ellipsis so long titles don't spill into the neighbouring lane's
+   space. The .gtt-event-narrow class is applied at render time by
+   isNarrowBox() in views/timetable-grid.js. */
+.gtt-event-narrow .gtt-event-title {
+    position: static;
     display: block;
+    width: auto;
     max-width: 100%;
     overflow: hidden;
     text-overflow: ellipsis;
-    white-space: nowrap;
-    padding-right: 2px;
-    /* 0.5rem breathing room on both sides (was margin-left: -8px, which
-       pinned the title against the border). */
-    margin-left: 0.5rem;
-    margin-right: 0.5rem;
 }
 
 .gtt-now-line {

@@ -476,6 +476,14 @@ function isEventPlayingNow(ev) {
     return nowMin >= ev._start && nowMin <= ev._end;
 }
 
+// Boxes narrower than this get .gtt-event-narrow, which switches the
+// title from sticky-scroll mode to ellipsis-truncation mode (see the
+// CSS side in views.css). Threshold picked as roughly "wider than the
+// scrollable area on a mobile viewport after the sticky floor label"
+// — below that, sticky positioning has nothing to pin against
+// (the whole box is already in view) so ellipsis is the right posture.
+const NARROW_BOX_WIDTH_PX = 260;
+
 function renderEventBlockV(ev, gridMin, numLanes) {
     const idx = store.pageData.timetable.events.indexOf(ev);
     const top = (ev._start - gridMin) * PX_PER_MIN;
@@ -484,8 +492,12 @@ function renderEventBlockV(ev, gridMin, numLanes) {
     const left = ev._lane * laneWidth;
     const fav = isFavorite('timetable', idx) ? ' gtt-event-fav' : '';
     const now = isEventPlayingNow(ev) ? ' gtt-event-now' : '';
+    // Vertical mode lays out one stage per column of fixed width; the
+    // per-lane width can shrink well below 260px on stages with many
+    // overlapping acts, so honour the same threshold here.
+    const narrow = (laneWidth - 4) < NARROW_BOX_WIDTH_PX ? ' gtt-event-narrow' : '';
     return `
-    <div class="gtt-event${fav}${now}" data-item-index="${idx}" data-action="toggle-grid-event" style="top:${top}px;height:${height}px;left:${left}px;width:${laneWidth - 4}px;--event-color:${categoryColor(ev.category)}">
+    <div class="gtt-event${fav}${now}${narrow}" data-item-index="${idx}" data-action="toggle-grid-event" style="top:${top}px;height:${height}px;left:${left}px;width:${laneWidth - 4}px;--event-color:${categoryColor(ev.category)}">
         <span class="gtt-event-title">${ev.title}</span>
     </div>`;
 }
@@ -497,8 +509,9 @@ function renderEventBlockH(ev, gridMin, dayOffset) {
     const top = ev._lane * LANE_HEIGHT;
     const fav = isFavorite('timetable', idx) ? ' gtt-event-fav' : '';
     const now = isEventPlayingNow(ev) ? ' gtt-event-now' : '';
+    const narrow = width < NARROW_BOX_WIDTH_PX ? ' gtt-event-narrow' : '';
     return `
-    <div class="gtt-event${fav}${now}" data-item-index="${idx}" data-action="toggle-grid-event" style="left:${left}px;width:${width}px;top:${top}px;height:${LANE_HEIGHT - 6}px;--event-color:${categoryColor(ev.category)}">
+    <div class="gtt-event${fav}${now}${narrow}" data-item-index="${idx}" data-action="toggle-grid-event" style="left:${left}px;width:${width}px;top:${top}px;height:${LANE_HEIGHT - 6}px;--event-color:${categoryColor(ev.category)}">
         <span class="gtt-event-title">${ev.title}</span>
     </div>`;
 }
