@@ -1366,6 +1366,11 @@ span#headerFilterLabel {
     top: 0;
     z-index: 3;
     background: var(--bg);
+    /* Single horizontal divider under the day/hours row — the only
+       remaining grid line after we removed the per-row and per-hour
+       lines. Anchors the sticky header visually against the scrolling
+       content below. */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
 }
 
 .gtt-corner {
@@ -1559,6 +1564,18 @@ span#headerFilterLabel {
     color: #fff;
 }
 
+/* Red 2px outline marks the hour the user is currently in — pairs
+   with the .gtt-current-stage row outline for a "you are here" cross-
+   reference across the timetable. Applied by renderVerticalLayout /
+   renderHorizontalLayout at render time; won't tick automatically as
+   the hour rolls over, but next render (view mount, day switch,
+   stage-autoscroll) will reapply. */
+.gtt-hour-label-h.gtt-current-hour,
+.gtt-hour-label.gtt-current-hour {
+    outline: 2px solid #ff3b3b;
+    outline-offset: -2px;
+}
+
 .gtt-day-divider {
     position: absolute;
     top: 0;
@@ -1617,15 +1634,13 @@ span#headerFilterLabel {
        unpositioned and always paints behind every positioned element. */
 }
 
-/* One absolutely-positioned line per hour boundary, spanning the whole track —
-   drawn explicitly in JS instead of a repeating CSS background so the ticks
-   stay aligned with real hour boundaries across the gaps between day blocks. */
+/* Hourly vertical grid lines removed as part of the timetable-polish
+   round — the hour labels in the sticky header carry that information
+   just fine and the ticks were adding visual noise. Kept the class
+   selector inert (not deleting the JS that emits the elements) so any
+   future 'restore the grid' toggle is a one-line CSS change. */
 .gtt-hour-tick {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    width: 1px;
-    background: rgba(255, 255, 255, 0.25);
+    display: none;
 }
 
 .gtt-now-line-v {
