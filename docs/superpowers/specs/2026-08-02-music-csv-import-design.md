@@ -114,7 +114,10 @@ unresolvable, the row is imported title-only per decision 3.
   `festival-pwa.php` next to the existing `class-music.php` require.
   - Registers a submenu page under the CPT list menu
     (`edit.php?post_type=pwa_music_event`, page slug `pwa-music-import`,
-    "Import CSV"), `current_user_can('edit_posts')`.
+    "Import CSV"), `current_user_can('publish_posts')`. (Amended during
+    final review: the spec originally said `edit_posts`, but this CPT uses
+    `capability_type => 'post'` and the importer creates posts as
+    `publish`, so `edit_posts` would let a Contributor mass-publish.)
   - Renders an upload form (nonce-protected) and, after submission, the
     results summary.
   - Parsing/normalization/date-math live in small static/pure methods so
