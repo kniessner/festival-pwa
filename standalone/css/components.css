@@ -780,16 +780,27 @@
    .gtt-stagelabel (row label, sticky-left). Was previously on
    .gtt-stagerow-wrap which covered the full row width; the label-only
    version is a lot less visually noisy. */
+.gtt-stagehead.gtt-current-stage,
+.gtt-current-stage .gtt-stagelabel {
+    /* Outline (rather than a ::after with border) draws OUTSIDE the
+       element's border-box, guaranteed to paint on top of the label's
+       own border-right (the column divider). Also doesn't consume any
+       layout space. Negative outline-offset pulls it back onto the
+       border-box so it aligns with the label's outer edge. */
+    outline: 2px solid #ff3b3b;
+    outline-offset: -2px;
+}
+
 .gtt-stagehead.gtt-current-stage::after,
 .gtt-current-stage .gtt-stagelabel::after {
     content: '';
     position: absolute;
-    inset: 0;
-    /* Red 2px outline marks the user's current stage. Was previously
-       pink; switched to red so it stands out unambiguously as "you
-       are here", matching the .gtt-now-line time indicator. Static
-       outline; the pulse-ring animation below still emanates on top. */
-    border: 2px solid #ff3b3b;
+    inset: 0 -1px 0 0;
+    /* Pulse-ring only — the static red outline lives on the parent's
+       'outline' property now (see above), so this pseudo-element just
+       provides the box-shadow-based emanating aura animation. Border
+       kept for the reduced-motion fallback below. */
+    border: 2px solid transparent;
     border-radius: inherit;
     pointer-events: none;
     box-shadow: 0 0 0 0 #ff3b3b;
