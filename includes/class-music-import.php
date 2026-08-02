@@ -131,4 +131,79 @@ class Festival_PWA_Music_Import {
             'flags'       => $flags,
         ];
     }
+
+    /* ── WordPress-dependent import ───────────────────────────────────── */
+
+    public static function import_row($analyzed) {
+        $external_id = sanitize_text_field($analyzed['external_id']);
+        $title       = sanitize_text_field($analyzed['title']);
+
+        if ($external_id === '' || $title === '') {
+            return ['status' => 'skipped', 'analyzed' => $analyzed];
+        }
+
+        $existing = get_posts([
+            'post_type'      => Festival_PWA_Music::POST_TYPE,
+            'post_status'    => 'any',
+            'posts_per_page' => 1,
+            'meta_key'       => '_pwa_music_external_id',
+            'meta_value'     => $external_id,
+        ]);
+
+        if ($existing) {
+            $post_id = $existing[0]->ID;
+            wp_update_post(['ID' => $post_id, 'post_title' => $title]);
+            $status = 'updated';
+        } else {
+            $post_id = wp_insert_post([
+                'post_type'   => Festival_PWA_Music::POST_TYPE,
+                'post_title'  => $title,
+                'post_status' => 'publish',
+            ]);
+            $status = 'created';
+        }
+
+        if (is_wp_error($post_id) || !$post_id) {
+            return ['status' => 'error', 'analyzed' => $analyzed];
+        }
+
+        update_post_meta($post_id, '_pwa_music_external_id', $external_id);
+        if ($analyzed['stage_value'] !== null) {
+            update_post_meta($post_id, '_pwa_music_stage', $analyzed['stage_value']);
+        }
+        if ($analyzed['start'] !== null) {
+            update_post_meta($post_id, '_pwa_music_start', $analyzed['start']);
+        }
+        if ($analyzed['end'] !== null) {
+            update_post_meta($post_id, '_pwa_music_end', $analyzed['end']);
+        }
+
+        return ['status' => $status, 'post_id' => $post_id, 'analyzed' => $analyzed];
+    }
+
+    public static function run_import($csv_path) {
+        $rows = self::parse_csv_file($csv_path);
+        $results = ['created' => 0, 'updated' => 0, 'skipped' => 0, 'flagged' => []];
+
+        foreach ($rows as $row) {
+            $analyzed = self::analyze_row($row);
+            $outcome = self::import_row($analyzed);
+
+            if ($outcome['status'] === 'created') $results['created']++;
+            elseif ($outcome['status'] === 'updated') $results['updated']++;
+            else $results['skipped']++;
+
+            if (!empty($analyzed['flags'])) {
+                $results['flagged'][] = [
+                    'external_id' => $analyzed['external_id'],
+                    'title'       => $analyzed['title'],
+                    'reasons'     => $analyzed['flags'],
+                ];
+            }
+        }
+
+        Festival_PWA_Music::rebuild_json();
+
+        return $results;
+    }
 }
