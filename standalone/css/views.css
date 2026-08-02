@@ -1393,6 +1393,10 @@ span#headerFilterLabel {
     font-size: 0.85rem;
     text-transform: uppercase;
     letter-spacing: 0.5px;
+    /* Right-border extends the .gtt-stagelabel column's divider up
+       into the sticky header, giving one continuous vertical line
+       between the floor-name column and the grid. */
+    border-right: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .gtt-stagehead {
@@ -1608,6 +1612,13 @@ span#headerFilterLabel {
     text-align: center;
     padding: 6px;
     background: var(--bg);
+    /* Right-border draws a continuous vertical divider between the
+       sticky floor-name column and the timetable grid, so the two
+       feel like separate columns instead of running into each other.
+       Matches the header corner cell (.gtt-corner-day) below for a
+       continuous vertical line from the very top of the sticky header
+       through every stage row. */
+    border-right: 1px solid rgba(255, 255, 255, 0.2);
     color: #fff;
     font-family: 'Megan Display';
     font-weight: 700;
