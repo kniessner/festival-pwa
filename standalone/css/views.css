@@ -1468,6 +1468,10 @@ span#headerFilterLabel {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    /* Horizontally center the title inside the box. Combined with
+       flex-direction: column + justify-content: center, this centers
+       .gtt-event-title on both axes. */
+    align-items: center;
     gap: 2px;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
 }
@@ -1496,37 +1500,21 @@ span#headerFilterLabel {
     font-weight: 700;
     line-height: 1.2;
     z-index: 3;
-    /* --- Default (WIDE boxes: long-form installations, De Loite's 11h
-       Space, etc.) ---
-       Sticky-left so the title stays pinned near the visible left edge
-       as the block scrolls under it. This is the behaviour that was
-       there originally — you can always see which act you're looking
-       at even when the box extends way past the viewport. */
-    position: sticky;
-    left: 100px;
-    display: inline-block;
-    width: max-content;
-    padding-right: 2px;
-    /* 0.5rem breathing room from box's left/right borders (was
-       margin-left: -8px, which pinned against the border). */
-    margin-left: 0.5rem;
-    margin-right: 0.5rem;
-    white-space: nowrap;
-}
+    text-align: center;
+    /* Wrap up to 2 lines; if the title is longer than that, truncate
+       cleanly with an ellipsis. The webkit-line-clamp / -webkit-box
+       trio is the only widely-supported CSS-only way to do multi-line
+       ellipsis (Baseline: works in Chrome/Firefox/Safari 2023+).
 
-/* --- Narrow boxes (30-60min sets, etc.) ---
-   Sticky helps nothing when the box is narrower than the visible
-   scroll area to begin with; instead, truncate cleanly with an
-   ellipsis so long titles don't spill into the neighbouring lane's
-   space. The .gtt-event-narrow class is applied at render time by
-   isNarrowBox() in views/timetable-grid.js. */
-.gtt-event-narrow .gtt-event-title {
-    position: static;
-    display: block;
-    width: auto;
-    max-width: 100%;
+       Replaces the previous sticky-left / max-content / white-space:
+       nowrap approach: static positioning means the title now flows
+       with the box (no more scroll-pinning) but wraps cleanly to two
+       lines instead of overflowing on one. */
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
     overflow: hidden;
-    text-overflow: ellipsis;
+    max-width: 100%;
 }
 
 .gtt-now-line {
