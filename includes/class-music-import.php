@@ -79,13 +79,42 @@ class Festival_PWA_Music_Import {
         return null;
     }
 
+    /**
+     * Parse the uploaded CSV into an array of column-keyed rows.
+     *
+     * Returns null — not [] — when the file cannot be read, has no header
+     * row, or the header is missing a column the import fundamentally needs
+     * (ID and Dein Artist Name; import_row() skips any row lacking either).
+     * That lets run_import() tell "malformed upload, abort" apart from the
+     * legitimate "valid header, zero data rows" case, which returns [].
+     *
+     * fgetcsv() takes every argument explicitly: PHP 8.5+ deprecates relying
+     * on the default $escape, and '' is the right value for an Excel-style
+     * export, which has no backslash-escaping convention.
+     */
+    const REQUIRED_COLUMNS = ['ID', 'Dein Artist Name'];
+
     public static function parse_csv_file($path) {
+        $handle = @fopen($path, 'r');
+        if (!$handle) return null;
+
+        $header = fgetcsv($handle, 0, ',', '"', '');
+        if (!$header) { fclose($handle); return null; }
+
+        $header = array_map(static function ($col) {
+            // Strip a UTF-8 BOM off the first column and trim stray padding.
+            return trim(preg_replace('/^\xEF\xBB\xBF/', '', (string) $col));
+        }, $header);
+
+        foreach (self::REQUIRED_COLUMNS as $required) {
+            if (!in_array($required, $header, true)) {
+                fclose($handle);
+                return null;
+            }
+        }
+
         $rows = [];
-        $handle = fopen($path, 'r');
-        if (!$handle) return $rows;
-        $header = fgetcsv($handle);
-        if (!$header) { fclose($handle); return $rows; }
-        while (($line = fgetcsv($handle)) !== false) {
+        while (($line = fgetcsv($handle, 0, ',', '"', '')) !== false) {
             if (count($line) < count($header)) {
                 $line = array_pad($line, count($header), '');
             }
@@ -142,9 +171,13 @@ class Festival_PWA_Music_Import {
             return ['status' => 'skipped', 'analyzed' => $analyzed];
         }
 
+        // Explicit status list rather than 'any': 'any' silently excludes
+        // statuses registered with exclude_from_search, i.e. 'trash'. Without
+        // trash here, trashing an imported event and re-importing would miss
+        // the existing post and create a duplicate with the same external ID.
         $existing = get_posts([
             'post_type'      => Festival_PWA_Music::POST_TYPE,
-            'post_status'    => 'any',
+            'post_status'    => ['publish', 'draft', 'pending', 'private', 'trash'],
             'posts_per_page' => 1,
             'meta_key'       => '_pwa_music_external_id',
             'meta_value'     => $external_id,
@@ -182,8 +215,18 @@ class Festival_PWA_Music_Import {
     }
 
     public static function run_import($csv_path) {
+        // ~313 lookups + up to 312 inserts + ~1,250 meta writes in one
+        // request. Best-effort only: @ swallows the notice on hosts where
+        // set_time_limit is disabled, where this simply does nothing.
+        @set_time_limit(0);
+
         $rows = self::parse_csv_file($csv_path);
-        $results = ['created' => 0, 'updated' => 0, 'skipped' => 0, 'flagged' => []];
+        if ($rows === null) {
+            // Abort before touching the database or rebuilding the JSON.
+            return ['error' => 'The CSV could not be read, or is missing required columns (ID, Dein Artist Name).'];
+        }
+
+        $results = ['created' => 0, 'updated' => 0, 'skipped' => 0, 'errors' => 0, 'flagged' => []];
 
         foreach ($rows as $row) {
             $analyzed = self::analyze_row($row);
@@ -191,6 +234,7 @@ class Festival_PWA_Music_Import {
 
             if ($outcome['status'] === 'created') $results['created']++;
             elseif ($outcome['status'] === 'updated') $results['updated']++;
+            elseif ($outcome['status'] === 'error') $results['errors']++;
             else $results['skipped']++;
 
             if (!empty($analyzed['flags'])) {
@@ -218,7 +262,11 @@ class Festival_PWA_Music_Import {
             'edit.php?post_type=' . Festival_PWA_Music::POST_TYPE,
             'Import CSV',
             'Import CSV',
-            'edit_posts',
+            // publish_posts, not edit_posts: import_row() creates posts as
+            // 'publish', and this CPT uses capability_type 'post', so a
+            // Contributor holds edit_posts but must not be able to publish.
+            // Must stay in sync with render_page()'s own check below.
+            'publish_posts',
             self::PAGE_SLUG,
             [$this, 'render_page']
         );
@@ -230,7 +278,7 @@ class Festival_PWA_Music_Import {
         if (
             isset($_POST['pwa_music_import_submit'])
             && wp_verify_nonce($_POST['pwa_music_import_nonce'] ?? '', 'pwa_music_import')
-            && current_user_can('edit_posts')
+            && current_user_can('publish_posts') // keep in sync with add_menu()
         ) {
             if (!empty($_FILES['music_csv']['tmp_name']) && is_uploaded_file($_FILES['music_csv']['tmp_name'])) {
                 $results = self::run_import($_FILES['music_csv']['tmp_name']);
@@ -248,10 +296,11 @@ class Festival_PWA_Music_Import {
                 <?php else: ?>
                     <div class="notice notice-success">
                         <p><?php echo esc_html(sprintf(
-                            'Created %d, updated %d, skipped %d.',
+                            'Created %d, updated %d, skipped %d, errors %d.',
                             $results['created'],
                             $results['updated'],
-                            $results['skipped']
+                            $results['skipped'],
+                            $results['errors']
                         )); ?></p>
                     </div>
                     <?php if (!empty($results['flagged'])): ?>
