@@ -58,6 +58,13 @@ const COL_WIDTH = 130;      // vertical mode: fixed width for every stage column
 const AXIS_WIDTH = 52;      // vertical mode: time-axis / corner column width
 const STAGE_LABEL_WIDTH = 96; // horizontal mode: stage-label column width
 const LANE_HEIGHT = 60;     // horizontal mode: overlap-lane height within a stage row
+// Visual gap between consecutive event boxes along the TIME axis (so
+// back-to-back sets don't visually stick to each other). Applied as an
+// inset from both edges of the box's time-span, i.e. the box shrinks by
+// 2 * EVENT_GAP_PX total. Horizontal mode: horizontal gap; vertical
+// mode: vertical gap. Inter-lane gaps (perpendicular axis) already
+// exist via 'width - 4' (V) / 'LANE_HEIGHT - 6' (H).
+const EVENT_GAP_PX = 3;
 const DAY_GAP = 28;         // horizontal mode: gap between consecutive day blocks
 
 // Haptic feedback pattern for a real stage-to-stage transition. Three
@@ -516,8 +523,11 @@ const NARROW_BOX_WIDTH_PX = 260;
 
 function renderEventBlockV(ev, gridMin, numLanes) {
     const idx = store.pageData.timetable.events.indexOf(ev);
-    const top = (ev._start - gridMin) * PX_PER_MIN;
-    const height = Math.max(24, (ev._end - ev._start) * PX_PER_MIN);
+    // Inset top + shrink height so consecutive events don't stick to
+    // each other along the vertical (time) axis. Min height reduced
+    // to accommodate the shrink for very short events (≤ 12min).
+    const top = (ev._start - gridMin) * PX_PER_MIN + EVENT_GAP_PX;
+    const height = Math.max(14, (ev._end - ev._start) * PX_PER_MIN - 2 * EVENT_GAP_PX);
     const laneWidth = COL_WIDTH / numLanes;
     const left = ev._lane * laneWidth;
     const fav = isFavorite('timetable', idx) ? ' gtt-event-fav' : '';
@@ -534,8 +544,11 @@ function renderEventBlockV(ev, gridMin, numLanes) {
 
 function renderEventBlockH(ev, gridMin, dayOffset) {
     const idx = store.pageData.timetable.events.indexOf(ev);
-    const left = dayOffset + (ev._start - gridMin) * PX_PER_MIN;
-    const width = Math.max(40, (ev._end - ev._start) * PX_PER_MIN);
+    // Inset left + shrink width so consecutive events don't stick to
+    // each other along the horizontal (time) axis. Min width reduced
+    // to accommodate the shrink for very short events.
+    const left = dayOffset + (ev._start - gridMin) * PX_PER_MIN + EVENT_GAP_PX;
+    const width = Math.max(30, (ev._end - ev._start) * PX_PER_MIN - 2 * EVENT_GAP_PX);
     const top = ev._lane * LANE_HEIGHT;
     const fav = isFavorite('timetable', idx) ? ' gtt-event-fav' : '';
     const now = isEventPlayingNow(ev) ? ' gtt-event-now' : '';
