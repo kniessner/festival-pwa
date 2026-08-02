@@ -206,4 +206,85 @@ class Festival_PWA_Music_Import {
 
         return $results;
     }
+
+    /* ── Admin UI ──────────────────────────────────────────────────────── */
+
+    public function __construct() {
+        add_action('admin_menu', [$this, 'add_menu']);
+    }
+
+    public function add_menu() {
+        add_submenu_page(
+            'edit.php?post_type=' . Festival_PWA_Music::POST_TYPE,
+            'Import CSV',
+            'Import CSV',
+            'edit_posts',
+            self::PAGE_SLUG,
+            [$this, 'render_page']
+        );
+    }
+
+    public function render_page() {
+        $results = null;
+
+        if (
+            isset($_POST['pwa_music_import_submit'])
+            && wp_verify_nonce($_POST['pwa_music_import_nonce'] ?? '', 'pwa_music_import')
+            && current_user_can('edit_posts')
+        ) {
+            if (!empty($_FILES['music_csv']['tmp_name']) && is_uploaded_file($_FILES['music_csv']['tmp_name'])) {
+                $results = self::run_import($_FILES['music_csv']['tmp_name']);
+            } else {
+                $results = ['error' => 'No file uploaded.'];
+            }
+        }
+        ?>
+        <div class="wrap">
+            <h1>Import Music Events (CSV)</h1>
+
+            <?php if ($results !== null): ?>
+                <?php if (isset($results['error'])): ?>
+                    <div class="notice notice-error"><p><?php echo esc_html($results['error']); ?></p></div>
+                <?php else: ?>
+                    <div class="notice notice-success">
+                        <p><?php echo esc_html(sprintf(
+                            'Created %d, updated %d, skipped %d.',
+                            $results['created'],
+                            $results['updated'],
+                            $results['skipped']
+                        )); ?></p>
+                    </div>
+                    <?php if (!empty($results['flagged'])): ?>
+                        <h2>Needs review (<?php echo count($results['flagged']); ?>)</h2>
+                        <table class="wp-list-table widefat fixed striped">
+                            <thead>
+                                <tr><th>External ID</th><th>Artist</th><th>Reason</th></tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($results['flagged'] as $flag): ?>
+                                    <tr>
+                                        <td><?php echo esc_html($flag['external_id']); ?></td>
+                                        <td><?php echo esc_html($flag['title']); ?></td>
+                                        <td><?php echo esc_html(implode(', ', $flag['reasons'])); ?></td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    <?php endif; ?>
+                <?php endif; ?>
+            <?php endif; ?>
+
+            <form method="post" enctype="multipart/form-data">
+                <?php wp_nonce_field('pwa_music_import', 'pwa_music_import_nonce'); ?>
+                <p><input type="file" name="music_csv" accept=".csv" required></p>
+                <p class="description">
+                    Expected columns: ID, Dein Artist Name, Stage, Playtime, day, start_time, end_time.
+                </p>
+                <?php submit_button('Import', 'primary', 'pwa_music_import_submit'); ?>
+            </form>
+        </div>
+        <?php
+    }
 }
+
+new Festival_PWA_Music_Import();
