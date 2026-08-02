@@ -1545,7 +1545,17 @@ span#headerFilterLabel {
     display: flex;
     align-items: center;
     justify-content: center;
-    border-right: 1px solid rgba(255, 255, 255, 0.2);
+    /* Border on the LEFT edge, not right. With box-sizing: border-box
+       and width: 120px, a border-right sits at pixel column
+       (label_left + 119) — one pixel LEFT of the true hour boundary
+       (which the JS positions at label_left + 120). Border-left
+       instead draws at pixel column label_left, exactly matching the
+       hour boundary the label represents and lining up cleanly with
+       event-block edges, day dividers, and the now-line. Side effect:
+       the first label of each day-block now has a border on its left,
+       but that harmlessly coincides with the day-divider (or, for day
+       1, the sticky corner column's right edge). */
+    border-left: 1px solid rgba(255, 255, 255, 0.2);
     font-family: var(--font-head);
     font-size: 1.05rem;
     font-weight: 700;
