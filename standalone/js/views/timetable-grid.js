@@ -328,8 +328,16 @@ function renderVerticalLayout({ data, header, track, stages, byStage, stageLanes
     }).join('');
 
     const hourLabels = [];
+    // Mark the hour label whose 60-min bucket contains "now" — the
+    // .gtt-current-hour red outline (see views.css) pairs with the
+    // .gtt-current-stage row outline as a "you are here" cross-
+    // reference. Only applies on today's grid; other days have no
+    // meaningful "current hour".
+    const isTodayV = store.gridDay === getEffectiveFestivalDay();
+    const currentHourBucketV = isTodayV ? Math.floor(currentContinuousMinutes() / 60) * 60 : null;
     for (let m = gridMin; m <= gridMax; m += 60) {
-        hourLabels.push(`<div class="gtt-hour-label" style="top:${(m - gridMin) * PX_PER_MIN}px">${String(Math.floor(m / 60) % 24).padStart(2, '0')}:00</div>`);
+        const cur = m === currentHourBucketV ? ' gtt-current-hour' : '';
+        hourLabels.push(`<div class="gtt-hour-label${cur}" style="top:${(m - gridMin) * PX_PER_MIN}px">${String(Math.floor(m / 60) % 24).padStart(2, '0')}:00</div>`);
     }
 
     const stageColumns = stages.map(stage => {
@@ -394,12 +402,20 @@ function renderHorizontalLayout({ data, header, track, blocks }) {
     // soon as a day's block width isn't an exact multiple of the tick spacing.
     const hourLabels = [];
     const hourTicks = [];
+    // Same "you are here" hour cross-reference as vertical mode —
+    // scoped per day-block since horizontal mode is a continuous strip
+    // of all days, and only today's block has a meaningful current hour.
+    const todayH = getEffectiveFestivalDay();
+    const nowMinH = currentContinuousMinutes();
     blocks.forEach(b => {
+        const isTodayBlock = b.dayValue === todayH;
+        const currentHourBucketH = isTodayBlock ? Math.floor(nowMinH / 60) * 60 : null;
         let first = true;
         for (let m = b.gridMin; m <= b.gridMax; m += 60) {
             const rulerLeft = b._offset + (m - b.gridMin) * PX_PER_MIN;
             const hourText = `${String(Math.floor(m / 60) % 24).padStart(2, '0')}:00`;
-            hourLabels.push(`<div class="gtt-hour-label-h" style="left:${rulerLeft}px">${hourText}</div>`);
+            const cur = m === currentHourBucketH ? ' gtt-current-hour' : '';
+            hourLabels.push(`<div class="gtt-hour-label-h${cur}" style="left:${rulerLeft}px">${hourText}</div>`);
             // Ticks live inside .gtt-track, not the ruler, so they need the stage-label
             // column's width added to line up with the ruler/row content above/below them.
             if (!first) hourTicks.push(`<div class="gtt-hour-tick" style="left:${STAGE_LABEL_WIDTH + rulerLeft}px"></div>`);
