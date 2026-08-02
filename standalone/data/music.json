@@ -1,7 +1,18 @@
 {
   "type": "music",
   "slug": "music",
-  "events": [],
+  "events": [
+    {
+      "id": 1,
+      "title": "DJ Bobo",
+      "day": "2026-08-13",
+      "start_time": "22:00",
+      "end_time": "23:30",
+      "stage": "porto-loco",
+      "stage_label": "Porto Loco",
+      "category": "Music"
+    }
+  ],
   "stages": [
     {
       "value": "atlantis",
