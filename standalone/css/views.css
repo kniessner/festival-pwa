@@ -1572,7 +1572,10 @@ span#headerFilterLabel {
     display: flex;
     align-items: stretch;
     background: var(--bg);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+    /* No border-bottom — removing the horizontal lines was a design call,
+       stage rows are now separated only by the LANE_INSET_PX padding
+       around event blocks (see renderEventBlockH). Kept .gtt-hour-tick
+       vertical lines and the day-divider intact. */
 }
 
 .gtt-stagelabel {
