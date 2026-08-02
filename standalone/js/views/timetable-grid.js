@@ -62,9 +62,14 @@ const LANE_HEIGHT = 60;     // horizontal mode: overlap-lane height within a sta
 // back-to-back sets don't visually stick to each other). Applied as an
 // inset from both edges of the box's time-span, i.e. the box shrinks by
 // 2 * EVENT_GAP_PX total. Horizontal mode: horizontal gap; vertical
-// mode: vertical gap. Inter-lane gaps (perpendicular axis) already
-// exist via 'width - 4' (V) / 'LANE_HEIGHT - 6' (H).
+// mode: vertical gap.
 const EVENT_GAP_PX = 3;
+// Visual gap on the PERPENDICULAR (lane) axis. Applied symmetrically
+// (inset from top+bottom in horizontal mode; inset from left+right in
+// vertical mode) so events don't sit flush against neighbouring lanes
+// or against the stage row's top/bottom edge. Was previously applied
+// only on one side (bottom in H, right in V), which looked lopsided.
+const LANE_INSET_PX = 3;
 const DAY_GAP = 28;         // horizontal mode: gap between consecutive day blocks
 
 // Haptic feedback pattern for a real stage-to-stage transition. Three
@@ -529,15 +534,18 @@ function renderEventBlockV(ev, gridMin, numLanes) {
     const top = (ev._start - gridMin) * PX_PER_MIN + EVENT_GAP_PX;
     const height = Math.max(14, (ev._end - ev._start) * PX_PER_MIN - 2 * EVENT_GAP_PX);
     const laneWidth = COL_WIDTH / numLanes;
-    const left = ev._lane * laneWidth;
+    // Inset on the perpendicular (lane) axis so events don't sit flush
+    // against the next lane's boundary. Symmetric LANE_INSET_PX each side.
+    const left = ev._lane * laneWidth + LANE_INSET_PX;
     const fav = isFavorite('timetable', idx) ? ' gtt-event-fav' : '';
     const now = isEventPlayingNow(ev) ? ' gtt-event-now' : '';
     // Vertical mode lays out one stage per column of fixed width; the
     // per-lane width can shrink well below 260px on stages with many
     // overlapping acts, so honour the same threshold here.
-    const narrow = (laneWidth - 4) < NARROW_BOX_WIDTH_PX ? ' gtt-event-narrow' : '';
+    const finalWidth = laneWidth - 2 * LANE_INSET_PX;
+    const narrow = finalWidth < NARROW_BOX_WIDTH_PX ? ' gtt-event-narrow' : '';
     return `
-    <div class="gtt-event${fav}${now}${narrow}" data-item-index="${idx}" data-action="toggle-grid-event" style="top:${top}px;height:${height}px;left:${left}px;width:${laneWidth - 4}px;--event-color:${categoryColor(ev.category)}">
+    <div class="gtt-event${fav}${now}${narrow}" data-item-index="${idx}" data-action="toggle-grid-event" style="top:${top}px;height:${height}px;left:${left}px;width:${finalWidth}px;--event-color:${categoryColor(ev.category)}">
         <span class="gtt-event-title">${ev.title}</span>
     </div>`;
 }
@@ -549,12 +557,16 @@ function renderEventBlockH(ev, gridMin, dayOffset) {
     // to accommodate the shrink for very short events.
     const left = dayOffset + (ev._start - gridMin) * PX_PER_MIN + EVENT_GAP_PX;
     const width = Math.max(30, (ev._end - ev._start) * PX_PER_MIN - 2 * EVENT_GAP_PX);
-    const top = ev._lane * LANE_HEIGHT;
+    // Inset on the perpendicular (lane) axis so events don't sit flush
+    // against the stage row's top edge (which is what used to happen —
+    // the 6px slack lived only at the bottom via 'height: LANE_HEIGHT - 6').
+    const top = ev._lane * LANE_HEIGHT + LANE_INSET_PX;
+    const height = LANE_HEIGHT - 2 * LANE_INSET_PX;
     const fav = isFavorite('timetable', idx) ? ' gtt-event-fav' : '';
     const now = isEventPlayingNow(ev) ? ' gtt-event-now' : '';
     const narrow = width < NARROW_BOX_WIDTH_PX ? ' gtt-event-narrow' : '';
     return `
-    <div class="gtt-event${fav}${now}${narrow}" data-item-index="${idx}" data-action="toggle-grid-event" style="left:${left}px;width:${width}px;top:${top}px;height:${LANE_HEIGHT - 6}px;--event-color:${categoryColor(ev.category)}">
+    <div class="gtt-event${fav}${now}${narrow}" data-item-index="${idx}" data-action="toggle-grid-event" style="left:${left}px;width:${width}px;top:${top}px;height:${height}px;--event-color:${categoryColor(ev.category)}">
         <span class="gtt-event-title">${ev.title}</span>
     </div>`;
 }
