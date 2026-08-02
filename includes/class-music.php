@@ -33,12 +33,10 @@ class Festival_PWA_Music {
         'Waldtraut',
         'Unterholz',
         'Neustockland',
-        'Mirage Outdoor',
-        'Mirage Indoor',
+        'Mirage',
         'Schweißperle',
         'Strandflitzer',
-        'Zirkus Mond draußen',
-        'Zirkus Mond drinnen',
+        'Zirkus Mond',
         'Sektamt',
     ];
 
@@ -154,12 +152,12 @@ class Festival_PWA_Music {
         update_post_meta($post_id, '_pwa_music_end', sanitize_text_field($_POST['pwa_music_end'] ?? ''));
         update_post_meta($post_id, '_pwa_music_stage', sanitize_text_field($_POST['pwa_music_stage'] ?? ''));
 
-        $this->rebuild_json();
+        self::rebuild_json();
     }
 
     public function on_status_change($post_id) {
         if (get_post_type($post_id) !== self::POST_TYPE) return;
-        $this->rebuild_json();
+        self::rebuild_json();
     }
 
     /* ── Admin list table: Stage + Time columns, both sortable ──────────── */
@@ -236,7 +234,7 @@ class Festival_PWA_Music {
         return $value;
     }
 
-    private function derive_day($datetime_local) {
+    public static function derive_day($datetime_local) {
         if (!$datetime_local) return '';
         try {
             $dt = new DateTime($datetime_local);
@@ -249,7 +247,7 @@ class Festival_PWA_Music {
         return $dt->format('Y-m-d');
     }
 
-    public function rebuild_json() {
+    public static function rebuild_json() {
         $posts = get_posts([
             'post_type'      => self::POST_TYPE,
             'post_status'    => 'publish',
@@ -276,7 +274,7 @@ class Festival_PWA_Music {
             $events[] = [
                 'id'          => $post->ID,
                 'title'       => get_the_title($post),
-                'day'         => $this->derive_day($start),
+                'day'         => self::derive_day($start),
                 'start_time'  => $startDt->format('H:i'),
                 'end_time'    => $endDt ? $endDt->format('H:i') : '',
                 'stage'       => $stageValue,
@@ -333,7 +331,7 @@ class Festival_PWA_Music {
         $file = FESTIVAL_PWA_DIR . 'pwa/data/music.json';
         $data = file_exists($file)
             ? json_decode(file_get_contents($file), true)
-            : $this->rebuild_json();
+            : self::rebuild_json();
 
         $data['_synced'] = file_exists($file) ? filemtime($file) : time();
         return new WP_REST_Response($data, 200);
