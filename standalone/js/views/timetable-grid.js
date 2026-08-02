@@ -627,6 +627,17 @@ export function closeGridEventDetail() {
     if (backdrop) backdrop.classList.remove('open');
 }
 
+// Esc closes the event-detail overlay. Bound once at module load; the
+// guard on .gtt-detail.open avoids stealing Esc from any other overlay
+// (search modal, onboarding, notifications) when this one isn't the
+// visible one. Same pattern as search.js's Escape handler.
+document.addEventListener('keydown', (e) => {
+    if (e.key !== 'Escape') return;
+    if (document.getElementById('gttDetail')?.classList.contains('open')) {
+        closeGridEventDetail();
+    }
+});
+
 function scrollGridToNowTime() {
     const orientation = store.gridScrollMode;
     setTimeout(() => {
