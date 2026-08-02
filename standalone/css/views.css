@@ -1572,10 +1572,34 @@ span#headerFilterLabel {
    renderHorizontalLayout at render time; won't tick automatically as
    the hour rolls over, but next render (view mount, day switch,
    stage-autoscroll) will reapply. */
+/* Red 2px outline marks the hour the user is currently in. Uses a
+   ::before pseudo-element (rather than 'outline') so it can extend
+   past the label's own padding-box on the right and bottom, covering
+   two divider lines that would otherwise chip the highlight:
+
+     - Next hour label's border-left (draws 1px past this label's
+       border-box right)
+     - .gtt-header's border-bottom (draws 1px past this label's
+       border-box bottom)
+
+   left: -1px also covers the current label's own border-left. */
 .gtt-hour-label-h.gtt-current-hour,
 .gtt-hour-label.gtt-current-hour {
-    outline: 2px solid #ff3b3b;
-    outline-offset: -2px;
+    /* Nothing on the label itself — pseudo below handles the outline. */
+}
+
+.gtt-hour-label-h.gtt-current-hour::before,
+.gtt-hour-label.gtt-current-hour::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -1px;      /* cover own border-left */
+    right: -1px;     /* cover next label's border-left */
+    bottom: -1px;    /* cover header's border-bottom */
+    border: 2px solid #ff3b3b;
+    box-sizing: border-box;
+    pointer-events: none;
+    z-index: 1;
 }
 
 .gtt-day-divider {
