@@ -117,6 +117,10 @@ class Festival_PWA_Music_Import {
         if ($dt['start'] === null) {
             $flags[] = ($day_raw === '' && $start_raw === '') ? 'unscheduled' : 'unparseable time';
         }
+        // Flag if start resolved but end_time is non-blank and unparseable
+        if ($dt['start'] !== null && $dt['end'] === null && trim($row['end_time'] ?? '') !== '') {
+            $flags[] = 'unparseable time';
+        }
 
         return [
             'external_id' => $external_id,
