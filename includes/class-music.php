@@ -178,7 +178,7 @@ class Festival_PWA_Music {
     public function render_column($column, $post_id) {
         if ($column === 'pwa_music_stage') {
             $value = get_post_meta($post_id, '_pwa_music_stage', true);
-            echo $value ? esc_html($this->stage_label($value)) : '—';
+            echo $value ? esc_html(self::stage_label($value)) : '—';
         } elseif ($column === 'pwa_music_time') {
             $start = get_post_meta($post_id, '_pwa_music_start', true);
             $end   = get_post_meta($post_id, '_pwa_music_end', true);
@@ -227,7 +227,7 @@ class Festival_PWA_Music {
 
     /* ── JSON generation ──────────────────────────────────────────────── */
 
-    private function stage_label($value) {
+    private static function stage_label($value) {
         foreach (self::STAGES as $label) {
             if (sanitize_title($label) === $value) return $label;
         }
@@ -278,7 +278,7 @@ class Festival_PWA_Music {
                 'start_time'  => $startDt->format('H:i'),
                 'end_time'    => $endDt ? $endDt->format('H:i') : '',
                 'stage'       => $stageValue,
-                'stage_label' => $this->stage_label($stageValue),
+                'stage_label' => self::stage_label($stageValue),
                 // 'type' (lowercase slug) is what the Program list's category
                 // filter actually compares against — 'category' is just the
                 // display label. Scraped events set both; music events need
