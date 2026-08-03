@@ -1,6 +1,7 @@
 import { store, fetchLocalized } from './store.js';
 import { NOTIFICATIONS_SEEN_KEY, DATA_FILES } from './config.js';
 import { escapeHtml } from './ui.js';
+import { t } from './i18n.js';
 
 // Notifications are authored via the WP plugin's "PWA Push" post type and
 // synced into data/notifications.json — separate from news.json (which is
@@ -42,6 +43,20 @@ function markAllNotificationsSeen() {
     }
 }
 
+// Shared by maybeShowNotifications() (unseen-only auto-popup) and
+// showAllNotifications() (manual "see everything" open, from the drop-up
+// menu's news preview) — same card markup either way.
+function renderNotificationCards(items) {
+    if (!items.length) return `<div class="page-intro" style="margin-top:0">${t('info.newsEmpty')}</div>`;
+    return items.map(item => `
+        <div class="news-card ${item.highlight ? 'news-highlight' : ''}">
+            <div class="card-header"><h3>${escapeHtml(item.question)}</h3></div>
+            ${item.date ? `<span class="news-date">${escapeHtml(formatNotificationDate(item))}</span>` : ''}
+            <p>${escapeHtml(item.answer)}</p>
+        </div>
+    `).join('');
+}
+
 export function maybeShowNotifications() {
     const unseen = getUnseenNotifications();
     if (!unseen.length) return;
@@ -50,14 +65,33 @@ export function maybeShowNotifications() {
     const list = document.getElementById('notificationsList');
     if (!modal || !list) return;
 
-    list.innerHTML = unseen.map(item => `
-        <div class="news-card ${item.highlight ? 'news-highlight' : ''}">
-            <div class="card-header"><h3>${escapeHtml(item.question)}</h3></div>
-            ${item.date ? `<span class="news-date">${escapeHtml(formatNotificationDate(item))}</span>` : ''}
-            <p>${escapeHtml(item.answer)}</p>
-        </div>
-    `).join('');
+    list.innerHTML = renderNotificationCards(unseen);
+    modal.classList.add('open');
+}
 
+// Single most recent item, regardless of seen/unseen state — used by the
+// drop-up menu's news-preview card. items is assumed newest-first (the
+// same assumption js/views/info.js's News tab already makes about this
+// feed).
+export function getLatestNotification() {
+    const items = store.pageData.notifications?.items;
+    return items && items.length ? items[0] : null;
+}
+
+// Opens the notifications modal showing EVERY item, not just unseen ones.
+// Deliberately separate from maybeShowNotifications(): that function only
+// ever renders the unseen subset, so reusing it here could open the modal
+// to an empty list the moment the one item being previewed has already
+// been marked seen elsewhere. Closing still goes through the shared
+// closeNotifications(), which marks everything seen — correct here too,
+// since the user has now seen everything by definition.
+export function showAllNotifications() {
+    const items = store.pageData.notifications?.items || [];
+    const modal = document.getElementById('notificationsModal');
+    const list = document.getElementById('notificationsList');
+    if (!modal || !list) return;
+
+    list.innerHTML = renderNotificationCards(items);
     modal.classList.add('open');
 }
 
