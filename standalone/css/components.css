@@ -476,10 +476,11 @@
     left: 0;
     right: 0;
     bottom: 0;
+    top:0;
     margin: 0 auto;
     width: 100%;
     max-width: 650px;
-    max-height: 80vh;
+    max-height: 100vh;
     background: var(--bg);
     border: 2px solid var(--accent-pink);
     border-bottom: none;
@@ -617,17 +618,17 @@
 }
 
 .install-card-close {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    background: none;
+      background: none;
     border: none;
-    color: var(--text);
-    font-size: 1.4rem;
-    font-weight: 700;
+    color: var(--text-muted);
+    font-size: 2rem;
     line-height: 1;
     cursor: pointer;
-    padding: 4px;
+    padding: 4px 6px;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    color: var(--accent-orange);
 }
 
 .lang-badge {
