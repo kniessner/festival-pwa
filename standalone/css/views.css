@@ -90,7 +90,7 @@ span#headerFilterLabel {
 
 .page-timetable .header-filter-btn {
     display: flex;
-    margin-top: -30px;
+    margin-top: 20px;
 }
 
 /*   .app-header h1 {
@@ -480,8 +480,8 @@ span#headerFilterLabel {
     text-transform: uppercase;
     letter-spacing: 0.5px;
     cursor: pointer; */
-    
-     flex: 0 0 auto;
+
+    flex: 0 0 auto;
     background: rgba(73, 69, 184, 1);
     border: none;
     color: var(--text-muted);
@@ -497,7 +497,7 @@ span#headerFilterLabel {
 }
 
 .fav-tab.active {
-      line-height: 17px;
+    line-height: 17px;
     color: var(--text);
     background: rgba(242, 184, 176, 1);
     border: 2px solid rgba(222, 78, 57, 1);
@@ -728,7 +728,8 @@ span#headerFilterLabel {
     margin: 0 -16px 20px;
     padding: 8px 16px;
     text-align: start;
-    justify-content: start;
+    justify-content: space-between;
+
 
 }
 
@@ -767,7 +768,7 @@ span#headerFilterLabel {
 }
 
 .tt-day-tab.active {
- 
+
     line-height: 17px;
     color: var(--text);
     background: rgba(242, 184, 176, 1);
@@ -1122,8 +1123,8 @@ span#headerFilterLabel {
     margin-bottom: 20px;
 }
 
-/* Category/genre are constant-valued (and thus meaningless to filter by)
-   while the Music tab is active — see updateTypeSpecificFilterUI() in
+/* Category is constant-valued (and thus meaningless to filter by) while
+   the Music tab is active — see updateTypeSpecificFilterUI() in
    views/timetable.js. */
 .tt-filter-group-hidden {
     display: none;
@@ -1269,7 +1270,7 @@ span#headerFilterLabel {
     color: var(--text);
     font-size: 1.1rem;
     cursor: pointer;
-    display:none;
+    display: none;
 }
 
 .gtt-scroll-toggle:active {
@@ -1318,7 +1319,7 @@ span#headerFilterLabel {
     border: 1px solid var(--border);
     border-radius: var(--radius);
     background: var(--bg-card);
-    position:fixed;
+    position: fixed;
     left: 0;
     right: 0;
     top: 200px;
@@ -1630,7 +1631,7 @@ span#headerFilterLabel {
 }
 
 .gtt-detail {
-     position: fixed;
+    position: fixed;
     left: -3px;
     right: -3px;
     bottom: -100%;
@@ -1640,7 +1641,7 @@ span#headerFilterLabel {
 }
 
 .gtt-detail.open {
-       bottom: -10px;
+    bottom: -10px;
 }
 
 .gtt-detail-panel {
@@ -1653,7 +1654,7 @@ span#headerFilterLabel {
     overflow-y: auto;
     position: relative;
     box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.45);
-        padding-bottom: 30px;
+    padding-bottom: 30px;
 }
 
 .gtt-detail-title-row {
