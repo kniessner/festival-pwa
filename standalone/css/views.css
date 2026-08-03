@@ -59,19 +59,17 @@
 }
 
 .header-filter-btn {
-    display: none;
     flex-shrink: 0;
     align-items: center;
     gap: 6px;
     background: rgba(229, 113, 97, 1);
     border: none;
     border-radius: 50px;
-    padding: 2px 16px;
+    padding: 0px 16px;
     color: rgba(27, 25, 42, 1);
-    font-family: var(--font-body);
     font-family: 'Megan Display';
     font-weight: 400;
-    line-height: 17px;
+    line-height: 28px;
     font-size: 16px;
     text-transform: uppercase;
     letter-spacing: 0.5px;
@@ -933,20 +931,22 @@ span#headerFilterLabel {
 .tt-hour-group {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 12px;
 }
 
 .tt-hour-label {
-    letter-spacing: 4px;
-    padding: 8px;
+    letter-spacing: 0;
+    padding: 8px 0;
     z-index: 10;
     color: var(--wp--preset--color--base);
     font-family: var(--wp--preset--font-family--megan-display);
     font-style: normal;
-    font-weight: 700;
+    font-weight: 400;
     line-height: 1.125;
     text-transform: uppercase;
-    font-size: var(--wp--preset--font-size--large);
+    font-size: 24px;
+    margin-top: 10px;
+    margin-bottom: -10px;
 }
 
 .tt-hour-events {
@@ -1052,14 +1052,15 @@ span#headerFilterLabel {
 .tt-now-badge {
     margin-left: auto;
     flex-shrink: 0;
-    background: var(--accent-pink);
-    color: #fff;
-    font-size: 0.65rem;
+    background: rgba(235, 149, 136, 1);
+    color: rgba(27, 25, 42, 1);
+    font-size: 14px;
     font-weight: 900;
-    padding: 4px 12px;
+    padding: 4px 12px 0;
     border-radius: 50px;
     letter-spacing: 1px;
     text-transform: uppercase;
+    font-family: 'Megan Display';
 }
 
 .tt-event-detail {
@@ -1307,7 +1308,7 @@ span#headerFilterLabel {
     border: none;
     color: var(--text-muted);
     border-radius: 20px;
-    padding: 8px 16px;
+    padding: 8px 14px;
     font-family: 'Megan Display';
     font-weight: 400;
     font-size: 15px;
