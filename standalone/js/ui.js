@@ -31,12 +31,11 @@ export function showToast(message) {
     }, 3000);
 }
 
-export function favButton(pageSlug, index, { icon = false } = {}) {
+export function favButton(pageSlug, index) {
     const isActive = isFavorite(pageSlug, index);
     const active = isActive ? 'active' : '';
-    const content = icon
-        ? `<span class="fav-star-icon" style="-webkit-mask-image:url(images/${isActive ? 'star.svg' : 'star-outline.svg'});mask-image:url(images/${isActive ? 'star.svg' : 'star-outline.svg'})"></span>`
-        : '★';
+    const icon = isActive ? 'star.svg' : 'star-outline.svg';
+    const content = `<span class="fav-star-icon" style="-webkit-mask-image:url(images/${icon});mask-image:url(images/${icon})"></span>`;
     return `<button class="fav-btn ${active}" data-action="toggle-fav" data-page="${pageSlug}" data-index="${index}" title="${t('common.favorite')}">${content}</button>`;
 }
 
