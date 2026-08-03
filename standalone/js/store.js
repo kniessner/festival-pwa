@@ -6,6 +6,10 @@ export const store = {
     pageData: {},
     lang: getLang(),
     ttFilters: { stage: 'all', category: 'all', genre: 'all', day: 'all' },
+    // Shared across the Program list and grid Timetable views — picking
+    // Music in one keeps it selected when switching to the other, since
+    // both read this same field fresh at render time.
+    eventTypeFilter: 'music',
     ttPendingDay: null,
     gridDay: null,
     gridScrollMode: 'horizontal',
@@ -46,7 +50,12 @@ export async function loadData() {
     // together instead of overlapping them).
     await Promise.all(Object.entries(DATA_FILES).map(async ([slug, file]) => {
         try {
-            store.pageData[slug] = await fetchLocalized(file, store.lang);
+            // music.json is never localized (music events aren't
+            // translated — see class-music.php), so requesting it with
+            // 'de' skips fetchLocalized's en/ attempt, which would only
+            // ever 404 and fall back anyway. Same file for every language.
+            const lang = slug === 'music' ? 'de' : store.lang;
+            store.pageData[slug] = await fetchLocalized(file, lang);
         } catch (e) {
             console.error('Failed to load', file, e);
         }

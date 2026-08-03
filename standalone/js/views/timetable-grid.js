@@ -5,6 +5,7 @@ import { t } from '../i18n.js';
 import { isFavorite } from '../favorites.js';
 import { getStage } from '../helpers/get-stage.js';
 import { createStageHysteresis } from '../helpers/stage-hysteresis.js';
+import { matchesEventType, resetTypeSpecificFilters, renderEventTypeTabs } from '../event-type-filter.js';
 
 // Module-scoped hysteresis: one instance survives every renderGridTimetable
 // call (view remounts don't reset it). On commit, mirrors the new stage to
@@ -124,16 +125,12 @@ export function renderGridTimetable(container) {
     const days = data.filters.days;
 
     container.innerHTML = `
+        ${renderEventTypeTabs('set-grid-event-type')}
         <div class="gtt-toolbar">
             <div class="gtt-daytabs" id="gttDayTabs"></div>
             <button class="gtt-scroll-toggle" id="gttScrollToggle" data-action="toggle-grid-scroll"></button>
         </div>
-        <div class="gtt-legend">
-            <span class="gtt-legend-item"><span class="gtt-legend-swatch" style="background:${categoryColor('Space')}"></span>${t('grid.legendSpace')}</span>
-            <span class="gtt-legend-item"><span class="gtt-legend-swatch" style="background:${categoryColor('Music')}"></span>${t('grid.legendMusic')}</span>
-            <span class="gtt-legend-item"><span class="gtt-legend-swatch" style="background:${categoryColor('Workshop')}"></span>${t('grid.legendWorkshop')}</span>
-            <span class="gtt-legend-item"><span class="gtt-legend-swatch" style="background:${categoryColor('Performance')}"></span>${t('grid.legendPerformance')}</span>
-        </div>
+        <div class="gtt-legend" id="gttLegend"></div>
         <div class="gtt-scroll" id="gttScroll">
             <div class="gtt-header" id="gttHeader"></div>
             <div class="gtt-track" id="gttTrack"></div>
@@ -141,6 +138,8 @@ export function renderGridTimetable(container) {
         <div class="gtt-detail-backdrop" id="gttDetailBackdrop" data-action="close-grid-detail"></div>
         <div class="gtt-detail" id="gttDetail"></div>
     `;
+
+    renderGridLegend();
 
     const tabsContainer = document.getElementById('gttDayTabs');
     // Day labels come back as full names now ("Donnerstag"/"Thursday") —
@@ -192,13 +191,44 @@ export function setGridDay(dayValue) {
     });
 }
 
+// Legend swatches scoped to the active tab — Music tab only ever shows
+// Music-category events, so Space/Workshop/Performance swatches would be
+// dead labels; same the other way around.
+function renderGridLegend() {
+    const legend = document.getElementById('gttLegend');
+    if (!legend) return;
+    const isMusic = store.eventTypeFilter === 'music';
+    legend.innerHTML = isMusic
+        ? `<span class="gtt-legend-item"><span class="gtt-legend-swatch" style="background:${categoryColor('Music')}"></span>${t('grid.legendMusic')}</span>`
+        : `
+            <span class="gtt-legend-item"><span class="gtt-legend-swatch" style="background:${categoryColor('Space')}"></span>${t('grid.legendSpace')}</span>
+            <span class="gtt-legend-item"><span class="gtt-legend-swatch" style="background:${categoryColor('Workshop')}"></span>${t('grid.legendWorkshop')}</span>
+            <span class="gtt-legend-item"><span class="gtt-legend-swatch" style="background:${categoryColor('Performance')}"></span>${t('grid.legendPerformance')}</span>
+        `;
+}
+
+export function setEventType(type) {
+    store.eventTypeFilter = type;
+    // ttFilters belongs to the Program list view, which has no state of
+    // its own here — reset it anyway so switching tabs from the grid
+    // doesn't leave a stale stage/category/genre selection waiting for
+    // whoever opens the Program list next.
+    resetTypeSpecificFilters(store.ttFilters);
+    document.querySelectorAll('.tt-type-tabs .tt-type-tab').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.type === type);
+    });
+    renderGridLegend();
+    refreshGridTimetable();
+}
+
 // Builds one day's stage/lane layout — used directly by vertical mode (single
 // day) and as one segment of the continuous strip in horizontal mode.
 function buildDayBlock(data, dayValue) {
     // Anything with a real slot (start, end, and a stage) gets plotted — including
     // "Space" installations that run for a set window, e.g. De Loite 10:00-21:00.
+    // matchesEventType() partitions Music vs. everything else per the active tab.
     const events = data.events.filter(ev =>
-        ev.day === dayValue && ev.start_time && ev.end_time && ev.stage
+        matchesEventType(ev) && ev.day === dayValue && ev.start_time && ev.end_time && ev.stage
     );
     if (events.length === 0) return null;
 

@@ -52,6 +52,9 @@ const STRINGS = {
         // timetable
         'tt.loading': 'Programm wird geladen…',
         'tt.emptySelection': 'Keine Events für diese Auswahl',
+        // event type tabs (Program list + grid Timetable)
+        'evt.music': 'Musik',
+        'evt.culture': 'Kultur',
         'tt.filterButton': 'Filter',
         'tt.filterTitle': 'Filter',
         'tt.stageLabel': 'Bühnen',
@@ -141,6 +144,9 @@ const STRINGS = {
         'home.countdownOver': 'Over',
         'tt.loading': 'Program is loading…',
         'tt.emptySelection': 'No events for this selection',
+        // event type tabs (Program list + grid Timetable)
+        'evt.music': 'Music',
+        'evt.culture': 'Culture',
         'tt.filterButton': ' Filter',
         'tt.filterTitle': 'Filter',
         'tt.stageLabel': 'Stages',

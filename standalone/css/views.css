@@ -778,6 +778,43 @@ span#headerFilterLabel {
     transform: scale(0.96);
 }
 
+/* Event type tabs (Music/Culture) — same pill convention as .tt-day-tab
+   and .info-tab, shown by both the Program list and grid Timetable. */
+
+.tt-type-tabs {
+    display: flex;
+    gap: 8px;
+    margin: 0 -16px 4px;
+    padding: 8px 16px 0;
+}
+
+.tt-type-tab {
+    flex: 1 1 0;
+    background: rgba(73, 69, 184, 1);
+    border: none;
+    color: var(--text-muted);
+    border-radius: 20px;
+    padding: 8px 16px;
+    font-family: 'Megan Display';
+    font-weight: 400;
+    font-size: 15px;
+    text-transform: uppercase;
+    cursor: pointer;
+    line-height: 22px;
+    height: 32px;
+}
+
+.tt-type-tab.active {
+    line-height: 17px;
+    color: var(--text);
+    background: rgba(242, 184, 176, 1);
+    border: 2px solid rgba(222, 78, 57, 1);
+}
+
+.tt-type-tab:active {
+    transform: scale(0.96);
+}
+
 /* Info tabs */
 
 .info-tabs {
@@ -1083,6 +1120,13 @@ span#headerFilterLabel {
 
 .tt-filter-group {
     margin-bottom: 20px;
+}
+
+/* Category/genre are constant-valued (and thus meaningless to filter by)
+   while the Music tab is active — see updateTypeSpecificFilterUI() in
+   views/timetable.js. */
+.tt-filter-group-hidden {
+    display: none;
 }
 
 .tt-filter-group label {
