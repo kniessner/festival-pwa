@@ -73,6 +73,23 @@ test('renderNav lists the 4 real pages (excluding hidden home) plus a disabled F
     assert.match(html, /menu-item-disabled/, 'Festivalmap placeholder present');
 });
 
+test('renderNav includes a Cashless link that opens the Weezevent widget in a new tab', async () => {
+    const { doc } = installGlobals({ localStorageState: { 'bucht-lang': 'de' } });
+    const { store } = await import('../js/store.js');
+    store.currentPage = 2;
+
+    const { renderNav } = await import('../js/router.js');
+    renderNav();
+
+    const html = doc._elements.get('menuNavList').innerHTML;
+    assert.match(
+        html,
+        /<a class="menu-item-link" href="https:\/\/widget\.weezevent\.com\/pay\/410675\/widgets\/c17f233e-6562-413e-9187-b6663d72afd2\/login" target="_blank" rel="noopener noreferrer">/,
+        'Cashless link has the exact URL and opens in a new tab'
+    );
+    assert.match(html, />Cashless</, 'labelled Cashless');
+});
+
 test('renderNav marks the current page active and updates the trigger label', async () => {
     const { doc } = installGlobals({ localStorageState: { 'bucht-lang': 'de' } });
     const { store } = await import('../js/store.js');

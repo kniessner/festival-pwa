@@ -530,6 +530,7 @@
 }
 
 .menu-nav-list button,
+.menu-nav-list a,
 .menu-nav-list .menu-item-disabled {
     position: relative;
     background: none;
@@ -537,6 +538,7 @@
     border-bottom: 1px solid rgba(242, 233, 220, 0.15);
     color: var(--text-muted);
     text-align: left;
+    text-decoration: none;
     padding: 30px 4px;
     font-family: 'Megan Display';
     font-size: 1.6rem;
@@ -550,6 +552,7 @@
 }
 
 .menu-nav-list button:last-child,
+.menu-nav-list a:last-child,
 .menu-nav-list .menu-item-disabled:last-child {
     border-bottom: none;
 }
@@ -569,6 +572,12 @@
     letter-spacing: 0;
     font-family: var(--font-body);
     opacity: 0.8;
+}
+
+.menu-item-external {
+    font-size: 1.1rem;
+    text-transform: none;
+    opacity: 0.7;
 }
 
 .menu-news-preview {

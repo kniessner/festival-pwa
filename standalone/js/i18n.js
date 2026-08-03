@@ -15,6 +15,7 @@ const STRINGS = {
         'nav.favorites': 'Mein Plan',
         'nav.info': 'Info',
         'nav.festivalmap': 'Festivalmap',
+        'nav.cashless': 'Cashless',
         // search
         'search.placeholder': 'Suchen...',
         'search.resultsTitle': 'Suchergebnisse',
@@ -110,6 +111,7 @@ const STRINGS = {
         'nav.favorites': 'My Plan',
         'nav.info': 'Info',
         'nav.festivalmap': 'Festival Map',
+        'nav.cashless': 'Cashless',
         'search.placeholder': ' Search...',
         'search.resultsTitle': 'Search results',
         'search.noResults': 'No results for "{{query}}"',
