@@ -45,11 +45,14 @@ function markAllNotificationsSeen() {
 
 function renderNotificationCards(items) {
     if (!items.length) return `<div class="page-intro" style="margin-top:0">${t('info.newsEmpty')}</div>`;
+    // item.answer is admin-authored HTML (WP_editor + wp_kses_post server-side
+    // — see class-notifications.php's English Translation meta box), not
+    // escaped here so its formatting (bold, lists, etc.) actually renders.
     return items.map(item => `
         <div class="news-card ${item.highlight ? 'news-highlight' : ''}">
             <div class="card-header"><h3>${escapeHtml(item.question)}</h3></div>
             ${item.date ? `<span class="news-date">${escapeHtml(formatNotificationDate(item))}</span>` : ''}
-            <p>${escapeHtml(item.answer)}</p>
+            <div class="news-answer">${item.answer}</div>
         </div>
     `).join('');
 }

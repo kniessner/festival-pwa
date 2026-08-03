@@ -141,7 +141,11 @@ class Festival_PWA_Notifications {
         update_post_meta($post_id, '_pwa_highlight', isset($_POST['pwa_highlight']) ? '1' : '');
         update_post_meta($post_id, '_pwa_send_push', isset($_POST['pwa_send_push']) ? '1' : '');
         update_post_meta($post_id, '_pwa_title_en', sanitize_text_field($_POST['pwa_title_en'] ?? ''));
-        update_post_meta($post_id, '_pwa_content_en', sanitize_textarea_field($_POST['pwa_content_en'] ?? ''));
+        // wp_kses_post (not sanitize_textarea_field) — this field is a rich
+        // editor now, and its HTML is rendered as-is by the standalone app
+        // (see standalone/js/notifications.js), so it needs to survive
+        // saving as safe HTML rather than being reduced to plain text.
+        update_post_meta($post_id, '_pwa_content_en', wp_kses_post($_POST['pwa_content_en'] ?? ''));
 
         $this->rebuild_json();
     }
@@ -169,9 +173,15 @@ class Festival_PWA_Notifications {
                 value="<?php echo esc_attr($title_en); ?>">
         </p>
         <p>
-            <label for="pwa_content_en"><strong>Text (English)</strong></label><br>
-            <textarea id="pwa_content_en" name="pwa_content_en" rows="5" class="widefat"><?php echo esc_textarea($content_en); ?></textarea>
+            <label for="pwacontenten"><strong>Text (English)</strong></label>
         </p>
+        <?php
+        wp_editor($content_en, 'pwacontenten', [
+            'textarea_name' => 'pwa_content_en',
+            'textarea_rows' => 8,
+            'media_buttons' => false,
+        ]);
+        ?>
         <p style="color:#646970;font-size:12px;">
             Leave either field empty to fall back to the German title/text above —
             English readers see the German content until it's translated, rather
