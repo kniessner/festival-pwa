@@ -331,8 +331,7 @@
 
 .fav-btn.active {
     opacity: 1;
-    color: #FFEB3B;
-    filter: drop-shadow(0 0 4px rgba(15, 18, 130, 0.2));
+    color: #de4e39 ;
 }
 
 .fav-btn:active {
