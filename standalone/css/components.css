@@ -476,15 +476,13 @@
     left: 0;
     right: 0;
     bottom: 0;
-    top:0;
+    top: 0;
     margin: 0 auto;
     width: 100%;
     max-width: 650px;
     max-height: 100vh;
     background: var(--bg);
-    border: 2px solid var(--accent-pink);
     border-bottom: none;
-    border-radius: var(--card-radius) var(--card-radius) 0 0;
     box-shadow: 0 -12px 40px rgba(0, 0, 0, 0.5);
     display: flex;
     flex-direction: column;
@@ -518,6 +516,10 @@
     line-height: 1;
     cursor: pointer;
     padding: 4px 6px;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    color: var(--accent-orange);
 }
 
 .menu-nav-list {
@@ -618,16 +620,17 @@
 }
 
 .install-card-close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
     background: none;
     border: none;
-    font-size: 2rem;
+    color: var(--text);
+    font-size: 1.4rem;
+    font-weight: 700;
     line-height: 1;
     cursor: pointer;
-    padding: 4px 6px;
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    color: var(--accent-orange);
+    padding: 4px;
 }
 
 .lang-badge {
@@ -670,8 +673,7 @@
 .onboarding-modal-panel {
     max-width: 480px;
     margin: 0 auto;
-    padding: max(48px, env(safe-area-inset-top, 0px) + 24px) 24px
-             max(32px, env(safe-area-inset-bottom, 0px) + 24px);
+    padding: max(48px, env(safe-area-inset-top, 0px) + 24px) 24px max(32px, env(safe-area-inset-bottom, 0px) + 24px);
     color: var(--text-muted);
     font-family: var(--font-body), sans-serif;
     display: flex;
@@ -865,6 +867,7 @@
 }
 
 @keyframes gtt-stage-pulse-wash {
+
     /* Cycle between accent-pink and accent-purple as an inset wash —
        ported from fusion's floorPulse which cycles background between
        primary and secondary. 999px inset radius floods the whole box
@@ -872,10 +875,12 @@
        darkest navy AND the lightest lavender label backgrounds. rgba()
        fallback lines match --accent-pink and --accent-purple's RGB for
        browsers pre-Baseline 2023 color-mix. */
-    0%, 100% {
+    0%,
+    100% {
         box-shadow: inset 0 0 0 999px rgba(222, 78, 57, 0.55);
         box-shadow: inset 0 0 0 999px color-mix(in srgb, var(--accent-pink) 55%, transparent);
     }
+
     50% {
         box-shadow: inset 0 0 0 999px rgba(118, 44, 140, 0.55);
         box-shadow: inset 0 0 0 999px color-mix(in srgb, var(--accent-purple) 55%, transparent);
@@ -883,49 +888,95 @@
 }
 
 @keyframes gtt-gig-vibrate {
+
     /* Ported from fusion's gigVibrate (see pwa_test/src/TimetableFlat/
        animations.ts). Shakes horizontally with a small rotation for the
        first third of the cycle, then rests — the pause is what makes it
        feel like a heartbeat rather than a robot. Amplitude dampens over
        the shake so it decays naturally. */
-    0%     { transform: translateX(0)      rotate(0deg); }
-    3.33%  { transform: translateX(-3px)   rotate(-1deg); }
-    6.67%  { transform: translateX(3px)    rotate(1deg); }
-    10%    { transform: translateX(-3px)   rotate(-1deg); }
-    13.33% { transform: translateX(3px)    rotate(1deg); }
-    16.67% { transform: translateX(-2px)   rotate(-0.5deg); }
-    20%    { transform: translateX(2px)    rotate(0.5deg); }
-    23.33% { transform: translateX(-1px)   rotate(-0.25deg); }
-    26.67% { transform: translateX(1px)    rotate(0.25deg); }
-    30%    { transform: translateX(-0.5px) rotate(-0.1deg); }
-    33.33% { transform: translateX(0)      rotate(0deg); }
-    100%   { transform: translateX(0)      rotate(0deg); }
+    0% {
+        transform: translateX(0) rotate(0deg);
+    }
+
+    3.33% {
+        transform: translateX(-3px) rotate(-1deg);
+    }
+
+    6.67% {
+        transform: translateX(3px) rotate(1deg);
+    }
+
+    10% {
+        transform: translateX(-3px) rotate(-1deg);
+    }
+
+    13.33% {
+        transform: translateX(3px) rotate(1deg);
+    }
+
+    16.67% {
+        transform: translateX(-2px) rotate(-0.5deg);
+    }
+
+    20% {
+        transform: translateX(2px) rotate(0.5deg);
+    }
+
+    23.33% {
+        transform: translateX(-1px) rotate(-0.25deg);
+    }
+
+    26.67% {
+        transform: translateX(1px) rotate(0.25deg);
+    }
+
+    30% {
+        transform: translateX(-0.5px) rotate(-0.1deg);
+    }
+
+    33.33% {
+        transform: translateX(0) rotate(0deg);
+    }
+
+    100% {
+        transform: translateX(0) rotate(0deg);
+    }
 }
 
 @keyframes gtt-stage-pulse-ring {
+
     /* Ring color derived from --accent-pink via color-mix; rgba()
        fallback provided for older browsers. The rgba() fallback matches
        --accent-pink's RGB (222, 78, 57) at the specified alpha. */
-    0%   {
+    0% {
         box-shadow: 0 0 0 0 rgba(222, 78, 57, 0.55);
         box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent-pink) 55%, transparent);
     }
-    70%  { box-shadow: 0 0 0 8px transparent; }
-    100% { box-shadow: 0 0 0 0 transparent; }
+
+    70% {
+        box-shadow: 0 0 0 8px transparent;
+    }
+
+    100% {
+        box-shadow: 0 0 0 0 transparent;
+    }
 }
 
 @media (prefers-reduced-motion: reduce) {
+
     .gtt-stagehead.gtt-current-stage,
     .gtt-current-stage .gtt-stagelabel,
     .gtt-current-stage .gtt-event.gtt-event-now,
     .gtt-stagerow-wrap.gtt-current-stage {
         animation: none;
     }
+
     .gtt-stagehead.gtt-current-stage,
     .gtt-current-stage .gtt-stagelabel {
         box-shadow: inset 0 0 0 999px rgba(222, 78, 57, 0.4);
         box-shadow: inset 0 0 0 999px color-mix(in srgb, var(--accent-pink) 40%, transparent);
     }
+
     .gtt-stagehead.gtt-current-stage::after,
     .gtt-stagerow-wrap.gtt-current-stage::after {
         animation: none;
