@@ -87,6 +87,11 @@ const STRINGS = {
         'notifications.title': 'Neuigkeiten',
         // menu (drop-up nav)
         'menu.title': 'Menü',
+        // password gate (temporary, pre-launch)
+        'gate.title': 'Noch nicht ganz da',
+        'gate.placeholder': 'Passwort',
+        'gate.submit': 'Weiter',
+        'gate.error': 'Falsches Passwort',
         // onboarding (location-permission opt-in)
         'onb.headline': 'Wer spielt hier gerade?',
         'onb.intro': 'Aktiviere GPS und dein Timetable öffnet sich automatisch auf der Bühne, an der du gerade stehst.',
@@ -176,6 +181,11 @@ const STRINGS = {
         'notifications.title': 'News',
         // menu (drop-up nav)
         'menu.title': 'Menu',
+        // password gate (temporary, pre-launch)
+        'gate.title': 'Not quite there yet',
+        'gate.placeholder': 'Password',
+        'gate.submit': 'Continue',
+        'gate.error': 'Wrong password',
         // onboarding (location-permission opt-in)
         'onb.headline': "Who's playing here right now?",
         'onb.intro': 'Enable GPS and your timetable jumps straight to the stage you\'re standing at.',

@@ -15,10 +15,15 @@ import { openMenu, closeMenu } from './menu.js';
 import { mergeMusicIntoTimetable, refreshMusic } from './music.js';
 import { showLocationPromptIfNeeded, onboardingAllow, onboardingNotNow } from './onboarding.js';
 import { loadStages, warnStageNameMismatches } from './helpers/get-stage.js';
+import { passwordGateOK, showPasswordGate } from './password-gate.js';
 
 const LANG_LABELS = { de: 'De', en: 'Eng' };
 
 async function init() {
+    // Temporary pre-launch gate — see password-gate.js for removal steps
+    // once the festival is live.
+    if (!passwordGateOK()) await showPasswordGate();
+
     document.documentElement.lang = store.lang;
     document.getElementById('searchInput').placeholder = t('search.placeholder');
     document.querySelector('.search-modal-header span').textContent = t('search.resultsTitle');
