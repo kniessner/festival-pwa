@@ -331,7 +331,7 @@
 
 .fav-btn.active {
     opacity: 1;
-    color: #de4e39 ;
+    color: #de4e39;
 }
 
 .fav-btn:active {
@@ -504,7 +504,7 @@
     text-transform: uppercase;
     letter-spacing: 0.5px;
     flex-shrink: 0;
-    display:none;
+    display: none;
 }
 
 .menu-modal-close {
@@ -526,6 +526,7 @@
     flex-direction: column;
     overflow-y: auto;
     padding: 0 20px;
+    margin-top: 20px;
 }
 
 .menu-nav-list button,
@@ -587,7 +588,7 @@
     border-radius: var(--card-radius);
     color: var(--text);
     cursor: pointer;
-    display:none;
+    display: none;
 }
 
 .menu-news-preview-empty {
