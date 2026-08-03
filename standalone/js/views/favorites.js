@@ -1,7 +1,7 @@
 import { store } from '../store.js';
 import { PAGES } from '../config.js';
-import { escapeHtml, card } from '../ui.js';
-import { getFavorites, toggleFavorite } from '../favorites.js';
+import { escapeHtml, card, nextEventCardHtml } from '../ui.js';
+import { getFavorites, toggleFavorite, getNextUpcomingFavorite } from '../favorites.js';
 import { renderNav, loadPage } from '../router.js';
 import { renderEventCard } from './timetable.js';
 import { t } from '../i18n.js';
@@ -13,9 +13,13 @@ function emptyStateCard(message) {
 
 export function renderFavorites(container) {
     const installCard = installCardHtml();
+    // Same "what's next" card as the Home page — naturally empty (null)
+    // here too when there are no favorites yet, so no special-casing
+    // needed between this and the early-return branch below.
+    const nextCard = nextEventCardHtml(getNextUpcomingFavorite());
     const favs = getFavorites();
     if (favs.length === 0) {
-        container.innerHTML = installCard + emptyStateCard(t('fav.emptyHint'));
+        container.innerHTML = installCard + nextCard + emptyStateCard(t('fav.emptyHint'));
         return;
     }
 
@@ -45,10 +49,12 @@ export function renderFavorites(container) {
     if (store.favTab === 'program' && programCount === 0 && newsCount > 0) store.favTab = 'news';
     else if (store.favTab === 'news' && newsCount === 0 && programCount > 0) store.favTab = 'program';
 
-    let html = `<div class="fav-tabs">
+    // Nothing to switch between when only one type has any favorites —
+    // the auto-switch above already points favTab at whichever one does.
+    let html = (programCount > 0 && newsCount > 0) ? `<div class="fav-tabs">
         <button class="fav-tab ${store.favTab === 'program' ? 'active' : ''}" data-action="set-fav-tab" data-tab="program">${t('fav.tabProgram')}</button>
         <button class="fav-tab ${store.favTab === 'news' ? 'active' : ''}" data-action="set-fav-tab" data-tab="news">${t('fav.tabNews')}</button>
-    </div>`;
+    </div>` : '';
 
     if (store.favTab === 'program') {
         if (programCount === 0) {
@@ -81,7 +87,7 @@ export function renderFavorites(container) {
         }
     }
 
-    container.innerHTML = installCard + html;
+    container.innerHTML = installCard + nextCard + html;
 }
 
 export function setFavTab(tab) {
