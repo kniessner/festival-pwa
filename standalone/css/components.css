@@ -506,6 +506,7 @@
     text-transform: uppercase;
     letter-spacing: 0.5px;
     flex-shrink: 0;
+    display:none;
 }
 
 .menu-modal-close {
@@ -588,6 +589,7 @@
     border-radius: var(--card-radius);
     color: var(--text);
     cursor: pointer;
+    display:none;
 }
 
 .menu-news-preview-empty {
@@ -1002,4 +1004,73 @@
         animation: none;
         box-shadow: 0 0 0 2px var(--accent-pink);
     }
+}
+
+/* ── Temporary password gate (pre-launch only) ──────────────────────────
+   Remove this whole block alongside js/password-gate.js and its one call
+   site in app.js's init() once the festival is live. */
+
+.password-gate {
+    position: fixed;
+    inset: 0;
+    z-index: 2000000;
+    background: var(--bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.password-gate-form {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    width: 100%;
+    max-width: 320px;
+    text-align: center;
+}
+
+.password-gate-title {
+    font-family: 'Megan Display';
+    font-size: 1.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-muted);
+    margin: 0 0 10px;
+}
+
+.password-gate-input {
+    padding: 14px 16px;
+    border-radius: 50px;
+    border: 2px solid var(--accent-pink);
+    background: var(--bg-card);
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: 1rem;
+    text-align: center;
+    outline: none;
+}
+
+.password-gate-submit {
+    background: var(--accent-pink);
+    color: var(--text);
+    border: none;
+    border-radius: 50px;
+    padding: 14px;
+    font-family: 'Megan Display';
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.password-gate-submit:active {
+    transform: scale(0.98);
+}
+
+.password-gate-error {
+    color: var(--accent-orange);
+    font-size: 0.85rem;
+    margin: 0;
 }
