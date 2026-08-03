@@ -1,5 +1,5 @@
 import { store } from './store.js';
-import { PAGES } from './config.js';
+import { PAGES, pageIdx } from './config.js';
 import { t } from './i18n.js';
 import { renderHome } from './views/home.js';
 import { renderTimetable } from './views/timetable.js';
@@ -9,18 +9,29 @@ import { renderFavorites } from './views/favorites.js';
 import { countValidFavorites } from './favorites.js';
 
 export function renderNav() {
-    const nav = document.getElementById('pageNav');
+    const triggerLabel = document.getElementById('menuTriggerLabel');
+    if (triggerLabel) triggerLabel.textContent = t(PAGES[store.currentPage]?.labelKey ?? 'nav.home');
+
+    const list = document.getElementById('menuNavList');
+    if (!list) return;
     const favCount = countValidFavorites();
-    nav.innerHTML = PAGES.map((p, i) => {
-        const badge = p.slug === 'favorites' && favCount > 0 ? `<span class="nav-badge">${favCount}</span>` : '';
-        const icon = p.icon.endsWith('.svg')
-            ? `<span class="nav-icon-mask" style="-webkit-mask-image:url(images/${p.icon});mask-image:url(images/${p.icon})"></span>`
-            : p.icon;
-        return `<button class="${i === store.currentPage ? 'active' : ''}" data-action="load-page" data-page="${i}" data-slug="${p.slug}">
-            <span class="nav-icon">${icon}${badge}</span>
-            <span class="nav-label">${t(p.labelKey)}</span>
-        </button>`;
-    }).join('');
+
+    const pageRows = PAGES
+        .filter(p => p.slug !== 'home')
+        .map(p => {
+            const index = pageIdx(p.slug);
+            const badge = p.slug === 'favorites' && favCount > 0 ? `<span class="nav-badge">${favCount}</span>` : '';
+            return `<button class="${index === store.currentPage ? 'active' : ''}" data-action="load-page" data-page="${index}" data-slug="${p.slug}">
+                <span class="menu-item-label">${t(p.labelKey)}${badge}</span>
+            </button>`;
+        }).join('');
+
+    const festivalmapRow = `<span class="menu-item-disabled" aria-disabled="true">
+        <span class="menu-item-label">${t('nav.festivalmap')}</span>
+        <span class="menu-item-sublabel">${t('common.comingSoon')}</span>
+    </span>`;
+
+    list.innerHTML = pageRows + festivalmapRow;
 }
 
 export function loadPage(index) {

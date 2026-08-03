@@ -390,16 +390,6 @@
     line-height: 1;
 }
 
-.bottom-nav button {
-    position: relative;
-}
-
-/* Home tab hidden from the nav for now — keep the markup/route in place
-   in case we want it back. */
-.bottom-nav button[data-slug="home"] {
-    display: none;
-}
-
 /* Language toggle */
 
 .lang-switcher {
@@ -423,76 +413,8 @@
     position: absolute;
 }
 
-/* Bottom nav */
-
-.bottom-nav {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    z-index: 200;
-    background:rgba(13, 10, 74, 1);
-    /* padding: 8px 12px calc(8px + env(safe-area-inset-bottom)); */
-    display: flex;
-    justify-content: center;
-    border-top: 2px solid rgba(225, 96, 77, 1);
-    max-width: 650px;
-    margin: auto;
-    height: 74px;
-}
-
-.bottom-nav button {
-    background: none;
-    border: none;
-    color: var(--text-muted);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 3px;
-    padding: 6px 8px;
- /* font-family: var(--font-body); */
-    font-family: 'Megan Display';
-    font-size: 16px;
-    cursor: pointer;
-    transition: color 0.2s;
-    min-width: 56px;
-    letter-spacing: 0;
-    text-transform: uppercase;
-    font-weight: 400;
-} 
-
-.bottom-nav button .nav-icon {
-    font-size: 1.5rem;
-    display: flex;
-}
-
-.nav-icon-mask {
-    display: block;
-    width: 36px;
-    height: 36px;
-    background-color: var(--text-muted);
-    -webkit-mask-size: contain;
-    mask-size: contain;
-    -webkit-mask-repeat: no-repeat;
-    mask-repeat: no-repeat;
-    -webkit-mask-position: center;
-    mask-position: center;
-}
-
-.bottom-nav button.active {
-    color: var(--accent-pink);
-}
-
-.bottom-nav button.active .nav-icon-mask {
-    background-color: var(--accent-pink);
-}
-
-.bottom-nav button  .nav-icon {
-    filter: drop-shadow(0 0 8px rgba(176, 50, 122, 0.5));
-}
-
-/* Drop-up menu (trigger + panel) — replaces .bottom-nav above once
-   router.js's renderNav() is repointed (Task 4). */
+/* Drop-up menu (trigger + panel) — the app's only navigation UI now
+   that the old fixed .bottom-nav icon row has been removed. */
 
 .menu-trigger {
     position: fixed;
