@@ -997,7 +997,7 @@ span#headerFilterLabel {
 
 .tt-event-title-row h3 {
     font-family: var(--wp--preset--font-family--megan-display, var(--font-head)), serif;
-    font-size: 1.15rem;
+    font-size: 24px;
     line-height: 1.2;
     color: var(--text);
     text-transform: uppercase;
