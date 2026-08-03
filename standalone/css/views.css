@@ -117,6 +117,7 @@ span#headerFilterLabel {
     color: var(--text-muted);
     margin-top: 4px;
     letter-spacing: 0.5px;
+    display:none;
 }
 
 /* Hero */
@@ -420,7 +421,7 @@ span#headerFilterLabel {
     color: rgba(27, 25, 42, 1);
     font-weight: bolder;
     text-align: center;
-    margin-top: 14px;
+    margin-top: 10px;
 }
 
 .faq-answer {
@@ -958,7 +959,7 @@ span#headerFilterLabel {
 
 .tt-event {
     background: var(--wp--preset--color--base, #f3efdf);
-    border: 2px solid rgba(15, 18, 130, 0.15);
+    border: 3px solid rgba(15, 18, 130, 0.15);
     border-radius: 18px;
     overflow: hidden;
     transition: border-color 0.2s, box-shadow 0.2s;
