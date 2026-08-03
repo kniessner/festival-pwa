@@ -31,6 +31,18 @@ export function showToast(message) {
     }, 3000);
 }
 
+// Shared by the Home page and My Plan (favorites) — same "what's next"
+// card either way, since it's always derived from the same favorited
+// program events (see getNextUpcomingFavorite() in favorites.js).
+export function nextEventCardHtml(next) {
+    if (!next) return '';
+    return `<div class="next-event-card" data-action="goto-event" data-index="${next.index}" data-day="${next.ev.day}">
+        <div class="next-event-label">${next.running ? t('home.runningNow') : t('home.nextEvent')}</div>
+        <h3>${escapeHtml(next.ev.title)}</h3>
+        <div class="next-event-meta">${escapeHtml(next.ev.time)}${next.ev.stage_label ? ' · ' + escapeHtml(next.ev.stage_label) : ''}</div>
+    </div>`;
+}
+
 export function favButton(pageSlug, index) {
     const isActive = isFavorite(pageSlug, index);
     const active = isActive ? 'active' : '';

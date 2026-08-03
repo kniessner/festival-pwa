@@ -1,6 +1,6 @@
 import { pageIdx, FESTIVAL_START } from '../config.js';
 import { countValidFavorites, getNextUpcomingFavorite } from '../favorites.js';
-import { escapeHtml } from '../ui.js';
+import { nextEventCardHtml } from '../ui.js';
 import { t } from '../i18n.js';
 import { installCardHtml } from '../install.js';
 
@@ -20,12 +20,7 @@ export function renderHome(container) {
                 <button class="quick-btn" data-action="load-page" data-page="${pageIdx('info')}">${t('home.quickInfo')}</button>
                 ${favCount > 0 ? `<button class="quick-btn quick-btn-accent" data-action="load-page" data-page="${pageIdx('favorites')}">${t('home.quickMyPlan', { count: favCount })}</button>` : ''}
             </div>
-            ${next ? `
-            <div class="next-event-card" data-action="goto-event" data-index="${next.index}" data-day="${next.ev.day}">
-                <div class="next-event-label">${next.running ? t('home.runningNow') : t('home.nextEvent')}</div>
-                <h3>${escapeHtml(next.ev.title)}</h3>
-                <div class="next-event-meta">${escapeHtml(next.ev.time)}${next.ev.stage_label ? ' · ' + escapeHtml(next.ev.stage_label) : ''}</div>
-            </div>` : ''}
+            ${nextEventCardHtml(next)}
         </div>
 
          <div class="info-section">
