@@ -159,6 +159,16 @@ export function renderEventCard(ev) {
     const displayTime = ev.time || ev.start_time || '';
     const favClass = isFavorite('timetable', idx) ? 'tt-event-fav' : '';
 
+    // Join only the parts that actually have a value — a missing stage
+    // (subline) or missing time/category (meta) must not leave a dangling
+    // ", " with nothing on one side of it.
+    const stageHtml = ev.stage_label ? `<strong>${ev.stage_label}</strong>` : '';
+    const sublineHtml = [stageHtml, ev.title].filter(Boolean).join(', ');
+
+    const timeText = displayTime ? `${displayTime}${endTime}` : '';
+    const timeHtml = timeText ? `<span class="event-time">${timeText}</span>` : '';
+    const metaHtml = [timeHtml, ev.category].filter(Boolean).join(', ');
+
     return `
     <div class="tt-event ${hasDetail ? 'has-detail' : ''} ${runningClass} ${favClass}" data-item-index="${idx}">
         <div class="tt-event-header" data-action="toggle-event">
@@ -166,8 +176,8 @@ export function renderEventCard(ev) {
                 <h3>${ev.title}</h3>
                 ${favButton('timetable', idx)}
             </div>
-            <div class="tt-event-subline"><strong>${ev.stage_label}</strong>, ${ev.title}</div>
-            <div class="tt-event-meta"><span class="event-time">${displayTime}${endTime}</span>, ${ev.category}</div>
+            <div class="tt-event-subline">${sublineHtml}</div>
+            <div class="tt-event-meta">${metaHtml}</div>
             <div class="tt-event-footer">
                 <div class="tt-event-badges">${langBadges}</div>
                 ${hasDetail ? `<span class="tt-event-toggle">${t('tt.more')}</span>` : '<span></span>'}
