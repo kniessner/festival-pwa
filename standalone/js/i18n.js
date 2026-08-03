@@ -7,12 +7,14 @@ const STRINGS = {
         'common.done': 'Fertig',
         'common.detailsSoon': 'Details folgen bald.',
         'common.updatedOn': 'Stand: {{date}}',
+        'common.comingSoon': 'Bald verfügbar',
         // nav
         'nav.home': 'Home',
         'nav.timetable': 'Programm',
         'nav.grid': 'Timetable',
         'nav.favorites': 'Mein Plan',
         'nav.info': 'Info',
+        'nav.festivalmap': 'Festivalmap',
         // search
         'search.placeholder': 'Suchen...',
         'search.resultsTitle': 'Suchergebnisse',
@@ -80,6 +82,8 @@ const STRINGS = {
         'info.newsEmpty': 'Aktuelle News werden hier angezeigt, sobald verfügbar.',
         // notifications
         'notifications.title': 'Neuigkeiten',
+        // menu (drop-up nav)
+        'menu.title': 'Menü',
         // onboarding (location-permission opt-in)
         'onb.headline': 'Wer spielt hier gerade?',
         'onb.intro': 'Aktiviere GPS und dein Timetable öffnet sich automatisch auf der Bühne, an der du gerade stehst.',
@@ -97,11 +101,13 @@ const STRINGS = {
         'common.done': 'Done',
         'common.detailsSoon': 'Details coming soon.',
         'common.updatedOn': 'Updated: {{date}}',
+        'common.comingSoon': 'Coming soon',
         'nav.home': 'Home',
         'nav.timetable': 'Program',
         'nav.grid': 'Timetable',
         'nav.favorites': 'My Plan',
         'nav.info': 'Info',
+        'nav.festivalmap': 'Festival Map',
         'search.placeholder': ' Search...',
         'search.resultsTitle': 'Search results',
         'search.noResults': 'No results for "{{query}}"',
@@ -162,6 +168,8 @@ const STRINGS = {
         'info.newsEmpty': 'Current news will be shown here once available.',
         // notifications
         'notifications.title': 'News',
+        // menu (drop-up nav)
+        'menu.title': 'Menu',
         // onboarding (location-permission opt-in)
         'onb.headline': "Who's playing here right now?",
         'onb.intro': 'Enable GPS and your timetable jumps straight to the stage you\'re standing at.',
