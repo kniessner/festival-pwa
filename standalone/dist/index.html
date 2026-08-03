@@ -98,7 +98,28 @@
       <div class="loading">Laden...⏳</div>
     </div>
 
-    <nav class="bottom-nav" id="pageNav"><!-- JS fills --></nav>
+    <!-- Drop-up menu — replaces the old fixed bottom-nav icon row.
+         Follows the same fixed-backdrop + .open-toggled panel convention
+         as #searchModal / #notificationsModal / #onboardingModal. See
+         docs/superpowers/specs/2026-08-03-dropup-nav-menu-design.md. -->
+    <button type="button" class="menu-trigger" id="menuTrigger" data-action="open-menu">
+      <span class="menu-trigger-icon">☰</span>
+      <span class="menu-trigger-label" id="menuTriggerLabel"></span>
+    </button>
+
+    <div class="menu-modal" id="menuModal">
+      <div class="menu-modal-backdrop" data-action="close-menu"></div>
+      <div class="menu-modal-panel">
+        <div class="menu-modal-header">
+          <span id="menuModalTitle"></span>
+          <button type="button" class="menu-modal-close" data-action="close-menu">✕</button>
+        </div>
+        <nav class="menu-nav-list" id="menuNavList"><!-- JS fills --></nav>
+        <div class="menu-news-preview" id="menuNewsPreview" data-action="open-all-notifications">
+          <div id="menuNewsPreviewContent"><!-- JS fills --></div>
+        </div>
+      </div>
+    </div>
 
   </main>
 
