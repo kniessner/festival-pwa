@@ -565,7 +565,7 @@ export function openGridEventDetail(el) {
         <div class="gtt-detail-panel">
             <div class="gtt-detail-title-row">
                 <h3>${ev.title}</h3>
-                ${favButton('timetable', idx, { icon: true })}
+                ${favButton('timetable', idx)}
             </div>
             <div class="gtt-detail-subline"><strong>${ev.stage_label}</strong>, ${ev.title}</div>
             <div class="gtt-detail-meta">${dayLabel} ${ev.start_time}${endTime}, ${ev.category}</div>
