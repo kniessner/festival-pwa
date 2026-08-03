@@ -14,6 +14,14 @@
  *     path isn't fixed relative to this plugin — it's a configurable
  *     setting instead of a guessed path.
  *
+ * Each notification also has optional English title/text fields (the
+ * "English Translation" meta box). Every save writes a SECOND file,
+ * notifications.json under an en/ subfolder in both of the locations
+ * above — matching the en/ convention the standalone app's fetchLocalized()
+ * already expects for every other localized data file. A field left empty
+ * falls back to the German title/text, so an English reader always sees
+ * something rather than a blank notification while translation is pending.
+ *
  * Each notification can be flagged "send as push" — that flag is stored
  * and exposed in the JSON/REST feed now, but actually delivering an OS-level
  * push notification needs infrastructure this plugin doesn't have yet
@@ -38,6 +46,7 @@ class Festival_PWA_Notifications {
     public function __construct() {
         add_action('init', [$this, 'register_post_type']);
         add_action('add_meta_boxes', [$this, 'add_meta_box']);
+        add_action('add_meta_boxes', [$this, 'add_translation_meta_box']);
         add_action('save_post_' . self::POST_TYPE, [$this, 'save']);
         add_action('trashed_post', [$this, 'on_status_change']);
         add_action('untrashed_post', [$this, 'on_status_change']);
@@ -131,8 +140,44 @@ class Festival_PWA_Notifications {
 
         update_post_meta($post_id, '_pwa_highlight', isset($_POST['pwa_highlight']) ? '1' : '');
         update_post_meta($post_id, '_pwa_send_push', isset($_POST['pwa_send_push']) ? '1' : '');
+        update_post_meta($post_id, '_pwa_title_en', sanitize_text_field($_POST['pwa_title_en'] ?? ''));
+        update_post_meta($post_id, '_pwa_content_en', sanitize_textarea_field($_POST['pwa_content_en'] ?? ''));
 
         $this->rebuild_json();
+    }
+
+    /* ── Meta box: English translation ───────────────────────────────── */
+
+    public function add_translation_meta_box() {
+        add_meta_box(
+            'pwa_notification_translation',
+            'English Translation',
+            [$this, 'render_translation_meta_box'],
+            self::POST_TYPE,
+            'normal',
+            'high'
+        );
+    }
+
+    public function render_translation_meta_box($post) {
+        $title_en   = get_post_meta($post->ID, '_pwa_title_en', true);
+        $content_en = get_post_meta($post->ID, '_pwa_content_en', true);
+        ?>
+        <p>
+            <label for="pwa_title_en"><strong>Title (English)</strong></label><br>
+            <input type="text" id="pwa_title_en" name="pwa_title_en" class="widefat"
+                value="<?php echo esc_attr($title_en); ?>">
+        </p>
+        <p>
+            <label for="pwa_content_en"><strong>Text (English)</strong></label><br>
+            <textarea id="pwa_content_en" name="pwa_content_en" rows="5" class="widefat"><?php echo esc_textarea($content_en); ?></textarea>
+        </p>
+        <p style="color:#646970;font-size:12px;">
+            Leave either field empty to fall back to the German title/text above —
+            English readers see the German content until it's translated, rather
+            than a blank notification.
+        </p>
+        <?php
     }
 
     public function on_status_change($post_id) {
@@ -152,15 +197,38 @@ class Festival_PWA_Notifications {
         ]);
 
         $items = [];
+        $items_en = [];
         foreach ($posts as $post) {
+            $title = get_the_title($post);
+            $answer = trim(wp_strip_all_tags(apply_filters('the_content', $post->post_content)));
+            $highlight = get_post_meta($post->ID, '_pwa_highlight', true) === '1';
+            $push = get_post_meta($post->ID, '_pwa_send_push', true) === '1';
+            $date = get_the_date('Y-m-d', $post);
+            $time = get_the_date('H:i', $post);
+
             $items[] = [
                 'id'        => $post->ID,
-                'question'  => get_the_title($post),
-                'answer'    => trim(wp_strip_all_tags(apply_filters('the_content', $post->post_content))),
-                'date'      => get_the_date('Y-m-d', $post),
-                'time'      => get_the_date('H:i', $post),
-                'highlight' => get_post_meta($post->ID, '_pwa_highlight', true) === '1',
-                'push'      => get_post_meta($post->ID, '_pwa_send_push', true) === '1',
+                'question'  => $title,
+                'answer'    => $answer,
+                'date'      => $date,
+                'time'      => $time,
+                'highlight' => $highlight,
+                'push'      => $push,
+            ];
+
+            // Falls back to the German title/text per-field — an editor can
+            // translate the title first and leave the body pending (or vice
+            // versa) without the untranslated half going blank.
+            $title_en = get_post_meta($post->ID, '_pwa_title_en', true);
+            $content_en = get_post_meta($post->ID, '_pwa_content_en', true);
+            $items_en[] = [
+                'id'        => $post->ID,
+                'question'  => $title_en !== '' ? $title_en : $title,
+                'answer'    => $content_en !== '' ? $content_en : $answer,
+                'date'      => $date,
+                'time'      => $time,
+                'highlight' => $highlight,
+                'push'      => $push,
             ];
         }
 
@@ -171,15 +239,21 @@ class Festival_PWA_Notifications {
             'intro' => '',
             'items' => $items,
         ];
+        $data_en = array_merge($data, ['items' => $items_en]);
 
         $json = wp_json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+        $json_en = wp_json_encode($data_en, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
 
         wp_mkdir_p(FESTIVAL_PWA_DIR . 'pwa/data/');
         file_put_contents(FESTIVAL_PWA_DIR . 'pwa/data/notifications.json', $json);
+        wp_mkdir_p(FESTIVAL_PWA_DIR . 'pwa/data/en/');
+        file_put_contents(FESTIVAL_PWA_DIR . 'pwa/data/en/notifications.json', $json_en);
 
         $webapp_dir = rtrim(get_option('festival_pwa_webapp_data_dir', FESTIVAL_PWA_WEBAPP_DATA_DIR_DEFAULT), '/');
         if ($webapp_dir && is_dir($webapp_dir) && is_writable($webapp_dir)) {
             file_put_contents($webapp_dir . '/notifications.json', $json);
+            wp_mkdir_p($webapp_dir . '/en/');
+            file_put_contents($webapp_dir . '/en/notifications.json', $json_en);
         }
 
         return $data;
