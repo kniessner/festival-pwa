@@ -43,9 +43,6 @@ function markAllNotificationsSeen() {
     }
 }
 
-// Shared by maybeShowNotifications() (unseen-only auto-popup) and
-// showAllNotifications() (manual "see everything" open, from the drop-up
-// menu's news preview) — same card markup either way.
 function renderNotificationCards(items) {
     if (!items.length) return `<div class="page-intro" style="margin-top:0">${t('info.newsEmpty')}</div>`;
     return items.map(item => `
@@ -76,23 +73,6 @@ export function maybeShowNotifications() {
 export function getLatestNotification() {
     const items = store.pageData.notifications?.items;
     return items && items.length ? items[0] : null;
-}
-
-// Opens the notifications modal showing EVERY item, not just unseen ones.
-// Deliberately separate from maybeShowNotifications(): that function only
-// ever renders the unseen subset, so reusing it here could open the modal
-// to an empty list the moment the one item being previewed has already
-// been marked seen elsewhere. Closing still goes through the shared
-// closeNotifications(), which marks everything seen — correct here too,
-// since the user has now seen everything by definition.
-export function showAllNotifications() {
-    const items = store.pageData.notifications?.items || [];
-    const modal = document.getElementById('notificationsModal');
-    const list = document.getElementById('notificationsList');
-    if (!modal || !list) return;
-
-    list.innerHTML = renderNotificationCards(items);
-    modal.classList.add('open');
 }
 
 export function closeNotifications() {

@@ -586,6 +586,17 @@
     font-style: italic;
 }
 
+/* Preview-only truncation — the full text still shows untruncated on the
+   Info page's News tab; tapping this card navigates there (app.js's
+   'goto-news' action). */
+.menu-news-preview-text {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    line-clamp: 3;
+    overflow: hidden;
+}
+
 /* Install card */
 
 .install-card {
