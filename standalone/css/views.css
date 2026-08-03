@@ -59,6 +59,7 @@
 }
 
 .header-filter-btn {
+    display: none;
     flex-shrink: 0;
     align-items: center;
     gap: 6px;
@@ -1042,7 +1043,7 @@ span#headerFilterLabel {
 }
 
 .tt-event-toggle {
-    font-size: 0.8rem;
+    font-size: 15px;
     color: var(--accent-pink);
     font-weight: 700;
     letter-spacing: 0.3px;
@@ -1330,10 +1331,7 @@ span#headerFilterLabel {
     position: relative;
     overflow: auto;
     -webkit-overflow-scrolling: touch;
-    /* Needs a real bounded height (not 100%, which never resolves against an
-       auto-height parent) so this element is itself the scrolling container —
-       .gtt-header/.gtt-stagelabel's position:sticky only takes effect relative
-       to an ancestor that actually scrolls. */
+ 
     height: calc(var(--vh, 1vh) * 100 - 200px);
     min-height: 320px;
     border: 1px solid var(--border);
@@ -1346,15 +1344,7 @@ span#headerFilterLabel {
     bottom: 74px;
     border-radius: 0;
 }
-
-/* Allow single-finger touch drags on both axes. The original design
- * (kniessner, 8c5f4a34) constrained touch to one axis per mode to avoid
- * diagonal-drag ambiguity, but with .gtt-toolbar hidden the mode toggle
- * is unreachable — leaving mobile users unable to scroll the other axis
- * at all. Explicit 'pan-x pan-y' opts out of any browser-side gesture
- * hijacking (pinch-zoom, pull-to-refresh) while allowing both scroll
- * axes; wheel/trackpad were unaffected already. Restore the one-axis
- * lock (pan-y / pan-x per mode) if the mode toggle is un-hidden. */
+ 
 .gtt-scroll.scroll-v,
 .gtt-scroll.scroll-h {
     touch-action: pan-x pan-y;
