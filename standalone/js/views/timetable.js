@@ -1,6 +1,7 @@
 import { store } from '../store.js';
 import { textToHtml, favButton } from '../ui.js';
 import { isEventRunning, getEffectiveFestivalDay } from '../festival.js';
+import { isFavorite } from '../favorites.js';
 import { t } from '../i18n.js';
 import {
     matchesEventType, resetTypeSpecificFilters, stagesForCurrentType, renderEventTypeTabs,
@@ -156,9 +157,10 @@ export function renderEventCard(ev) {
     // ev.time is a pre-formatted "DO 10:00"-style string the scraper builds;
     // sources that don't produce it (e.g. music.json) still have start_time.
     const displayTime = ev.time || ev.start_time || '';
+    const favClass = isFavorite('timetable', idx) ? 'tt-event-fav' : '';
 
     return `
-    <div class="tt-event ${hasDetail ? 'has-detail' : ''} ${runningClass}" data-item-index="${idx}">
+    <div class="tt-event ${hasDetail ? 'has-detail' : ''} ${runningClass} ${favClass}" data-item-index="${idx}">
         <div class="tt-event-header" data-action="toggle-event">
             <div class="tt-event-title-row">
                 <h3>${ev.title}</h3>

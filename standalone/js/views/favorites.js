@@ -92,6 +92,14 @@ export function setFavTab(tab) {
 export function toggleFavFromCard(btn, pageSlug, itemIndex) {
     const isNowFav = toggleFavorite(pageSlug, itemIndex);
     btn.classList.toggle('active', isNowFav);
+    // Program list cards nest their fav button directly inside .tt-event,
+    // so the glow can update immediately without a full re-render. The
+    // grid Timetable's fav button lives in the separate #gttDetail
+    // overlay, not inside its .gtt-event block, so the same trick
+    // doesn't reach it there — that class only refreshes on next render,
+    // same as before this glow existed.
+    const card = btn.closest('.tt-event');
+    if (card) card.classList.toggle('tt-event-fav', isNowFav);
     renderNav();
     if (PAGES[store.currentPage].slug === 'favorites') loadPage(store.currentPage);
 }
