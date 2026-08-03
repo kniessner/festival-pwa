@@ -38,8 +38,6 @@
     /* padding: 20px 20px 12px; */
     text-align: left;
     padding: 0px 20px;
-
-
 }
 
 .app-header-row {
@@ -73,11 +71,12 @@
     font-family: var(--font-body);
     font-family: 'Megan Display';
     font-weight: 400;
+    line-height: 17px;
     font-size: 16px;
     text-transform: uppercase;
     letter-spacing: 0.5px;
     cursor: pointer;
-        margin-top: -10px;
+    margin-top: -10px;
 }
 
 span#headerFilterLabel {
@@ -96,7 +95,7 @@ span#headerFilterLabel {
 /* Same active look as .tt-type-tab.active — shown whenever a stage or
    category filter is set (see refreshTimetable() in views/timetable.js). */
 .header-filter-btn.active {
-    line-height: 17px;
+
     color: var(--text);
     background: rgba(242, 184, 176, 1);
     border: 2px solid rgba(222, 78, 57, 1);
@@ -1179,6 +1178,12 @@ span#headerFilterLabel {
 }
 
 .tt-filter-done {
+    /* .tt-filter-panel scrolls (overflow-y: auto) when the pill groups
+       don't fit in 85vh — sticky keeps this reachable at the bottom of
+       that scroll area instead of requiring a scroll-to-the-end. */
+    position: sticky;
+    bottom: 0;
+    z-index: 1;
     display: block;
     width: 100%;
     margin-top: 8px;
