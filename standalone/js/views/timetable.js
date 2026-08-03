@@ -109,6 +109,9 @@ export function refreshTimetable() {
 
     updateTypeSpecificFilterUI(data);
 
+    const filterBtn = document.getElementById('headerFilterBtn');
+    if (filterBtn) filterBtn.classList.toggle('active', filters.stage !== 'all' || filters.category !== 'all');
+
     let events = data.events.filter(matchesEventType).filter(ev => {
         if (filters.day !== 'all' && ev.day !== filters.day) return false;
         if (filters.stage !== 'all' && ev.stage !== filters.stage) return false;
