@@ -5,7 +5,7 @@ export const store = {
     currentPage: 0,
     pageData: {},
     lang: getLang(),
-    ttFilters: { stage: 'all', category: 'all', genre: 'all', day: 'all' },
+    ttFilters: { stage: 'all', category: 'all', day: 'all' },
     // Shared across the Program list and grid Timetable views — picking
     // Music in one keeps it selected when switching to the other, since
     // both read this same field fresh at render time.

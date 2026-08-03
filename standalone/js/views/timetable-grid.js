@@ -211,7 +211,7 @@ export function setEventType(type) {
     store.eventTypeFilter = type;
     // ttFilters belongs to the Program list view, which has no state of
     // its own here — reset it anyway so switching tabs from the grid
-    // doesn't leave a stale stage/category/genre selection waiting for
+    // doesn't leave a stale stage/category selection waiting for
     // whoever opens the Program list next.
     resetTypeSpecificFilters(store.ttFilters);
     document.querySelectorAll('.tt-type-tabs .tt-type-tab').forEach(btn => {

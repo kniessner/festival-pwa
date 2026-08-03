@@ -50,15 +50,14 @@ test('matchesEventType filters to non-music events when the culture tab is activ
     assert.equal(matchesEventType({ category: 'Talk' }), true);
 });
 
-test('resetTypeSpecificFilters resets stage/category/genre to "all", leaves other keys untouched', async () => {
+test('resetTypeSpecificFilters resets stage/category to "all", leaves other keys untouched', async () => {
     const { resetTypeSpecificFilters } = await import('../js/event-type-filter.js');
 
-    const filters = { stage: 'atlantis', category: 'workshop', genre: 'talk', day: 'friday' };
+    const filters = { stage: 'atlantis', category: 'workshop', day: 'friday' };
     resetTypeSpecificFilters(filters);
 
     assert.equal(filters.stage, 'all');
     assert.equal(filters.category, 'all');
-    assert.equal(filters.genre, 'all');
     assert.equal(filters.day, 'friday', 'day is untouched — it is not type-specific');
 });
 
