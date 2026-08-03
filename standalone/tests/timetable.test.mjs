@@ -84,3 +84,73 @@ test('refreshTimetable marks the header filter button active only when stage or 
     refreshTimetable();
     assert.equal(doc._elements.get('headerFilterBtn').classList.contains('active'), false, 'reset back to inactive');
 });
+
+// renderEventCard() returns a plain HTML string — no DOM touched, so
+// these need only the localStorage stub (for isFavorite) plus a
+// store.pageData.timetable.events array containing the event under test
+// (renderEventCard looks up its own index via .indexOf(ev)).
+
+test('renderEventCard subline: no stage — just the title, no leading comma', async () => {
+    installGlobals({ localStorageState: { 'bucht-lang': 'de' } });
+    const { store } = await import('../js/store.js');
+    const { renderEventCard } = await import('../js/views/timetable.js');
+
+    const ev = { title: 'Momentarium', day: '2026-08-13', category: 'Space' };
+    store.pageData.timetable = { events: [ev] };
+    store.ttFilters = { day: '2026-08-13' };
+
+    const html = renderEventCard(ev);
+    assert.match(html, /<div class="tt-event-subline">Momentarium<\/div>/);
+});
+
+test('renderEventCard subline: stage present — joined with the title via a comma', async () => {
+    installGlobals({ localStorageState: { 'bucht-lang': 'de' } });
+    const { store } = await import('../js/store.js');
+    const { renderEventCard } = await import('../js/views/timetable.js');
+
+    const ev = { title: 'De Loite', stage_label: 'dezentral', day: '2026-08-13', category: 'Space' };
+    store.pageData.timetable = { events: [ev] };
+    store.ttFilters = { day: '2026-08-13' };
+
+    const html = renderEventCard(ev);
+    assert.match(html, /<div class="tt-event-subline"><strong>dezentral<\/strong>, De Loite<\/div>/);
+});
+
+test('renderEventCard meta: no time — just the category, no comma', async () => {
+    installGlobals({ localStorageState: { 'bucht-lang': 'de' } });
+    const { store } = await import('../js/store.js');
+    const { renderEventCard } = await import('../js/views/timetable.js');
+
+    const ev = { title: 'Momentarium', day: '2026-08-13', category: 'Space' };
+    store.pageData.timetable = { events: [ev] };
+    store.ttFilters = { day: '2026-08-13' };
+
+    const html = renderEventCard(ev);
+    assert.match(html, /<div class="tt-event-meta">Space<\/div>/);
+});
+
+test('renderEventCard meta: no category — just the time, no comma', async () => {
+    installGlobals({ localStorageState: { 'bucht-lang': 'de' } });
+    const { store } = await import('../js/store.js');
+    const { renderEventCard } = await import('../js/views/timetable.js');
+
+    const ev = { title: 'De Loite', day: '2026-08-13', time: 'DO 10:00', end_time: '21:00' };
+    store.pageData.timetable = { events: [ev] };
+    store.ttFilters = { day: '2026-08-13' };
+
+    const html = renderEventCard(ev);
+    assert.match(html, /<div class="tt-event-meta"><span class="event-time">DO 10:00 – 21:00<\/span><\/div>/);
+});
+
+test('renderEventCard meta: both time and category present — joined with a comma', async () => {
+    installGlobals({ localStorageState: { 'bucht-lang': 'de' } });
+    const { store } = await import('../js/store.js');
+    const { renderEventCard } = await import('../js/views/timetable.js');
+
+    const ev = { title: 'De Loite', day: '2026-08-13', time: 'DO 10:00', end_time: '21:00', category: 'Space' };
+    store.pageData.timetable = { events: [ev] };
+    store.ttFilters = { day: '2026-08-13' };
+
+    const html = renderEventCard(ev);
+    assert.match(html, /<div class="tt-event-meta"><span class="event-time">DO 10:00 – 21:00<\/span>, Space<\/div>/);
+});
