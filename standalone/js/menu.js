@@ -12,11 +12,14 @@ function renderNewsPreview() {
     const content = document.getElementById('menuNewsPreviewContent');
     if (!content) return;
     const latest = getLatestNotification();
+    // latest.answer is admin-authored HTML (see notifications.js's matching
+    // comment) — not escaped, so formatting renders; wrapped in a <div>,
+    // not a <p>, since it may already contain its own <p>/<ul> tags.
     content.innerHTML = latest
         ? `<div class="news-card ${latest.highlight ? 'news-highlight' : ''}">
                <div class="card-header"><h3>${escapeHtml(latest.question)}</h3></div>
                ${latest.date ? `<span class="news-date">${escapeHtml(formatNotificationDate(latest))}</span>` : ''}
-               <p class="menu-news-preview-text">${escapeHtml(latest.answer)}</p>
+               <div class="news-answer menu-news-preview-text">${latest.answer}</div>
            </div>`
         : `<div class="menu-news-preview-empty">${t('info.newsEmpty')}</div>`;
 }

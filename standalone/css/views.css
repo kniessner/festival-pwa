@@ -477,18 +477,7 @@ span#headerFilterLabel {
 }
 
 .fav-tab {
-    /* padding: 10px 22px;
-    border: none;
-    border-radius: 50px;
-    background: var(--accent-blue, #0303d5);
-    color: #fff;
-    font-family: var(--font-body);
-    font-weight: 700;
-    font-size: 0.85rem;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    cursor: pointer; */
-
+ 
     flex: 0 0 auto;
     background: rgba(73, 69, 184, 1);
     border: none;
@@ -906,7 +895,13 @@ span#headerFilterLabel {
     font-weight: 700;
 }
 
-.news-card p {
+/* .news-answer covers plain-text answers (no inner <p> to match the rule
+   above) — the wrapper is a <div>, not a <p>, since English-translated
+   answers are admin-authored HTML from a rich editor and may already
+   contain their own <p>/<ul> tags; nesting those inside another <p>
+   would be invalid markup. */
+.news-card p,
+.news-answer {
     font-size: 0.9rem;
     color: var(--text-on-card);
     line-height: 1.5;

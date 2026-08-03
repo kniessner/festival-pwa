@@ -28,7 +28,7 @@ export function renderInfo(container) {
                 <div class="card-header"><h3>${escapeHtml(item.question)}</h3>
                 ${favButton('notifications', i)}</div>
                 ${date}
-                <p>${escapeHtml(item.answer)}</p>
+                <div class="news-answer">${item.answer}</div>
             </div>`;
         }).join('');
     } else {
