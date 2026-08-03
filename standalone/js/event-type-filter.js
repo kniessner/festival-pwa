@@ -13,14 +13,13 @@ export function matchesEventType(ev) {
     return store.eventTypeFilter === 'music' ? isMusicEvent(ev) : !isMusicEvent(ev);
 }
 
-// Stage/category/genre selections from one tab can be meaningless (or
-// simply absent) under the other — e.g. a music-only stage doesn't exist
-// in the culture event set. Reset them to 'all' on every tab switch so
-// the user never lands on a silent, filtered-to-nothing view.
+// Stage/category selections from one tab can be meaningless (or simply
+// absent) under the other — e.g. a music-only stage doesn't exist in the
+// culture event set. Reset them to 'all' on every tab switch so the user
+// never lands on a silent, filtered-to-nothing view.
 export function resetTypeSpecificFilters(filters) {
     filters.stage = 'all';
     filters.category = 'all';
-    filters.genre = 'all';
 }
 
 // Stage options scoped to whichever tab is active — avoids showing a

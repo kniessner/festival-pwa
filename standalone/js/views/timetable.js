@@ -13,7 +13,7 @@ export function renderTimetable(container) {
         return;
     }
 
-    // Persist user-changed filters (stage/category/genre) but ALWAYS recompute
+    // Persist user-changed filters (stage/category) but ALWAYS recompute
     // the day from the actual current date so it stays correct across days.
     store.ttFilters.day = getEffectiveFestivalDay();
 
@@ -40,10 +40,6 @@ export function renderTimetable(container) {
                 <label>${t('tt.stageLabel')}</label>
                 <div class="tt-filter-pills" id="ttStagePills"></div>
             </div>
-            <div class="tt-filter-group" id="ttGenreGroup">
-                <label>${t('tt.genreLabel')}</label>
-                <div class="tt-filter-pills">${filterPills('genre', data.filters.genres)}</div>
-            </div>
             <button class="tt-filter-done" data-action="toggle-filter">${t('common.done')}</button>
         </div>
         <div class="tt-filter-backdrop" id="ttFilterBackdrop" data-action="toggle-filter"></div>
@@ -63,17 +59,15 @@ export function setEventType(type) {
     refreshTimetable();
 }
 
-// Category/genre are meaningless while Music is active (every music event
-// shares one constant value for both, so filtering by them is a no-op) —
-// their whole filter groups hide. The stage pill list is rebuilt to only
-// the stages present for the active tab, so there's never a pill that
-// would filter the list down to zero results.
+// Category is meaningless while Music is active (every music event shares
+// one constant value, so filtering by it is a no-op) — its filter group
+// hides. The stage pill list is rebuilt to only the stages present for
+// the active tab, so there's never a pill that would filter the list
+// down to zero results.
 function updateTypeSpecificFilterUI(data) {
     const isMusic = store.eventTypeFilter === 'music';
     const categoryGroup = document.getElementById('ttCategoryGroup');
-    const genreGroup = document.getElementById('ttGenreGroup');
     if (categoryGroup) categoryGroup.classList.toggle('tt-filter-group-hidden', isMusic);
-    if (genreGroup) genreGroup.classList.toggle('tt-filter-group-hidden', isMusic);
 
     const stagePills = document.getElementById('ttStagePills');
     if (stagePills) {
@@ -119,10 +113,6 @@ export function refreshTimetable() {
         if (filters.day !== 'all' && ev.day !== filters.day) return false;
         if (filters.stage !== 'all' && ev.stage !== filters.stage) return false;
         if (filters.category !== 'all' && ev.type !== filters.category) return false;
-        // ev.genre is a capitalized label ("Space"), but the filter pill's
-        // value is the lowercase slug ("space") — same convention mismatch
-        // ev.type/ev.category already had, fixed the same way there.
-        if (filters.genre !== 'all' && (ev.genre || '').toLowerCase() !== filters.genre) return false;
         return true;
     });
 
@@ -216,7 +206,6 @@ export function toggleFilterPanel() {
 export function resetFilters() {
     store.ttFilters.stage = 'all';
     store.ttFilters.category = 'all';
-    store.ttFilters.genre = 'all';
     syncFilterPills();
     refreshTimetable();
 }
