@@ -80,42 +80,6 @@ test('getLatestNotification returns null when there are no items', async () => {
     assert.equal(getLatestNotification(), null);
 });
 
-test('showAllNotifications renders every item regardless of seen state, and opens the modal', async () => {
-    const { doc } = installGlobals({
-        localStorageState: {
-            'bucht-lang': 'de',
-            'bucht-notifications-seen': JSON.stringify([1]),
-        },
-    });
-    const { store } = await import('../js/store.js');
-    const { showAllNotifications } = await import('../js/notifications.js');
-
-    store.pageData.notifications = { items: [
-        { id: 1, question: 'Seen already', answer: 'A', date: '2026-08-01' },
-        { id: 2, question: 'Still unseen', answer: 'B', date: '2026-07-30' },
-    ] };
-
-    showAllNotifications();
-
-    const list = doc._elements.get('notificationsList');
-    assert.match(list.innerHTML, /Seen already/, 'already-seen item still rendered');
-    assert.match(list.innerHTML, /Still unseen/, 'unseen item rendered too');
-    assert.equal(doc._elements.get('notificationsModal').classList.contains('open'), true);
-});
-
-test('showAllNotifications renders the empty-state copy when there are no items', async () => {
-    const { doc } = installGlobals({ localStorageState: { 'bucht-lang': 'de' } });
-    const { store } = await import('../js/store.js');
-    const { showAllNotifications } = await import('../js/notifications.js');
-
-    store.pageData.notifications = { items: [] };
-    showAllNotifications();
-
-    const list = doc._elements.get('notificationsList');
-    assert.match(list.innerHTML, /Aktuelle News werden hier angezeigt/, 'empty-state copy shown');
-    assert.equal(doc._elements.get('notificationsModal').classList.contains('open'), true);
-});
-
 test('maybeShowNotifications still only shows unseen items (existing behavior unchanged)', async () => {
     const { doc } = installGlobals({
         localStorageState: {

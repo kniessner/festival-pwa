@@ -10,7 +10,7 @@ import { setupInstallTracking, setupOfflineIndicator, dismissInstallCard, trigge
 import { showToast } from './ui.js';
 import { PAGES, pageIdx } from './config.js';
 import { t, setLang } from './i18n.js';
-import { maybeShowNotifications, closeNotifications, setupNotificationsRefresh, showAllNotifications } from './notifications.js';
+import { maybeShowNotifications, closeNotifications, setupNotificationsRefresh } from './notifications.js';
 import { openMenu, closeMenu } from './menu.js';
 import { mergeMusicIntoTimetable, refreshMusic } from './music.js';
 import { showLocationPromptIfNeeded, onboardingAllow, onboardingNotNow } from './onboarding.js';
@@ -234,7 +234,11 @@ const actions = {
     'close-notifications': () => closeNotifications(),
     'open-menu': () => openMenu(),
     'close-menu': () => closeMenu(),
-    'open-all-notifications': () => showAllNotifications(),
+    'goto-news': () => {
+        closeMenu();
+        goToPage(pageIdx('info'));
+        setTimeout(() => switchInfoTab('news'), 300);
+    },
     'onboarding-allow': () => onboardingAllow(),
     'onboarding-not-now': () => onboardingNotNow(),
     'goto-event': el => {

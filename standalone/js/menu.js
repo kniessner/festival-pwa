@@ -16,7 +16,7 @@ function renderNewsPreview() {
         ? `<div class="news-card ${latest.highlight ? 'news-highlight' : ''}">
                <div class="card-header"><h3>${escapeHtml(latest.question)}</h3></div>
                ${latest.date ? `<span class="news-date">${escapeHtml(formatNotificationDate(latest))}</span>` : ''}
-               <p>${escapeHtml(latest.answer)}</p>
+               <p class="menu-news-preview-text">${escapeHtml(latest.answer)}</p>
            </div>`
         : `<div class="menu-news-preview-empty">${t('info.newsEmpty')}</div>`;
 }
