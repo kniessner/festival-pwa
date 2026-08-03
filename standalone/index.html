@@ -98,14 +98,9 @@
       <div class="loading">Laden...⏳</div>
     </div>
 
-    <nav class="bottom-nav" id="pageNav"><!-- JS fills --></nav>
-
-    <!-- Drop-up menu: replaces .bottom-nav above. router.js's renderNav()
-         still targets #pageNav until Task 4 repoints it at #menuNavList —
-         until then this trigger/panel exist but aren't wired to any
-         action (Task 3). Follows the same fixed-backdrop + .open-toggled
-         panel convention as #searchModal / #notificationsModal /
-         #onboardingModal. See
+    <!-- Drop-up menu — replaces the old fixed bottom-nav icon row.
+         Follows the same fixed-backdrop + .open-toggled panel convention
+         as #searchModal / #notificationsModal / #onboardingModal. See
          docs/superpowers/specs/2026-08-03-dropup-nav-menu-design.md. -->
     <button type="button" class="menu-trigger" id="menuTrigger" data-action="open-menu">
       <span class="menu-trigger-icon">☰</span>

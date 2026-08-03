@@ -195,7 +195,7 @@ function toggleFaqItem(item) {
 }
 
 const actions = {
-    'load-page': el => goToPage(parseInt(el.dataset.page, 10)),
+    'load-page': el => { goToPage(parseInt(el.dataset.page, 10)); closeMenu(); },
     'toggle-fav': el => toggleFavFromCard(el, el.dataset.page, parseInt(el.dataset.index, 10)),
     'set-fav-tab': el => setFavTab(el.dataset.tab),
     'set-day': el => setDay(el.dataset.day),
