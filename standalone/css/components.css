@@ -496,37 +496,39 @@
 
 .menu-trigger {
     position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    z-index: 200;
-    max-width: 650px;
-    margin: auto;
-    height: 64px;
-    background: rgba(13, 10, 74, 1);
+    right: 20px;
+    bottom: calc(20px + env(safe-area-inset-bottom));
+    z-index: 250;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: var(--accent-pink);
     border: none;
-    border-top: 2px solid rgba(225, 96, 77, 1);
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 10px;
     color: var(--text-muted);
-    font-family: 'Megan Display';
-    font-size: 1rem;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
     cursor: pointer;
     padding: 0;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
 }
 
 .menu-trigger-icon {
-    font-size: 1.2rem;
+    font-size: 1.4rem;
     line-height: 1;
     display: flex;
 }
 
+/* A round FAB shows the icon only — the current-page label stays in the
+   DOM (renderNav() still sets its text) but visually hidden, so it's
+   still announced to screen readers as the button's accessible name. */
 .menu-trigger-label {
-    line-height: 1;
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
 }
 
 .menu-modal {
