@@ -30,12 +30,8 @@ export function mergeMusicIntoTimetable() {
     if (newStages.length) {
         timetable.filters.stages = [...(timetable.filters.stages || []), ...newStages];
     }
-
-    ['categories', 'genres'].forEach(facet => {
-        if (!(timetable.filters[facet] || []).some(c => c.value === 'music')) {
-            timetable.filters[facet] = [...(timetable.filters[facet] || []), { value: 'music', label: 'Music' }];
-        }
-    });
+    // No 'music' pill injected into categories/genres facets anymore — the
+    // Music/Culture tab (event-type-filter.js) supersedes it.
 }
 
 // Re-fetches just music.json (not the whole page data) and re-merges — the
@@ -43,7 +39,9 @@ export function mergeMusicIntoTimetable() {
 // so this actually gets whatever was most recently published.
 export async function refreshMusic() {
     try {
-        store.pageData.music = await fetchLocalized(DATA_FILES.music, store.lang);
+        // Always the unlocalized file — see loadData()'s matching comment
+        // in store.js. music.json has no en/ variant by design.
+        store.pageData.music = await fetchLocalized(DATA_FILES.music, 'de');
         mergeMusicIntoTimetable();
         return true;
     } catch (e) {

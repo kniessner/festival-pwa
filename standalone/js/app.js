@@ -1,8 +1,8 @@
 import { loadData, loadManifest } from './store.js';
 import { loadPage, renderNav } from './router.js';
 import { setupSearch, scrollToItem, closeSearchModal } from './search.js';
-import { setDay, toggleFilterPanel, resetFilters, toggleEventDetail, setFilterValue } from './views/timetable.js';
-import { setGridDay, openGridEventDetail, closeGridEventDetail, toggleGridScrollMode } from './views/timetable-grid.js';
+import { setDay, toggleFilterPanel, resetFilters, toggleEventDetail, setFilterValue, setEventType } from './views/timetable.js';
+import { setGridDay, openGridEventDetail, closeGridEventDetail, toggleGridScrollMode, setEventType as setGridEventType } from './views/timetable-grid.js';
 import { store } from './store.js';
 import { switchInfoTab } from './views/info.js';
 import { toggleFavFromCard, setFavTab } from './views/favorites.js';
@@ -199,6 +199,8 @@ const actions = {
     'toggle-fav': el => toggleFavFromCard(el, el.dataset.page, parseInt(el.dataset.index, 10)),
     'set-fav-tab': el => setFavTab(el.dataset.tab),
     'set-day': el => setDay(el.dataset.day),
+    'set-event-type': el => setEventType(el.dataset.type),
+    'set-grid-event-type': el => setGridEventType(el.dataset.type),
     'toggle-filter': () => toggleFilterPanel(),
     'reset-filters': () => resetFilters(),
     'set-filter': el => setFilterValue(el.dataset.facet, el.dataset.value),

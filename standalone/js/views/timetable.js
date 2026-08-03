@@ -2,6 +2,9 @@ import { store } from '../store.js';
 import { textToHtml, favButton } from '../ui.js';
 import { isEventRunning, getEffectiveFestivalDay } from '../festival.js';
 import { t } from '../i18n.js';
+import {
+    matchesEventType, resetTypeSpecificFilters, stagesForCurrentType, renderEventTypeTabs,
+} from '../event-type-filter.js';
 
 export function renderTimetable(container) {
     const data = store.pageData.timetable;
@@ -21,6 +24,7 @@ export function renderTimetable(container) {
     container.innerHTML = `
         <div class="tt-intro">${textToHtml(data.intro)}</div>
 
+        ${renderEventTypeTabs('set-event-type')}
         <div class="tt-day-tabs" id="ttDayTabs"></div>
         <div class="tt-events" id="ttEvents"></div>
         <div class="tt-filter-panel" id="ttFilterPanel">
@@ -28,15 +32,15 @@ export function renderTimetable(container) {
                 <strong>${t('tt.filterTitle')}</strong>
                 <button class="tt-filter-reset" data-action="reset-filters">${t('tt.resetFilters')}</button>
             </div>
-            <div class="tt-filter-group">
+            <div class="tt-filter-group" id="ttCategoryGroup">
                 <label>${t('tt.categoryLabel')}</label>
                 <div class="tt-filter-pills">${filterPills('category', data.filters.categories)}</div>
             </div>
             <div class="tt-filter-group">
                 <label>${t('tt.stageLabel')}</label>
-                <div class="tt-filter-pills">${filterPills('stage', data.filters.stages)}</div>
+                <div class="tt-filter-pills" id="ttStagePills"></div>
             </div>
-            <div class="tt-filter-group">
+            <div class="tt-filter-group" id="ttGenreGroup">
                 <label>${t('tt.genreLabel')}</label>
                 <div class="tt-filter-pills">${filterPills('genre', data.filters.genres)}</div>
             </div>
@@ -47,6 +51,37 @@ export function renderTimetable(container) {
 
     syncFilterPills();
     refreshTimetable();
+}
+
+export function setEventType(type) {
+    store.eventTypeFilter = type;
+    resetTypeSpecificFilters(store.ttFilters);
+    syncFilterPills();
+    document.querySelectorAll('.tt-type-tabs .tt-type-tab').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.type === type);
+    });
+    refreshTimetable();
+}
+
+// Category/genre are meaningless while Music is active (every music event
+// shares one constant value for both, so filtering by them is a no-op) —
+// their whole filter groups hide. The stage pill list is rebuilt to only
+// the stages present for the active tab, so there's never a pill that
+// would filter the list down to zero results.
+function updateTypeSpecificFilterUI(data) {
+    const isMusic = store.eventTypeFilter === 'music';
+    const categoryGroup = document.getElementById('ttCategoryGroup');
+    const genreGroup = document.getElementById('ttGenreGroup');
+    if (categoryGroup) categoryGroup.classList.toggle('tt-filter-group-hidden', isMusic);
+    if (genreGroup) genreGroup.classList.toggle('tt-filter-group-hidden', isMusic);
+
+    const stagePills = document.getElementById('ttStagePills');
+    if (stagePills) {
+        const scoped = stagesForCurrentType(data.events, data.filters.stages);
+        stagePills.innerHTML = scoped.map(opt =>
+            `<button class="tt-filter-pill ${store.ttFilters.stage === opt.value ? 'active' : ''}" data-action="set-filter" data-facet="stage" data-value="${opt.value}">${opt.label}</button>`
+        ).join('');
+    }
 }
 
 // Keeps the filter pills' active state in sync with store.ttFilters —
@@ -78,7 +113,9 @@ export function refreshTimetable() {
         return `<button class="tt-day-tab ${isActive ? 'active' : ''}" data-day="${d.value}" data-action="set-day">${d.label.slice(0, 3)}</button>`;
     }).join('');
 
-    let events = data.events.filter(ev => {
+    updateTypeSpecificFilterUI(data);
+
+    let events = data.events.filter(matchesEventType).filter(ev => {
         if (filters.day !== 'all' && ev.day !== filters.day) return false;
         if (filters.stage !== 'all' && ev.stage !== filters.stage) return false;
         if (filters.category !== 'all' && ev.type !== filters.category) return false;
