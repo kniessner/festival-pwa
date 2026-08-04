@@ -1,6 +1,7 @@
 import { FAV_KEY } from './config.js';
 import { store } from './store.js';
 import { getEffectiveFestivalDay } from './festival.js';
+import { safeGetJSON, safeSetJSON } from './helpers/safe-storage.js';
 
 // Matches the rollover used for the "JETZT" badges and grid now-line: hours
 // before this belong to the previous festival night, not a new calendar day.
@@ -12,8 +13,7 @@ function continuousMinutes(hour, minute) {
 }
 
 export function getFavorites() {
-    try { return JSON.parse(localStorage.getItem(FAV_KEY)) || []; }
-    catch { return []; }
+    return safeGetJSON(FAV_KEY, []);
 }
 
 export function toggleFavorite(pageSlug, itemIndex) {
@@ -21,7 +21,10 @@ export function toggleFavorite(pageSlug, itemIndex) {
     const idx = favs.findIndex(f => f.page === pageSlug && f.index === itemIndex);
     if (idx >= 0) { favs.splice(idx, 1); }
     else { favs.push({ page: pageSlug, index: itemIndex }); }
-    localStorage.setItem(FAV_KEY, JSON.stringify(favs));
+    // safeSetJSON swallows write failures (Safari private mode / quota) —
+    // matches the read side above and every other localStorage caller
+    // in the app.
+    safeSetJSON(FAV_KEY, favs);
     return idx < 0;
 }
 

@@ -1,3 +1,5 @@
+import { safeGet, safeSet } from './helpers/safe-storage.js';
+
 const STRINGS = {
     de: {
         // common
@@ -201,15 +203,15 @@ const STRINGS = {
 const LANG_KEY = 'bucht-lang';
 
 export function getLang() {
-    const stored = localStorage.getItem(LANG_KEY);
+    const stored = safeGet(LANG_KEY);
     if (stored === 'de' || stored === 'en') return stored;
     const initial = navigator.language && navigator.language.toLowerCase().startsWith('en') ? 'en' : 'de';
-    localStorage.setItem(LANG_KEY, initial);
+    safeSet(LANG_KEY, initial);
     return initial;
 }
 
 export function setLang(lang) {
-    localStorage.setItem(LANG_KEY, lang);
+    safeSet(LANG_KEY, lang);
     document.documentElement.lang = lang;
 }
 
