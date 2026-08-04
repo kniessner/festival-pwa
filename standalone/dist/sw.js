@@ -230,6 +230,34 @@ async function staleWhileRevalidate(request, event) {
     return fresh || new Response('Offline and not cached', { status: 503 });
 }
 
+// Manual "refresh" action (js/store.js's refreshAllData()) — deliberately
+// bypasses every strategy above, including their cache-on-failure fallback.
+// A user tapping refresh wants to know whether it actually worked; silently
+// handing back stale cache on failure (like staleWhileRevalidate/
+// networkFirst do for the ambient background case) would look like success
+// when it wasn't. Returning a clear failure here lets the client decide to
+// keep showing its current in-memory data instead — see refreshAllData()'s
+// per-slug try/catch in store.js.
+async function networkOnly(request) {
+    try {
+        const res = await fetchWithTimeout(request, 12000);
+        if (res.ok) {
+            // Cache under the canonical URL (no ?forceRefresh param), not
+            // the request's actual URL — otherwise this lands in a cache
+            // entry a later plain reload never looks up (staleWhileRevalidate
+            // does an exact cache.match(), no ignoreSearch), so the reload
+            // would miss and fall back to whatever was cached before this
+            // refresh instead of showing the data it just fetched.
+            const canonicalUrl = new URL(request.url);
+            canonicalUrl.searchParams.delete('forceRefresh');
+            await putCache(new Request(canonicalUrl.toString()), res.clone());
+        }
+        return res;
+    } catch (err) {
+        return new Response('Refresh failed — network unavailable', { status: 503 });
+    }
+}
+
 async function crossOriginAsset(request) {
     const cache = await caches.open(CACHE_NAME);
     const cached = await cache.match(request);
@@ -254,7 +282,9 @@ self.addEventListener('fetch', e => {
 
     // Local app assets + Google Fonts
     if (isLocalAsset(url)) {
-        if (url.pathname.endsWith('notifications.json') || url.pathname.endsWith('music.json')) {
+        if (url.pathname.includes('/data/') && url.searchParams.has('forceRefresh')) {
+            e.respondWith(networkOnly(request));
+        } else if (url.pathname.endsWith('notifications.json') || url.pathname.endsWith('music.json')) {
             e.respondWith(networkFirst(request));
         } else if (url.pathname.includes('/data/')) {
             e.respondWith(staleWhileRevalidate(request, e));

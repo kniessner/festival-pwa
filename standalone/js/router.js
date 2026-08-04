@@ -41,7 +41,7 @@ export function renderNav() {
         <span class="menu-item-sublabel">${t('common.comingSoon')}</span>
     </span>`;
 
-    list.innerHTML = pageRows + festivalmapRow + cashlessRow ;
+    list.innerHTML = pageRows + festivalmapRow + cashlessRow;
 }
 
 export function loadPage(index) {

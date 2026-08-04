@@ -25,16 +25,21 @@ export const store = {
     userStage: null
 };
 
-export async function fetchLocalized(file, lang) {
+export async function fetchLocalized(file, lang, { forceRefresh = false } = {}) {
+    // The service worker only takes its networkOnly() bypass path (see
+    // sw.js) when it sees this query param on the request URL — plain
+    // `{cache: 'no-store'}` here wouldn't reach past the SW's own fetch
+    // interception.
+    const suffix = forceRefresh ? '?forceRefresh=1' : '';
     if (lang !== 'de') {
         try {
-            const res = await fetch(`data/${lang}/${file}`);
+            const res = await fetch(`data/${lang}/${file}${suffix}`);
             if (res.ok) return await res.json();
         } catch (e) {
             // fall through to German
         }
     }
-    const res = await fetch(`data/${file}`);
+    const res = await fetch(`data/${file}${suffix}`);
     // The service worker's networkFirst() returns a plain-text 503 (not
     // JSON) when both the network and its cache come up empty — check
     // res.ok so that surfaces as a clear "fetch failed" error to callers
@@ -60,6 +65,26 @@ export async function loadData() {
             console.error('Failed to load', file, e);
         }
     }));
+}
+
+// Manual "refresh" action, triggered from the drop-up menu. Bypasses the
+// service worker's caching entirely (see fetchLocalized's forceRefresh
+// param / sw.js's networkOnly()) so a stale offline cache can't silently
+// mask new data. store.pageData[slug] is only overwritten inside the try —
+// a slug that fails to refresh keeps whatever data it already had, per the
+// requirement that a failed refresh must never blank out the current view.
+export async function refreshAllData() {
+    const failed = [];
+    await Promise.all(Object.entries(DATA_FILES).map(async ([slug, file]) => {
+        try {
+            const lang = slug === 'music' ? 'de' : store.lang;
+            store.pageData[slug] = await fetchLocalized(file, lang, { forceRefresh: true });
+        } catch (e) {
+            console.error('Failed to refresh', file, e);
+            failed.push(slug);
+        }
+    }));
+    return { failed };
 }
 
 export async function loadManifest() {
