@@ -787,7 +787,7 @@
        own border-right (the column divider). Also doesn't consume any
        layout space. Negative outline-offset pulls it back onto the
        border-box so it aligns with the label's outer edge. */
-    outline: 2px solid #ff3b3b;
+    outline: 2px solid var(--color-now-indicator);
     outline-offset: -2px;
 }
 
@@ -803,7 +803,7 @@
     border: 2px solid transparent;
     border-radius: inherit;
     pointer-events: none;
-    box-shadow: 0 0 0 0 #ff3b3b;
+    box-shadow: 0 0 0 0 var(--color-now-indicator);
     animation: gtt-stage-pulse-ring 2s ease-out infinite;
 }
 
@@ -846,11 +846,11 @@
 }
 
 @keyframes gtt-stage-pulse-ring {
-    /* Ring emanates in red (#ff3b3b = rgb(255,59,59)), matching the
+    /* Ring emanates in red (var(--color-now-indicator) = rgb(255,59,59)), matching the
        static border above and the .gtt-now-line time indicator. */
     0%   {
         box-shadow: 0 0 0 0 rgba(255, 59, 59, 0.55);
-        box-shadow: 0 0 0 0 color-mix(in srgb, #ff3b3b 55%, transparent);
+        box-shadow: 0 0 0 0 color-mix(in srgb, var(--color-now-indicator) 55%, transparent);
     }
     70%  { box-shadow: 0 0 0 8px transparent; }
     100% { box-shadow: 0 0 0 0 transparent; }
@@ -871,6 +871,6 @@
     .gtt-stagehead.gtt-current-stage::after,
     .gtt-current-stage .gtt-stagelabel::after {
         animation: none;
-        box-shadow: 0 0 0 2px #ff3b3b;
+        box-shadow: 0 0 0 2px var(--color-now-indicator);
     }
 }
