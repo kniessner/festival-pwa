@@ -1,4 +1,4 @@
-import { loadData, loadManifest } from './store.js';
+import { loadData, loadManifest, refreshAllData } from './store.js';
 import { loadPage, renderNav } from './router.js';
 import { setupSearch, scrollToItem, closeSearchModal } from './search.js';
 import { setDay, toggleFilterPanel, resetFilters, toggleEventDetail, setFilterValue, setEventType } from './views/timetable.js';
@@ -31,6 +31,7 @@ async function init() {
     document.getElementById('notificationsDoneBtn').textContent = t('common.done');
     updateLangSwitcherLabel();
     updateHeaderFilterLabel();
+    updateMenuRefreshLabel();
     // Parallel-load timetable/info data and stage polygons — they're
     // independent files, no reason to serialise the round-trips.
     await Promise.all([loadData(), loadStages()]);
@@ -109,18 +110,44 @@ function updateHeaderFilterLabel() {
     if (label) label.textContent = t('tt.filterButton');
 }
 
+function updateMenuRefreshLabel() {
+    const btn = document.getElementById('menuRefreshBtn');
+    if (btn) btn.setAttribute('aria-label', t('nav.refresh'));
+}
+
 async function setLangAndRefresh(lang) {
     if (lang === store.lang) return;
     setLang(lang);
     store.lang = lang;
     updateLangSwitcherLabel();
     updateHeaderFilterLabel();
+    updateMenuRefreshLabel();
     document.getElementById('searchInput').placeholder = t('search.placeholder');
     document.querySelector('.search-modal-header span').textContent = t('search.resultsTitle');
     await loadData();
     mergeMusicIntoTimetable();
     renderNav();
     goToPage(store.currentPage);
+}
+
+// Guards against a double-tap firing two overlapping refreshes — the
+// button itself is also disabled for the same reason, belt-and-suspenders
+// since disabled buttons can still be re-clicked before the DOM update
+// from the previous tap has painted.
+let isRefreshing = false;
+async function refreshData(triggerEl) {
+    if (isRefreshing) return;
+    isRefreshing = true;
+    if (triggerEl) triggerEl.disabled = true;
+    closeMenu();
+    showToast(t('common.refreshing'));
+    const { failed } = await refreshAllData();
+    mergeMusicIntoTimetable();
+    renderNav();
+    goToPage(store.currentPage);
+    showToast(failed.length ? t('common.refreshFailed') : t('common.refreshSuccess'));
+    isRefreshing = false;
+    if (triggerEl) triggerEl.disabled = false;
 }
 
 function setupUpdateBanner() {
@@ -239,6 +266,7 @@ const actions = {
     'close-notifications': () => closeNotifications(),
     'open-menu': () => openMenu(),
     'close-menu': () => closeMenu(),
+    'refresh-data': el => refreshData(el),
     'goto-news': () => {
         closeMenu();
         goToPage(pageIdx('info'));
