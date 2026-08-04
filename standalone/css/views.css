@@ -1526,9 +1526,9 @@ span#headerFilterLabel {
     left: 52px;
     right: 0;
     height: 2px;
-    background: #ff3b3b;
+    background: var(--color-now-indicator);
     z-index: 1;
-    box-shadow: 0 0 6px #ff3b3b;
+    box-shadow: 0 0 6px var(--color-now-indicator);
 }
 
 /* Horizontal layout: time runs left-to-right, stages are rows */
@@ -1596,7 +1596,7 @@ span#headerFilterLabel {
     left: -1px;      /* cover own border-left */
     right: -1px;     /* cover next label's border-left */
     bottom: -1px;    /* cover header's border-bottom */
-    border: 2px solid #ff3b3b;
+    border: 2px solid var(--color-now-indicator);
     box-sizing: border-box;
     pointer-events: none;
     z-index: 1;
@@ -1681,9 +1681,9 @@ span#headerFilterLabel {
     top: 0;
     bottom: 0;
     width: 2px;
-    background: #ff3b3b;
+    background: var(--color-now-indicator);
     z-index: 1;
-    box-shadow: 0 0 6px #ff3b3b;
+    box-shadow: 0 0 6px var(--color-now-indicator);
 }
 
 .gtt-detail-backdrop {
