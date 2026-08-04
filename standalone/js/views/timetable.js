@@ -4,7 +4,7 @@ import { isEventRunning, getEffectiveFestivalDay } from '../festival.js';
 import { isFavorite } from '../favorites.js';
 import { t } from '../i18n.js';
 import {
-    matchesEventType, resetTypeSpecificFilters, stagesForCurrentType, renderEventTypeTabs,
+    matchesEventType, resetTypeSpecificFilters, stagesForCurrentType, renderEventTypeTabs, isMusicEvent,
 } from '../event-type-filter.js';
 
 export function renderTimetable(container) {
@@ -15,8 +15,11 @@ export function renderTimetable(container) {
     }
 
     // Persist user-changed filters (stage/category) but ALWAYS recompute
-    // the day from the actual current date so it stays correct across days.
-    store.ttFilters.day = getEffectiveFestivalDay();
+    // the day from the actual current date so it stays correct across days —
+    // unless a jump (search result / next-event card) just requested a
+    // specific day via prepareJumpToEvent(), in which case honor that once.
+    store.ttFilters.day = store.ttPendingDay || getEffectiveFestivalDay();
+    store.ttPendingDay = null;
 
     const filterPills = (facet, options) => options.map(opt =>
         `<button class="tt-filter-pill" data-action="set-filter" data-facet="${facet}" data-value="${opt.value}">${opt.label}</button>`
@@ -48,6 +51,21 @@ export function renderTimetable(container) {
 
     syncFilterPills();
     refreshTimetable();
+}
+
+// Called before navigating to a specific timetable event from elsewhere
+// (search results, the next-event card) so the event is actually visible
+// once the page renders — otherwise it can be silently hidden by the day
+// filter defaulting to "today", the event-type tab sitting on the wrong
+// value, or a leftover stage/category filter, and the jump would look like
+// nothing happened.
+export function prepareJumpToEvent(index) {
+    const ev = store.pageData.timetable?.events?.[index];
+    if (!ev) return;
+    store.ttPendingDay = ev.day || null;
+    store.ttFilters.stage = 'all';
+    store.ttFilters.category = 'all';
+    store.eventTypeFilter = isMusicEvent(ev) ? 'music' : 'culture';
 }
 
 export function setEventType(type) {

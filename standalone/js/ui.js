@@ -36,7 +36,7 @@ export function showToast(message) {
 // program events (see getNextUpcomingFavorite() in favorites.js).
 export function nextEventCardHtml(next) {
     if (!next) return '';
-    return `<div class="next-event-card" data-action="goto-event" data-index="${next.index}" data-day="${next.ev.day}">
+    return `<div class="next-event-card" data-action="goto-event" data-index="${next.index}">
         <div class="next-event-label">${next.running ? t('home.runningNow') : t('home.nextEvent')}</div>
         <h3>${escapeHtml(next.ev.title)}</h3>
         <div class="next-event-meta">${escapeHtml(next.ev.time)}${next.ev.stage_label ? ' · ' + escapeHtml(next.ev.stage_label) : ''}</div>
