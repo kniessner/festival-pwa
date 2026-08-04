@@ -534,13 +534,12 @@ function isEventPlayingNow(ev) {
     return nowMin >= ev._start && nowMin <= ev._end;
 }
 
-// Boxes narrower than this get .gtt-event-narrow, which switches the
-// title from sticky-scroll mode to ellipsis-truncation mode (see the
-// CSS side in views.css). Threshold picked as roughly "wider than the
-// scrollable area on a mobile viewport after the sticky floor label"
-// — below that, sticky positioning has nothing to pin against
-// (the whole box is already in view) so ellipsis is the right posture.
-const NARROW_BOX_WIDTH_PX = 260;
+// (Previously: NARROW_BOX_WIDTH_PX + .gtt-event-narrow class dispatch
+// that switched title behaviour between sticky-scroll and ellipsis-
+// truncation modes. Both modes were replaced by a uniform centred +
+// 2-line-clamped layout in commit 822a9ce, making the class inert.
+// Removed to keep this file honest — add it back if we ever want
+// per-width title styling again.)
 
 function renderEventBlockV(ev, gridMin, numLanes) {
     const idx = store.pageData.timetable.events.indexOf(ev);
@@ -559,9 +558,8 @@ function renderEventBlockV(ev, gridMin, numLanes) {
     // per-lane width can shrink well below 260px on stages with many
     // overlapping acts, so honour the same threshold here.
     const finalWidth = laneWidth - 2 * LANE_INSET_PX;
-    const narrow = finalWidth < NARROW_BOX_WIDTH_PX ? ' gtt-event-narrow' : '';
     return `
-    <div class="gtt-event${fav}${now}${narrow}" data-item-index="${idx}" data-action="toggle-grid-event" style="top:${top}px;height:${height}px;left:${left}px;width:${finalWidth}px;--event-color:${categoryColor(ev.category)}">
+    <div class="gtt-event${fav}${now}" data-item-index="${idx}" data-action="toggle-grid-event" style="top:${top}px;height:${height}px;left:${left}px;width:${finalWidth}px;--event-color:${categoryColor(ev.category)}">
         <span class="gtt-event-title">${ev.title}</span>
     </div>`;
 }
@@ -580,9 +578,8 @@ function renderEventBlockH(ev, gridMin, dayOffset) {
     const height = LANE_HEIGHT - 2 * LANE_INSET_PX;
     const fav = isFavorite('timetable', idx) ? ' gtt-event-fav' : '';
     const now = isEventPlayingNow(ev) ? ' gtt-event-now' : '';
-    const narrow = width < NARROW_BOX_WIDTH_PX ? ' gtt-event-narrow' : '';
     return `
-    <div class="gtt-event${fav}${now}${narrow}" data-item-index="${idx}" data-action="toggle-grid-event" style="left:${left}px;width:${width}px;top:${top}px;height:${height}px;--event-color:${categoryColor(ev.category)}">
+    <div class="gtt-event${fav}${now}" data-item-index="${idx}" data-action="toggle-grid-event" style="left:${left}px;width:${width}px;top:${top}px;height:${height}px;--event-color:${categoryColor(ev.category)}">
         <span class="gtt-event-title">${ev.title}</span>
     </div>`;
 }
