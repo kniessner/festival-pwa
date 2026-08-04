@@ -1,7 +1,7 @@
 import { loadData, loadManifest, refreshAllData } from './store.js';
 import { loadPage, renderNav } from './router.js';
 import { setupSearch, scrollToItem, closeSearchModal } from './search.js';
-import { setDay, toggleFilterPanel, resetFilters, toggleEventDetail, setFilterValue, setEventType } from './views/timetable.js';
+import { setDay, toggleFilterPanel, resetFilters, toggleEventDetail, setFilterValue, setEventType, prepareJumpToEvent } from './views/timetable.js';
 import { setGridDay, openGridEventDetail, closeGridEventDetail, toggleGridScrollMode, setEventType as setGridEventType } from './views/timetable-grid.js';
 import { store } from './store.js';
 import { switchInfoTab } from './views/info.js';
@@ -258,6 +258,7 @@ const actions = {
         const itemIndex = parseInt(el.dataset.index, 10);
         const tab = el.dataset.infoTab;
         closeSearchBar();
+        if (PAGES[idx].slug === 'timetable') prepareJumpToEvent(itemIndex);
         goToPage(idx);
         if (tab) setTimeout(() => { switchInfoTab(tab); scrollToItem(PAGES[idx].slug, itemIndex); }, 400);
         else setTimeout(() => scrollToItem(PAGES[idx].slug, itemIndex), 300);
@@ -276,7 +277,7 @@ const actions = {
     'onboarding-not-now': () => onboardingNotNow(),
     'goto-event': el => {
         const itemIndex = parseInt(el.dataset.index, 10);
-        if (el.dataset.day) store.ttPendingDay = el.dataset.day;
+        prepareJumpToEvent(itemIndex);
         const idx = pageIdx('timetable');
         goToPage(idx);
         setTimeout(() => scrollToItem('timetable', itemIndex), 300);

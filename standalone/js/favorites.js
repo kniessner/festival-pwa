@@ -12,6 +12,17 @@ function continuousMinutes(hour, minute) {
     return hour * 60 + minute;
 }
 
+// Same rollover-aware minute count, but from an event's start_time string —
+// exported so views/favorites.js can sort a day's favorited events into the
+// right order (a naive string/lexicographic sort on "01:00" vs "23:00" would
+// wrongly put the after-midnight act first, even though it's later in the
+// same festival night).
+export function eventStartMinutes(ev) {
+    if (!ev.start_time) return Infinity;
+    const [h, m] = ev.start_time.split(':').map(Number);
+    return continuousMinutes(h, m);
+}
+
 export function getFavorites() {
     return safeGetJSON(FAV_KEY, []);
 }

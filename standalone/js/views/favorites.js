@@ -1,7 +1,7 @@
 import { store } from '../store.js';
 import { PAGES } from '../config.js';
 import { escapeHtml, card, nextEventCardHtml } from '../ui.js';
-import { getFavorites, toggleFavorite, getNextUpcomingFavorite } from '../favorites.js';
+import { getFavorites, toggleFavorite, getNextUpcomingFavorite, eventStartMinutes } from '../favorites.js';
 import { renderNav, loadPage } from '../router.js';
 import { renderEventCard } from './timetable.js';
 import { t } from '../i18n.js';
@@ -42,6 +42,11 @@ export function renderFavorites(container) {
             if (item) newsItems.push({ item, index: f.index, page: f.page });
         }
     }
+
+    // Favorites are stored in toggle order, not schedule order — sort each
+    // day's events by start time (rollover-aware, so an after-midnight act
+    // still lands after a 23:00 one instead of before it).
+    Object.values(programByDay).forEach(events => events.sort((a, b) => eventStartMinutes(a) - eventStartMinutes(b)));
 
     const programCount = Object.values(programByDay).reduce((n, arr) => n + arr.length, 0);
     const newsCount = newsItems.length;
