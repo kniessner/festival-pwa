@@ -1,6 +1,6 @@
 import { store } from '../store.js';
 import { favButton } from '../ui.js';
-import { getEffectiveFestivalDay } from '../festival.js';
+import { getEffectiveFestivalDay, dayAbbrev } from '../festival.js';
 import { t } from '../i18n.js';
 import { isFavorite } from '../favorites.js';
 import { getStage } from '../helpers/get-stage.js';
@@ -155,9 +155,10 @@ export function renderGridTimetable(container) {
 
     const tabsContainer = document.getElementById('gttDayTabs');
     // Day labels come back as full names now ("Donnerstag"/"Thursday") —
-    // trim to a 3-letter abbreviation so the tab pills stay compact.
+    // abbreviate for the tab pills, matching the scraper's own day_short
+    // convention (2 letters in German) rather than a generic 3-char slice.
     tabsContainer.innerHTML = days.map(d =>
-        `<button class="gtt-day-tab ${d.value === store.gridDay ? 'active' : ''}" data-day="${d.value}" data-action="set-grid-day">${d.label.slice(0, 3)}</button>`
+        `<button class="gtt-day-tab ${d.value === store.gridDay ? 'active' : ''}" data-day="${d.value}" data-action="set-grid-day">${dayAbbrev(d.value, d.label)}</button>`
     ).join('');
 
     updateScrollToggleButton();
@@ -411,17 +412,21 @@ function renderHorizontalLayout({ data, header, track, blocks }) {
         const isTodayBlock = b.dayValue === todayH;
         const currentHourBucketH = isTodayBlock ? Math.floor(nowMinH / 60) * 60 : null;
         let first = true;
-        // Exclusive of gridMax: that closing tick sits only DAY_GAP (28px)
-        // from the next block's opening tick, but each label renders as a
-        // fixed 120px-wide box (see .gtt-hour-label-h) — drawing both would
-        // overlap by 92px and visually merge (most noticeable on a day that
-        // runs late, e.g. "08:00" overlapping the next day's "06:00"). The
-        // next block's own opening label 28px later already marks that instant.
+        // Ticks cover the block's FULL width (gridMin..gridMax, including any
+        // early-riser/late-closer overtime) — clamping this to the nominal
+        // 06:00-to-06:00 window left a stretch of the ruler with real event
+        // content underneath but no tick at all, which read as broken. The
+        // overtime portion's hour-of-day text inevitably repeats what the
+        // NEXT block's own opening ticks are about to show (e.g. two
+        // separate "06:00"s a DAY_GAP apart) — .gtt-hour-label-h--overtime
+        // dims those so they read as "still the previous night" rather than
+        // a duplicate/mistake.
         for (let m = b.gridMin; m < b.gridMax; m += 60) {
             const rulerLeft = b._offset + (m - b.gridMin) * PX_PER_MIN;
             const hourText = `${String(Math.floor(m / 60) % 24).padStart(2, '0')}:00`;
             const cur = m === currentHourBucketH ? ' gtt-current-hour' : '';
-            hourLabels.push(`<div class="gtt-hour-label-h${cur}" style="left:${rulerLeft}px">${hourText}</div>`);
+            const overtime = m >= DAY_WINDOW_END ? ' gtt-hour-label-h--overtime' : '';
+            hourLabels.push(`<div class="gtt-hour-label-h${cur}${overtime}" style="left:${rulerLeft}px">${hourText}</div>`);
             // Ticks live inside .gtt-track, not the ruler, so they need the stage-label
             // column's width added to line up with the ruler/row content above/below them.
             if (!first) hourTicks.push(`<div class="gtt-hour-tick" style="left:${STAGE_LABEL_WIDTH + rulerLeft}px"></div>`);
@@ -511,7 +516,7 @@ function onGridScroll() {
     }
 
     const label = store.pageData.timetable?.filters.days.find(d => d.value === current.day)?.label || '';
-    corner.textContent = label.slice(0, 3);
+    corner.textContent = dayAbbrev(current.day, label);
 
     if (store.gridDay !== current.day) {
         store.gridDay = current.day;
@@ -602,7 +607,7 @@ export function openGridEventDetail(el) {
     const langBadges = ev.langs && ev.langs.length
         ? `<div class="gtt-detail-badges">${ev.langs.map(l => `<span class="lang-badge">${l.toUpperCase()}</span>`).join('')}</div>`
         : '';
-    const dayLabel = (store.pageData.timetable?.filters?.days?.find(d => d.value === ev.day)?.label || '').slice(0, 3);
+    const dayLabel = dayAbbrev(ev.day, store.pageData.timetable?.filters?.days?.find(d => d.value === ev.day)?.label);
     const endTime = ev.end_time ? ` – ${ev.end_time}` : '';
 
     detail.innerHTML = `

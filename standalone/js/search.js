@@ -82,11 +82,18 @@ function renderSearchResults(results, query) {
         // music events (no such field) fall back to start/end_time, shown
         // as a range since that's the more useful signal for a DJ set.
         const timeLabel = r.item.time || (r.item.start_time ? `${r.item.start_time}${r.item.end_time ? ' – ' + r.item.end_time : ''}` : '');
-        const meta = timeLabel ? `${escapeHtml(timeLabel)} · ${escapeHtml(r.item.stage_label || '')}` : '';
+        // Program results already show time + stage, which is enough to tell
+        // them apart — the "Programm" source label is only actually useful
+        // for FAQ/News results, which have no such context of their own.
+        const metaParts = [];
+        if (r.page !== 'timetable') metaParts.push(escapeHtml(r.pageLabel));
+        if (timeLabel) metaParts.push(escapeHtml(timeLabel));
+        if (r.item.stage_label) metaParts.push(escapeHtml(r.item.stage_label));
+        const meta = metaParts.join(' · ');
         const infoTabAttr = r.infoTab ? ` data-info-tab="${r.infoTab}"` : '';
         return `
         <div class="grid-card search-card" data-action="search-jump" data-page-idx="${pageIdx(r.page)}" data-index="${r.index}"${infoTabAttr}>
-            <div class="search-meta">${escapeHtml(r.pageLabel)}${meta ? ' · ' + meta : ''}</div>
+            <div class="search-meta">${meta}</div>
             <h3>${escapeHtml(title)}</h3>
             ${desc ? `<p>${escapeHtml(desc.substring(0, 120))}${desc.length > 120 ? '...' : ''}</p>` : ''}
         </div>`;

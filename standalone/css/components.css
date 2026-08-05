@@ -347,7 +347,7 @@
 
 .fav-btn.active {
     opacity: 1;
-    color: #de4e39;
+    color: rgba(27, 25, 42, 1);
 }
 
 .fav-btn:active {
@@ -400,7 +400,7 @@
     height: 26px;
     border-radius: 50%;
     display: flex;
-    dispay:none;
+    display:none;
     align-items: center;
     justify-content: center;
     line-height: 1;
@@ -547,18 +547,26 @@
     display: none;
 }
 
+/* Mirrors .menu-modal-refresh's FAB (opposite corner) — was previously
+   nested inside .menu-modal-header, which is display:none, so it never
+   actually rendered despite already being positioned here. */
 .menu-modal-close {
-    background: none;
+    background: var(--accent-pink);
     border: none;
     color: var(--text-muted);
-    font-size: 1rem;
+    font-size: 1.4rem;
     line-height: 1;
     cursor: pointer;
-    padding: 4px 6px;
     position: fixed;
-    bottom: 20px;
+    bottom: calc(20px + env(safe-area-inset-bottom));
     right: 20px;
-    color: var(--accent-orange);
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
 }
 
 .menu-modal-refresh {

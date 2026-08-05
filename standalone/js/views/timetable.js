@@ -1,6 +1,6 @@
 import { store } from '../store.js';
 import { textToHtml, favButton } from '../ui.js';
-import { isEventRunning, getEffectiveFestivalDay } from '../festival.js';
+import { isEventRunning, getEffectiveFestivalDay, dayAbbrev } from '../festival.js';
 import { isFavorite } from '../favorites.js';
 import { t } from '../i18n.js';
 import {
@@ -122,8 +122,9 @@ export function refreshTimetable() {
     tabsContainer.innerHTML = data.filters.days.map(d => {
         const isActive = d.value === filters.day;
         // Day labels come back as full names now ("Donnerstag"/"Thursday") —
-        // trim to a 3-letter abbreviation so the tab pills stay compact.
-        return `<button class="tt-day-tab ${isActive ? 'active' : ''}" data-day="${d.value}" data-action="set-day">${d.label.slice(0, 3)}</button>`;
+        // abbreviate for the tab pills, matching the scraper's own day_short
+        // convention (2 letters in German) rather than a generic 3-char slice.
+        return `<button class="tt-day-tab ${isActive ? 'active' : ''}" data-day="${d.value}" data-action="set-day">${dayAbbrev(d.value, d.label)}</button>`;
     }).join('');
 
     updateTypeSpecificFilterUI(data);
@@ -172,9 +173,15 @@ export function renderEventCard(ev) {
     const runningClass = isEventRunning(ev, store.ttFilters.day) ? 'running' : '';
     const langBadges = ev.langs && ev.langs.length ? ev.langs.map(l => `<span class="lang-badge">${l.toUpperCase()}</span>`).join('') : '';
     const endTime = ev.end_time ? ` – ${ev.end_time}` : '';
-    // ev.time is a pre-formatted "DO 10:00"-style string the scraper builds;
-    // sources that don't produce it (e.g. music.json) still have start_time.
-    const displayTime = ev.time || ev.start_time || '';
+    // ev.time is a pre-formatted "DO 10:00"-style (day + time) string the
+    // scraper builds for Program events; music.json events only carry plain
+    // start_time with no day baked in, so without this the day would just
+    // silently disappear for music cards — build the same "<Day> <time>"
+    // shape ourselves from ev.day + start_time.
+    const dayTag = !ev.time && ev.day
+        ? dayAbbrev(ev.day, store.pageData.timetable?.filters?.days?.find(d => d.value === ev.day)?.label)
+        : '';
+    const displayTime = ev.time || (dayTag ? `${dayTag} ${ev.start_time}` : ev.start_time) || '';
     const favClass = isFavorite('timetable', idx) ? 'tt-event-fav' : '';
 
     // Join only the parts that actually have a value — a missing stage
