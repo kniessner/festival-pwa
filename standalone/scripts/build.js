@@ -11,12 +11,15 @@
  * itself, so dist/ (and whatever deploy.sh pushes to gh-pages) is always
  * this optimized output, never a stale unminified one.
  *
- * Remember to bump sw.js's CACHE_VERSION before deploying a fresh build —
- * this script doesn't do that for you (see other scripts/*.sh for why).
+ * Bumps sw.js's CACHE_VERSION (and syncs index.html's ?v= params to match,
+ * via bump-cache-version.sh) on the SOURCE files before copying/bundling
+ * into dist/ — so every build ships under a version the device hasn't
+ * already cached, without relying on that being done by hand first.
  */
 
 const fs = require('fs');
 const path = require('path');
+const { execFileSync } = require('child_process');
 const esbuild = require('esbuild');
 
 const ROOT_DIR = path.join(__dirname, '..');
@@ -150,6 +153,9 @@ async function build() {
     console.log(`   Target: ${DIST_DIR}`);
     console.log('');
 
+    const newVersion = execFileSync(path.join(ROOT_DIR, 'scripts', 'bump-cache-version.sh'), { encoding: 'utf8' }).trim();
+    console.log(`   🔁 Cache version bumped to ${newVersion}`);
+
     fs.rmSync(DIST_DIR, { recursive: true, force: true });
     fs.mkdirSync(DIST_DIR, { recursive: true });
 
@@ -182,7 +188,6 @@ async function build() {
 
     console.log('');
     console.log(`✅ Build complete — ${path.relative(ROOT_DIR, DIST_DIR) || '.'}/ is ready.`);
-    console.log('   Double-check sw.js\'s CACHE_VERSION is bumped before deploying.');
 }
 
 build().catch(err => {

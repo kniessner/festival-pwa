@@ -30,17 +30,32 @@ if [ "$1" = "--dry-run" ]; then
     echo "🧪 Dry run — no files will actually be transferred"
 fi
 
-# The WP plugin's "PWA Push" and "Music" post types write data/notifications.json
-# and data/music.json directly on the server (see includes/class-notifications.php
-# and includes/class-music.php) — excluded here so a deploy never overwrites
-# that live content with the local repo's copies (which are just blank
-# placeholders for local dev/offline fallback).
-RSYNC_FLAGS+=(--exclude=data/notifications.json --exclude=data/music.json)
+# The WP plugin's "PWA Push" and "Music" post types write notifications.json
+# and music.json directly on the server (see includes/class-notifications.php
+# and includes/class-music.php), in both data/ and data/en/ — excluded here so
+# a deploy never overwrites that live content with the local repo's copies
+# (which are just blank placeholders for local dev/offline fallback). The
+# exclude patterns must list both locations explicitly: rsync's exclude
+# matches the exact relative path, so data/notifications.json would NOT also
+# catch data/en/notifications.json.
+RSYNC_FLAGS+=(
+    --exclude=data/notifications.json --exclude=data/en/notifications.json
+    --exclude=data/music.json --exclude=data/en/music.json
+)
 
 # Runtime files the app actually needs. Mirrors deploy.sh's dist/ build list
 # (index.html, manifest.json, sw.js, js/, css/, data/, images/, icons/) —
 # scripts/, docs/, .log/, and README/STRATEGY.md are dev-only and excluded.
 DEPLOY_FILES=(index.html manifest.json sw.js js css data images icons)
+
+# Every deploy ships a fresh cache-busted sw.js + index.html, so a change
+# never goes out under a version the device has already cached (see
+# scripts/bump-cache-version.sh for why sw.js and index.html are bumped
+# together instead of separately).
+if [ "$1" != "--dry-run" ]; then
+    NEW_VERSION="$("$SCRIPT_DIR/bump-cache-version.sh")"
+    echo "🔁 Cache version bumped to $NEW_VERSION"
+fi
 
 echo "🚀 Festival PWA Standalone — Production Deploy"
 echo "   Source: $ROOT_DIR"

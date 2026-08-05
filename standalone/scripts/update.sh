@@ -317,11 +317,8 @@ with open(path, 'w') as f:
 
 info "Busting Service Worker cache"
 echo "🔁 Busting Service Worker cache..."
-SW_FILE="$ROOT_DIR/sw.js"
-if [ -f "$SW_FILE" ]; then
-    NEW_VERSION="$(date +%s)"
-    sed -i.bak "s/const CACHE_VERSION = '[^']*'/const CACHE_VERSION = '$NEW_VERSION'/" "$SW_FILE"
-    rm -f "$SW_FILE.bak"
+if [ -f "$ROOT_DIR/sw.js" ]; then
+    NEW_VERSION="$("$SCRIPTS_DIR/bump-cache-version.sh")"
     ok "Cache version bumped to $NEW_VERSION"
     echo "   ✅ Cache version bumped to $NEW_VERSION"
 else
