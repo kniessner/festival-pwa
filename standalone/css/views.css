@@ -188,7 +188,7 @@ span#headerFilterLabel {
 /* Next upcoming favorite (home screen) */
 
 .next-event-card {
-    margin: 0 auto;
+    margin: 10px auto 16px;
     min-height: 168px;
     display: flex;
     flex-direction: column;
@@ -1388,7 +1388,7 @@ span#headerFilterLabel {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #a49fe6;
+    background: #f2b8b0;
     color: #14123f;
     font-family: var(--font-head);
     font-weight: 700;
