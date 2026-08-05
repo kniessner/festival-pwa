@@ -181,7 +181,12 @@ export function renderEventCard(ev) {
     // (subline) or missing time/category (meta) must not leave a dangling
     // ", " with nothing on one side of it.
     const stageHtml = ev.stage_label ? `<strong>${ev.stage_label}</strong>` : '';
-    const sublineHtml = [stageHtml, ev.title].filter(Boolean).join(', ');
+    // Hosts (the actual performers/artists), not the title again — the
+    // title's already the card's h3 heading just above. Sources without
+    // hosts (e.g. music.json) simply omit this part rather than repeating
+    // the title as a filler.
+    const hostsText = ev.hosts && ev.hosts.length ? ev.hosts.join(', ') : '';
+    const sublineHtml = [stageHtml, hostsText].filter(Boolean).join(', ');
 
     const timeText = displayTime ? `${displayTime}${endTime}` : '';
     const timeHtml = timeText ? `<span class="event-time">${timeText}</span>` : '';

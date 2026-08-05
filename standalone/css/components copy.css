@@ -332,7 +332,7 @@
 
 .fav-btn.active {
     opacity: 1;
-    color: #de4e39;
+    color: rgba(27, 25, 42, 1);
 }
 
 .fav-btn:active {
