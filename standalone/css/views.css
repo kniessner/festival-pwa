@@ -1568,6 +1568,14 @@ span#headerFilterLabel {
     color: #fff;
 }
 
+/* Hours past a day's nominal 06:00 cutoff (an overnight set running past
+   sunrise) — the hour-of-day text here inevitably repeats what the NEXT
+   day's own opening ticks are about to show a DAY_GAP away, so this dims
+   them to read as "still the previous night" rather than a duplicate. */
+.gtt-hour-label-h--overtime {
+    opacity: 0.45;
+}
+
 /* Red 2px outline marks the hour the user is currently in — pairs
    with the .gtt-current-stage row outline for a "you are here" cross-
    reference across the timetable. Applied by renderVerticalLayout /
