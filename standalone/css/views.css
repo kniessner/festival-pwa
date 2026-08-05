@@ -927,7 +927,7 @@ span#headerFilterLabel {
     display: flex;
     flex-direction: column;
     gap: 16px;
-    padding-bottom: 80px;
+    padding-bottom: 20px;
 }
 
 .tt-hour-group {
