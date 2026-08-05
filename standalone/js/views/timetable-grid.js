@@ -97,7 +97,13 @@ const STAGE_COLORS = {
     'skalahara': '#3ac16e',
     'strandflitzer': '#c23b6b',
     'walking-act': '#762c8c',
-    'zirkus-mond': '#e85d75'
+    'zirkus-mond': '#e85d75',
+    // Sub-venues of Zirkus Mond / Mirage — shades of their parent stage's
+    // color rather than the generic fallback, so they still read as related.
+    'zirkus-mond-zelt': '#f28aa0',
+    'zirkus-mond-turmbuehnchen': '#b23a52',
+    'mirage-acro': '#ff9552',
+    'mirage-glimmer': '#ffcf5c'
 };
 function stageColor(stage) { return STAGE_COLORS[stage] || '#b0327a'; }
 

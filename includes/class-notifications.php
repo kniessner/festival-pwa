@@ -126,9 +126,11 @@ class Festival_PWA_Notifications {
             </label>
         </p>
         <p style="color:#646970;font-size:12px;">
-            Every notification always shows as an in-app alert. OS push delivery
-            for the checkbox above isn't wired up yet — it just records the
-            intent for when that's built.
+            Every notification always shows as an in-app alert regardless of this
+            checkbox. Checking it ALSO sends a one-time OS push to everyone
+            currently subscribed, the moment you save/publish — unchecking and
+            re-checking it lets you resend (e.g. after fixing a typo before
+            anyone saw it), but a normal edit afterward won't re-notify anyone.
         </p>
         <?php
     }
@@ -146,6 +148,29 @@ class Festival_PWA_Notifications {
         // (see standalone/js/notifications.js), so it needs to survive
         // saving as safe HTML rather than being reduced to plain text.
         update_post_meta($post_id, '_pwa_content_en', wp_kses_post($_POST['pwa_content_en'] ?? ''));
+
+        // Fires the actual OS push exactly once per post — guarded by
+        // _pwa_push_sent so re-saving an already-pushed post (fixing a
+        // typo, etc.) doesn't re-notify every subscriber. Unchecking and
+        // re-checking the box does intentionally allow a re-send, since
+        // that's the only way to retry after e.g. an empty title slipped
+        // through.
+        $send_push = isset($_POST['pwa_send_push']);
+        $already_sent = get_post_meta($post_id, '_pwa_push_sent', true) === '1';
+        if ($send_push && !$already_sent) {
+            $title_de = get_the_title($post_id);
+            $body_de  = trim(wp_strip_all_tags(apply_filters('the_content', get_post($post_id)->post_content)));
+            $title_en = sanitize_text_field($_POST['pwa_title_en'] ?? '');
+            $body_en  = trim(wp_strip_all_tags(wp_kses_post($_POST['pwa_content_en'] ?? '')));
+            Festival_PWA_Push::send_to_all([
+                'de' => ['title' => $title_de, 'body' => $body_de],
+                'en' => ['title' => $title_en, 'body' => $body_en],
+            ]);
+            update_post_meta($post_id, '_pwa_push_sent', '1');
+        } elseif (!$send_push) {
+            // Allows a genuine retry: uncheck, save, check again.
+            update_post_meta($post_id, '_pwa_push_sent', '');
+        }
 
         $this->rebuild_json();
     }

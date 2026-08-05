@@ -22,15 +22,32 @@ function getSeenIds() {
     return new Set(safeGetJSON(NOTIFICATIONS_SEEN_KEY, []));
 }
 
-function getUnseenNotifications() {
+// Only "Highlight this notification" items are popup-worthy — the News tab
+// (js/views/info.js) still lists every item regardless of highlight, this
+// is just the interruptive on-open popup's own scope.
+function getUnseenHighlighted() {
     const items = store.pageData.notifications?.items;
     if (!items || !items.length) return [];
     const seen = getSeenIds();
-    return items.filter(item => !seen.has(item.id));
+    return items.filter(item => item.highlight && !seen.has(item.id));
+}
+
+// The popup shows at most ONE card, not every qualifying item stacked —
+// items is newest-first (same assumption getLatestNotification() makes
+// about this feed), so [0] is the most recent unseen highlighted one.
+function getPopupNotification() {
+    return getUnseenHighlighted()[0] || null;
 }
 
 function markAllNotificationsSeen() {
-    const items = store.pageData.notifications?.items || [];
+    // Only highlighted items are ever tracked here — a non-highlighted item
+    // must stay "unseen" so that if it's highlighted later, it still shows
+    // up in the popup instead of having already been silently marked seen
+    // by an earlier, unrelated popup close. Marks every unseen highlighted
+    // item as seen on close (not just the one shown), so an older
+    // highlighted item that lost out to a newer one doesn't awkwardly pop
+    // up on the next launch.
+    const items = getUnseenHighlighted();
     const seen = getSeenIds();
     items.forEach(item => seen.add(item.id));
     // safeSetJSON swallows write failures (Safari private mode / quota
@@ -54,14 +71,14 @@ function renderNotificationCards(items) {
 }
 
 export function maybeShowNotifications() {
-    const unseen = getUnseenNotifications();
-    if (!unseen.length) return;
+    const item = getPopupNotification();
+    if (!item) return;
 
     const modal = document.getElementById('notificationsModal');
     const list = document.getElementById('notificationsList');
     if (!modal || !list) return;
 
-    list.innerHTML = renderNotificationCards(unseen);
+    list.innerHTML = renderNotificationCards([item]);
     modal.classList.add('open');
 }
 

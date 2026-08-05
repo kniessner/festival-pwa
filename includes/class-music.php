@@ -38,6 +38,10 @@ class Festival_PWA_Music {
         'Strandflitzer',
         'Zirkus Mond',
         'Sektamt',
+        'Zirkus Mond Zelt',
+        'Zirkus Mond Turmbühnchen',
+        'Mirage Acro',
+        'Mirage Glimmer',
     ];
 
     // Stage acts run around the clock — same rollover convention the

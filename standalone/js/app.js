@@ -16,6 +16,7 @@ import { mergeMusicIntoTimetable, refreshMusic } from './music.js';
 import { showLocationPromptIfNeeded, onboardingAllow, onboardingNotNow } from './onboarding.js';
 import { loadStages, warnStageNameMismatches } from './helpers/get-stage.js';
 import { passwordGateOK, showPasswordGate } from './password-gate.js';
+import { togglePush } from './push.js';
 
 const LANG_LABELS = { de: 'De', en: 'Eng' };
 
@@ -268,6 +269,11 @@ const actions = {
     'open-menu': () => openMenu(),
     'close-menu': () => closeMenu(),
     'refresh-data': el => refreshData(el),
+    'toggle-push': async () => {
+        const nowSubscribed = await togglePush();
+        showToast(nowSubscribed ? t('push.enabled') : t('push.disabled'));
+        renderNav();
+    },
     'goto-news': () => {
         closeMenu();
         goToPage(pageIdx('info'));

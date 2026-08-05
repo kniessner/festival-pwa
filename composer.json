@@ -1,0 +1,12 @@
+{
+    "name": "festival-tech/festival-pwa",
+    "description": "WordPress plugin dependencies for the Festival PWA — primarily Web Push delivery for the 'Also send as OS push notification' option.",
+    "type": "wordpress-plugin",
+    "require": {
+        "php": ">=7.4",
+        "minishlink/web-push": "^9.0"
+    },
+    "config": {
+        "vendor-dir": "vendor"
+    }
+}
