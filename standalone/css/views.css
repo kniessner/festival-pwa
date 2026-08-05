@@ -213,17 +213,18 @@ span#headerFilterLabel {
 }
 
 .next-event-label {
-    font-size: 0.72rem;
+    font-size: 13px;
     color: var(--accent-pink);
     text-transform: uppercase;
     letter-spacing: 1.5px;
     font-weight: 700;
     margin-bottom: 8px;
+        font-family: 'Megan Display';
 }
 
 .next-event-card h3 {
     font-family: var(--wp--preset--font-family--megan-display, var(--font-head)), serif;
-    font-size: 1.2rem;
+    font-size: 26px;
     line-height: 1.25;
     color: var(--text);
     font-weight: 700;
