@@ -42,6 +42,13 @@ if (!defined('FESTIVAL_PWA_WEBAPP_DATA_DIR_DEFAULT')) {
     define('FESTIVAL_PWA_WEBAPP_DATA_DIR_DEFAULT', '/srv/htdocs/webapp/data');
 }
 
+// Public URL of the same webapp — used to deep-link a push notification's
+// click straight to its entry on the News tab (?notif=<post ID>, read by
+// standalone/js/app.js on load / via the service worker's postMessage).
+if (!defined('FESTIVAL_PWA_WEBAPP_URL')) {
+    define('FESTIVAL_PWA_WEBAPP_URL', 'https://bucht-der-traeumer.de/webapp/');
+}
+
 class Festival_PWA_Notifications {
     const POST_TYPE = 'pwa_notification';
 
@@ -182,7 +189,7 @@ class Festival_PWA_Notifications {
             Festival_PWA_Push::send_to_all([
                 'de' => ['title' => $title_de, 'body' => $body_de],
                 'en' => ['title' => $title_en, 'body' => $body_en],
-            ]);
+            ], FESTIVAL_PWA_WEBAPP_URL . '?notif=' . $post_id);
             update_post_meta($post_id, '_pwa_push_sent', '1');
         } elseif (!$send_push) {
             // Allows a genuine retry: uncheck, save, check again.
@@ -214,7 +221,7 @@ class Festival_PWA_Notifications {
         Festival_PWA_Push::send_to_all([
             'de' => ['title' => $title_de, 'body' => $body_de],
             'en' => ['title' => $title_en, 'body' => $body_en],
-        ]);
+        ], FESTIVAL_PWA_WEBAPP_URL . '?notif=' . $post->ID);
         update_post_meta($post->ID, '_pwa_push_sent', '1');
 
         // notifications.json is otherwise only rebuilt from save() (a real

@@ -91,6 +91,19 @@ export function getLatestNotification() {
     return items && items.length ? items[0] : null;
 }
 
+// Deep-link target for an OS push notification's click (see sw.js's
+// notificationclick and app.js's ?notif= handling) — looked up by the
+// item's stable WP post ID rather than its array index, since the feed can
+// gain newer entries between when a push was sent and when it's tapped,
+// which would shift indexes but never IDs.
+export function scrollToNotificationById(id) {
+    const target = document.querySelector(`#content [data-item-id="${id}"]`);
+    if (!target) return;
+    target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    target.classList.add('highlight', 'highlight-quick');
+    setTimeout(() => target.classList.remove('highlight', 'highlight-quick'), 1000);
+}
+
 export function closeNotifications() {
     const modal = document.getElementById('notificationsModal');
     if (modal) modal.classList.remove('open');
