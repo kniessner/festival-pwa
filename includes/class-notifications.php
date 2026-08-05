@@ -22,13 +22,15 @@
  * falls back to the German title/text, so an English reader always sees
  * something rather than a blank notification while translation is pending.
  *
- * Each notification can be flagged "send as push" — that flag is stored
- * and exposed in the JSON/REST feed now, but actually delivering an OS-level
- * push notification needs infrastructure this plugin doesn't have yet
- * (a Web Push endpoint, VAPID keys, a subscription store). Until that's
- * built, the PWA instead shows an in-app popup for any notification it
- * hasn't seen yet — see standalone/js/notifications.js — which needs none
- * of that and works for every notification regardless of the push flag.
+ * Each notification can be flagged "send as push", delivering an actual
+ * OS-level Web Push via class-push.php on top of the in-app popup every
+ * notification already gets regardless of the flag (see
+ * standalone/js/notifications.js). The send fires once, either
+ * immediately (save() below, when the post is published right away) or —
+ * respecting WordPress's own Schedule date/time picker — when WP-Cron
+ * actually auto-publishes a scheduled post (on_scheduled_publish() below,
+ * hooked to transition_post_status). Either way it's guarded by
+ * _pwa_push_sent so a post is never pushed twice.
  */
 
 if (!defined('ABSPATH')) exit;
@@ -48,6 +50,7 @@ class Festival_PWA_Notifications {
         add_action('add_meta_boxes', [$this, 'add_meta_box']);
         add_action('add_meta_boxes', [$this, 'add_translation_meta_box']);
         add_action('save_post_' . self::POST_TYPE, [$this, 'save']);
+        add_action('transition_post_status', [$this, 'on_scheduled_publish'], 10, 3);
         add_action('trashed_post', [$this, 'on_status_change']);
         add_action('untrashed_post', [$this, 'on_status_change']);
         add_action('before_delete_post', [$this, 'on_status_change']);
@@ -128,7 +131,8 @@ class Festival_PWA_Notifications {
         <p style="color:#646970;font-size:12px;">
             Every notification always shows as an in-app alert regardless of this
             checkbox. Checking it ALSO sends a one-time OS push to everyone
-            currently subscribed, the moment you save/publish — unchecking and
+            currently subscribed — immediately if you publish now, or at the
+            date/time below if you use Schedule instead. Unchecking and
             re-checking it lets you resend (e.g. after fixing a typo before
             anyone saw it), but a normal edit afterward won't re-notify anyone.
         </p>
@@ -155,9 +159,18 @@ class Festival_PWA_Notifications {
         // re-checking the box does intentionally allow a re-send, since
         // that's the only way to retry after e.g. an empty title slipped
         // through.
+        //
+        // Only sends here when the post is ACTUALLY publishing right now —
+        // if the admin picked a future date in WordPress's own Schedule
+        // picker (post_status is 'future', not 'publish'), this
+        // deliberately does nothing; on_scheduled_publish() below fires the
+        // send later, when WP-Cron actually publishes it. Without this
+        // check, scheduling a post would push immediately at save time
+        // instead of at the scheduled time.
         $send_push = isset($_POST['pwa_send_push']);
         $already_sent = get_post_meta($post_id, '_pwa_push_sent', true) === '1';
-        if ($send_push && !$already_sent) {
+        $publishing_now = get_post_status($post_id) === 'publish';
+        if ($send_push && !$already_sent && $publishing_now) {
             // Raw HTML, not pre-stripped — Festival_PWA_Push::send_to_all()
             // does its own HTML-to-plain-text conversion (preserving
             // paragraph/list line breaks, which a naive strip here would
@@ -176,6 +189,38 @@ class Festival_PWA_Notifications {
             update_post_meta($post_id, '_pwa_push_sent', '');
         }
 
+        $this->rebuild_json();
+    }
+
+    // WP-Cron's counterpart to save()'s immediate-publish send: fires
+    // whenever ANY post transitions status, so it's scoped down to
+    // exactly the one case save() intentionally skips — a scheduled
+    // ('future') PWA Push post that WordPress's own cron just auto-
+    // published. No $_POST here (there's no real HTTP request behind a
+    // cron-triggered publish), so unlike save() this reads straight from
+    // the already-saved post meta instead.
+    public function on_scheduled_publish($new_status, $old_status, $post) {
+        if ($post->post_type !== self::POST_TYPE) return;
+        if ($new_status !== 'publish' || $old_status !== 'future') return;
+
+        $send_push = get_post_meta($post->ID, '_pwa_send_push', true) === '1';
+        $already_sent = get_post_meta($post->ID, '_pwa_push_sent', true) === '1';
+        if (!$send_push || $already_sent) return;
+
+        $title_de = get_the_title($post);
+        $body_de  = apply_filters('the_content', $post->post_content);
+        $title_en = get_post_meta($post->ID, '_pwa_title_en', true);
+        $body_en  = get_post_meta($post->ID, '_pwa_content_en', true);
+        Festival_PWA_Push::send_to_all([
+            'de' => ['title' => $title_de, 'body' => $body_de],
+            'en' => ['title' => $title_en, 'body' => $body_en],
+        ]);
+        update_post_meta($post->ID, '_pwa_push_sent', '1');
+
+        // notifications.json is otherwise only rebuilt from save() (a real
+        // form submission) — a scheduled post publishing via cron needs
+        // its own rebuild trigger so it actually shows up in the feed the
+        // moment it goes live, not just whenever someone next edits it.
         $this->rebuild_json();
     }
 
