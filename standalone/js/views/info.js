@@ -24,7 +24,7 @@ export function renderInfo(container) {
         html += news.items.map((item, i) => {
             const date = item.date ? `<span class="news-date">${escapeHtml(formatNotificationDate(item))}</span>` : '';
             const highlight = item.highlight ? 'news-highlight' : '';
-            return `<div class="news-card ${highlight}" data-item-index="${i}">
+            return `<div class="news-card ${highlight}" data-item-index="${i}" data-item-id="${item.id}">
                 <div class="card-header"><h3>${escapeHtml(item.question)}</h3>
                 ${favButton('notifications', i)}</div>
                 ${date}

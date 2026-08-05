@@ -10,7 +10,7 @@ import { setupInstallTracking, setupOfflineIndicator, dismissInstallCard, trigge
 import { showToast } from './ui.js';
 import { PAGES, pageIdx } from './config.js';
 import { t, setLang } from './i18n.js';
-import { maybeShowNotifications, closeNotifications, setupNotificationsRefresh } from './notifications.js';
+import { maybeShowNotifications, closeNotifications, setupNotificationsRefresh, scrollToNotificationById } from './notifications.js';
 import { openMenu, closeMenu } from './menu.js';
 import { mergeMusicIntoTimetable, refreshMusic } from './music.js';
 import { showLocationPromptIfNeeded, onboardingAllow, onboardingNotNow, showPushPromptIfNeeded, pushOnboardingAllow, pushOnboardingNotNow } from './onboarding.js';
@@ -45,9 +45,19 @@ async function init() {
     renderNav();
     // manifest.json's start_url passes ?page=favorites so launching the
     // installed home-screen app opens My Plan directly; a plain browser
-    // visit (no query param) still lands on Home as before.
-    const requestedPage = new URLSearchParams(location.search).get('page');
-    goToPage(requestedPage ? Math.max(0, pageIdx(requestedPage)) : 0);
+    // visit (no query param) still lands on Home as before. ?notif=<id>
+    // (a tapped OS push notification's deep link, opened fresh by
+    // sw.js's notificationclick via clients.openWindow) takes priority
+    // over both — same-tab clicks are instead handled live via the
+    // service-worker message listener in setupUpdateBanner() below.
+    const params = new URLSearchParams(location.search);
+    const notifId = params.get('notif');
+    const requestedPage = params.get('page');
+    if (notifId) {
+        goToNotification(notifId);
+    } else {
+        goToPage(requestedPage ? Math.max(0, pageIdx(requestedPage)) : 0);
+    }
     setupOfflineIndicator();
     setupInstallTracking(refreshInstallCardIfVisible);
     setupUpdateBanner();
@@ -160,6 +170,12 @@ function setupUpdateBanner() {
     navigator.serviceWorker.addEventListener('message', event => {
         if (event.data?.type === 'UPDATE_AVAILABLE') {
             showUpdateBanner();
+        } else if (event.data?.type === 'notification-click') {
+            // Tab was already open — sw.js focused it and sent this instead
+            // of the fresh ?notif= page load the cold-start path gets, so
+            // route there live instead of relying on location.search.
+            const notifId = new URL(event.data.url, location.origin).searchParams.get('notif');
+            if (notifId) goToNotification(notifId);
         }
     });
 
@@ -204,6 +220,20 @@ function showUpdateBanner(worker = null) {
 function goToPage(index) {
     loadPage(index);
     setupSearch();
+}
+
+// Shared by both notification-click paths (cold-start ?notif= param and
+// the same-tab postMessage above) — same 300ms delay as the other
+// goToPage-then-scroll actions (goto-news, goto-event) below, giving the
+// News panel's DOM time to render before scrollToNotificationById looks
+// for it.
+function goToNotification(id) {
+    closeMenu();
+    goToPage(pageIdx('info'));
+    setTimeout(() => {
+        switchInfoTab('news');
+        scrollToNotificationById(parseInt(id, 10));
+    }, 300);
 }
 
 async function showLastUpdated() {
