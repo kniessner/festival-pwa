@@ -187,7 +187,7 @@ export function renderEventCard(ev) {
     // Join only the parts that actually have a value — a missing stage
     // (subline) or missing time/category (meta) must not leave a dangling
     // ", " with nothing on one side of it.
-    const stageHtml = ev.stage_label ? `<strong>${ev.stage_label}</strong>` : '';
+    const stageHtml = ev.stage_label ? `<span class="tt-event-stage">${ev.stage_label}</span>` : '';
     // Hosts (the actual performers/artists), not the title again — the
     // title's already the card's h3 heading just above. Sources without
     // hosts (e.g. music.json) simply omit this part rather than repeating

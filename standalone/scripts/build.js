@@ -76,6 +76,21 @@ function buildCss() {
     console.log(`   ✅ css/*.css (${fmtSize(before)} → ${fmtSize(after)})`);
 }
 
+function copyDir(srcDir, destDir) {
+    fs.mkdirSync(destDir, { recursive: true });
+    let count = 0;
+    for (const entry of fs.readdirSync(srcDir, { withFileTypes: true })) {
+        const srcPath = path.join(srcDir, entry.name);
+        const destPath = path.join(destDir, entry.name);
+        if (entry.isDirectory()) count += copyDir(srcPath, destPath);
+        else {
+            fs.copyFileSync(srcPath, destPath);
+            count++;
+        }
+    }
+    return count;
+}
+
 function minifyJsonFile(src, dest) {
     const data = JSON.parse(fs.readFileSync(src, 'utf8'));
     fs.mkdirSync(path.dirname(dest), { recursive: true });
@@ -166,6 +181,9 @@ async function build() {
     await buildJs();
     buildCss();
     buildServiceWorker();
+
+    const fontCount = copyDir(path.join(ROOT_DIR, 'fonts'), path.join(DIST_DIR, 'fonts'));
+    console.log(`   ✅ fonts/* (${fontCount} files, copied as-is)`);
 
     copyJsonDir(path.join(ROOT_DIR, 'data'), path.join(DIST_DIR, 'data'));
     console.log('   ✅ data/**/*.json (minified)');
