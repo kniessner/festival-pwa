@@ -7,6 +7,7 @@ import { renderGridTimetable } from './views/timetable-grid.js';
 import { renderInfo } from './views/info.js';
 import { renderFavorites } from './views/favorites.js';
 import { countValidFavorites } from './favorites.js';
+import { isPushSupported, isPushSubscribed } from './push.js';
 
 // External link, not an in-app route — opens in a real browser tab (via
 // target="_blank") even when the PWA is running installed/standalone,
@@ -41,7 +42,15 @@ export function renderNav() {
         <span class="menu-item-sublabel">${t('common.comingSoon')}</span>
     </span>`;
 
-    list.innerHTML = pageRows + festivalmapRow + cashlessRow;
+    // Not every browser/platform supports Web Push (notably Safari on iOS
+    // below 16.4, or without the app added to the Home Screen) — hiding
+    // the row entirely there beats showing a toggle that can never turn on.
+    const pushRow = isPushSupported() ? `<button class="menu-item-toggle menu-item-toggle-small" data-action="toggle-push">
+        <span class="menu-item-label">${t('nav.pushNotifications')}</span>
+        <span class="menu-item-toggle-switch ${isPushSubscribed() ? 'on' : ''}" aria-hidden="true"></span>
+    </button>` : '';
+
+    list.innerHTML = pageRows + festivalmapRow + cashlessRow + pushRow;
 }
 
 export function loadPage(index) {

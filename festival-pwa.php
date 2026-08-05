@@ -19,6 +19,13 @@ require_once FESTIVAL_PWA_DIR . 'includes/class-pwa-frontend.php';
 require_once FESTIVAL_PWA_DIR . 'includes/class-notifications.php';
 require_once FESTIVAL_PWA_DIR . 'includes/class-music.php';
 require_once FESTIVAL_PWA_DIR . 'includes/class-music-import.php';
+require_once FESTIVAL_PWA_DIR . 'includes/class-push.php';
+
+// Creates the push-subscriptions table and generates the VAPID keypair on
+// first activation — see Festival_PWA_Push::install(). Re-activating a
+// plugin that's already set up is a no-op (dbDelta diffs the schema, and
+// the VAPID keys are only ever generated once).
+register_activation_hook(__FILE__, ['Festival_PWA_Push', 'install']);
 
 class Festival_PWA {
     /**

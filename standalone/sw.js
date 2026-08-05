@@ -7,7 +7,7 @@
  *   - Cross-origin assets        → Cache-First only for CORS/basic responses
  */
 
-const CACHE_VERSION = '1785921046';
+const CACHE_VERSION = '1785939916';
 const APP_NAME = 'bucht-standalone';
 const CACHE_NAME = `${APP_NAME}-v${CACHE_VERSION}`;
 
@@ -41,10 +41,12 @@ const SHELL_ASSETS = [
     './js/music.js',
     './js/notifications.js',
     './js/onboarding.js',
+    './js/push.js',
     './js/helpers/geolocation-permission.js',
     './js/helpers/get-stage.js',
     './js/helpers/point-in-polygon.js',
     './js/helpers/prompt-storage.js',
+    './js/helpers/safe-storage.js',
     './js/helpers/stage-hysteresis.js',
     './js/views/home.js',
     './js/views/timetable.js',
@@ -320,6 +322,50 @@ self.addEventListener('fetch', e => {
 
     // Cross-origin assets referenced by content (images, CSS, fonts).
     e.respondWith(crossOriginAsset(request));
+});
+
+// ── Push notifications ──────────────────────────────────────────────────────
+//
+// Payload shape is set server-side by class-push.php's send_to_all():
+// {title, body, url}. url is optional (defaults to the app root below);
+// class-notifications.php doesn't currently set one, but the shape leaves
+// room for a future deep link (e.g. straight to the News tab).
+
+self.addEventListener('push', e => {
+    let payload = { title: 'Bucht der Träumer', body: '' };
+    try {
+        if (e.data) payload = { ...payload, ...e.data.json() };
+    } catch (err) {
+        console.log('[SW] Push payload parse failed', err.message);
+    }
+
+    e.waitUntil(
+        self.registration.showNotification(payload.title, {
+            body: payload.body,
+            icon: './icons/icon-192.png',
+            badge: './icons/icon-192.png',
+            data: { url: payload.url || './' },
+        })
+    );
+});
+
+self.addEventListener('notificationclick', e => {
+    e.notification.close();
+    const targetUrl = e.notification.data?.url || './';
+
+    e.waitUntil(
+        self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then(clientList => {
+            // Prefer focusing an already-open tab over stacking a new one —
+            // most opens will be someone re-opening the installed app they
+            // already have running/backgrounded.
+            for (const client of clientList) {
+                if (client.url.includes(self.registration.scope) && 'focus' in client) {
+                    return client.focus();
+                }
+            }
+            return self.clients.openWindow(targetUrl);
+        })
+    );
 });
 
 // ── Message handling ──────────────────────────────────────────────────────

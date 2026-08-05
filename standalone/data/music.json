@@ -3,7 +3,7 @@
     "slug": "music",
     "events": [
         {
-            "id": 7296,
+            "id": 7638,
             "title": "mirella",
             "day": "2026-08-13",
             "start_time": "12:00",
@@ -15,7 +15,7 @@
             "genre": "Music"
         },
         {
-            "id": 7289,
+            "id": 7631,
             "title": "Angel Lagoon",
             "day": "2026-08-13",
             "start_time": "14:30",
@@ -27,7 +27,7 @@
             "genre": "Music"
         },
         {
-            "id": 7137,
+            "id": 7486,
             "title": "Popsie Koch",
             "day": "2026-08-13",
             "start_time": "16:00",
@@ -39,7 +39,7 @@
             "genre": "Music"
         },
         {
-            "id": 7228,
+            "id": 7573,
             "title": "massin attack",
             "day": "2026-08-13",
             "start_time": "16:30",
@@ -51,7 +51,7 @@
             "genre": "Music"
         },
         {
-            "id": 7251,
+            "id": 7594,
             "title": "Marlies",
             "day": "2026-08-13",
             "start_time": "16:30",
@@ -63,7 +63,7 @@
             "genre": "Music"
         },
         {
-            "id": 7243,
+            "id": 7587,
             "title": "Montezuma",
             "day": "2026-08-13",
             "start_time": "17:00",
@@ -75,7 +75,7 @@
             "genre": "Music"
         },
         {
-            "id": 7182,
+            "id": 7528,
             "title": "Juli Lee",
             "day": "2026-08-13",
             "start_time": "19:00",
@@ -87,7 +87,7 @@
             "genre": "Music"
         },
         {
-            "id": 7258,
+            "id": 7600,
             "title": "Fog Puma",
             "day": "2026-08-13",
             "start_time": "19:00",
@@ -99,7 +99,7 @@
             "genre": "Music"
         },
         {
-            "id": 7320,
+            "id": 7659,
             "title": "Franz Scala",
             "day": "2026-08-13",
             "start_time": "19:00",
@@ -111,7 +111,7 @@
             "genre": "Music"
         },
         {
-            "id": 7350,
+            "id": 7688,
             "title": "Wa22ermann",
             "day": "2026-08-13",
             "start_time": "19:30",
@@ -123,7 +123,7 @@
             "genre": "Music"
         },
         {
-            "id": 7170,
+            "id": 7517,
             "title": "Harry Nipples",
             "day": "2026-08-13",
             "start_time": "20:00",
@@ -135,7 +135,7 @@
             "genre": "Music"
         },
         {
-            "id": 7193,
+            "id": 7539,
             "title": "Mira",
             "day": "2026-08-13",
             "start_time": "21:00",
@@ -147,7 +147,7 @@
             "genre": "Music"
         },
         {
-            "id": 7241,
+            "id": 7585,
             "title": "Santi &#038; Tugce",
             "day": "2026-08-13",
             "start_time": "21:00",
@@ -159,7 +159,7 @@
             "genre": "Music"
         },
         {
-            "id": 7263,
+            "id": 7605,
             "title": "Maltitz",
             "day": "2026-08-13",
             "start_time": "21:00",
@@ -171,7 +171,19 @@
             "genre": "Music"
         },
         {
-            "id": 7142,
+            "id": 7754,
+            "title": "Jonathan Kaspar",
+            "day": "2026-08-13",
+            "start_time": "21:00",
+            "end_time": "00:00",
+            "stage": "mirage",
+            "stage_label": "Mirage",
+            "type": "music",
+            "category": "Music",
+            "genre": "Music"
+        },
+        {
+            "id": 7490,
             "title": "Thujan",
             "day": "2026-08-13",
             "start_time": "22:00",
@@ -183,7 +195,7 @@
             "genre": "Music"
         },
         {
-            "id": 7148,
+            "id": 7496,
             "title": "Local Suicide",
             "day": "2026-08-13",
             "start_time": "22:00",
@@ -195,7 +207,7 @@
             "genre": "Music"
         },
         {
-            "id": 7333,
+            "id": 7672,
             "title": "Ponybarker",
             "day": "2026-08-13",
             "start_time": "22:30",
@@ -207,7 +219,7 @@
             "genre": "Music"
         },
         {
-            "id": 7119,
+            "id": 7469,
             "title": "Moritz Butschek",
             "day": "2026-08-13",
             "start_time": "23:00",
@@ -219,7 +231,7 @@
             "genre": "Music"
         },
         {
-            "id": 7230,
+            "id": 7575,
             "title": "Carlo Bonanza",
             "day": "2026-08-13",
             "start_time": "23:00",
@@ -231,7 +243,7 @@
             "genre": "Music"
         },
         {
-            "id": 7140,
+            "id": 7679,
             "title": "Kahl &#038; Kæmena \/w César B.",
             "day": "2026-08-13",
             "start_time": "23:30",
@@ -243,19 +255,7 @@
             "genre": "Music"
         },
         {
-            "id": 7341,
-            "title": "Kahl &#038; Kæmena \/w César B.",
-            "day": "2026-08-13",
-            "start_time": "23:30",
-            "end_time": "01:00",
-            "stage": "schweissperle",
-            "stage_label": "Schweißperle",
-            "type": "music",
-            "category": "Music",
-            "genre": "Music"
-        },
-        {
-            "id": 7242,
+            "id": 7586,
             "title": "Borella",
             "day": "2026-08-13",
             "start_time": "00:00",
@@ -267,7 +267,19 @@
             "genre": "Music"
         },
         {
-            "id": 7229,
+            "id": 7750,
+            "title": "Voodoos and Taboos",
+            "day": "2026-08-13",
+            "start_time": "00:00",
+            "end_time": "02:00",
+            "stage": "mirage",
+            "stage_label": "Mirage",
+            "type": "music",
+            "category": "Music",
+            "genre": "Music"
+        },
+        {
+            "id": 7574,
             "title": "Johannes Albert",
             "day": "2026-08-13",
             "start_time": "01:00",
@@ -279,7 +291,7 @@
             "genre": "Music"
         },
         {
-            "id": 7298,
+            "id": 7640,
             "title": "Zweistein",
             "day": "2026-08-13",
             "start_time": "01:00",
@@ -291,7 +303,7 @@
             "genre": "Music"
         },
         {
-            "id": 7334,
+            "id": 7673,
             "title": "Pauli Pocket",
             "day": "2026-08-13",
             "start_time": "01:00",
@@ -303,7 +315,19 @@
             "genre": "Music"
         },
         {
-            "id": 7370,
+            "id": 7756,
+            "title": "DJ Flink",
+            "day": "2026-08-13",
+            "start_time": "01:00",
+            "end_time": "04:00",
+            "stage": "zirkus-mond",
+            "stage_label": "Zirkus Mond",
+            "type": "music",
+            "category": "Music",
+            "genre": "Music"
+        },
+        {
+            "id": 7708,
             "title": "Saeko Killy",
             "day": "2026-08-13",
             "start_time": "02:00",
@@ -315,7 +339,7 @@
             "genre": "Music"
         },
         {
-            "id": 7286,
+            "id": 7628,
             "title": "mimizan",
             "day": "2026-08-13",
             "start_time": "02:30",
@@ -327,7 +351,7 @@
             "genre": "Music"
         },
         {
-            "id": 7253,
+            "id": 7596,
             "title": "Maurice Mino",
             "day": "2026-08-13",
             "start_time": "03:00",
@@ -339,19 +363,7 @@
             "genre": "Music"
         },
         {
-            "id": 7093,
-            "title": "Party",
-            "day": "2026-08-14",
-            "start_time": "09:00",
-            "end_time": "16:00",
-            "stage": "atlantis",
-            "stage_label": "Atlantis",
-            "type": "music",
-            "category": "Music",
-            "genre": "Music"
-        },
-        {
-            "id": 7290,
+            "id": 7632,
             "title": "Bonnie Spacey",
             "day": "2026-08-14",
             "start_time": "12:00",
@@ -363,7 +375,7 @@
             "genre": "Music"
         },
         {
-            "id": 7122,
+            "id": 7472,
             "title": "Grandmoflash",
             "day": "2026-08-14",
             "start_time": "13:00",
@@ -375,7 +387,7 @@
             "genre": "Music"
         },
         {
-            "id": 7211,
+            "id": 7557,
             "title": "Pilocka Krach",
             "day": "2026-08-14",
             "start_time": "13:00",
@@ -387,7 +399,7 @@
             "genre": "Music"
         },
         {
-            "id": 7264,
+            "id": 7606,
             "title": "EDE",
             "day": "2026-08-14",
             "start_time": "14:00",
@@ -399,7 +411,7 @@
             "genre": "Music"
         },
         {
-            "id": 7304,
+            "id": 7643,
             "title": "Jul",
             "day": "2026-08-14",
             "start_time": "14:00",
@@ -411,19 +423,7 @@
             "genre": "Music"
         },
         {
-            "id": 7089,
-            "title": "DJ Bobo",
-            "day": "2026-08-14",
-            "start_time": "14:24",
-            "end_time": "15:00",
-            "stage": "porto-loco",
-            "stage_label": "Porto Loco",
-            "type": "music",
-            "category": "Music",
-            "genre": "Music"
-        },
-        {
-            "id": 7139,
+            "id": 7488,
             "title": "Arnau Yuna",
             "day": "2026-08-14",
             "start_time": "15:00",
@@ -435,19 +435,7 @@
             "genre": "Music"
         },
         {
-            "id": 7245,
-            "title": "Pacaya",
-            "day": "2026-08-14",
-            "start_time": "15:00",
-            "end_time": "17:30",
-            "stage": "zirkus-mond",
-            "stage_label": "Zirkus Mond",
-            "type": "music",
-            "category": "Music",
-            "genre": "Music"
-        },
-        {
-            "id": 7270,
+            "id": 7612,
             "title": "NAKED",
             "day": "2026-08-14",
             "start_time": "15:00",
@@ -459,7 +447,7 @@
             "genre": "Music"
         },
         {
-            "id": 7274,
+            "id": 7616,
             "title": "Pacaya",
             "day": "2026-08-14",
             "start_time": "15:00",
@@ -471,7 +459,7 @@
             "genre": "Music"
         },
         {
-            "id": 7353,
+            "id": 7691,
             "title": "KEENE",
             "day": "2026-08-14",
             "start_time": "15:00",
@@ -483,7 +471,19 @@
             "genre": "Music"
         },
         {
-            "id": 7297,
+            "id": 7746,
+            "title": "The Naked Tea Party",
+            "day": "2026-08-14",
+            "start_time": "15:00",
+            "end_time": "19:00",
+            "stage": "schweissperle",
+            "stage_label": "Schweißperle",
+            "type": "music",
+            "category": "Music",
+            "genre": "Music"
+        },
+        {
+            "id": 7639,
             "title": "Apolonia",
             "day": "2026-08-14",
             "start_time": "15:30",
@@ -495,7 +495,7 @@
             "genre": "Music"
         },
         {
-            "id": 7175,
+            "id": 7522,
             "title": "ciao 3lla",
             "day": "2026-08-14",
             "start_time": "16:00",
@@ -507,7 +507,7 @@
             "genre": "Music"
         },
         {
-            "id": 7197,
+            "id": 7543,
             "title": "Chris Schwarzwälder",
             "day": "2026-08-14",
             "start_time": "16:00",
@@ -519,7 +519,7 @@
             "genre": "Music"
         },
         {
-            "id": 7310,
+            "id": 7649,
             "title": "KALEA",
             "day": "2026-08-14",
             "start_time": "16:00",
@@ -531,7 +531,7 @@
             "genre": "Music"
         },
         {
-            "id": 7314,
+            "id": 7653,
             "title": "Käthe&#038;Haes",
             "day": "2026-08-14",
             "start_time": "16:00",
@@ -543,7 +543,7 @@
             "genre": "Music"
         },
         {
-            "id": 7377,
+            "id": 7715,
             "title": "Sheila",
             "day": "2026-08-14",
             "start_time": "16:00",
@@ -555,7 +555,7 @@
             "genre": "Music"
         },
         {
-            "id": 7124,
+            "id": 7474,
             "title": "MIDICONFUSION",
             "day": "2026-08-14",
             "start_time": "17:00",
@@ -567,7 +567,7 @@
             "genre": "Music"
         },
         {
-            "id": 7202,
+            "id": 7548,
             "title": "HOVR",
             "day": "2026-08-14",
             "start_time": "17:00",
@@ -579,7 +579,7 @@
             "genre": "Music"
         },
         {
-            "id": 7185,
+            "id": 7531,
             "title": "Britta Arnold",
             "day": "2026-08-14",
             "start_time": "17:30",
@@ -591,7 +591,19 @@
             "genre": "Music"
         },
         {
-            "id": 7179,
+            "id": 7724,
+            "title": "Robinson Schmuso",
+            "day": "2026-08-14",
+            "start_time": "17:30",
+            "end_time": "19:30",
+            "stage": "zirkus-mond",
+            "stage_label": "Zirkus Mond",
+            "type": "music",
+            "category": "Music",
+            "genre": "Music"
+        },
+        {
+            "id": 7525,
             "title": "Holly North",
             "day": "2026-08-14",
             "start_time": "18:00",
@@ -603,7 +615,7 @@
             "genre": "Music"
         },
         {
-            "id": 7186,
+            "id": 7532,
             "title": "Pilar Jordan",
             "day": "2026-08-14",
             "start_time": "18:00",
@@ -615,20 +627,8 @@
             "genre": "Music"
         },
         {
-            "id": 7254,
-            "title": "Havali Sergec",
-            "day": "2026-08-14",
-            "start_time": "18:00",
-            "end_time": "20:00",
-            "stage": "stroboklo",
-            "stage_label": "Stroboklo",
-            "type": "music",
-            "category": "Music",
-            "genre": "Music"
-        },
-        {
-            "id": 7281,
-            "title": "MigraKid (b2b Xima)",
+            "id": 7623,
+            "title": "MigraKid",
             "day": "2026-08-14",
             "start_time": "18:00",
             "end_time": "20:00",
@@ -639,8 +639,8 @@
             "genre": "Music"
         },
         {
-            "id": 7285,
-            "title": "Xima (b2b MigraKid)",
+            "id": 7627,
+            "title": "Xima",
             "day": "2026-08-14",
             "start_time": "18:00",
             "end_time": "20:00",
@@ -651,7 +651,7 @@
             "genre": "Music"
         },
         {
-            "id": 7382,
+            "id": 7720,
             "title": "Planfrei",
             "day": "2026-08-14",
             "start_time": "18:00",
@@ -663,7 +663,19 @@
             "genre": "Music"
         },
         {
-            "id": 7277,
+            "id": 7748,
+            "title": "Tina Tischler",
+            "day": "2026-08-14",
+            "start_time": "18:00",
+            "end_time": "20:00",
+            "stage": "stroboklo",
+            "stage_label": "Stroboklo",
+            "type": "music",
+            "category": "Music",
+            "genre": "Music"
+        },
+        {
+            "id": 7619,
             "title": "EaAruru",
             "day": "2026-08-14",
             "start_time": "18:30",
@@ -675,7 +687,7 @@
             "genre": "Music"
         },
         {
-            "id": 7331,
+            "id": 7670,
             "title": "AP Solis",
             "day": "2026-08-14",
             "start_time": "18:30",
@@ -687,7 +699,7 @@
             "genre": "Music"
         },
         {
-            "id": 7380,
+            "id": 7718,
             "title": "SkyVibes",
             "day": "2026-08-14",
             "start_time": "18:30",
@@ -699,7 +711,19 @@
             "genre": "Music"
         },
         {
-            "id": 7213,
+            "id": 7736,
+            "title": "Riders Connection",
+            "day": "2026-08-14",
+            "start_time": "18:30",
+            "end_time": "19:30",
+            "stage": "neustockland",
+            "stage_label": "Neustockland",
+            "type": "music",
+            "category": "Music",
+            "genre": "Music"
+        },
+        {
+            "id": 7559,
             "title": "Brigade",
             "day": "2026-08-14",
             "start_time": "19:00",
@@ -711,7 +735,19 @@
             "genre": "Music"
         },
         {
-            "id": 7162,
+            "id": 7734,
+            "title": "Derya Yildirim",
+            "day": "2026-08-14",
+            "start_time": "19:00",
+            "end_time": "20:00",
+            "stage": "seeblick",
+            "stage_label": "Seeblick",
+            "type": "music",
+            "category": "Music",
+            "genre": "Music"
+        },
+        {
+            "id": 7510,
             "title": "ELIF",
             "day": "2026-08-14",
             "start_time": "19:30",
@@ -723,7 +759,7 @@
             "genre": "Music"
         },
         {
-            "id": 7191,
+            "id": 7537,
             "title": "Roman Flügel",
             "day": "2026-08-14",
             "start_time": "19:30",
@@ -735,7 +771,7 @@
             "genre": "Music"
         },
         {
-            "id": 7174,
+            "id": 7521,
             "title": "DAS MAER",
             "day": "2026-08-14",
             "start_time": "20:00",
@@ -747,7 +783,7 @@
             "genre": "Music"
         },
         {
-            "id": 7240,
+            "id": 7584,
             "title": "Mohii",
             "day": "2026-08-14",
             "start_time": "20:00",
@@ -759,7 +795,7 @@
             "genre": "Music"
         },
         {
-            "id": 7252,
+            "id": 7595,
             "title": "sin:port",
             "day": "2026-08-14",
             "start_time": "20:00",
@@ -771,7 +807,7 @@
             "genre": "Music"
         },
         {
-            "id": 7255,
+            "id": 7597,
             "title": "Ligal Tamir",
             "day": "2026-08-14",
             "start_time": "20:00",
@@ -783,7 +819,7 @@
             "genre": "Music"
         },
         {
-            "id": 7339,
+            "id": 7677,
             "title": "MUZUNGOU",
             "day": "2026-08-14",
             "start_time": "20:00",
@@ -795,7 +831,7 @@
             "genre": "Music"
         },
         {
-            "id": 7356,
+            "id": 7694,
             "title": "goldie",
             "day": "2026-08-14",
             "start_time": "20:00",
@@ -807,19 +843,7 @@
             "genre": "Music"
         },
         {
-            "id": 7104,
-            "title": "Krumelur",
-            "day": "2026-08-14",
-            "start_time": "20:30",
-            "end_time": "22:30",
-            "stage": "waldtraut",
-            "stage_label": "Waldtraut",
-            "type": "music",
-            "category": "Music",
-            "genre": "Music"
-        },
-        {
-            "id": 7215,
+            "id": 7561,
             "title": "R3NATA",
             "day": "2026-08-14",
             "start_time": "20:30",
@@ -831,7 +855,31 @@
             "genre": "Music"
         },
         {
-            "id": 7120,
+            "id": 7733,
+            "title": "Mariybu",
+            "day": "2026-08-14",
+            "start_time": "20:30",
+            "end_time": "21:30",
+            "stage": "seeblick",
+            "stage_label": "Seeblick",
+            "type": "music",
+            "category": "Music",
+            "genre": "Music"
+        },
+        {
+            "id": 7751,
+            "title": "Krumelur",
+            "day": "2026-08-14",
+            "start_time": "20:30",
+            "end_time": "22:30",
+            "stage": "waldtraut",
+            "stage_label": "Waldtraut",
+            "type": "music",
+            "category": "Music",
+            "genre": "Music"
+        },
+        {
+            "id": 7470,
             "title": "DAS GÜNTHER",
             "day": "2026-08-14",
             "start_time": "21:30",
@@ -843,7 +891,7 @@
             "genre": "Music"
         },
         {
-            "id": 7266,
+            "id": 7608,
             "title": "Priori",
             "day": "2026-08-14",
             "start_time": "21:30",
@@ -855,7 +903,7 @@
             "genre": "Music"
         },
         {
-            "id": 7373,
+            "id": 7711,
             "title": "PARRA FOR CUVA",
             "day": "2026-08-14",
             "start_time": "21:30",
@@ -867,7 +915,7 @@
             "genre": "Music"
         },
         {
-            "id": 7141,
+            "id": 7489,
             "title": "NVANCE",
             "day": "2026-08-14",
             "start_time": "22:00",
@@ -879,7 +927,7 @@
             "genre": "Music"
         },
         {
-            "id": 7206,
+            "id": 7552,
             "title": "Zombies In Miami",
             "day": "2026-08-14",
             "start_time": "22:00",
@@ -891,7 +939,7 @@
             "genre": "Music"
         },
         {
-            "id": 7262,
+            "id": 7604,
             "title": "Poppy",
             "day": "2026-08-14",
             "start_time": "22:00",
@@ -903,7 +951,7 @@
             "genre": "Music"
         },
         {
-            "id": 7315,
+            "id": 7654,
             "title": "Peet Flower",
             "day": "2026-08-14",
             "start_time": "22:00",
@@ -915,7 +963,7 @@
             "genre": "Music"
         },
         {
-            "id": 7327,
+            "id": 7666,
             "title": "SILSAN",
             "day": "2026-08-14",
             "start_time": "22:00",
@@ -927,7 +975,19 @@
             "genre": "Music"
         },
         {
-            "id": 7107,
+            "id": 7753,
+            "title": "Teuterekordz",
+            "day": "2026-08-14",
+            "start_time": "22:00",
+            "end_time": "23:00",
+            "stage": "seeblick",
+            "stage_label": "Seeblick",
+            "type": "music",
+            "category": "Music",
+            "genre": "Music"
+        },
+        {
+            "id": 7458,
             "title": "Neurolabz",
             "day": "2026-08-14",
             "start_time": "22:30",
@@ -939,19 +999,7 @@
             "genre": "Music"
         },
         {
-            "id": 7115,
-            "title": "Maria Theresia von Eberg",
-            "day": "2026-08-14",
-            "start_time": "22:30",
-            "end_time": "00:30",
-            "stage": "unterholz",
-            "stage_label": "Unterholz",
-            "type": "music",
-            "category": "Music",
-            "genre": "Music"
-        },
-        {
-            "id": 7321,
+            "id": 7660,
             "title": "Hot Oasis",
             "day": "2026-08-14",
             "start_time": "22:30",
@@ -963,7 +1011,19 @@
             "genre": "Music"
         },
         {
-            "id": 7156,
+            "id": 7738,
+            "title": "Maria Theresia von Eberg",
+            "day": "2026-08-14",
+            "start_time": "22:30",
+            "end_time": "00:30",
+            "stage": "unterholz",
+            "stage_label": "Unterholz",
+            "type": "music",
+            "category": "Music",
+            "genre": "Music"
+        },
+        {
+            "id": 7504,
             "title": "Adri Tüde &#038; The Bille",
             "day": "2026-08-14",
             "start_time": "23:00",
@@ -975,7 +1035,7 @@
             "genre": "Music"
         },
         {
-            "id": 7250,
+            "id": 7593,
             "title": "Kirubin (aka Antaares) *live",
             "day": "2026-08-14",
             "start_time": "23:00",
@@ -987,7 +1047,7 @@
             "genre": "Music"
         },
         {
-            "id": 7328,
+            "id": 7667,
             "title": "Denis Horvat",
             "day": "2026-08-14",
             "start_time": "23:00",
@@ -999,7 +1059,7 @@
             "genre": "Music"
         },
         {
-            "id": 7188,
+            "id": 7534,
             "title": "Len Faki",
             "day": "2026-08-14",
             "start_time": "23:30",
@@ -1011,7 +1071,7 @@
             "genre": "Music"
         },
         {
-            "id": 7212,
+            "id": 7558,
             "title": "Courtesy",
             "day": "2026-08-14",
             "start_time": "23:30",
@@ -1023,7 +1083,7 @@
             "genre": "Music"
         },
         {
-            "id": 7180,
+            "id": 7526,
             "title": "Florian Msk",
             "day": "2026-08-14",
             "start_time": "00:00",
@@ -1035,7 +1095,7 @@
             "genre": "Music"
         },
         {
-            "id": 7218,
+            "id": 7564,
             "title": "Wolle XDP",
             "day": "2026-08-14",
             "start_time": "00:00",
@@ -1047,7 +1107,7 @@
             "genre": "Music"
         },
         {
-            "id": 7282,
+            "id": 7624,
             "title": "Nasty Grooves",
             "day": "2026-08-14",
             "start_time": "00:00",
@@ -1059,7 +1119,7 @@
             "genre": "Music"
         },
         {
-            "id": 7357,
+            "id": 7695,
             "title": "Kallé",
             "day": "2026-08-14",
             "start_time": "00:00",
@@ -1071,7 +1131,19 @@
             "genre": "Music"
         },
         {
-            "id": 7126,
+            "id": 7730,
+            "title": "Prtcl",
+            "day": "2026-08-14",
+            "start_time": "00:00",
+            "end_time": "02:00",
+            "stage": "zirkus-mond",
+            "stage_label": "Zirkus Mond",
+            "type": "music",
+            "category": "Music",
+            "genre": "Music"
+        },
+        {
+            "id": 7476,
             "title": "Caleessi&#038;Kreis",
             "day": "2026-08-14",
             "start_time": "01:00",
@@ -1083,7 +1155,7 @@
             "genre": "Music"
         },
         {
-            "id": 7295,
+            "id": 7637,
             "title": "Henri Bergmann",
             "day": "2026-08-14",
             "start_time": "01:00",
@@ -1095,7 +1167,7 @@
             "genre": "Music"
         },
         {
-            "id": 7103,
+            "id": 7455,
             "title": "Rafush",
             "day": "2026-08-14",
             "start_time": "01:30",
@@ -1107,7 +1179,7 @@
             "genre": "Music"
         },
         {
-            "id": 7106,
+            "id": 7457,
             "title": "Dj Goodboy",
             "day": "2026-08-14",
             "start_time": "01:30",
@@ -1119,7 +1191,7 @@
             "genre": "Music"
         },
         {
-            "id": 7163,
+            "id": 7511,
             "title": "Alexskyspirit",
             "day": "2026-08-14",
             "start_time": "01:30",
@@ -1131,7 +1203,7 @@
             "genre": "Music"
         },
         {
-            "id": 7160,
+            "id": 7508,
             "title": "JoMa Beton",
             "day": "2026-08-14",
             "start_time": "02:00",
@@ -1143,7 +1215,19 @@
             "genre": "Music"
         },
         {
-            "id": 7345,
+            "id": 7567,
+            "title": "KLAUDIA",
+            "day": "2026-08-14",
+            "start_time": "02:00",
+            "end_time": "04:00",
+            "stage": "unterholz",
+            "stage_label": "Unterholz",
+            "type": "music",
+            "category": "Music",
+            "genre": "Music"
+        },
+        {
+            "id": 7683,
             "title": "Emma Keks und Stephan Licha",
             "day": "2026-08-14",
             "start_time": "02:00",
@@ -1155,7 +1239,7 @@
             "genre": "Music"
         },
         {
-            "id": 7360,
+            "id": 7698,
             "title": "Phara",
             "day": "2026-08-14",
             "start_time": "02:00",
@@ -1167,7 +1251,31 @@
             "genre": "Music"
         },
         {
-            "id": 7190,
+            "id": 7725,
+            "title": "Maybe it&#8217;s Nice",
+            "day": "2026-08-14",
+            "start_time": "02:00",
+            "end_time": "04:00",
+            "stage": "sektamt",
+            "stage_label": "Sektamt",
+            "type": "music",
+            "category": "Music",
+            "genre": "Music"
+        },
+        {
+            "id": 7741,
+            "title": "heidiwitzka",
+            "day": "2026-08-14",
+            "start_time": "02:00",
+            "end_time": "04:00",
+            "stage": "zirkus-mond",
+            "stage_label": "Zirkus Mond",
+            "type": "music",
+            "category": "Music",
+            "genre": "Music"
+        },
+        {
+            "id": 7536,
             "title": "DJ RED",
             "day": "2026-08-14",
             "start_time": "03:00",
@@ -1179,8 +1287,8 @@
             "genre": "Music"
         },
         {
-            "id": 7299,
-            "title": "Oliver Koletzki",
+            "id": 7726,
+            "title": "Frida Darko b2b Oliver Koletzki",
             "day": "2026-08-14",
             "start_time": "03:00",
             "end_time": "05:00",
@@ -1191,43 +1299,7 @@
             "genre": "Music"
         },
         {
-            "id": 7301,
-            "title": "Frida Darko",
-            "day": "2026-08-14",
-            "start_time": "03:00",
-            "end_time": "05:00",
-            "stage": "atlantis",
-            "stage_label": "Atlantis",
-            "type": "music",
-            "category": "Music",
-            "genre": "Music"
-        },
-        {
-            "id": 7388,
-            "title": "Frida Darko",
-            "day": "2026-08-14",
-            "start_time": "03:00",
-            "end_time": "05:00",
-            "stage": "atlantis",
-            "stage_label": "Atlantis",
-            "type": "music",
-            "category": "Music",
-            "genre": "Music"
-        },
-        {
-            "id": 7165,
-            "title": "Vittjas Tief",
-            "day": "2026-08-14",
-            "start_time": "03:30",
-            "end_time": "06:30",
-            "stage": "waldtraut",
-            "stage_label": "Waldtraut",
-            "type": "music",
-            "category": "Music",
-            "genre": "Music"
-        },
-        {
-            "id": 7272,
+            "id": 7614,
             "title": "Damian.Thorn",
             "day": "2026-08-14",
             "start_time": "03:30",
@@ -1239,7 +1311,7 @@
             "genre": "Music"
         },
         {
-            "id": 7383,
+            "id": 7721,
             "title": "Vittjas Tief",
             "day": "2026-08-14",
             "start_time": "03:30",
@@ -1251,7 +1323,7 @@
             "genre": "Music"
         },
         {
-            "id": 7118,
+            "id": 7468,
             "title": "Najesh &#038; Artišoko",
             "day": "2026-08-14",
             "start_time": "04:00",
@@ -1263,7 +1335,7 @@
             "genre": "Music"
         },
         {
-            "id": 7143,
+            "id": 7491,
             "title": "Cioz",
             "day": "2026-08-14",
             "start_time": "04:00",
@@ -1275,7 +1347,7 @@
             "genre": "Music"
         },
         {
-            "id": 7210,
+            "id": 7556,
             "title": "Cøral Negrø",
             "day": "2026-08-14",
             "start_time": "04:00",
@@ -1287,7 +1359,7 @@
             "genre": "Music"
         },
         {
-            "id": 7181,
+            "id": 7527,
             "title": "UREM",
             "day": "2026-08-14",
             "start_time": "05:00",
@@ -1299,7 +1371,7 @@
             "genre": "Music"
         },
         {
-            "id": 7361,
+            "id": 7699,
             "title": "face*",
             "day": "2026-08-14",
             "start_time": "05:00",
@@ -1311,7 +1383,7 @@
             "genre": "Music"
         },
         {
-            "id": 7312,
+            "id": 7651,
             "title": "Tobi Teilzeit",
             "day": "2026-08-15",
             "start_time": "06:00",
@@ -1323,7 +1395,7 @@
             "genre": "Music"
         },
         {
-            "id": 7368,
+            "id": 7706,
             "title": "SASKiA SASSE",
             "day": "2026-08-15",
             "start_time": "06:00",
@@ -1335,7 +1407,7 @@
             "genre": "Music"
         },
         {
-            "id": 7136,
+            "id": 7485,
             "title": "Marliblue &#038; Sofyah",
             "day": "2026-08-15",
             "start_time": "06:30",
@@ -1347,7 +1419,7 @@
             "genre": "Music"
         },
         {
-            "id": 7216,
+            "id": 7562,
             "title": "CHOMBA",
             "day": "2026-08-15",
             "start_time": "09:00",
@@ -1359,7 +1431,7 @@
             "genre": "Music"
         },
         {
-            "id": 7198,
+            "id": 7544,
             "title": "Laaar",
             "day": "2026-08-15",
             "start_time": "11:00",
@@ -1371,7 +1443,7 @@
             "genre": "Music"
         },
         {
-            "id": 7265,
+            "id": 7607,
             "title": "Bukka &#038; U:WE",
             "day": "2026-08-15",
             "start_time": "12:00",
@@ -1383,7 +1455,7 @@
             "genre": "Music"
         },
         {
-            "id": 7219,
+            "id": 7565,
             "title": "ÉLAA",
             "day": "2026-08-15",
             "start_time": "12:30",
@@ -1395,7 +1467,7 @@
             "genre": "Music"
         },
         {
-            "id": 7161,
+            "id": 7509,
             "title": "Steppo",
             "day": "2026-08-15",
             "start_time": "14:00",
@@ -1407,7 +1479,7 @@
             "genre": "Music"
         },
         {
-            "id": 7189,
+            "id": 7535,
             "title": "Slaymira",
             "day": "2026-08-15",
             "start_time": "14:00",
@@ -1419,7 +1491,7 @@
             "genre": "Music"
         },
         {
-            "id": 7278,
+            "id": 7620,
             "title": "Patryk Molinari",
             "day": "2026-08-15",
             "start_time": "14:00",
@@ -1431,7 +1503,7 @@
             "genre": "Music"
         },
         {
-            "id": 7300,
+            "id": 7641,
             "title": "rømengo.",
             "day": "2026-08-15",
             "start_time": "14:00",
@@ -1443,7 +1515,31 @@
             "genre": "Music"
         },
         {
-            "id": 7208,
+            "id": 7742,
+            "title": "Gina Scirocco",
+            "day": "2026-08-15",
+            "start_time": "14:00",
+            "end_time": "16:00",
+            "stage": "sektamt",
+            "stage_label": "Sektamt",
+            "type": "music",
+            "category": "Music",
+            "genre": "Music"
+        },
+        {
+            "id": 7749,
+            "title": "Foolik",
+            "day": "2026-08-15",
+            "start_time": "14:00",
+            "end_time": "16:30",
+            "stage": "porto-loco",
+            "stage_label": "Porto Loco",
+            "type": "music",
+            "category": "Music",
+            "genre": "Music"
+        },
+        {
+            "id": 7554,
             "title": "jungspund",
             "day": "2026-08-15",
             "start_time": "14:30",
@@ -1455,7 +1551,7 @@
             "genre": "Music"
         },
         {
-            "id": 7164,
+            "id": 7512,
             "title": "Bayawaka vs Golanski",
             "day": "2026-08-15",
             "start_time": "15:00",
@@ -1467,7 +1563,7 @@
             "genre": "Music"
         },
         {
-            "id": 7169,
+            "id": 7516,
             "title": "Tenvin",
             "day": "2026-08-15",
             "start_time": "15:00",
@@ -1479,7 +1575,7 @@
             "genre": "Music"
         },
         {
-            "id": 7177,
+            "id": 7523,
             "title": "The Vulvaa Power Show",
             "day": "2026-08-15",
             "start_time": "15:00",
@@ -1491,7 +1587,7 @@
             "genre": "Music"
         },
         {
-            "id": 7332,
+            "id": 7671,
             "title": "CAJOUX",
             "day": "2026-08-15",
             "start_time": "15:00",
@@ -1503,7 +1599,7 @@
             "genre": "Music"
         },
         {
-            "id": 7309,
+            "id": 7648,
             "title": "Ronn Andy",
             "day": "2026-08-15",
             "start_time": "16:00",
@@ -1515,7 +1611,7 @@
             "genre": "Music"
         },
         {
-            "id": 7326,
+            "id": 7665,
             "title": "Lotte Ahoi",
             "day": "2026-08-15",
             "start_time": "16:00",
@@ -1527,7 +1623,7 @@
             "genre": "Music"
         },
         {
-            "id": 7330,
+            "id": 7669,
             "title": "Rudi Nhocane",
             "day": "2026-08-15",
             "start_time": "16:00",
@@ -1539,7 +1635,19 @@
             "genre": "Music"
         },
         {
-            "id": 7200,
+            "id": 7737,
+            "title": "Cosmic Dance Kitchen",
+            "day": "2026-08-15",
+            "start_time": "16:00",
+            "end_time": "18:00",
+            "stage": "sektamt",
+            "stage_label": "Sektamt",
+            "type": "music",
+            "category": "Music",
+            "genre": "Music"
+        },
+        {
+            "id": 7546,
             "title": "iorie",
             "day": "2026-08-15",
             "start_time": "16:30",
@@ -1551,7 +1659,19 @@
             "genre": "Music"
         },
         {
-            "id": 7269,
+            "id": 7743,
+            "title": "Atric",
+            "day": "2026-08-15",
+            "start_time": "16:30",
+            "end_time": "17:30",
+            "stage": "porto-loco",
+            "stage_label": "Porto Loco",
+            "type": "music",
+            "category": "Music",
+            "genre": "Music"
+        },
+        {
+            "id": 7611,
             "title": "Kotiēr",
             "day": "2026-08-15",
             "start_time": "17:00",
@@ -1563,7 +1683,7 @@
             "genre": "Music"
         },
         {
-            "id": 7329,
+            "id": 7668,
             "title": "Rochelle Baz",
             "day": "2026-08-15",
             "start_time": "17:00",
@@ -1575,7 +1695,7 @@
             "genre": "Music"
         },
         {
-            "id": 7365,
+            "id": 7703,
             "title": "tibitrap",
             "day": "2026-08-15",
             "start_time": "17:00",
@@ -1587,7 +1707,7 @@
             "genre": "Music"
         },
         {
-            "id": 7184,
+            "id": 7530,
             "title": "Baerbel",
             "day": "2026-08-15",
             "start_time": "17:30",
@@ -1599,7 +1719,7 @@
             "genre": "Music"
         },
         {
-            "id": 7217,
+            "id": 7563,
             "title": "😜(Unauffinbar)",
             "day": "2026-08-15",
             "start_time": "17:30",
@@ -1611,7 +1731,7 @@
             "genre": "Music"
         },
         {
-            "id": 7284,
+            "id": 7626,
             "title": "JUSTICE (DE)",
             "day": "2026-08-15",
             "start_time": "17:30",
@@ -1623,7 +1743,7 @@
             "genre": "Music"
         },
         {
-            "id": 7105,
+            "id": 7456,
             "title": "Val Vashar",
             "day": "2026-08-15",
             "start_time": "18:00",
@@ -1635,7 +1755,7 @@
             "genre": "Music"
         },
         {
-            "id": 7239,
+            "id": 7583,
             "title": "maaje",
             "day": "2026-08-15",
             "start_time": "18:00",
@@ -1647,7 +1767,7 @@
             "genre": "Music"
         },
         {
-            "id": 7276,
+            "id": 7618,
             "title": "Daniel Hauser",
             "day": "2026-08-15",
             "start_time": "18:00",
@@ -1659,7 +1779,7 @@
             "genre": "Music"
         },
         {
-            "id": 7280,
+            "id": 7622,
             "title": "DJ Norma b2b Greta Spark",
             "day": "2026-08-15",
             "start_time": "18:00",
@@ -1671,7 +1791,7 @@
             "genre": "Music"
         },
         {
-            "id": 7291,
+            "id": 7633,
             "title": "Beccolores",
             "day": "2026-08-15",
             "start_time": "18:00",
@@ -1683,7 +1803,7 @@
             "genre": "Music"
         },
         {
-            "id": 7318,
+            "id": 7657,
             "title": "LIZZN",
             "day": "2026-08-15",
             "start_time": "18:00",
@@ -1695,7 +1815,7 @@
             "genre": "Music"
         },
         {
-            "id": 7121,
+            "id": 7471,
             "title": "JPATTERSSON",
             "day": "2026-08-15",
             "start_time": "18:30",
@@ -1707,7 +1827,7 @@
             "genre": "Music"
         },
         {
-            "id": 7259,
+            "id": 7601,
             "title": "Perera Elsewhere",
             "day": "2026-08-15",
             "start_time": "19:00",
@@ -1719,7 +1839,7 @@
             "genre": "Music"
         },
         {
-            "id": 7374,
+            "id": 7712,
             "title": "Natascha Polké",
             "day": "2026-08-15",
             "start_time": "19:00",
@@ -1731,7 +1851,7 @@
             "genre": "Music"
         },
         {
-            "id": 7134,
+            "id": 7579,
             "title": "musikalienparade",
             "day": "2026-08-15",
             "start_time": "19:30",
@@ -1743,19 +1863,7 @@
             "genre": "Music"
         },
         {
-            "id": 7235,
-            "title": "musikalienparade",
-            "day": "2026-08-15",
-            "start_time": "19:30",
-            "end_time": "21:30",
-            "stage": "schweissperle",
-            "stage_label": "Schweißperle",
-            "type": "music",
-            "category": "Music",
-            "genre": "Music"
-        },
-        {
-            "id": 7275,
+            "id": 7617,
             "title": "Roman Adam",
             "day": "2026-08-15",
             "start_time": "19:30",
@@ -1767,7 +1875,7 @@
             "genre": "Music"
         },
         {
-            "id": 7152,
+            "id": 7500,
             "title": "SHKOON",
             "day": "2026-08-15",
             "start_time": "20:00",
@@ -1779,7 +1887,7 @@
             "genre": "Music"
         },
         {
-            "id": 7195,
+            "id": 7541,
             "title": "SENU",
             "day": "2026-08-15",
             "start_time": "20:00",
@@ -1791,7 +1899,7 @@
             "genre": "Music"
         },
         {
-            "id": 7225,
+            "id": 7570,
             "title": "Faul &#038; Spaeth",
             "day": "2026-08-15",
             "start_time": "20:00",
@@ -1803,19 +1911,7 @@
             "genre": "Music"
         },
         {
-            "id": 7233,
-            "title": "pixxi",
-            "day": "2026-08-15",
-            "start_time": "20:00",
-            "end_time": "20:30",
-            "stage": "neustockland",
-            "stage_label": "Neustockland",
-            "type": "music",
-            "category": "Music",
-            "genre": "Music"
-        },
-        {
-            "id": 7236,
+            "id": 7580,
             "title": "Franziska Frizzante",
             "day": "2026-08-15",
             "start_time": "20:00",
@@ -1827,19 +1923,7 @@
             "genre": "Music"
         },
         {
-            "id": 7303,
-            "title": "Adomani b2b Edmundo",
-            "day": "2026-08-15",
-            "start_time": "20:00",
-            "end_time": "22:00",
-            "stage": "stroboklo",
-            "stage_label": "Stroboklo",
-            "type": "music",
-            "category": "Music",
-            "genre": "Music"
-        },
-        {
-            "id": 7323,
+            "id": 7662,
             "title": "Bombata",
             "day": "2026-08-15",
             "start_time": "20:00",
@@ -1851,19 +1935,7 @@
             "genre": "Music"
         },
         {
-            "id": 7336,
-            "title": "Adomani b2b Edmundo",
-            "day": "2026-08-15",
-            "start_time": "20:00",
-            "end_time": "22:00",
-            "stage": "stroboklo",
-            "stage_label": "Stroboklo",
-            "type": "music",
-            "category": "Music",
-            "genre": "Music"
-        },
-        {
-            "id": 7379,
+            "id": 7717,
             "title": "pixxi",
             "day": "2026-08-15",
             "start_time": "20:00",
@@ -1875,7 +1947,19 @@
             "genre": "Music"
         },
         {
-            "id": 7325,
+            "id": 7752,
+            "title": "Ferky",
+            "day": "2026-08-15",
+            "start_time": "20:00",
+            "end_time": "22:00",
+            "stage": "stroboklo",
+            "stage_label": "Stroboklo",
+            "type": "music",
+            "category": "Music",
+            "genre": "Music"
+        },
+        {
+            "id": 7664,
             "title": "Yulia Niko",
             "day": "2026-08-15",
             "start_time": "20:30",
@@ -1887,7 +1971,7 @@
             "genre": "Music"
         },
         {
-            "id": 7157,
+            "id": 7505,
             "title": "Jessovski",
             "day": "2026-08-15",
             "start_time": "21:00",
@@ -1899,7 +1983,7 @@
             "genre": "Music"
         },
         {
-            "id": 7249,
+            "id": 7592,
             "title": "Ramona Wouters",
             "day": "2026-08-15",
             "start_time": "21:00",
@@ -1911,7 +1995,7 @@
             "genre": "Music"
         },
         {
-            "id": 7132,
+            "id": 7482,
             "title": "Gebrömmel",
             "day": "2026-08-15",
             "start_time": "21:30",
@@ -1923,7 +2007,7 @@
             "genre": "Music"
         },
         {
-            "id": 7287,
+            "id": 7629,
             "title": "Noy Ära",
             "day": "2026-08-15",
             "start_time": "21:30",
@@ -1935,7 +2019,7 @@
             "genre": "Music"
         },
         {
-            "id": 7108,
+            "id": 7459,
             "title": "HypoGeo",
             "day": "2026-08-15",
             "start_time": "22:00",
@@ -1947,7 +2031,7 @@
             "genre": "Music"
         },
         {
-            "id": 7146,
+            "id": 7494,
             "title": "Lil&#8216; Lil&#8216;",
             "day": "2026-08-15",
             "start_time": "22:00",
@@ -1959,7 +2043,7 @@
             "genre": "Music"
         },
         {
-            "id": 7196,
+            "id": 7542,
             "title": "Amaliah",
             "day": "2026-08-15",
             "start_time": "22:00",
@@ -1971,7 +2055,7 @@
             "genre": "Music"
         },
         {
-            "id": 7271,
+            "id": 7613,
             "title": "Blasha &#038; Allatt",
             "day": "2026-08-15",
             "start_time": "22:00",
@@ -1983,7 +2067,7 @@
             "genre": "Music"
         },
         {
-            "id": 7288,
+            "id": 7630,
             "title": "bebibelli",
             "day": "2026-08-15",
             "start_time": "22:00",
@@ -1995,11 +2079,11 @@
             "genre": "Music"
         },
         {
-            "id": 7293,
+            "id": 7635,
             "title": "Hannes Turm",
             "day": "2026-08-15",
             "start_time": "22:00",
-            "end_time": "00:00",
+            "end_time": "22:00",
             "stage": "stroboklo",
             "stage_label": "Stroboklo",
             "type": "music",
@@ -2007,7 +2091,7 @@
             "genre": "Music"
         },
         {
-            "id": 7313,
+            "id": 7652,
             "title": "Erobique",
             "day": "2026-08-15",
             "start_time": "22:00",
@@ -2019,7 +2103,31 @@
             "genre": "Music"
         },
         {
-            "id": 7153,
+            "id": 7674,
+            "title": "Adomani b2b Edmundo",
+            "day": "2026-08-15",
+            "start_time": "22:00",
+            "end_time": "00:00",
+            "stage": "stroboklo",
+            "stage_label": "Stroboklo",
+            "type": "music",
+            "category": "Music",
+            "genre": "Music"
+        },
+        {
+            "id": 7731,
+            "title": "Babestation",
+            "day": "2026-08-15",
+            "start_time": "22:00",
+            "end_time": "00:00",
+            "stage": "sektamt",
+            "stage_label": "Sektamt",
+            "type": "music",
+            "category": "Music",
+            "genre": "Music"
+        },
+        {
+            "id": 7501,
             "title": "Rafael Cerato",
             "day": "2026-08-15",
             "start_time": "22:30",
@@ -2031,7 +2139,7 @@
             "genre": "Music"
         },
         {
-            "id": 7347,
+            "id": 7685,
             "title": "Sarah4k",
             "day": "2026-08-15",
             "start_time": "23:00",
@@ -2043,7 +2151,7 @@
             "genre": "Music"
         },
         {
-            "id": 7167,
+            "id": 7514,
             "title": "Victor Danta",
             "day": "2026-08-15",
             "start_time": "23:30",
@@ -2055,7 +2163,7 @@
             "genre": "Music"
         },
         {
-            "id": 7324,
+            "id": 7663,
             "title": "Horst Haller",
             "day": "2026-08-15",
             "start_time": "23:30",
@@ -2067,7 +2175,7 @@
             "genre": "Music"
         },
         {
-            "id": 7340,
+            "id": 7678,
             "title": "Mosley Jr",
             "day": "2026-08-15",
             "start_time": "23:30",
@@ -2079,7 +2187,19 @@
             "genre": "Music"
         },
         {
-            "id": 7194,
+            "id": 7744,
+            "title": "Floyd Lavine",
+            "day": "2026-08-15",
+            "start_time": "23:30",
+            "end_time": "02:00",
+            "stage": "mirage",
+            "stage_label": "Mirage",
+            "type": "music",
+            "category": "Music",
+            "genre": "Music"
+        },
+        {
+            "id": 7540,
             "title": "Cassy",
             "day": "2026-08-15",
             "start_time": "00:00",
@@ -2091,7 +2211,7 @@
             "genre": "Music"
         },
         {
-            "id": 7237,
+            "id": 7581,
             "title": "kluntje",
             "day": "2026-08-15",
             "start_time": "00:00",
@@ -2103,7 +2223,7 @@
             "genre": "Music"
         },
         {
-            "id": 7248,
+            "id": 7591,
             "title": "Rene Wise",
             "day": "2026-08-15",
             "start_time": "00:00",
@@ -2115,7 +2235,7 @@
             "genre": "Music"
         },
         {
-            "id": 7319,
+            "id": 7658,
             "title": "EIK",
             "day": "2026-08-15",
             "start_time": "00:00",
@@ -2127,7 +2247,7 @@
             "genre": "Music"
         },
         {
-            "id": 7349,
+            "id": 7687,
             "title": "Yetti Meissner",
             "day": "2026-08-15",
             "start_time": "00:00",
@@ -2139,7 +2259,7 @@
             "genre": "Music"
         },
         {
-            "id": 7358,
+            "id": 7696,
             "title": "Gahara",
             "day": "2026-08-15",
             "start_time": "00:00",
@@ -2151,7 +2271,7 @@
             "genre": "Music"
         },
         {
-            "id": 7366,
+            "id": 7704,
             "title": "PEREZ PAPI",
             "day": "2026-08-15",
             "start_time": "00:00",
@@ -2163,7 +2283,7 @@
             "genre": "Music"
         },
         {
-            "id": 7145,
+            "id": 7493,
             "title": "The Jakob Sister",
             "day": "2026-08-15",
             "start_time": "00:30",
@@ -2175,7 +2295,7 @@
             "genre": "Music"
         },
         {
-            "id": 7337,
+            "id": 7675,
             "title": "dwig",
             "day": "2026-08-15",
             "start_time": "00:30",
@@ -2187,7 +2307,19 @@
             "genre": "Music"
         },
         {
-            "id": 7378,
+            "id": 7757,
+            "title": "Mila Journée",
+            "day": "2026-08-15",
+            "start_time": "00:30",
+            "end_time": "02:30",
+            "stage": "atlantis",
+            "stage_label": "Atlantis",
+            "type": "music",
+            "category": "Music",
+            "genre": "Music"
+        },
+        {
+            "id": 7716,
             "title": "STEFFOO",
             "day": "2026-08-15",
             "start_time": "01:00",
@@ -2199,7 +2331,7 @@
             "genre": "Music"
         },
         {
-            "id": 7116,
+            "id": 7466,
             "title": "Elisa Elisa",
             "day": "2026-08-15",
             "start_time": "02:00",
@@ -2211,7 +2343,7 @@
             "genre": "Music"
         },
         {
-            "id": 7135,
+            "id": 7484,
             "title": "Soela",
             "day": "2026-08-15",
             "start_time": "02:00",
@@ -2223,7 +2355,7 @@
             "genre": "Music"
         },
         {
-            "id": 7199,
+            "id": 7545,
             "title": "K.EULE",
             "day": "2026-08-15",
             "start_time": "02:00",
@@ -2235,7 +2367,7 @@
             "genre": "Music"
         },
         {
-            "id": 7348,
+            "id": 7686,
             "title": "Stoerenfred",
             "day": "2026-08-15",
             "start_time": "02:00",
@@ -2247,7 +2379,7 @@
             "genre": "Music"
         },
         {
-            "id": 7352,
+            "id": 7690,
             "title": "Fluoelf",
             "day": "2026-08-15",
             "start_time": "02:00",
@@ -2259,7 +2391,7 @@
             "genre": "Music"
         },
         {
-            "id": 7375,
+            "id": 7713,
             "title": "Ole Olsen",
             "day": "2026-08-15",
             "start_time": "02:00",
@@ -2271,7 +2403,7 @@
             "genre": "Music"
         },
         {
-            "id": 7376,
+            "id": 7714,
             "title": "Sarah Farina",
             "day": "2026-08-15",
             "start_time": "02:00",
@@ -2283,7 +2415,19 @@
             "genre": "Music"
         },
         {
-            "id": 7150,
+            "id": 7739,
+            "title": "Dave Lewis",
+            "day": "2026-08-15",
+            "start_time": "02:00",
+            "end_time": "04:00",
+            "stage": "stroboklo",
+            "stage_label": "Stroboklo",
+            "type": "music",
+            "category": "Music",
+            "genre": "Music"
+        },
+        {
+            "id": 7498,
             "title": "RaverPik",
             "day": "2026-08-15",
             "start_time": "02:30",
@@ -2295,7 +2439,7 @@
             "genre": "Music"
         },
         {
-            "id": 7151,
+            "id": 7499,
             "title": "Innellea",
             "day": "2026-08-15",
             "start_time": "02:30",
@@ -2307,7 +2451,7 @@
             "genre": "Music"
         },
         {
-            "id": 7205,
+            "id": 7551,
             "title": "Mila Stern",
             "day": "2026-08-15",
             "start_time": "02:30",
@@ -2319,7 +2463,7 @@
             "genre": "Music"
         },
         {
-            "id": 7113,
+            "id": 7464,
             "title": "Creepy Deep",
             "day": "2026-08-15",
             "start_time": "04:00",
@@ -2331,7 +2475,7 @@
             "genre": "Music"
         },
         {
-            "id": 7187,
+            "id": 7533,
             "title": "bīsubisou",
             "day": "2026-08-15",
             "start_time": "04:00",
@@ -2343,7 +2487,7 @@
             "genre": "Music"
         },
         {
-            "id": 7238,
+            "id": 7582,
             "title": "G4F4RØU &#038; Zelyna je Belle",
             "day": "2026-08-15",
             "start_time": "04:00",
@@ -2355,7 +2499,7 @@
             "genre": "Music"
         },
         {
-            "id": 7311,
+            "id": 7650,
             "title": "ZuendHoelzl",
             "day": "2026-08-15",
             "start_time": "04:00",
@@ -2367,7 +2511,7 @@
             "genre": "Music"
         },
         {
-            "id": 7147,
+            "id": 7495,
             "title": "Sabu!",
             "day": "2026-08-15",
             "start_time": "04:30",
@@ -2379,7 +2523,7 @@
             "genre": "Music"
         },
         {
-            "id": 7207,
+            "id": 7553,
             "title": "Kaufmann",
             "day": "2026-08-15",
             "start_time": "04:30",
@@ -2391,7 +2535,7 @@
             "genre": "Music"
         },
         {
-            "id": 7342,
+            "id": 7680,
             "title": "Flieder",
             "day": "2026-08-15",
             "start_time": "04:30",
@@ -2403,7 +2547,19 @@
             "genre": "Music"
         },
         {
-            "id": 7316,
+            "id": 7732,
+            "title": "Paul Valentin",
+            "day": "2026-08-15",
+            "start_time": "04:30",
+            "end_time": "05:30",
+            "stage": "mirage",
+            "stage_label": "Mirage",
+            "type": "music",
+            "category": "Music",
+            "genre": "Music"
+        },
+        {
+            "id": 7655,
             "title": "Jan Taubmann",
             "day": "2026-08-15",
             "start_time": "05:00",
@@ -2415,7 +2571,7 @@
             "genre": "Music"
         },
         {
-            "id": 7114,
+            "id": 7465,
             "title": "Lara Schick",
             "day": "2026-08-15",
             "start_time": "05:30",
@@ -2427,7 +2583,7 @@
             "genre": "Music"
         },
         {
-            "id": 7292,
+            "id": 7634,
             "title": "Alko",
             "day": "2026-08-15",
             "start_time": "05:30",
@@ -2439,7 +2595,19 @@
             "genre": "Music"
         },
         {
-            "id": 7158,
+            "id": 7747,
+            "title": "Enzio Etchaberri &#038; Tobi Dei &#038; Niklaus Katzorke",
+            "day": "2026-08-15",
+            "start_time": "05:30",
+            "end_time": "08:00",
+            "stage": "schlupfloch",
+            "stage_label": "Schlupfloch",
+            "type": "music",
+            "category": "Music",
+            "genre": "Music"
+        },
+        {
+            "id": 7506,
             "title": "junoia",
             "day": "2026-08-16",
             "start_time": "06:00",
@@ -2451,7 +2619,7 @@
             "genre": "Music"
         },
         {
-            "id": 7267,
+            "id": 7609,
             "title": "Whrikk",
             "day": "2026-08-16",
             "start_time": "06:00",
@@ -2463,7 +2631,7 @@
             "genre": "Music"
         },
         {
-            "id": 7268,
+            "id": 7610,
             "title": "Kotoe Karasawa",
             "day": "2026-08-16",
             "start_time": "06:00",
@@ -2475,7 +2643,7 @@
             "genre": "Music"
         },
         {
-            "id": 7364,
+            "id": 7702,
             "title": "dj buona sara",
             "day": "2026-08-16",
             "start_time": "06:30",
@@ -2487,7 +2655,7 @@
             "genre": "Music"
         },
         {
-            "id": 7133,
+            "id": 7483,
             "title": "Mika Dutsch",
             "day": "2026-08-16",
             "start_time": "07:30",
@@ -2499,7 +2667,7 @@
             "genre": "Music"
         },
         {
-            "id": 7111,
+            "id": 7462,
             "title": "Naias",
             "day": "2026-08-16",
             "start_time": "08:00",
@@ -2511,7 +2679,7 @@
             "genre": "Music"
         },
         {
-            "id": 7346,
+            "id": 7684,
             "title": "Lisa Filou",
             "day": "2026-08-16",
             "start_time": "08:00",
@@ -2523,7 +2691,19 @@
             "genre": "Music"
         },
         {
-            "id": 7367,
+            "id": 7735,
+            "title": "Jiido",
+            "day": "2026-08-16",
+            "start_time": "08:00",
+            "end_time": "10:00",
+            "stage": "stroboklo",
+            "stage_label": "Stroboklo",
+            "type": "music",
+            "category": "Music",
+            "genre": "Music"
+        },
+        {
+            "id": 7705,
             "title": "Lucy Love und die Andere",
             "day": "2026-08-16",
             "start_time": "09:00",
@@ -2535,7 +2715,7 @@
             "genre": "Music"
         },
         {
-            "id": 7173,
+            "id": 7520,
             "title": "Rhabia",
             "day": "2026-08-16",
             "start_time": "10:00",
@@ -2547,7 +2727,7 @@
             "genre": "Music"
         },
         {
-            "id": 7176,
+            "id": 7588,
             "title": "Sutsche",
             "day": "2026-08-16",
             "start_time": "10:00",
@@ -2559,19 +2739,7 @@
             "genre": "Music"
         },
         {
-            "id": 7244,
-            "title": "Sutsche",
-            "day": "2026-08-16",
-            "start_time": "10:00",
-            "end_time": "12:30",
-            "stage": "unterholz",
-            "stage_label": "Unterholz",
-            "type": "music",
-            "category": "Music",
-            "genre": "Music"
-        },
-        {
-            "id": 7308,
+            "id": 7647,
             "title": "Dirty Amore &#038; Dark Disco Engine (Hybrid Live Act)",
             "day": "2026-08-16",
             "start_time": "11:00",
@@ -2583,7 +2751,7 @@
             "genre": "Music"
         },
         {
-            "id": 7168,
+            "id": 7515,
             "title": "Solar Kid",
             "day": "2026-08-16",
             "start_time": "12:00",
@@ -2595,7 +2763,7 @@
             "genre": "Music"
         },
         {
-            "id": 7224,
+            "id": 7569,
             "title": "Haensen&#038;Gretel",
             "day": "2026-08-16",
             "start_time": "12:00",
@@ -2607,7 +2775,7 @@
             "genre": "Music"
         },
         {
-            "id": 7343,
+            "id": 7681,
             "title": "Surreal",
             "day": "2026-08-16",
             "start_time": "12:00",
@@ -2619,7 +2787,7 @@
             "genre": "Music"
         },
         {
-            "id": 7354,
+            "id": 7692,
             "title": "Andreas Rauscher",
             "day": "2026-08-16",
             "start_time": "12:00",
@@ -2631,7 +2799,7 @@
             "genre": "Music"
         },
         {
-            "id": 7117,
+            "id": 7467,
             "title": "ele &#038; aal",
             "day": "2026-08-16",
             "start_time": "12:30",
@@ -2643,7 +2811,7 @@
             "genre": "Music"
         },
         {
-            "id": 7279,
+            "id": 7621,
             "title": "SINAMIN",
             "day": "2026-08-16",
             "start_time": "13:00",
@@ -2655,7 +2823,7 @@
             "genre": "Music"
         },
         {
-            "id": 7214,
+            "id": 7560,
             "title": "Katschinka",
             "day": "2026-08-16",
             "start_time": "13:30",
@@ -2667,7 +2835,7 @@
             "genre": "Music"
         },
         {
-            "id": 7246,
+            "id": 7589,
             "title": "wilson.solidarity",
             "day": "2026-08-16",
             "start_time": "13:30",
@@ -2679,7 +2847,7 @@
             "genre": "Music"
         },
         {
-            "id": 7128,
+            "id": 7478,
             "title": "Qualia Trax",
             "day": "2026-08-16",
             "start_time": "14:00",
@@ -2691,7 +2859,7 @@
             "genre": "Music"
         },
         {
-            "id": 7307,
+            "id": 7646,
             "title": "Bonnie Ford",
             "day": "2026-08-16",
             "start_time": "14:00",
@@ -2703,7 +2871,7 @@
             "genre": "Music"
         },
         {
-            "id": 7362,
+            "id": 7700,
             "title": "Quantic Devices",
             "day": "2026-08-16",
             "start_time": "14:00",
@@ -2715,7 +2883,7 @@
             "genre": "Music"
         },
         {
-            "id": 7221,
+            "id": 7566,
             "title": "Christian Löffler",
             "day": "2026-08-16",
             "start_time": "15:00",
@@ -2727,7 +2895,7 @@
             "genre": "Music"
         },
         {
-            "id": 7257,
+            "id": 7599,
             "title": "Heimlich Knüller",
             "day": "2026-08-16",
             "start_time": "15:00",
@@ -2739,7 +2907,7 @@
             "genre": "Music"
         },
         {
-            "id": 7109,
+            "id": 7460,
             "title": "HypoGeo",
             "day": "2026-08-16",
             "start_time": "15:30",
@@ -2751,7 +2919,7 @@
             "genre": "Music"
         },
         {
-            "id": 7227,
+            "id": 7572,
             "title": "Kuestenklatsch",
             "day": "2026-08-16",
             "start_time": "15:30",
@@ -2763,8 +2931,8 @@
             "genre": "Music"
         },
         {
-            "id": 7335,
-            "title": "BenBorn",
+            "id": 7682,
+            "title": "Pan &#038; Ben Born",
             "day": "2026-08-16",
             "start_time": "15:30",
             "end_time": "17:30",
@@ -2775,19 +2943,7 @@
             "genre": "Music"
         },
         {
-            "id": 7344,
-            "title": "Pan",
-            "day": "2026-08-16",
-            "start_time": "15:30",
-            "end_time": "17:30",
-            "stage": "unterholz",
-            "stage_label": "Unterholz",
-            "type": "music",
-            "category": "Music",
-            "genre": "Music"
-        },
-        {
-            "id": 7231,
+            "id": 7576,
             "title": "Lueking",
             "day": "2026-08-16",
             "start_time": "16:00",
@@ -2799,7 +2955,7 @@
             "genre": "Music"
         },
         {
-            "id": 7256,
+            "id": 7598,
             "title": "W.I.R Killing Zoe b2b Charon Styx",
             "day": "2026-08-16",
             "start_time": "16:00",
@@ -2811,7 +2967,7 @@
             "genre": "Music"
         },
         {
-            "id": 7305,
+            "id": 7644,
             "title": "Sarah Wild",
             "day": "2026-08-16",
             "start_time": "16:00",
@@ -2823,7 +2979,7 @@
             "genre": "Music"
         },
         {
-            "id": 7322,
+            "id": 7661,
             "title": "DJ ZBB",
             "day": "2026-08-16",
             "start_time": "16:00",
@@ -2835,7 +2991,7 @@
             "genre": "Music"
         },
         {
-            "id": 7351,
+            "id": 7689,
             "title": "Dakz",
             "day": "2026-08-16",
             "start_time": "16:00",
@@ -2847,7 +3003,19 @@
             "genre": "Music"
         },
         {
-            "id": 7154,
+            "id": 7740,
+            "title": "Von Spazier",
+            "day": "2026-08-16",
+            "start_time": "16:00",
+            "end_time": "08:00",
+            "stage": "sektamt",
+            "stage_label": "Sektamt",
+            "type": "music",
+            "category": "Music",
+            "genre": "Music"
+        },
+        {
+            "id": 7502,
             "title": "Annett Gapstream",
             "day": "2026-08-16",
             "start_time": "16:30",
@@ -2859,7 +3027,7 @@
             "genre": "Music"
         },
         {
-            "id": 7273,
+            "id": 7615,
             "title": "Raoul",
             "day": "2026-08-16",
             "start_time": "16:30",
@@ -2871,7 +3039,7 @@
             "genre": "Music"
         },
         {
-            "id": 7155,
+            "id": 7503,
             "title": "Mattmosphere b2b Amapola",
             "day": "2026-08-16",
             "start_time": "17:00",
@@ -2883,7 +3051,7 @@
             "genre": "Music"
         },
         {
-            "id": 7130,
+            "id": 7480,
             "title": "Antaares",
             "day": "2026-08-16",
             "start_time": "17:30",
@@ -2895,7 +3063,7 @@
             "genre": "Music"
         },
         {
-            "id": 7131,
+            "id": 7481,
             "title": "Jama",
             "day": "2026-08-16",
             "start_time": "18:00",
@@ -2907,7 +3075,7 @@
             "genre": "Music"
         },
         {
-            "id": 7220,
+            "id": 7577,
             "title": "Hanna Baertig",
             "day": "2026-08-16",
             "start_time": "18:00",
@@ -2919,19 +3087,7 @@
             "genre": "Music"
         },
         {
-            "id": 7232,
-            "title": "Hanna Baertig",
-            "day": "2026-08-16",
-            "start_time": "18:00",
-            "end_time": "20:00",
-            "stage": "stroboklo",
-            "stage_label": "Stroboklo",
-            "type": "music",
-            "category": "Music",
-            "genre": "Music"
-        },
-        {
-            "id": 7260,
+            "id": 7602,
             "title": "lisa luka",
             "day": "2026-08-16",
             "start_time": "18:00",
@@ -2943,7 +3099,7 @@
             "genre": "Music"
         },
         {
-            "id": 7306,
+            "id": 7645,
             "title": "Elizen the Emperor",
             "day": "2026-08-16",
             "start_time": "18:00",
@@ -2955,7 +3111,7 @@
             "genre": "Music"
         },
         {
-            "id": 7112,
+            "id": 7463,
             "title": "Kasadelica",
             "day": "2026-08-16",
             "start_time": "18:30",
@@ -2967,7 +3123,7 @@
             "genre": "Music"
         },
         {
-            "id": 7192,
+            "id": 7538,
             "title": "FINCA AMOUR",
             "day": "2026-08-16",
             "start_time": "18:30",
@@ -2979,7 +3135,7 @@
             "genre": "Music"
         },
         {
-            "id": 7294,
+            "id": 7636,
             "title": "Julita Just",
             "day": "2026-08-16",
             "start_time": "18:30",
@@ -2991,7 +3147,7 @@
             "genre": "Music"
         },
         {
-            "id": 7384,
+            "id": 7722,
             "title": "Nixe",
             "day": "2026-08-16",
             "start_time": "19:00",
@@ -3003,7 +3159,19 @@
             "genre": "Music"
         },
         {
-            "id": 7110,
+            "id": 7758,
+            "title": "Bicadeli alias Roland Krug",
+            "day": "2026-08-16",
+            "start_time": "19:00",
+            "end_time": "20:00",
+            "stage": "sektamt",
+            "stage_label": "Sektamt",
+            "type": "music",
+            "category": "Music",
+            "genre": "Music"
+        },
+        {
+            "id": 7461,
             "title": "Electrypnose",
             "day": "2026-08-16",
             "start_time": "20:00",
@@ -3015,7 +3183,7 @@
             "genre": "Music"
         },
         {
-            "id": 7129,
+            "id": 7479,
             "title": "Kon Faber",
             "day": "2026-08-16",
             "start_time": "20:00",
@@ -3027,7 +3195,7 @@
             "genre": "Music"
         },
         {
-            "id": 7138,
+            "id": 7487,
             "title": "RICHIE HAWTIN",
             "day": "2026-08-16",
             "start_time": "20:00",
@@ -3039,7 +3207,7 @@
             "genre": "Music"
         },
         {
-            "id": 7171,
+            "id": 7518,
             "title": "InDeLa",
             "day": "2026-08-16",
             "start_time": "20:00",
@@ -3051,7 +3219,7 @@
             "genre": "Music"
         },
         {
-            "id": 7283,
+            "id": 7625,
             "title": "FishEye",
             "day": "2026-08-16",
             "start_time": "20:00",
@@ -3063,7 +3231,7 @@
             "genre": "Music"
         },
         {
-            "id": 7317,
+            "id": 7656,
             "title": "menty b. (2 Girls 1 Club)",
             "day": "2026-08-16",
             "start_time": "20:00",
@@ -3075,7 +3243,7 @@
             "genre": "Music"
         },
         {
-            "id": 7363,
+            "id": 7701,
             "title": "Alina Viktoria",
             "day": "2026-08-16",
             "start_time": "20:00",
@@ -3087,7 +3255,7 @@
             "genre": "Music"
         },
         {
-            "id": 7183,
+            "id": 7529,
             "title": "Satori",
             "day": "2026-08-16",
             "start_time": "20:30",
@@ -3099,7 +3267,7 @@
             "genre": "Music"
         },
         {
-            "id": 7369,
+            "id": 7707,
             "title": "Isabeau Fort",
             "day": "2026-08-16",
             "start_time": "20:30",
@@ -3111,7 +3279,7 @@
             "genre": "Music"
         },
         {
-            "id": 7125,
+            "id": 7475,
             "title": "rampue",
             "day": "2026-08-16",
             "start_time": "21:00",
@@ -3123,7 +3291,7 @@
             "genre": "Music"
         },
         {
-            "id": 7226,
+            "id": 7571,
             "title": "Mamoré",
             "day": "2026-08-16",
             "start_time": "21:00",
@@ -3135,7 +3303,7 @@
             "genre": "Music"
         },
         {
-            "id": 7172,
+            "id": 7519,
             "title": "TECHNOCALOR",
             "day": "2026-08-16",
             "start_time": "21:30",
@@ -3147,7 +3315,7 @@
             "genre": "Music"
         },
         {
-            "id": 7302,
+            "id": 7642,
             "title": "Kalipo",
             "day": "2026-08-16",
             "start_time": "21:30",
@@ -3159,7 +3327,7 @@
             "genre": "Music"
         },
         {
-            "id": 7166,
+            "id": 7513,
             "title": "SACID",
             "day": "2026-08-16",
             "start_time": "22:30",
@@ -3171,7 +3339,7 @@
             "genre": "Music"
         },
         {
-            "id": 7127,
+            "id": 7477,
             "title": "Maik Gyver",
             "day": "2026-08-16",
             "start_time": "23:00",
@@ -3183,7 +3351,7 @@
             "genre": "Music"
         },
         {
-            "id": 7203,
+            "id": 7549,
             "title": "Überhaupt &#038; Außerdem",
             "day": "2026-08-16",
             "start_time": "23:00",
@@ -3195,7 +3363,7 @@
             "genre": "Music"
         },
         {
-            "id": 7209,
+            "id": 7555,
             "title": "Cris Kai",
             "day": "2026-08-16",
             "start_time": "23:00",
@@ -3207,7 +3375,7 @@
             "genre": "Music"
         },
         {
-            "id": 7355,
+            "id": 7693,
             "title": "SAHRA BASS",
             "day": "2026-08-16",
             "start_time": "23:00",
@@ -3219,7 +3387,7 @@
             "genre": "Music"
         },
         {
-            "id": 7371,
+            "id": 7709,
             "title": "Stefan Vöst",
             "day": "2026-08-16",
             "start_time": "23:00",
@@ -3231,7 +3399,7 @@
             "genre": "Music"
         },
         {
-            "id": 7385,
+            "id": 7723,
             "title": "steve challier",
             "day": "2026-08-16",
             "start_time": "23:00",
@@ -3243,7 +3411,7 @@
             "genre": "Music"
         },
         {
-            "id": 7389,
+            "id": 7727,
             "title": "RAFA",
             "day": "2026-08-16",
             "start_time": "23:00",
@@ -3255,7 +3423,7 @@
             "genre": "Music"
         },
         {
-            "id": 7390,
+            "id": 7728,
             "title": "Christopher lawrenz",
             "day": "2026-08-16",
             "start_time": "23:00",
@@ -3267,7 +3435,7 @@
             "genre": "Music"
         },
         {
-            "id": 7391,
+            "id": 7729,
             "title": "Hagel",
             "day": "2026-08-16",
             "start_time": "23:00",
@@ -3279,7 +3447,19 @@
             "genre": "Music"
         },
         {
-            "id": 7338,
+            "id": 7745,
+            "title": "Megatronic",
+            "day": "2026-08-16",
+            "start_time": "23:00",
+            "end_time": "01:30",
+            "stage": "mirage",
+            "stage_label": "Mirage",
+            "type": "music",
+            "category": "Music",
+            "genre": "Music"
+        },
+        {
+            "id": 7676,
             "title": "serene &#038; philosofiesta",
             "day": "2026-08-16",
             "start_time": "00:00",
@@ -3291,8 +3471,8 @@
             "genre": "Music"
         },
         {
-            "id": 7201,
-            "title": "FELGENTEUFEL",
+            "id": 7547,
+            "title": "FELGENTEUFEL666",
             "day": "2026-08-16",
             "start_time": "01:00",
             "end_time": "03:30",
@@ -3303,7 +3483,7 @@
             "genre": "Music"
         },
         {
-            "id": 7261,
+            "id": 7603,
             "title": "DJ EarWormLoop",
             "day": "2026-08-16",
             "start_time": "01:00",
@@ -3315,7 +3495,7 @@
             "genre": "Music"
         },
         {
-            "id": 7359,
+            "id": 7697,
             "title": "TILDA",
             "day": "2026-08-16",
             "start_time": "01:00",
@@ -3327,7 +3507,7 @@
             "genre": "Music"
         },
         {
-            "id": 7144,
+            "id": 7492,
             "title": "CALABASA",
             "day": "2026-08-16",
             "start_time": "01:30",
@@ -3339,7 +3519,7 @@
             "genre": "Music"
         },
         {
-            "id": 7234,
+            "id": 7578,
             "title": "Slurm McKenzie",
             "day": "2026-08-16",
             "start_time": "01:30",
@@ -3351,7 +3531,7 @@
             "genre": "Music"
         },
         {
-            "id": 7381,
+            "id": 7719,
             "title": "OhOhOuzo",
             "day": "2026-08-16",
             "start_time": "02:00",
@@ -3363,7 +3543,7 @@
             "genre": "Music"
         },
         {
-            "id": 7372,
+            "id": 7710,
             "title": "Käpt&#8217;n 12 &#038; Düsentrieb",
             "day": "2026-08-16",
             "start_time": "02:30",
@@ -3375,7 +3555,7 @@
             "genre": "Music"
         },
         {
-            "id": 7159,
+            "id": 7507,
             "title": "Daniel Dahlmann",
             "day": "2026-08-16",
             "start_time": "03:30",
@@ -3387,7 +3567,7 @@
             "genre": "Music"
         },
         {
-            "id": 7204,
+            "id": 7550,
             "title": "Blame the Booker",
             "day": "2026-08-16",
             "start_time": "03:30",
@@ -3399,7 +3579,7 @@
             "genre": "Music"
         },
         {
-            "id": 7149,
+            "id": 7497,
             "title": "anima",
             "day": "2026-08-16",
             "start_time": "04:00",
@@ -3411,7 +3591,7 @@
             "genre": "Music"
         },
         {
-            "id": 7178,
+            "id": 7524,
             "title": "LENI",
             "day": "2026-08-16",
             "start_time": "04:00",
@@ -3423,7 +3603,7 @@
             "genre": "Music"
         },
         {
-            "id": 7247,
+            "id": 7590,
             "title": "Finnjamin &#038; Hannesodersoo",
             "day": "2026-08-16",
             "start_time": "04:00",
@@ -3435,13 +3615,37 @@
             "genre": "Music"
         },
         {
-            "id": 7123,
+            "id": 7473,
             "title": "Rakäthe",
             "day": "2026-08-17",
             "start_time": "06:30",
             "end_time": "09:00",
             "stage": "mirage",
             "stage_label": "Mirage",
+            "type": "music",
+            "category": "Music",
+            "genre": "Music"
+        },
+        {
+            "id": 7755,
+            "title": "Endloswelle",
+            "day": "2026-08-17",
+            "start_time": "14:00",
+            "end_time": "18:00",
+            "stage": "zirkus-mond",
+            "stage_label": "Zirkus Mond",
+            "type": "music",
+            "category": "Music",
+            "genre": "Music"
+        },
+        {
+            "id": 7568,
+            "title": "mari.ama",
+            "day": "2026-08-17",
+            "start_time": "23:00",
+            "end_time": "00:00",
+            "stage": "schweissperle",
+            "stage_label": "Schweißperle",
             "type": "music",
             "category": "Music",
             "genre": "Music"

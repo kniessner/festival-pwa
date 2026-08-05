@@ -22,6 +22,9 @@ const STRINGS = {
         'nav.festivalmap': 'Festivalmap',
         'nav.cashless': 'Cashless',
         'nav.refresh': 'Aktualisieren',
+        'nav.pushNotifications': 'Push-Benachrichtigungen',
+        'push.enabled': 'Benachrichtigungen aktiviert',
+        'push.disabled': 'Benachrichtigungen deaktiviert',
         // search
         'search.placeholder': 'Suchen...',
         'search.resultsTitle': 'Suchergebnisse',
@@ -102,10 +105,11 @@ const STRINGS = {
         'onb.headline': 'Wer spielt hier gerade?',
         'onb.intro': 'Aktiviere GPS und dein Timetable öffnet sich automatisch auf der Bühne, an der du gerade stehst.',
         'onb.featureTimetable': 'Automatischer Sprung zu der Bühne auf der du dich gerade befindest, um schneller erfahren zu können wer gerade spielt.',
+        'onb.featurePush': 'Push-Benachrichtigungen für wichtige Ankündigungen, direkt auf dein Gerät.',
         'onb.disclaimer': 'Diese Funktion funktioniert nur, wenn du der App Zugriff auf deinen Standort erlaubst und GPS aktiviert ist.',
         'onb.privacyTitle': 'Infos zum Datenschutz',
         'onb.privacyBody': 'Kein Tracking. Keine Datenweitergabe. Dein Standort bleibt nur lokal auf deinem Gerät.',
-        'onb.buttonAllow': 'GPS aktivieren',
+        'onb.buttonAllow': 'Aktivieren',
         'onb.buttonNotNow': 'Nicht jetzt'
     },
     en: {
@@ -127,6 +131,9 @@ const STRINGS = {
         'nav.festivalmap': 'Festival Map',
         'nav.cashless': 'Cashless',
         'nav.refresh': 'Refresh',
+        'nav.pushNotifications': 'Push Notifications',
+        'push.enabled': 'Notifications enabled',
+        'push.disabled': 'Notifications disabled',
         'search.placeholder': ' Search...',
         'search.resultsTitle': 'Search results',
         'search.noResults': 'No results for "{{query}}"',
@@ -200,10 +207,11 @@ const STRINGS = {
         'onb.headline': "Who's playing here right now?",
         'onb.intro': 'Enable GPS and your timetable jumps straight to the stage you\'re standing at.',
         'onb.featureTimetable': "Automatic jump to the stage you're currently standing at, so you can find out faster who's playing right now.",
+        'onb.featurePush': 'Push notifications for important announcements, straight to your device.',
         'onb.disclaimer': 'This feature only works if you allow the app to access your location and have GPS enabled.',
         'onb.privacyTitle': 'Privacy info',
         'onb.privacyBody': 'No tracking. No data sharing. Your location stays on your device.',
-        'onb.buttonAllow': 'Enable GPS',
+        'onb.buttonAllow': 'Enable',
         'onb.buttonNotNow': 'Not now'
     }
 };

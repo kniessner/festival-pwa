@@ -6,6 +6,7 @@ import {
     setLocationPromptCompleted,
 } from './helpers/prompt-storage.js';
 import { startLocationWatch } from './location.js';
+import { isPushSupported, subscribeToPush } from './push.js';
 
 // Onboarding overlay lifecycle. Rendered as a pre-existing DOM node in
 // index.html (#onboardingModal) — matches the .notifications-modal /
@@ -82,6 +83,15 @@ function localiseAndOpen() {
     setText('onboardingPrivacyBody', 'onb.privacyBody');
     setText('onboardingBtnAllow', 'onb.buttonAllow');
     setText('onboardingBtnNotNow', 'onb.buttonNotNow');
+
+    // Browsers without Web Push support (notably Safari on iOS below 16.4,
+    // or not yet added to the Home Screen) would only ever see this bullet
+    // followed by a silent no-op tap — hide it rather than promise
+    // something "Allow" can't actually deliver there.
+    const pushRow = document.getElementById('onboardingFeaturePushRow');
+    if (pushRow) pushRow.style.display = isPushSupported() ? '' : 'none';
+    if (isPushSupported()) setText('onboardingFeaturePush', 'onb.featurePush');
+
     document.getElementById('onboardingModal')?.classList.add('open');
 }
 
@@ -96,14 +106,20 @@ function closeOverlay() {
 }
 
 /**
- * "Enable GPS" handler. MUST call getCurrentPosition from inside the
- * click handler for the iOS-PWA gesture rule to fire — otherwise the
- * native dialog is suppressed on installed PWAs. Also starts the
- * watchPosition so subsequent fixes flow into store.userLocation.
+ * "Enable" handler — location AND push together, matching the combined
+ * feature-badge list above (badge 1 = location, badge 2 = push). Both
+ * permission requests MUST fire from inside this click handler for the
+ * iOS-PWA gesture rule: getCurrentPosition/requestPermission called
+ * asynchronously (e.g. after an awaited fetch) get silently suppressed on
+ * installed PWAs instead of prompting. subscribeToPush() calls
+ * Notification.requestPermission() before its first await, so invoking it
+ * here — even un-awaited — still runs on this same click's call stack.
  *
  * Called from the delegated action handler in app.js.
  */
 export function onboardingAllow() {
+    if (isPushSupported()) subscribeToPush();
+
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
             (position) => {
