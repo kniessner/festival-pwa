@@ -172,6 +172,7 @@
     font-size: 0.85rem;
     text-transform: uppercase;
     letter-spacing: 1px;
+    display:none;
 }
 
 .search-modal-close {
@@ -190,8 +191,8 @@
 
 .search-results {
     overflow-y: auto;
-    background: var(--bg);
-    border: 1px solid var(--border);
+    background: transparent;
+    border: 0px solid var(--border);
     border-top: none;
     border-radius: 0 0 var(--radius) var(--radius);
     padding: 12px;
@@ -346,8 +347,7 @@
 
 .fav-btn.active {
     opacity: 1;
-    color: #FFEB3B;
-    filter: drop-shadow(0 0 4px rgba(15, 18, 130, 0.2));
+    color: #de4e39;
 }
 
 .fav-btn:active {
@@ -596,25 +596,25 @@
 .menu-nav-list button,
 .menu-nav-list a,
 .menu-nav-list .menu-item-disabled {
-    position: relative;
+     position: relative;
     background: none;
     border: none;
-    border-bottom: 1px solid rgba(242, 233, 220, 0.15);
+    border-bottom: 1px solid rgba(242, 233, 220, .15);
     color: var(--text-muted);
     text-align: center;
     text-decoration: none;
     padding: 30px 4px;
-    font-family: 'Megan Display';
+    font-family: Megan Display;
     font-size: 1.6rem;
     line-height: 1.6rem;
-
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    letter-spacing: .5px;
     cursor: pointer;
     display: flex;
-    align-items: center;
-    justify-content: center;
+    align-items: self-start;
+    justify-content: start;
     width: 100%;
+    text-align: left;
 
 }
 
