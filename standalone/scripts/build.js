@@ -56,6 +56,7 @@ async function buildJs() {
 
     const after = fs.statSync(outfile).size;
     console.log(`   ✅ js/*.js (${fmtSize(before)}, ${jsFiles.length} files) → js/app.js (${fmtSize(after)})`);
+    return jsFiles;
 }
 
 function buildCss() {
@@ -142,7 +143,7 @@ async function copyImages(srcDir, destDir) {
     return { before, after, optimized, copied };
 }
 
-function buildServiceWorker() {
+function buildServiceWorker(jsFiles) {
     const src = fs.readFileSync(path.join(ROOT_DIR, 'sw.js'), 'utf8');
     const match = src.match(/const SHELL_ASSETS = \[([\s\S]*?)\];/);
     if (!match) {
@@ -152,6 +153,18 @@ function buildServiceWorker() {
     }
 
     const assets = [...match[1].matchAll(/'([^']+)'/g)].map(m => m[1]);
+
+    // Every real js/*.js file must be precached (see sw.js's own MAINTENANCE
+    // comment) or an installed-then-offline user hits a broken app the first
+    // time an uncached module is requested — catch a forgotten entry here
+    // instead of shipping it silently.
+    const missingJs = jsFiles
+        .map(f => './js/' + f.split(path.sep).join('/'))
+        .filter(rel => !assets.includes(rel));
+    if (missingJs.length) {
+        throw new Error(`sw.js SHELL_ASSETS is missing: ${missingJs.join(', ')}`);
+    }
+
     // JS files are bundled into one, so every individual ./js/... entry
     // collapses down to just the bundle itself.
     const rewritten = assets.filter(a => !a.startsWith('./js/') || a === './js/app.js');
@@ -178,9 +191,9 @@ async function build() {
     minifyJsonFile(path.join(ROOT_DIR, 'manifest.json'), path.join(DIST_DIR, 'manifest.json'));
     console.log('   ✅ index.html, manifest.json');
 
-    await buildJs();
+    const jsFiles = await buildJs();
     buildCss();
-    buildServiceWorker();
+    buildServiceWorker(jsFiles);
 
     const fontCount = copyDir(path.join(ROOT_DIR, 'fonts'), path.join(DIST_DIR, 'fonts'));
     console.log(`   ✅ fonts/* (${fontCount} files, copied as-is)`);
