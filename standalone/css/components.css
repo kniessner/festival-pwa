@@ -157,7 +157,20 @@
 }
 
 .search-modal-header {
-    display: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 18px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-bottom: none;
+    border-radius: var(--radius) var(--radius) 0 0;
+    color: var(--text);
+    font-family: var(--font-head);
+    font-weight: 700;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
 .search-modal-close {
@@ -178,7 +191,8 @@
     overflow-y: auto;
     background: var(--bg);
     border: 1px solid var(--border);
-    border-radius: var(--radius);
+    border-top: none;
+    border-radius: 0 0 var(--radius) var(--radius);
     padding: 12px;
     display: flex;
     flex-direction: column;
@@ -331,7 +345,8 @@
 
 .fav-btn.active {
     opacity: 1;
-    color: #de4e39;
+    color: #FFEB3B;
+    filter: drop-shadow(0 0 4px rgba(15, 18, 130, 0.2));
 }
 
 .fav-btn:active {
@@ -373,7 +388,8 @@
 /* Nav badge */
 
 .nav-badge {
-    position: relative;
+    position: absolute;
+    top: -4px;
     right: -4px;
     background: var(--accent-orange);
     color: var(--bg);
@@ -386,7 +402,16 @@
     align-items: center;
     justify-content: center;
     line-height: 1;
-    float: right;
+}
+
+.bottom-nav button {
+    position: relative;
+}
+
+/* Home tab hidden from the nav for now — keep the markup/route in place
+   in case we want it back. */
+.bottom-nav button[data-slug="home"] {
+    display: none;
 }
 
 /* Language toggle */
@@ -412,199 +437,72 @@
     position: absolute;
 }
 
-/* Drop-up menu (trigger + panel) — the app's only navigation UI now
-   that the old fixed .bottom-nav icon row has been removed. */
+/* Bottom nav */
 
-.menu-trigger {
+.bottom-nav {
     position: fixed;
-    right: 20px;
-    bottom: calc(20px + env(safe-area-inset-bottom));
-    z-index: 250;
-    width: 56px;
-    height: 56px;
-    border-radius: 50%;
-    background: var(--accent-pink);
-    border: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--text-muted);
-    cursor: pointer;
-    padding: 0;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
-}
-
-.menu-trigger-icon {
-    font-size: 1.4rem;
-    display: flex;
-}
-
-/* A round FAB shows the icon only — the current-page label stays in the
-   DOM (renderNav() still sets its text) but visually hidden, so it's
-   still announced to screen readers as the button's accessible name. */
-.menu-trigger-label {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-    clip: rect(0 0 0 0);
-    white-space: nowrap;
-}
-
-.menu-modal {
-    display: none;
-    position: fixed;
-    inset: 0;
-    z-index: 1000002;
-}
-
-.menu-modal.open {
-    display: block;
-}
-
-.menu-modal-backdrop {
-    position: absolute;
-    inset: 0;
-    background: rgba(4, 4, 30, 0.7);
-    backdrop-filter: blur(2px);
-}
-
-.menu-modal-panel {
-    position: absolute;
+    bottom: 0;
     left: 0;
     right: 0;
-    bottom: 0;
-    top: 0;
-    margin: 0 auto;
-    width: 100%;
+    z-index: 200;
+    background:rgba(13, 10, 74, 1);
+    /* padding: 8px 12px calc(8px + env(safe-area-inset-bottom)); */
+    display: flex;
+    justify-content: center;
+    border-top: 2px solid rgba(225, 96, 77, 1);
     max-width: 650px;
-    max-height: 100vh;
-    background: var(--bg);
-    border-bottom: none;
-    box-shadow: 0 -12px 40px rgba(0, 0, 0, 0.5);
+    margin: auto;
+    height: 74px;
+}
+
+.bottom-nav button {
+    background: none;
+    border: none;
+    color: var(--text-muted);
     display: flex;
     flex-direction: column;
-    overflow: hidden;
-    transform: translateY(100%);
-    transition: transform 0.25s ease;
-}
-
-.menu-modal.open .menu-modal-panel {
-    transform: translateY(0);
-}
-
-.menu-modal-header {
-    display: flex;
     align-items: center;
-    justify-content: space-between;
-    padding: 18px 20px 10px;
-    color: var(--wp--preset--color--beige, #f3efdf);
-    font-family: var(--wp--preset--font-family--megan-display, var(--font-head)), serif;
-    font-size: 1.1rem;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    flex-shrink: 0;
-    display: none;
-}
-
-.menu-modal-close {
-    background: none;
-    border: none;
-    color: var(--text-muted);
-    font-size: 1rem;
-    line-height: 1;
-    cursor: pointer;
-    padding: 4px 6px;
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    color: var(--accent-orange);
-}
-
-.menu-nav-list {
-    display: flex;
-    flex-direction: column;
-    overflow-y: auto;
-    padding: 0 20px;
-    margin-top: 20px;
-}
-
-.menu-nav-list button,
-.menu-nav-list a,
-.menu-nav-list .menu-item-disabled {
-    position: relative;
-    background: none;
-    border: none;
-    border-bottom: 1px solid rgba(242, 233, 220, 0.15);
-    color: var(--text-muted);
-    text-align: left;
-    text-decoration: none;
-    padding: 30px 4px;
+    gap: 3px;
+    padding: 6px 8px;
+ /* font-family: var(--font-body); */
     font-family: 'Megan Display';
-    font-size: 1.6rem;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
+    font-size: 16px;
     cursor: pointer;
+    transition: color 0.2s;
+    min-width: 56px;
+    letter-spacing: 0;
+    text-transform: uppercase;
+    font-weight: 400;
+} 
+
+.bottom-nav button .nav-icon {
+    font-size: 1.5rem;
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
 }
 
-.menu-nav-list button:last-child,
-.menu-nav-list a:last-child,
-.menu-nav-list .menu-item-disabled:last-child {
-    border-bottom: none;
+.nav-icon-mask {
+    display: block;
+    width: 36px;
+    height: 36px;
+    background-color: var(--text-muted);
+    -webkit-mask-size: contain;
+    mask-size: contain;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    mask-position: center;
 }
 
-.menu-nav-list button.active {
+.bottom-nav button.active {
     color: var(--accent-pink);
 }
 
-.menu-nav-list .menu-item-disabled {
-    color: rgba(242, 233, 220, 0.35);
-    cursor: default;
+.bottom-nav button.active .nav-icon-mask {
+    background-color: var(--accent-pink);
 }
 
-.menu-item-sublabel {
-    font-size: 0.7rem;
-    text-transform: none;
-    letter-spacing: 0;
-    font-family: var(--font-body);
-    opacity: 0.8;
-}
-
-.menu-item-external {
-    font-size: 1.1rem;
-    text-transform: none;
-    opacity: 0.7;
-}
-
-.menu-news-preview {
-    flex-shrink: 0;
-    margin: 10px 20px 20px;
-    padding: 14px 16px;
-    background: var(--bg-card);
-    border-radius: var(--card-radius);
-    color: var(--text);
-    cursor: pointer;
-    display: none;
-}
-
-.menu-news-preview-empty {
-    color: var(--text-on-card);
-    font-style: italic;
-}
-
-/* Preview-only truncation — the full text still shows untruncated on the
-   Info page's News tab; tapping this card navigates there (app.js's
-   'goto-news' action). */
-.menu-news-preview-text {
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    line-clamp: 3;
-    overflow: hidden;
+.bottom-nav button  .nav-icon {
+    filter: drop-shadow(0 0 8px rgba(176, 50, 122, 0.5));
 }
 
 /* Install card */
@@ -694,7 +592,8 @@
 .onboarding-modal-panel {
     max-width: 480px;
     margin: 0 auto;
-    padding: max(48px, env(safe-area-inset-top, 0px) + 24px) 24px max(32px, env(safe-area-inset-bottom, 0px) + 24px);
+    padding: max(48px, env(safe-area-inset-top, 0px) + 24px) 24px
+             max(32px, env(safe-area-inset-bottom, 0px) + 24px);
     color: var(--text-muted);
     font-family: var(--font-body), sans-serif;
     display: flex;
@@ -875,20 +774,40 @@
     animation: gtt-gig-vibrate 2s ease-in-out infinite;
 }
 
+/* Red 2px outline ONLY on the stage-label cell (not the whole row) —
+   marks the user's current stage as a compact "you are here" flag.
+   Vertical mode: .gtt-stagehead (column header). Horizontal mode:
+   .gtt-stagelabel (row label, sticky-left). Was previously on
+   .gtt-stagerow-wrap which covered the full row width; the label-only
+   version is a lot less visually noisy. */
+.gtt-stagehead.gtt-current-stage,
+.gtt-current-stage .gtt-stagelabel {
+    /* Outline (rather than a ::after with border) draws OUTSIDE the
+       element's border-box, guaranteed to paint on top of the label's
+       own border-right (the column divider). Also doesn't consume any
+       layout space. Negative outline-offset pulls it back onto the
+       border-box so it aligns with the label's outer edge. */
+    outline: 2px solid var(--color-now-indicator);
+    outline-offset: -2px;
+}
+
 .gtt-stagehead.gtt-current-stage::after,
-.gtt-stagerow-wrap.gtt-current-stage::after {
+.gtt-current-stage .gtt-stagelabel::after {
     content: '';
     position: absolute;
-    inset: 0;
-    border: 2px solid var(--accent-pink);
+    inset: 0 -1px 0 0;
+    /* Pulse-ring only — the static red outline lives on the parent's
+       'outline' property now (see above), so this pseudo-element just
+       provides the box-shadow-based emanating aura animation. Border
+       kept for the reduced-motion fallback below. */
+    border: 2px solid transparent;
     border-radius: inherit;
     pointer-events: none;
-    box-shadow: 0 0 0 0 var(--accent-pink);
+    box-shadow: 0 0 0 0 var(--color-now-indicator);
     animation: gtt-stage-pulse-ring 2s ease-out infinite;
 }
 
 @keyframes gtt-stage-pulse-wash {
-
     /* Cycle between accent-pink and accent-purple as an inset wash —
        ported from fusion's floorPulse which cycles background between
        primary and secondary. 999px inset radius floods the whole box
@@ -896,12 +815,10 @@
        darkest navy AND the lightest lavender label backgrounds. rgba()
        fallback lines match --accent-pink and --accent-purple's RGB for
        browsers pre-Baseline 2023 color-mix. */
-    0%,
-    100% {
+    0%, 100% {
         box-shadow: inset 0 0 0 999px rgba(222, 78, 57, 0.55);
         box-shadow: inset 0 0 0 999px color-mix(in srgb, var(--accent-pink) 55%, transparent);
     }
-
     50% {
         box-shadow: inset 0 0 0 999px rgba(118, 44, 140, 0.55);
         box-shadow: inset 0 0 0 999px color-mix(in srgb, var(--accent-purple) 55%, transparent);
@@ -909,167 +826,51 @@
 }
 
 @keyframes gtt-gig-vibrate {
-
     /* Ported from fusion's gigVibrate (see pwa_test/src/TimetableFlat/
        animations.ts). Shakes horizontally with a small rotation for the
        first third of the cycle, then rests — the pause is what makes it
        feel like a heartbeat rather than a robot. Amplitude dampens over
        the shake so it decays naturally. */
-    0% {
-        transform: translateX(0) rotate(0deg);
-    }
-
-    3.33% {
-        transform: translateX(-3px) rotate(-1deg);
-    }
-
-    6.67% {
-        transform: translateX(3px) rotate(1deg);
-    }
-
-    10% {
-        transform: translateX(-3px) rotate(-1deg);
-    }
-
-    13.33% {
-        transform: translateX(3px) rotate(1deg);
-    }
-
-    16.67% {
-        transform: translateX(-2px) rotate(-0.5deg);
-    }
-
-    20% {
-        transform: translateX(2px) rotate(0.5deg);
-    }
-
-    23.33% {
-        transform: translateX(-1px) rotate(-0.25deg);
-    }
-
-    26.67% {
-        transform: translateX(1px) rotate(0.25deg);
-    }
-
-    30% {
-        transform: translateX(-0.5px) rotate(-0.1deg);
-    }
-
-    33.33% {
-        transform: translateX(0) rotate(0deg);
-    }
-
-    100% {
-        transform: translateX(0) rotate(0deg);
-    }
+    0%     { transform: translateX(0)      rotate(0deg); }
+    3.33%  { transform: translateX(-3px)   rotate(-1deg); }
+    6.67%  { transform: translateX(3px)    rotate(1deg); }
+    10%    { transform: translateX(-3px)   rotate(-1deg); }
+    13.33% { transform: translateX(3px)    rotate(1deg); }
+    16.67% { transform: translateX(-2px)   rotate(-0.5deg); }
+    20%    { transform: translateX(2px)    rotate(0.5deg); }
+    23.33% { transform: translateX(-1px)   rotate(-0.25deg); }
+    26.67% { transform: translateX(1px)    rotate(0.25deg); }
+    30%    { transform: translateX(-0.5px) rotate(-0.1deg); }
+    33.33% { transform: translateX(0)      rotate(0deg); }
+    100%   { transform: translateX(0)      rotate(0deg); }
 }
 
 @keyframes gtt-stage-pulse-ring {
-
-    /* Ring color derived from --accent-pink via color-mix; rgba()
-       fallback provided for older browsers. The rgba() fallback matches
-       --accent-pink's RGB (222, 78, 57) at the specified alpha. */
-    0% {
-        box-shadow: 0 0 0 0 rgba(222, 78, 57, 0.55);
-        box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent-pink) 55%, transparent);
+    /* Ring emanates in red (var(--color-now-indicator) = rgb(255,59,59)), matching the
+       static border above and the .gtt-now-line time indicator. */
+    0%   {
+        box-shadow: 0 0 0 0 rgba(255, 59, 59, 0.55);
+        box-shadow: 0 0 0 0 color-mix(in srgb, var(--color-now-indicator) 55%, transparent);
     }
-
-    70% {
-        box-shadow: 0 0 0 8px transparent;
-    }
-
-    100% {
-        box-shadow: 0 0 0 0 transparent;
-    }
+    70%  { box-shadow: 0 0 0 8px transparent; }
+    100% { box-shadow: 0 0 0 0 transparent; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-
     .gtt-stagehead.gtt-current-stage,
     .gtt-current-stage .gtt-stagelabel,
     .gtt-current-stage .gtt-event.gtt-event-now,
     .gtt-stagerow-wrap.gtt-current-stage {
         animation: none;
     }
-
     .gtt-stagehead.gtt-current-stage,
     .gtt-current-stage .gtt-stagelabel {
         box-shadow: inset 0 0 0 999px rgba(222, 78, 57, 0.4);
         box-shadow: inset 0 0 0 999px color-mix(in srgb, var(--accent-pink) 40%, transparent);
     }
-
     .gtt-stagehead.gtt-current-stage::after,
-    .gtt-stagerow-wrap.gtt-current-stage::after {
+    .gtt-current-stage .gtt-stagelabel::after {
         animation: none;
-        box-shadow: 0 0 0 2px var(--accent-pink);
+        box-shadow: 0 0 0 2px var(--color-now-indicator);
     }
-}
-
-/* ── Temporary password gate (pre-launch only) ──────────────────────────
-   Remove this whole block alongside js/password-gate.js and its one call
-   site in app.js's init() once the festival is live. */
-
-.password-gate {
-    position: fixed;
-    inset: 0;
-    z-index: 2000000;
-    background: var(--bg);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-}
-
-.password-gate-form {
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-    width: 100%;
-    max-width: 320px;
-    text-align: center;
-}
-
-.password-gate-title {
-    font-family: 'Megan Display';
-    font-size: 1.5rem;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    color: var(--text-muted);
-    margin: 0 0 10px;
-}
-
-.password-gate-input {
-    padding: 14px 16px;
-    border-radius: 50px;
-    border: 2px solid var(--accent-pink);
-    background: var(--bg-card);
-    color: var(--text);
-    font-family: var(--font-body);
-    font-size: 1rem;
-    text-align: center;
-    outline: none;
-}
-
-.password-gate-submit {
-    background: var(--accent-pink);
-    color: var(--text);
-    border: none;
-    border-radius: 50px;
-    padding: 14px;
-    font-family: 'Megan Display';
-    font-size: 1rem;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    font-weight: 700;
-    cursor: pointer;
-}
-
-.password-gate-submit:active {
-    transform: scale(0.98);
-}
-
-.password-gate-error {
-    color: var(--accent-orange);
-    font-size: 0.85rem;
-    margin: 0;
 }

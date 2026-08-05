@@ -2,6 +2,7 @@ import { store, fetchLocalized } from './store.js';
 import { NOTIFICATIONS_SEEN_KEY, DATA_FILES } from './config.js';
 import { escapeHtml } from './ui.js';
 import { t } from './i18n.js';
+import { safeGetJSON, safeSetJSON } from './helpers/safe-storage.js';
 
 // Notifications are authored via the WP plugin's "PWA Push" post type and
 // synced into data/notifications.json — separate from news.json (which is
@@ -18,8 +19,7 @@ export function formatNotificationDate(item) {
 }
 
 function getSeenIds() {
-    try { return new Set(JSON.parse(localStorage.getItem(NOTIFICATIONS_SEEN_KEY)) || []); }
-    catch { return new Set(); }
+    return new Set(safeGetJSON(NOTIFICATIONS_SEEN_KEY, []));
 }
 
 function getUnseenNotifications() {
@@ -33,14 +33,10 @@ function markAllNotificationsSeen() {
     const items = store.pageData.notifications?.items || [];
     const seen = getSeenIds();
     items.forEach(item => seen.add(item.id));
-    try {
-        localStorage.setItem(NOTIFICATIONS_SEEN_KEY, JSON.stringify([...seen]));
-    } catch {
-        // Safari private mode / quota exceeded / etc. Swallow silently
-        // — matches the pattern in helpers/prompt-storage.js. Worst case
-        // the user sees the same notifications again on next launch,
-        // which is acceptable.
-    }
+    // safeSetJSON swallows write failures (Safari private mode / quota
+    // exceeded / etc.). Worst case the user sees the same notifications
+    // again on next launch, which is acceptable.
+    safeSetJSON(NOTIFICATIONS_SEEN_KEY, [...seen]);
 }
 
 function renderNotificationCards(items) {

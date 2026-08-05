@@ -13,6 +13,13 @@
     --text-on-card: rgba(27, 25, 42, 0.65);
     --border: rgba(176, 50, 122, 0.3);
     --card-border: rgba(15, 18, 130, 0.15);
+    /* "You are here" red — shared by the .gtt-now-line time indicator,
+       the current-stage label outline, the current-hour label outline,
+       and the pulse-ring animation. Bright saturated red so it reads
+       unambiguously on the navy background. rgba(255, 59, 59) is the
+       hex-equivalent tuple used in animation keyframes' alpha-fallback
+       lines that pair with color-mix() on Baseline 2023+ browsers. */
+    --color-now-indicator: #ff3b3b;
     --radius: 12px;
     --card-radius: 20px;
     --font-body: 'Instrument Sans', sans-serif;

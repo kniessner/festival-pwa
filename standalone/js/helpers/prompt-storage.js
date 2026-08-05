@@ -1,4 +1,5 @@
 import { LOCATION_PROMPT_KEY } from '../config.js';
+import { safeGet, safeSet } from './safe-storage.js';
 
 /**
  * Sticky localStorage flag for the location-permission onboarding
@@ -9,23 +10,16 @@ import { LOCATION_PROMPT_KEY } from '../config.js';
  *
  * Ported from fusion (helper/locationPromptStorage.ts) — same
  * semantics, no banner subsystem in v1 so this file is smaller.
+ * The try/catch storage guards live in helpers/safe-storage.js since
+ * three other modules use the same pattern.
  */
 
 /** True iff the user has engaged with the Location prompt screen. */
 export function getLocationPromptCompleted() {
-    try {
-        return localStorage.getItem(LOCATION_PROMPT_KEY) === '1';
-    } catch {
-        return false;
-    }
+    return safeGet(LOCATION_PROMPT_KEY) === '1';
 }
 
 /** Set on either button tap of the Location prompt screen. Sticky. */
 export function setLocationPromptCompleted() {
-    try {
-        localStorage.setItem(LOCATION_PROMPT_KEY, '1');
-    } catch {
-        // Private mode / quota / etc. — silently fail. Worst case the
-        // user sees the prompt again next launch, which is acceptable.
-    }
+    safeSet(LOCATION_PROMPT_KEY, '1');
 }

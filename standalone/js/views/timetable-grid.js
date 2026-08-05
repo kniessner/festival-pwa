@@ -58,6 +58,18 @@ const COL_WIDTH = 130;      // vertical mode: fixed width for every stage column
 const AXIS_WIDTH = 52;      // vertical mode: time-axis / corner column width
 const STAGE_LABEL_WIDTH = 96; // horizontal mode: stage-label column width
 const LANE_HEIGHT = 60;     // horizontal mode: overlap-lane height within a stage row
+// Visual gap between consecutive event boxes along the TIME axis (so
+// back-to-back sets don't visually stick to each other). Applied as an
+// inset from both edges of the box's time-span, i.e. the box shrinks by
+// 2 * EVENT_GAP_PX total. Horizontal mode: horizontal gap; vertical
+// mode: vertical gap.
+const EVENT_GAP_PX = 3;
+// Visual gap on the PERPENDICULAR (lane) axis. Applied symmetrically
+// (inset from top+bottom in horizontal mode; inset from left+right in
+// vertical mode) so events don't sit flush against neighbouring lanes
+// or against the stage row's top/bottom edge. Was previously applied
+// only on one side (bottom in H, right in V), which looked lopsided.
+const LANE_INSET_PX = 3;
 const DAY_GAP = 28;         // horizontal mode: gap between consecutive day blocks
 
 // Haptic feedback pattern for a real stage-to-stage transition. Three
@@ -316,8 +328,16 @@ function renderVerticalLayout({ data, header, track, stages, byStage, stageLanes
     }).join('');
 
     const hourLabels = [];
+    // Mark the hour label whose 60-min bucket contains "now" — the
+    // .gtt-current-hour red outline (see views.css) pairs with the
+    // .gtt-current-stage row outline as a "you are here" cross-
+    // reference. Only applies on today's grid; other days have no
+    // meaningful "current hour".
+    const isTodayV = store.gridDay === getEffectiveFestivalDay();
+    const currentHourBucketV = isTodayV ? Math.floor(currentContinuousMinutes() / 60) * 60 : null;
     for (let m = gridMin; m <= gridMax; m += 60) {
-        hourLabels.push(`<div class="gtt-hour-label" style="top:${(m - gridMin) * PX_PER_MIN}px">${String(Math.floor(m / 60) % 24).padStart(2, '0')}:00</div>`);
+        const cur = m === currentHourBucketV ? ' gtt-current-hour' : '';
+        hourLabels.push(`<div class="gtt-hour-label${cur}" style="top:${(m - gridMin) * PX_PER_MIN}px">${String(Math.floor(m / 60) % 24).padStart(2, '0')}:00</div>`);
     }
 
     const stageColumns = stages.map(stage => {
@@ -382,12 +402,20 @@ function renderHorizontalLayout({ data, header, track, blocks }) {
     // soon as a day's block width isn't an exact multiple of the tick spacing.
     const hourLabels = [];
     const hourTicks = [];
+    // Same "you are here" hour cross-reference as vertical mode —
+    // scoped per day-block since horizontal mode is a continuous strip
+    // of all days, and only today's block has a meaningful current hour.
+    const todayH = getEffectiveFestivalDay();
+    const nowMinH = currentContinuousMinutes();
     blocks.forEach(b => {
+        const isTodayBlock = b.dayValue === todayH;
+        const currentHourBucketH = isTodayBlock ? Math.floor(nowMinH / 60) * 60 : null;
         let first = true;
         for (let m = b.gridMin; m <= b.gridMax; m += 60) {
             const rulerLeft = b._offset + (m - b.gridMin) * PX_PER_MIN;
             const hourText = `${String(Math.floor(m / 60) % 24).padStart(2, '0')}:00`;
-            hourLabels.push(`<div class="gtt-hour-label-h" style="left:${rulerLeft}px">${hourText}</div>`);
+            const cur = m === currentHourBucketH ? ' gtt-current-hour' : '';
+            hourLabels.push(`<div class="gtt-hour-label-h${cur}" style="left:${rulerLeft}px">${hourText}</div>`);
             // Ticks live inside .gtt-track, not the ruler, so they need the stage-label
             // column's width added to line up with the ruler/row content above/below them.
             if (!first) hourTicks.push(`<div class="gtt-hour-tick" style="left:${STAGE_LABEL_WIDTH + rulerLeft}px"></div>`);
@@ -506,42 +534,52 @@ function isEventPlayingNow(ev) {
     return nowMin >= ev._start && nowMin <= ev._end;
 }
 
-// Boxes narrower than this get .gtt-event-narrow, which switches the
-// title from sticky-scroll mode to ellipsis-truncation mode (see the
-// CSS side in views.css). Threshold picked as roughly "wider than the
-// scrollable area on a mobile viewport after the sticky floor label"
-// — below that, sticky positioning has nothing to pin against
-// (the whole box is already in view) so ellipsis is the right posture.
-const NARROW_BOX_WIDTH_PX = 260;
+// (Previously: NARROW_BOX_WIDTH_PX + .gtt-event-narrow class dispatch
+// that switched title behaviour between sticky-scroll and ellipsis-
+// truncation modes. Both modes were replaced by a uniform centred +
+// 2-line-clamped layout in commit 822a9ce, making the class inert.
+// Removed to keep this file honest — add it back if we ever want
+// per-width title styling again.)
 
 function renderEventBlockV(ev, gridMin, numLanes) {
     const idx = store.pageData.timetable.events.indexOf(ev);
-    const top = (ev._start - gridMin) * PX_PER_MIN;
-    const height = Math.max(24, (ev._end - ev._start) * PX_PER_MIN);
+    // Inset top + shrink height so consecutive events don't stick to
+    // each other along the vertical (time) axis. Min height reduced
+    // to accommodate the shrink for very short events (≤ 12min).
+    const top = (ev._start - gridMin) * PX_PER_MIN + EVENT_GAP_PX;
+    const height = Math.max(14, (ev._end - ev._start) * PX_PER_MIN - 2 * EVENT_GAP_PX);
     const laneWidth = COL_WIDTH / numLanes;
-    const left = ev._lane * laneWidth;
+    // Inset on the perpendicular (lane) axis so events don't sit flush
+    // against the next lane's boundary. Symmetric LANE_INSET_PX each side.
+    const left = ev._lane * laneWidth + LANE_INSET_PX;
     const fav = isFavorite('timetable', idx) ? ' gtt-event-fav' : '';
     const now = isEventPlayingNow(ev) ? ' gtt-event-now' : '';
     // Vertical mode lays out one stage per column of fixed width; the
     // per-lane width can shrink well below 260px on stages with many
     // overlapping acts, so honour the same threshold here.
-    const narrow = (laneWidth - 4) < NARROW_BOX_WIDTH_PX ? ' gtt-event-narrow' : '';
+    const finalWidth = laneWidth - 2 * LANE_INSET_PX;
     return `
-    <div class="gtt-event${fav}${now}${narrow}" data-item-index="${idx}" data-action="toggle-grid-event" style="top:${top}px;height:${height}px;left:${left}px;width:${laneWidth - 4}px;--event-color:${categoryColor(ev.category)}">
+    <div class="gtt-event${fav}${now}" data-item-index="${idx}" data-action="toggle-grid-event" style="top:${top}px;height:${height}px;left:${left}px;width:${finalWidth}px;--event-color:${categoryColor(ev.category)}">
         <span class="gtt-event-title">${ev.title}</span>
     </div>`;
 }
 
 function renderEventBlockH(ev, gridMin, dayOffset) {
     const idx = store.pageData.timetable.events.indexOf(ev);
-    const left = dayOffset + (ev._start - gridMin) * PX_PER_MIN;
-    const width = Math.max(40, (ev._end - ev._start) * PX_PER_MIN);
-    const top = ev._lane * LANE_HEIGHT;
+    // Inset left + shrink width so consecutive events don't stick to
+    // each other along the horizontal (time) axis. Min width reduced
+    // to accommodate the shrink for very short events.
+    const left = dayOffset + (ev._start - gridMin) * PX_PER_MIN + EVENT_GAP_PX;
+    const width = Math.max(30, (ev._end - ev._start) * PX_PER_MIN - 2 * EVENT_GAP_PX);
+    // Inset on the perpendicular (lane) axis so events don't sit flush
+    // against the stage row's top edge (which is what used to happen —
+    // the 6px slack lived only at the bottom via 'height: LANE_HEIGHT - 6').
+    const top = ev._lane * LANE_HEIGHT + LANE_INSET_PX;
+    const height = LANE_HEIGHT - 2 * LANE_INSET_PX;
     const fav = isFavorite('timetable', idx) ? ' gtt-event-fav' : '';
     const now = isEventPlayingNow(ev) ? ' gtt-event-now' : '';
-    const narrow = width < NARROW_BOX_WIDTH_PX ? ' gtt-event-narrow' : '';
     return `
-    <div class="gtt-event${fav}${now}${narrow}" data-item-index="${idx}" data-action="toggle-grid-event" style="left:${left}px;width:${width}px;top:${top}px;height:${LANE_HEIGHT - 6}px;--event-color:${categoryColor(ev.category)}">
+    <div class="gtt-event${fav}${now}" data-item-index="${idx}" data-action="toggle-grid-event" style="left:${left}px;width:${width}px;top:${top}px;height:${height}px;--event-color:${categoryColor(ev.category)}">
         <span class="gtt-event-title">${ev.title}</span>
     </div>`;
 }
@@ -585,6 +623,17 @@ export function closeGridEventDetail() {
     if (detail) detail.classList.remove('open');
     if (backdrop) backdrop.classList.remove('open');
 }
+
+// Esc closes the event-detail overlay. Bound once at module load; the
+// guard on .gtt-detail.open avoids stealing Esc from any other overlay
+// (search modal, onboarding, notifications) when this one isn't the
+// visible one. Same pattern as search.js's Escape handler.
+document.addEventListener('keydown', (e) => {
+    if (e.key !== 'Escape') return;
+    if (document.getElementById('gttDetail')?.classList.contains('open')) {
+        closeGridEventDetail();
+    }
+});
 
 function scrollGridToNowTime() {
     const orientation = store.gridScrollMode;
