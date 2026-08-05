@@ -411,7 +411,13 @@ function renderHorizontalLayout({ data, header, track, blocks }) {
         const isTodayBlock = b.dayValue === todayH;
         const currentHourBucketH = isTodayBlock ? Math.floor(nowMinH / 60) * 60 : null;
         let first = true;
-        for (let m = b.gridMin; m <= b.gridMax; m += 60) {
+        // Exclusive of gridMax: that closing tick sits only DAY_GAP (28px)
+        // from the next block's opening tick, but each label renders as a
+        // fixed 120px-wide box (see .gtt-hour-label-h) — drawing both would
+        // overlap by 92px and visually merge (most noticeable on a day that
+        // runs late, e.g. "08:00" overlapping the next day's "06:00"). The
+        // next block's own opening label 28px later already marks that instant.
+        for (let m = b.gridMin; m < b.gridMax; m += 60) {
             const rulerLeft = b._offset + (m - b.gridMin) * PX_PER_MIN;
             const hourText = `${String(Math.floor(m / 60) % 24).padStart(2, '0')}:00`;
             const cur = m === currentHourBucketH ? ' gtt-current-hour' : '';

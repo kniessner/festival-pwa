@@ -158,20 +158,7 @@
 }
 
 .search-modal-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 14px 18px;
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-bottom: none;
-    border-radius: var(--radius) var(--radius) 0 0;
-    color: var(--text);
-    font-family: var(--font-head);
-    font-weight: 700;
-    font-size: 0.85rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
+    display: none;
 }
 
 .search-modal-close {
@@ -192,8 +179,7 @@
     overflow-y: auto;
     background: var(--bg);
     border: 1px solid var(--border);
-    border-top: none;
-    border-radius: 0 0 var(--radius) var(--radius);
+    border-radius: var(--radius);
     padding: 12px;
     display: flex;
     flex-direction: column;
@@ -346,8 +332,7 @@
 
 .fav-btn.active {
     opacity: 1;
-    color: #FFEB3B;
-    filter: drop-shadow(0 0 4px rgba(15, 18, 130, 0.2));
+    color: #de4e39;
 }
 
 .fav-btn:active {
@@ -389,8 +374,7 @@
 /* Nav badge */
 
 .nav-badge {
-    position: absolute;
-    top: -4px;
+    position: relative;
     right: -4px;
     background: var(--accent-orange);
     color: var(--bg);
@@ -400,20 +384,11 @@
     height: 26px;
     border-radius: 50%;
     display: flex;
-    dispay:none;
     align-items: center;
     justify-content: center;
     line-height: 1;
-}
-
-.bottom-nav button {
-    position: relative;
-}
-
-/* Home tab hidden from the nav for now — keep the markup/route in place
-   in case we want it back. */
-.bottom-nav button[data-slug="home"] {
-    display: none;
+    float: right;
+    display:none;
 }
 
 /* Language toggle */
@@ -765,8 +740,7 @@
 .onboarding-modal-panel {
     max-width: 480px;
     margin: 0 auto;
-    padding: max(48px, env(safe-area-inset-top, 0px) + 24px) 24px
-             max(32px, env(safe-area-inset-bottom, 0px) + 24px);
+    padding: max(48px, env(safe-area-inset-top, 0px) + 24px) 24px max(32px, env(safe-area-inset-bottom, 0px) + 24px);
     color: var(--text-muted);
     font-family: var(--font-body), sans-serif;
     display: flex;
@@ -947,40 +921,20 @@
     animation: gtt-gig-vibrate 2s ease-in-out infinite;
 }
 
-/* Red 2px outline ONLY on the stage-label cell (not the whole row) —
-   marks the user's current stage as a compact "you are here" flag.
-   Vertical mode: .gtt-stagehead (column header). Horizontal mode:
-   .gtt-stagelabel (row label, sticky-left). Was previously on
-   .gtt-stagerow-wrap which covered the full row width; the label-only
-   version is a lot less visually noisy. */
-.gtt-stagehead.gtt-current-stage,
-.gtt-current-stage .gtt-stagelabel {
-    /* Outline (rather than a ::after with border) draws OUTSIDE the
-       element's border-box, guaranteed to paint on top of the label's
-       own border-right (the column divider). Also doesn't consume any
-       layout space. Negative outline-offset pulls it back onto the
-       border-box so it aligns with the label's outer edge. */
-    outline: 2px solid var(--color-now-indicator);
-    outline-offset: -2px;
-}
-
 .gtt-stagehead.gtt-current-stage::after,
-.gtt-current-stage .gtt-stagelabel::after {
+.gtt-stagerow-wrap.gtt-current-stage::after {
     content: '';
     position: absolute;
-    inset: 0 -1px 0 0;
-    /* Pulse-ring only — the static red outline lives on the parent's
-       'outline' property now (see above), so this pseudo-element just
-       provides the box-shadow-based emanating aura animation. Border
-       kept for the reduced-motion fallback below. */
-    border: 2px solid transparent;
+    inset: 0;
+    border: 2px solid var(--accent-pink);
     border-radius: inherit;
     pointer-events: none;
-    box-shadow: 0 0 0 0 var(--color-now-indicator);
+    box-shadow: 0 0 0 0 var(--accent-pink);
     animation: gtt-stage-pulse-ring 2s ease-out infinite;
 }
 
 @keyframes gtt-stage-pulse-wash {
+
     /* Cycle between accent-pink and accent-purple as an inset wash —
        ported from fusion's floorPulse which cycles background between
        primary and secondary. 999px inset radius floods the whole box
@@ -988,10 +942,12 @@
        darkest navy AND the lightest lavender label backgrounds. rgba()
        fallback lines match --accent-pink and --accent-purple's RGB for
        browsers pre-Baseline 2023 color-mix. */
-    0%, 100% {
+    0%,
+    100% {
         box-shadow: inset 0 0 0 999px rgba(222, 78, 57, 0.55);
         box-shadow: inset 0 0 0 999px color-mix(in srgb, var(--accent-pink) 55%, transparent);
     }
+
     50% {
         box-shadow: inset 0 0 0 999px rgba(118, 44, 140, 0.55);
         box-shadow: inset 0 0 0 999px color-mix(in srgb, var(--accent-purple) 55%, transparent);
@@ -999,55 +955,101 @@
 }
 
 @keyframes gtt-gig-vibrate {
+
     /* Ported from fusion's gigVibrate (see pwa_test/src/TimetableFlat/
        animations.ts). Shakes horizontally with a small rotation for the
        first third of the cycle, then rests — the pause is what makes it
        feel like a heartbeat rather than a robot. Amplitude dampens over
        the shake so it decays naturally. */
-    0%     { transform: translateX(0)      rotate(0deg); }
-    3.33%  { transform: translateX(-3px)   rotate(-1deg); }
-    6.67%  { transform: translateX(3px)    rotate(1deg); }
-    10%    { transform: translateX(-3px)   rotate(-1deg); }
-    13.33% { transform: translateX(3px)    rotate(1deg); }
-    16.67% { transform: translateX(-2px)   rotate(-0.5deg); }
-    20%    { transform: translateX(2px)    rotate(0.5deg); }
-    23.33% { transform: translateX(-1px)   rotate(-0.25deg); }
-    26.67% { transform: translateX(1px)    rotate(0.25deg); }
-    30%    { transform: translateX(-0.5px) rotate(-0.1deg); }
-    33.33% { transform: translateX(0)      rotate(0deg); }
-    100%   { transform: translateX(0)      rotate(0deg); }
+    0% {
+        transform: translateX(0) rotate(0deg);
+    }
+
+    3.33% {
+        transform: translateX(-3px) rotate(-1deg);
+    }
+
+    6.67% {
+        transform: translateX(3px) rotate(1deg);
+    }
+
+    10% {
+        transform: translateX(-3px) rotate(-1deg);
+    }
+
+    13.33% {
+        transform: translateX(3px) rotate(1deg);
+    }
+
+    16.67% {
+        transform: translateX(-2px) rotate(-0.5deg);
+    }
+
+    20% {
+        transform: translateX(2px) rotate(0.5deg);
+    }
+
+    23.33% {
+        transform: translateX(-1px) rotate(-0.25deg);
+    }
+
+    26.67% {
+        transform: translateX(1px) rotate(0.25deg);
+    }
+
+    30% {
+        transform: translateX(-0.5px) rotate(-0.1deg);
+    }
+
+    33.33% {
+        transform: translateX(0) rotate(0deg);
+    }
+
+    100% {
+        transform: translateX(0) rotate(0deg);
+    }
 }
 
 @keyframes gtt-stage-pulse-ring {
-    /* Ring emanates in red (var(--color-now-indicator) = rgb(255,59,59)), matching the
-       static border above and the .gtt-now-line time indicator. */
-    0%   {
-        box-shadow: 0 0 0 0 rgba(255, 59, 59, 0.55);
-        box-shadow: 0 0 0 0 color-mix(in srgb, var(--color-now-indicator) 55%, transparent);
+
+    /* Ring color derived from --accent-pink via color-mix; rgba()
+       fallback provided for older browsers. The rgba() fallback matches
+       --accent-pink's RGB (222, 78, 57) at the specified alpha. */
+    0% {
+        box-shadow: 0 0 0 0 rgba(222, 78, 57, 0.55);
+        box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent-pink) 55%, transparent);
     }
-    70%  { box-shadow: 0 0 0 8px transparent; }
-    100% { box-shadow: 0 0 0 0 transparent; }
+
+    70% {
+        box-shadow: 0 0 0 8px transparent;
+    }
+
+    100% {
+        box-shadow: 0 0 0 0 transparent;
+    }
 }
 
 @media (prefers-reduced-motion: reduce) {
+
     .gtt-stagehead.gtt-current-stage,
     .gtt-current-stage .gtt-stagelabel,
     .gtt-current-stage .gtt-event.gtt-event-now,
     .gtt-stagerow-wrap.gtt-current-stage {
         animation: none;
     }
+
     .gtt-stagehead.gtt-current-stage,
     .gtt-current-stage .gtt-stagelabel {
         box-shadow: inset 0 0 0 999px rgba(222, 78, 57, 0.4);
         box-shadow: inset 0 0 0 999px color-mix(in srgb, var(--accent-pink) 40%, transparent);
     }
+
     .gtt-stagehead.gtt-current-stage::after,
-    .gtt-current-stage .gtt-stagelabel::after {
+    .gtt-stagerow-wrap.gtt-current-stage::after {
         animation: none;
-        box-shadow: 0 0 0 2px var(--color-now-indicator);
+        box-shadow: 0 0 0 2px var(--accent-pink);
     }
 }
-
 
 /* ── Temporary password gate (pre-launch only) ──────────────────────────
    Remove this whole block alongside js/password-gate.js and its one call
