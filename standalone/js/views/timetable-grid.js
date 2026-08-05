@@ -380,10 +380,23 @@ function renderHorizontalLayout({ data, header, track, blocks }) {
     let cursor = 0;
     blocks.forEach(b => {
         b._offset = cursor;
-        b._width = (b.gridMax - b.gridMin) * PX_PER_MIN;
+        // Reserve only the nominal 06:00-to-06:00 width between blocks — an
+        // overnight set that runs past that (a late closer, an early riser)
+        // isn't given extra dead space of its own; it just overflows past
+        // this block's boundary into the gap and the start of the next
+        // block's area, visually flowing into the next day. Event position/
+        // width (renderEventBlockH) is computed straight from its own
+        // start/end time, independent of gridMax, so this doesn't clip it.
+        b._width = (Math.min(b.gridMax, DAY_WINDOW_END) - Math.max(b.gridMin, DAY_WINDOW_START)) * PX_PER_MIN;
         cursor += b._width + DAY_GAP;
     });
-    const gridWidth = cursor - DAY_GAP;
+    // The last block has no "next day" to flow into, so it still reserves
+    // its own true (possibly overtime-extended) width — otherwise a late
+    // set on the final day would overflow past the scrollable content's
+    // own right edge instead of just past a day boundary.
+    const lastBlock = blocks[blocks.length - 1];
+    const lastTrueWidth = (lastBlock.gridMax - lastBlock.gridMin) * PX_PER_MIN;
+    const gridWidth = Math.max(cursor - DAY_GAP, lastBlock._offset + lastTrueWidth);
     const totalWidth = STAGE_LABEL_WIDTH + gridWidth;
 
     // Stage rows span every day block — union of stages, canonical order.
@@ -408,25 +421,24 @@ function renderHorizontalLayout({ data, header, track, blocks }) {
     // of all days, and only today's block has a meaningful current hour.
     const todayH = getEffectiveFestivalDay();
     const nowMinH = currentContinuousMinutes();
-    blocks.forEach(b => {
+    blocks.forEach((b, i) => {
         const isTodayBlock = b.dayValue === todayH;
         const currentHourBucketH = isTodayBlock ? Math.floor(nowMinH / 60) * 60 : null;
+        const isLastBlock = i === blocks.length - 1;
         let first = true;
-        // Ticks cover the block's FULL width (gridMin..gridMax, including any
-        // early-riser/late-closer overtime) — clamping this to the nominal
-        // 06:00-to-06:00 window left a stretch of the ruler with real event
-        // content underneath but no tick at all, which read as broken. The
-        // overtime portion's hour-of-day text inevitably repeats what the
-        // NEXT block's own opening ticks are about to show (e.g. two
-        // separate "06:00"s a DAY_GAP apart) — .gtt-hour-label-h--overtime
-        // dims those so they read as "still the previous night" rather than
-        // a duplicate/mistake.
-        for (let m = b.gridMin; m < b.gridMax; m += 60) {
+        // Ticks only cover the nominal 06:00-to-06:00 window that this
+        // block actually reserved width for (see the offset/width pass
+        // above) — an overnight set running past that has its own event box
+        // overflow into the gap and the next block's space instead, so no
+        // tick is needed (or would even have reserved room to sit in)
+        // beyond this point. The last block has no next day to flow into,
+        // so it keeps labeling its own true range, overtime included.
+        const tickEnd = isLastBlock ? b.gridMax : Math.min(b.gridMax, DAY_WINDOW_END);
+        for (let m = Math.max(b.gridMin, DAY_WINDOW_START); m < tickEnd; m += 60) {
             const rulerLeft = b._offset + (m - b.gridMin) * PX_PER_MIN;
             const hourText = `${String(Math.floor(m / 60) % 24).padStart(2, '0')}:00`;
             const cur = m === currentHourBucketH ? ' gtt-current-hour' : '';
-            const overtime = m >= DAY_WINDOW_END ? ' gtt-hour-label-h--overtime' : '';
-            hourLabels.push(`<div class="gtt-hour-label-h${cur}${overtime}" style="left:${rulerLeft}px">${hourText}</div>`);
+            hourLabels.push(`<div class="gtt-hour-label-h${cur}" style="left:${rulerLeft}px">${hourText}</div>`);
             // Ticks live inside .gtt-track, not the ruler, so they need the stage-label
             // column's width added to line up with the ruler/row content above/below them.
             if (!first) hourTicks.push(`<div class="gtt-hour-tick" style="left:${STAGE_LABEL_WIDTH + rulerLeft}px"></div>`);
