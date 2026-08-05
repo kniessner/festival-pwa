@@ -105,12 +105,17 @@ const STRINGS = {
         'onb.headline': 'Wer spielt hier gerade?',
         'onb.intro': 'Aktiviere GPS und dein Timetable öffnet sich automatisch auf der Bühne, an der du gerade stehst.',
         'onb.featureTimetable': 'Automatischer Sprung zu der Bühne auf der du dich gerade befindest, um schneller erfahren zu können wer gerade spielt.',
-        'onb.featurePush': 'Push-Benachrichtigungen für wichtige Ankündigungen, direkt auf dein Gerät.',
         'onb.disclaimer': 'Diese Funktion funktioniert nur, wenn du der App Zugriff auf deinen Standort erlaubst und GPS aktiviert ist.',
         'onb.privacyTitle': 'Infos zum Datenschutz',
         'onb.privacyBody': 'Kein Tracking. Keine Datenweitergabe. Dein Standort bleibt nur lokal auf deinem Gerät.',
-        'onb.buttonAllow': 'Aktivieren',
-        'onb.buttonNotNow': 'Nicht jetzt'
+        'onb.buttonAllow': 'GPS aktivieren',
+        'onb.buttonNotNow': 'Nicht jetzt',
+        // push-notification opt-in (shown right after the location screen)
+        'pushOnb.headline': 'Nichts verpassen',
+        'pushOnb.intro': 'Aktiviere Push-Benachrichtigungen und erhalte wichtige Ankündigungen direkt auf dein Gerät.',
+        'pushOnb.feature': 'Wichtige Updates zum Festival, auch wenn die App gerade nicht geöffnet ist.',
+        'pushOnb.buttonAllow': 'Aktivieren',
+        'pushOnb.buttonNotNow': 'Nicht jetzt'
     },
     en: {
         'common.loading': 'Loading...',
@@ -207,12 +212,17 @@ const STRINGS = {
         'onb.headline': "Who's playing here right now?",
         'onb.intro': 'Enable GPS and your timetable jumps straight to the stage you\'re standing at.',
         'onb.featureTimetable': "Automatic jump to the stage you're currently standing at, so you can find out faster who's playing right now.",
-        'onb.featurePush': 'Push notifications for important announcements, straight to your device.',
         'onb.disclaimer': 'This feature only works if you allow the app to access your location and have GPS enabled.',
         'onb.privacyTitle': 'Privacy info',
         'onb.privacyBody': 'No tracking. No data sharing. Your location stays on your device.',
-        'onb.buttonAllow': 'Enable',
-        'onb.buttonNotNow': 'Not now'
+        'onb.buttonAllow': 'Enable GPS',
+        'onb.buttonNotNow': 'Not now',
+        // push-notification opt-in (shown right after the location screen)
+        'pushOnb.headline': "Don't miss out",
+        'pushOnb.intro': 'Enable push notifications and get important announcements straight to your device.',
+        'pushOnb.feature': "Important festival updates, even when the app isn't open.",
+        'pushOnb.buttonAllow': 'Enable',
+        'pushOnb.buttonNotNow': 'Not now'
     }
 };
 

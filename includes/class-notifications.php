@@ -158,10 +158,14 @@ class Festival_PWA_Notifications {
         $send_push = isset($_POST['pwa_send_push']);
         $already_sent = get_post_meta($post_id, '_pwa_push_sent', true) === '1';
         if ($send_push && !$already_sent) {
+            // Raw HTML, not pre-stripped — Festival_PWA_Push::send_to_all()
+            // does its own HTML-to-plain-text conversion (preserving
+            // paragraph/list line breaks, which a naive strip here would
+            // have collapsed) and combines German+English into one payload.
             $title_de = get_the_title($post_id);
-            $body_de  = trim(wp_strip_all_tags(apply_filters('the_content', get_post($post_id)->post_content)));
+            $body_de  = apply_filters('the_content', get_post($post_id)->post_content);
             $title_en = sanitize_text_field($_POST['pwa_title_en'] ?? '');
-            $body_en  = trim(wp_strip_all_tags(wp_kses_post($_POST['pwa_content_en'] ?? '')));
+            $body_en  = wp_kses_post($_POST['pwa_content_en'] ?? '');
             Festival_PWA_Push::send_to_all([
                 'de' => ['title' => $title_de, 'body' => $body_de],
                 'en' => ['title' => $title_en, 'body' => $body_en],

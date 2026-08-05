@@ -13,7 +13,7 @@ import { t, setLang } from './i18n.js';
 import { maybeShowNotifications, closeNotifications, setupNotificationsRefresh } from './notifications.js';
 import { openMenu, closeMenu } from './menu.js';
 import { mergeMusicIntoTimetable, refreshMusic } from './music.js';
-import { showLocationPromptIfNeeded, onboardingAllow, onboardingNotNow } from './onboarding.js';
+import { showLocationPromptIfNeeded, onboardingAllow, onboardingNotNow, showPushPromptIfNeeded, pushOnboardingAllow, pushOnboardingNotNow } from './onboarding.js';
 import { loadStages, warnStageNameMismatches } from './helpers/get-stage.js';
 import { passwordGateOK, showPasswordGate } from './password-gate.js';
 import { togglePush } from './push.js';
@@ -54,9 +54,12 @@ async function init() {
     showLastUpdated();
     wireDelegation();
     // Onboarding awaited BEFORE notifications so first-launch users
-    // don't see both modals stacked. Returning users go through this
-    // instantly (sticky flag or already-granted permission).
+    // don't see modals stacked. Returning users go through both
+    // instantly (sticky flag or already-decided permission). Push is
+    // sequenced strictly after location resolves — one screen at a time,
+    // never shown simultaneously.
     await showLocationPromptIfNeeded();
+    await showPushPromptIfNeeded();
     maybeShowNotifications();
     setupNotificationsRefresh();
     setupMusicRefresh();
@@ -281,6 +284,8 @@ const actions = {
     },
     'onboarding-allow': () => onboardingAllow(),
     'onboarding-not-now': () => onboardingNotNow(),
+    'push-onboarding-allow': () => pushOnboardingAllow(),
+    'push-onboarding-not-now': () => pushOnboardingNotNow(),
     'goto-event': el => {
         const itemIndex = parseInt(el.dataset.index, 10);
         prepareJumpToEvent(itemIndex);

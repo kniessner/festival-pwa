@@ -186,13 +186,38 @@ class Festival_PWA_Push {
 
     /* ── Sending ──────────────────────────────────────────────────────── */
 
+    // HTML → plain text for the push body. wp_strip_all_tags() alone
+    // removes tags with NO separator at all, so multi-paragraph content
+    // collapses into one unreadable run-on line ("Paragraph oneParagraph
+    // two"); OS notifications can't render the original bold/lists, but
+    // they can still show it as separate lines, which is the "formatting"
+    // that's actually worth preserving here.
+    private static function html_to_plain_text($html) {
+        $html = preg_replace('/<br\s*\/?>/i', "\n", $html);
+        $html = preg_replace('/<\/(p|li|div|h[1-6])>/i', "\n\n", $html);
+        $text = wp_strip_all_tags($html);
+        $text = preg_replace('/\n{3,}/', "\n\n", $text);
+        return trim($text);
+    }
+
+    // Combines German + English into one string everyone sees, rather
+    // than picking one per subscriber — skips English entirely when it's
+    // empty or identical to German (an untranslated post whose English
+    // field was left blank, per class-notifications.php's own
+    // "leave empty to fall back to German" convention).
+    private static function combine_bilingual($de, $en, $joiner) {
+        $de = trim($de);
+        $en = trim($en);
+        if ($en === '' || $en === $de) return $de;
+        return $de . $joiner . $en;
+    }
+
     // Called from class-notifications.php's save handler the first time a
     // post is saved with "send as push" checked (guarded there by
     // _pwa_push_sent so re-saving an already-sent post doesn't re-push).
-    // $content is ['de' => ['title'=>,'body'=>], 'en' => [...]] — each
-    // subscriber gets the variant matching the language their browser was
-    // set to at subscribe time (see the `lang` column / js/push.js),
-    // falling back to German the same way the rest of the app does.
+    // $content is ['de' => ['title'=>,'body'=>], 'en' => [...]] — body
+    // values are raw HTML (the_content-filtered post content / wp_kses_post
+    // English field), plain-texted and combined below.
     public static function send_to_all(array $content, $url = '') {
         $public  = get_option('festival_pwa_vapid_public_key');
         $private = get_option('festival_pwa_vapid_private_key');
@@ -200,7 +225,7 @@ class Festival_PWA_Push {
 
         global $wpdb;
         $table = self::table_name();
-        $rows  = $wpdb->get_results("SELECT id, endpoint, p256dh, auth, lang FROM {$table}", ARRAY_A);
+        $rows  = $wpdb->get_results("SELECT id, endpoint, p256dh, auth FROM {$table}", ARRAY_A);
         if (!$rows) return;
 
         $webPush = new WebPush([
@@ -215,13 +240,15 @@ class Festival_PWA_Push {
             ],
         ]);
 
+        $title = self::combine_bilingual($content['de']['title'] ?? '', $content['en']['title'] ?? '', ' / ');
+        $body  = self::combine_bilingual(
+            self::html_to_plain_text($content['de']['body'] ?? ''),
+            self::html_to_plain_text($content['en']['body'] ?? ''),
+            "\n\n"
+        );
+        $payload = wp_json_encode(['title' => $title, 'body' => $body, 'url' => $url]);
+
         foreach ($rows as $row) {
-            $lang = ($row['lang'] === 'en' && !empty($content['en']['title'])) ? 'en' : 'de';
-            $payload = wp_json_encode([
-                'title' => $content[$lang]['title'],
-                'body'  => $content[$lang]['body'],
-                'url'   => $url,
-            ]);
             $subscription = Subscription::create([
                 'endpoint'        => $row['endpoint'],
                 'keys'            => ['p256dh' => $row['p256dh'], 'auth' => $row['auth']],
