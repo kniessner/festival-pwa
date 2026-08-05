@@ -44,9 +44,9 @@ RSYNC_FLAGS+=(
 )
 
 # Runtime files the app actually needs. Mirrors deploy.sh's dist/ build list
-# (index.html, manifest.json, sw.js, js/, css/, data/, images/, icons/) —
+# (index.html, manifest.json, sw.js, js/, css/, data/, fonts/, images/, icons/) —
 # scripts/, docs/, .log/, and README/STRATEGY.md are dev-only and excluded.
-DEPLOY_FILES=(index.html manifest.json sw.js js css data images icons)
+DEPLOY_FILES=(index.html manifest.json sw.js js css data fonts images icons)
 
 # Every deploy ships a fresh cache-busted sw.js + index.html, so a change
 # never goes out under a version the device has already cached (see
@@ -77,12 +77,16 @@ if [ "$1" = "--dry-run" ]; then
 fi
 
 # The host sits behind WordPress.com's edge cache (Batcache-style), which
-# caches the /app/ response independently of the files on disk — without
-# this, visitors (and our own verification below) can keep seeing a stale
-# snapshot for a while after a successful rsync.
+# caches each asset URL independently of the files on disk. Purging only
+# $LIVE_URL leaves JS/font sub-resources (which carry a 1-year Cache-Control
+# and, for anything but app.js's own script tag, no cache-busting query
+# param) served stale from the edge for a while after a successful rsync —
+# this is what caused a fresh app.js to load an edge-cached pre-update
+# notifications.js and 404 on fonts right after a deploy. `--domain` purges
+# the whole site's edge cache instead of just the one URL, closing that gap.
 echo ""
-echo "🧹 Purging edge cache for $LIVE_URL ..."
-ssh -o BatchMode=yes -o ConnectTimeout=10 "$SSH_TARGET" "wp edge-cache purge '$LIVE_URL' '${LIVE_URL%/}'" || echo "   ⚠️  Edge cache purge failed — page may serve stale content until the cache naturally expires"
+echo "🧹 Purging edge cache for the whole domain ..."
+ssh -o BatchMode=yes -o ConnectTimeout=10 "$SSH_TARGET" "wp edge-cache purge --domain --yes" || echo "   ⚠️  Edge cache purge failed — page may serve stale content until the cache naturally expires"
 
 echo ""
 echo "🔎 Verifying $LIVE_URL ..."
