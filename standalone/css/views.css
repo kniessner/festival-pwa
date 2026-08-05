@@ -720,7 +720,6 @@ span#headerFilterLabel {
     margin: 0 -16px 20px;
     padding: 8px 16px;
     text-align: start;
-    justify-content: space-between;
 }
 
 .tt-day-tabs::-webkit-scrollbar {
