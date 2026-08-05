@@ -4,14 +4,29 @@ import { getGeolocationPermissionState } from './helpers/geolocation-permission.
 import {
     getLocationPromptCompleted,
     setLocationPromptCompleted,
+    getPushPromptCompleted,
+    setPushPromptCompleted,
 } from './helpers/prompt-storage.js';
 import { startLocationWatch } from './location.js';
 import { isPushSupported, subscribeToPush } from './push.js';
 
-// Onboarding overlay lifecycle. Rendered as a pre-existing DOM node in
-// index.html (#onboardingModal) — matches the .notifications-modal /
-// .search-modal pattern where the shell of the modal lives in the HTML
-// and JS just localises the strings and toggles the .open class.
+// Onboarding overlay lifecycle: two sequential screens (location, then
+// push), each its own pre-existing DOM node in index.html (#onboardingModal
+// / #pushOnboardingModal) — matches the .notifications-modal / .search-modal
+// pattern where the shell of the modal lives in the HTML and JS just
+// localises the strings and toggles the .open class. Deliberately two
+// SEPARATE screens rather than one combined ask: Notification.
+// requestPermission() needs its own user gesture, same iOS-PWA rule as
+// getCurrentPosition below — bundling both prompts under one button's
+// click still satisfies that (both calls happen synchronously on the same
+// gesture), but showing one combined screen made the location-specific
+// copy/disclaimer/privacy-box read oddly for a "grant push too" ask, so
+// they're now two screens shown back to back instead.
+//
+// Onboarding overlays only ever show on mobile — desktop users can still
+// enable either from the drop-up menu (the push toggle) or their browser's
+// own site settings (location), but there's no first-launch "screen"
+// experience for them.
 //
 // Ported from fusion's LocationPrompt.tsx: same skip logic (sticky
 // completed-flag → skip; granted/denied at OS level → skip and set
@@ -22,10 +37,18 @@ import { isPushSupported, subscribeToPush } from './push.js';
 //   - No banner subsystem (v1 scope).
 //   - Punchier privacy copy (product decision, see plan.md).
 
-// Resolved by whichever button the user taps. Kept in module scope so
-// the delegated action handlers in app.js can resolve it without
-// showLocationPromptIfNeeded needing to know the click plumbing.
+function isMobileDevice() {
+    return /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+}
+
+// Resolved by whichever button the user taps on the LOCATION screen. Kept
+// in module scope so the delegated action handlers in app.js can resolve
+// it without showLocationPromptIfNeeded needing to know the click plumbing.
 let pendingResolve = null;
+
+// Same, for the PUSH screen — separate variable since the two screens can
+// (briefly) coexist in the DOM, even though only one is ever .open at once.
+let pushPendingResolve = null;
 
 /**
  * Show the overlay if the user hasn't engaged with it yet AND the OS
@@ -39,6 +62,16 @@ let pendingResolve = null;
  *          skipping without showing).
  */
 export async function showLocationPromptIfNeeded() {
+    // Onboarding screens are a mobile-only experience — on desktop this
+    // just resolves immediately without ever rendering anything (though
+    // an already-granted permission from a previous mobile session still
+    // gets its watcher started below, same as the returning-user path).
+    if (!isMobileDevice()) {
+        const state = await getGeolocationPermissionState();
+        if (state === 'granted') startLocationWatch();
+        return;
+    }
+
     // Sticky-flag check first — cheap, synchronous. Once the user
     // engaged in a previous session, never re-show, regardless of OS
     // state. Matches fusion's deliberately non-naggy posture. If
@@ -83,15 +116,6 @@ function localiseAndOpen() {
     setText('onboardingPrivacyBody', 'onb.privacyBody');
     setText('onboardingBtnAllow', 'onb.buttonAllow');
     setText('onboardingBtnNotNow', 'onb.buttonNotNow');
-
-    // Browsers without Web Push support (notably Safari on iOS below 16.4,
-    // or not yet added to the Home Screen) would only ever see this bullet
-    // followed by a silent no-op tap — hide it rather than promise
-    // something "Allow" can't actually deliver there.
-    const pushRow = document.getElementById('onboardingFeaturePushRow');
-    if (pushRow) pushRow.style.display = isPushSupported() ? '' : 'none';
-    if (isPushSupported()) setText('onboardingFeaturePush', 'onb.featurePush');
-
     document.getElementById('onboardingModal')?.classList.add('open');
 }
 
@@ -106,20 +130,14 @@ function closeOverlay() {
 }
 
 /**
- * "Enable" handler — location AND push together, matching the combined
- * feature-badge list above (badge 1 = location, badge 2 = push). Both
- * permission requests MUST fire from inside this click handler for the
- * iOS-PWA gesture rule: getCurrentPosition/requestPermission called
- * asynchronously (e.g. after an awaited fetch) get silently suppressed on
- * installed PWAs instead of prompting. subscribeToPush() calls
- * Notification.requestPermission() before its first await, so invoking it
- * here — even un-awaited — still runs on this same click's call stack.
+ * "Enable GPS" handler. MUST call getCurrentPosition from inside the
+ * click handler for the iOS-PWA gesture rule to fire — otherwise the
+ * native dialog is suppressed on installed PWAs. Also starts the
+ * watchPosition so subsequent fixes flow into store.userLocation.
  *
  * Called from the delegated action handler in app.js.
  */
 export function onboardingAllow() {
-    if (isPushSupported()) subscribeToPush();
-
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
             (position) => {
@@ -151,4 +169,64 @@ export function onboardingAllow() {
 /** "Not now" handler. Soft-decline: never call geolocation. */
 export function onboardingNotNow() {
     closeOverlay();
+}
+
+/**
+ * Push counterpart to showLocationPromptIfNeeded() — shown right after
+ * the location screen closes (either button), never before it and never
+ * bundled into the same screen. Same skip logic: sticky-flag once engaged,
+ * skip (and mark completed) if the OS permission is already decided,
+ * mobile-only.
+ *
+ * Called from app.js:init() right after showLocationPromptIfNeeded()
+ * resolves, so the two screens show back to back without stacking.
+ */
+export async function showPushPromptIfNeeded() {
+    if (!isMobileDevice() || !isPushSupported()) return;
+
+    if (getPushPromptCompleted()) return;
+
+    if (Notification.permission !== 'default') {
+        // Already decided at the OS level — nothing to ask, and no need
+        // to keep re-checking every launch.
+        setPushPromptCompleted();
+        return;
+    }
+
+    return new Promise((resolve) => {
+        pushPendingResolve = resolve;
+        setText('pushOnboardingHeadline', 'pushOnb.headline');
+        setText('pushOnboardingIntro', 'pushOnb.intro');
+        setText('pushOnboardingFeature', 'pushOnb.feature');
+        setText('pushOnboardingBtnAllow', 'pushOnb.buttonAllow');
+        setText('pushOnboardingBtnNotNow', 'pushOnb.buttonNotNow');
+        document.getElementById('pushOnboardingModal')?.classList.add('open');
+    });
+}
+
+function closePushOverlay() {
+    document.getElementById('pushOnboardingModal')?.classList.remove('open');
+    setPushPromptCompleted();
+    if (pushPendingResolve) {
+        const r = pushPendingResolve;
+        pushPendingResolve = null;
+        r();
+    }
+}
+
+/**
+ * "Enable" handler for the push screen. subscribeToPush() calls
+ * Notification.requestPermission() before its first await, so calling it
+ * here — even un-awaited — still runs on this click's call stack,
+ * satisfying the same iOS-PWA user-gesture rule as onboardingAllow()'s
+ * getCurrentPosition call above.
+ */
+export function pushOnboardingAllow() {
+    subscribeToPush();
+    closePushOverlay();
+}
+
+/** "Not now" handler. Soft-decline: never request permission. */
+export function pushOnboardingNotNow() {
+    closePushOverlay();
 }
