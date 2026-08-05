@@ -4,7 +4,7 @@ import { isEventRunning, getEffectiveFestivalDay, dayAbbrev } from '../festival.
 import { isFavorite } from '../favorites.js';
 import { t } from '../i18n.js';
 import {
-    matchesEventType, resetTypeSpecificFilters, stagesForCurrentType, renderEventTypeTabs, isMusicEvent,
+    matchesEventType, resetTypeSpecificFilters, stagesForCurrentType, daysForCurrentType, renderEventTypeTabs, isMusicEvent,
 } from '../event-type-filter.js';
 
 export function renderTimetable(container) {
@@ -119,7 +119,7 @@ export function refreshTimetable() {
     const tabsContainer = document.getElementById('ttDayTabs');
     if (!container || !tabsContainer) return;
 
-    tabsContainer.innerHTML = data.filters.days.map(d => {
+    tabsContainer.innerHTML = daysForCurrentType(data.events, data.filters.days).map(d => {
         const isActive = d.value === filters.day;
         // Day labels come back as full names now ("Donnerstag"/"Thursday") —
         // abbreviate for the tab pills, matching the scraper's own day_short

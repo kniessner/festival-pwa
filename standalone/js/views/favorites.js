@@ -103,6 +103,17 @@ export function setFavTab(tab) {
 export function toggleFavFromCard(btn, pageSlug, itemIndex) {
     const isNowFav = toggleFavorite(pageSlug, itemIndex);
     btn.classList.toggle('active', isNowFav);
+    // classList above only recolors the icon (currentColor through the CSS
+    // mask) — the star's actual shape is a separate SVG baked into this
+    // mask-image at render time (see favButton() in ui.js), so it has to be
+    // swapped here too or it stays outline/filled until the next full
+    // re-render instead of flipping the instant the button is tapped.
+    const icon = btn.querySelector('.fav-star-icon');
+    if (icon) {
+        const iconFile = isNowFav ? 'star.svg' : 'star-outline.svg';
+        icon.style.webkitMaskImage = `url(images/${iconFile})`;
+        icon.style.maskImage = `url(images/${iconFile})`;
+    }
     // Program list cards nest their fav button directly inside .tt-event,
     // so the glow can update immediately without a full re-render. The
     // grid Timetable's fav button lives in the separate #gttDetail

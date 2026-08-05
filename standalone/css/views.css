@@ -1039,6 +1039,7 @@ span.tt-event-stage {
     display: flex;
     gap: 6px;
     flex-wrap: wrap;
+    margin-right: 8px;
 }
 
 .tt-event-toggle {
@@ -1337,9 +1338,7 @@ span.tt-event-stage {
        to an ancestor that actually scrolls. */
     height: calc(var(--vh, 1vh) * 100 - 200px);
     min-height: 320px;
-    border: 1px solid var(--border);
     border-radius: var(--radius);
-    background: var(--bg-card);
     position: fixed;
     left: 0;
     right: 0;

@@ -30,6 +30,14 @@ export function stagesForCurrentType(events, stageOptions) {
     return stageOptions.filter(s => present.has(s.value));
 }
 
+// Same idea as stagesForCurrentType, but for day tabs — a day with no
+// events at all (stray/placeholder data) or none under the active
+// music/culture tab shouldn't get a tab that just leads to an empty list.
+export function daysForCurrentType(events, dayOptions) {
+    const present = new Set(events.filter(matchesEventType).map(ev => ev.day));
+    return dayOptions.filter(d => present.has(d.value));
+}
+
 // Shared markup for both views (Program list / grid Timetable) — only the
 // action name differs, since each view wires its own setEventType()
 // wrapper (same convention as the existing per-view setDay/setGridDay).
