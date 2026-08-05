@@ -7,7 +7,7 @@
  *   - Cross-origin assets        → Cache-First only for CORS/basic responses
  */
 
-const CACHE_VERSION = '1785946592';
+const CACHE_VERSION = '1785951598';
 const APP_NAME = 'bucht-standalone';
 const CACHE_NAME = `${APP_NAME}-v${CACHE_VERSION}`;
 
@@ -27,6 +27,13 @@ const SHELL_ASSETS = [
     './css/base.css',
     './css/components.css',
     './css/views.css',
+    './fonts/InstrumentSans-Variable.ttf',
+    './fonts/InstrumentSans-Italic-Variable.ttf',
+    './fonts/Lato-Regular.ttf',
+    './fonts/Lato-Bold.ttf',
+    './fonts/Megan-Display.otf',
+    './fonts/Sunday-Regular.ttf',
+    './fonts/JosefinSans-SemiBold.woff2',
     './js/app.js',
     './manifest.json',
     './icons/icon-192.png',
@@ -332,9 +339,15 @@ self.addEventListener('notificationclick', e => {
         self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then(clientList => {
             // Prefer focusing an already-open tab over stacking a new one —
             // most opens will be someone re-opening the installed app they
-            // already have running/backgrounded.
+            // already have running/backgrounded. That tab is already on
+            // whatever page it was on, though, so it needs telling where to
+            // go (app.js's message listener reads targetUrl's ?notif= param
+            // and routes there) — openWindow's fresh document load reads
+            // the same param straight off location.search instead, no
+            // message needed.
             for (const client of clientList) {
                 if (client.url.includes(self.registration.scope) && 'focus' in client) {
+                    client.postMessage({ type: 'notification-click', url: targetUrl });
                     return client.focus();
                 }
             }
