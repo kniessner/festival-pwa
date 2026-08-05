@@ -78,7 +78,11 @@ function renderSearchResults(results, query) {
     container.innerHTML = results.map(r => {
         const title = r.item.title || r.item.question || 'Item';
         const desc = r.item.desc || r.item.answer || r.item.excerpt || '';
-        const meta = r.item.time ? `${escapeHtml(r.item.time)} · ${escapeHtml(r.item.stage_label || '')}` : '';
+        // r.item.time is the scraper's pre-formatted "DO 10:00" string —
+        // music events (no such field) fall back to start/end_time, shown
+        // as a range since that's the more useful signal for a DJ set.
+        const timeLabel = r.item.time || (r.item.start_time ? `${r.item.start_time}${r.item.end_time ? ' – ' + r.item.end_time : ''}` : '');
+        const meta = timeLabel ? `${escapeHtml(timeLabel)} · ${escapeHtml(r.item.stage_label || '')}` : '';
         const infoTabAttr = r.infoTab ? ` data-info-tab="${r.infoTab}"` : '';
         return `
         <div class="grid-card search-card" data-action="search-jump" data-page-idx="${pageIdx(r.page)}" data-index="${r.index}"${infoTabAttr}>
@@ -103,6 +107,10 @@ export function scrollToItem(pageSlug, itemIndex) {
     if (!target) target = candidates[0];
     if (!target) return;
     target.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    target.classList.add('highlight');
-    setTimeout(() => target.classList.remove('highlight'), 2000);
+    // .highlight-quick overrides .highlight's animation-duration so the
+    // pulse actually completes within 1s instead of being cut off mid-fade
+    // (the shared .highlight class's default 2s animation is also used by
+    // timetable.js's "scroll to now" highlight, which should stay as-is).
+    target.classList.add('highlight', 'highlight-quick');
+    setTimeout(() => target.classList.remove('highlight', 'highlight-quick'), 1000);
 }

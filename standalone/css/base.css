@@ -165,6 +165,13 @@ h1 {
     animation: highlightPulse 2s ease-out;
 }
 
+/* Search-jump wants a shorter pulse than the default 2s (used elsewhere by
+   timetable.js's "scroll to now" highlight) — overrides just the duration
+   so it still uses the same keyframes. */
+.highlight-quick {
+    animation-duration: 1s;
+}
+
 @keyframes highlightPulse {
     0% {
         box-shadow: 0 0 0 4px rgba(176, 50, 122, 0.6);
