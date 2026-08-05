@@ -439,9 +439,10 @@
     position: absolute;
 }
 
-/* Bottom nav */
+/* Drop-up menu (trigger + panel) — the app's only navigation UI now
+   that the old fixed .bottom-nav icon row has been removed. */
 
-.bottom-nav {
+.menu-trigger {
     position: fixed;
     right: 20px;
     bottom: calc(20px + env(safe-area-inset-bottom));
@@ -511,12 +512,10 @@
     position: absolute;
     left: 0;
     right: 0;
-    z-index: 200;
-    background:rgba(13, 10, 74, 1);
-    /* padding: 8px 12px calc(8px + env(safe-area-inset-bottom)); */
-    display: flex;
-    justify-content: center;
-    border-top: 2px solid rgba(225, 96, 77, 1);
+    bottom: 0;
+    top: 0;
+    margin: 0 auto;
+    width: 100%;
     max-width: 650px;
     max-height: 100vh;
     background: #080943b8;
@@ -524,6 +523,17 @@
     box-shadow: 0 -12px 40px rgba(0, 0, 0, 0.5);
     display: flex;
     flex-direction: column;
+    overflow: hidden;
+    transform: translateY(100%);
+    transition: transform 0.25s ease;
+}
+
+.menu-modal.open .menu-modal-panel {
+    transform: translateY(0);
+}
+
+.menu-modal-header {
+    display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 18px 20px 10px;
@@ -600,15 +610,6 @@
     text-transform: uppercase;
     letter-spacing: 0.5px;
     cursor: pointer;
-    transition: color 0.2s;
-    min-width: 56px;
-    letter-spacing: 0;
-    text-transform: uppercase;
-    font-weight: 400;
-} 
-
-.bottom-nav button .nav-icon {
-    font-size: 1.5rem;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -620,29 +621,60 @@
     width: 100%;
 }
 
-.nav-icon-mask {
-    display: block;
-    width: 36px;
-    height: 36px;
-    background-color: var(--text-muted);
-    -webkit-mask-size: contain;
-    mask-size: contain;
-    -webkit-mask-repeat: no-repeat;
-    mask-repeat: no-repeat;
-    -webkit-mask-position: center;
-    mask-position: center;
+.menu-nav-list button:last-child,
+.menu-nav-list a:last-child,
+.menu-nav-list .menu-item-disabled:last-child {
+    border-bottom: none;
 }
 
-.bottom-nav button.active {
+.menu-nav-list button.active {
     color: var(--accent-pink);
 }
 
-.bottom-nav button.active .nav-icon-mask {
-    background-color: var(--accent-pink);
+.menu-nav-list .menu-item-disabled {
+    color: rgba(242, 233, 220, 0.35);
+    cursor: default;
 }
 
-.bottom-nav button  .nav-icon {
-    filter: drop-shadow(0 0 8px rgba(176, 50, 122, 0.5));
+.menu-item-sublabel {
+    font-size: 0.7rem;
+    text-transform: none;
+    letter-spacing: 0;
+    font-family: var(--font-body);
+    opacity: 0.8;
+}
+
+.menu-item-external {
+    font-size: 1.1rem;
+    text-transform: none;
+    opacity: 0.7;
+}
+
+.menu-news-preview {
+    flex-shrink: 0;
+    margin: 10px 20px 20px;
+    padding: 14px 16px;
+    background: var(--bg-card);
+    border-radius: var(--card-radius);
+    color: var(--text);
+    cursor: pointer;
+    display: none;
+}
+
+.menu-news-preview-empty {
+    color: var(--text-on-card);
+    font-style: italic;
+}
+
+/* Preview-only truncation — the full text still shows untruncated on the
+   Info page's News tab; tapping this card navigates there (app.js's
+   'goto-news' action). */
+.menu-news-preview-text {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    line-clamp: 3;
+    overflow: hidden;
 }
 
 /* Install card */
