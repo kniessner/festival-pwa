@@ -65,7 +65,7 @@ export function getLoadedStages() {
  */
 export function warnStageNameMismatches(timetableFilters) {
     if (!timetableFilters || !Array.isArray(timetableFilters.stages)) return;
-    const polygonNames = new Set(getLoadedStages().map(f => f.properties.name));
+    const polygonNames = new Set(getLoadedStages().map(f => f.properties.slug));
     const timetableSlugs = new Set(
         timetableFilters.stages.map(s => s.value).filter(v => v !== 'walking-act'),
     );
@@ -107,7 +107,7 @@ export function getStage(location) {
         // modelled for stage polygons, so we only check the outer ring.
         const outerRing = feature.geometry.coordinates[0];
         if (isPointInPolygon(point, outerRing)) {
-            return feature.properties.name;
+            return feature.properties.slug;
         }
     }
     return false;

@@ -20,22 +20,24 @@ test('point strictly outside a unit square', () => {
 });
 
 test('a real bucht polygon: schweissperle from stages.geojson', () => {
-    // schweissperle in the current geojson is one of nine 200m x 200m squares
-    // strung along the north shore of Helenesee (all at ~52.283 N).
-    // Centre is (14.498, 52.283).
+    // schweissperle in the real geojson is an irregular hexagon on the
+    // north side of the festival site (~52.2763 N, 14.4954 E).
     const schweissperle = [
-        [14.4965, 52.2839],
-        [14.4995, 52.2839],
-        [14.4995, 52.2821],
-        [14.4965, 52.2821],
-        [14.4965, 52.2839],
+        [14.495101, 52.276442],
+        [14.495049, 52.276191],
+        [14.495705, 52.276123],
+        [14.495779, 52.27622],
+        [14.495844, 52.276294],
+        [14.495761, 52.276365],
+        [14.495691, 52.276425],
+        [14.495101, 52.276442],
     ];
-    // Dead centre — inside.
-    assert.equal(isPointInPolygon([14.498, 52.283], schweissperle), true);
+    // Roughly the centre of the polygon — inside.
+    assert.equal(isPointInPolygon([14.4954, 52.2763], schweissperle), true);
     // Well north of the polygon — outside.
-    assert.equal(isPointInPolygon([14.498, 52.290000], schweissperle), false);
-    // Just east of this polygon (in the gap before skalahara) — outside.
-    assert.equal(isPointInPolygon([14.5000, 52.283], schweissperle), false);
+    assert.equal(isPointInPolygon([14.4954, 52.2775], schweissperle), false);
+    // Just east of the polygon — outside.
+    assert.equal(isPointInPolygon([14.4965, 52.2763], schweissperle), false);
 });
 
 test('degenerate polygon (fewer than 3 unique vertices) never contains anything', () => {

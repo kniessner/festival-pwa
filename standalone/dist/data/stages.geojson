@@ -1,131 +1,604 @@
 {
   "type": "FeatureCollection",
-  "_note": "DUMMY POLYGONS v1 for the stage-autoscroll feature. Nine 200m x 200m squares strung west-to-east along the north shore of Helenesee (all at 52.283 N, safely on land ~200m north of the water). Larger size so approximate GPS-spoof apps (that only let you pan-drag a map, not enter exact lat/lng) still land inside a polygon. Center-to-center spacing is 0.004° longitude (~272m at this latitude) so there's a ~72m visible gap between adjacent stages. Slug order matches data/timetable.json filters.stages, excluding walking-act (roaming performers, no fixed location). Final polygons will be surveyed on-site later. Feature spec: standalone/docs/floor-detection-plan.md.",
   "features": [
     {
       "type": "Feature",
-      "properties": { "name": "community-corner dezentral" },
+      "properties": {
+        "slug": "mirage-arco"
+      },
       "geometry": {
         "type": "Polygon",
-        "coordinates": [[
-          [14.4765, 52.2839],
-          [14.4795, 52.2839],
-          [14.4795, 52.2821],
-          [14.4765, 52.2821],
-          [14.4765, 52.2839]
-        ]]
+        "coordinates": [
+          [
+            [
+              14.503117,
+              52.275695
+            ],
+            [
+              14.503063,
+              52.275535
+            ],
+            [
+              14.502922,
+              52.275333
+            ],
+            [
+              14.503318,
+              52.275273
+            ],
+            [
+              14.503354,
+              52.27567
+            ],
+            [
+              14.503117,
+              52.275695
+            ]
+          ]
+        ]
       }
     },
     {
       "type": "Feature",
-      "properties": { "name": "cuddle-poodle" },
+      "properties": {
+        "slug": "seeblick"
+      },
       "geometry": {
         "type": "Polygon",
-        "coordinates": [[
-          [14.4805, 52.2839],
-          [14.4835, 52.2839],
-          [14.4835, 52.2821],
-          [14.4805, 52.2821],
-          [14.4805, 52.2839]
-        ]]
+        "coordinates": [
+          [
+            [
+              14.501531,
+              52.275764
+            ],
+            [
+              14.500686,
+              52.275878
+            ],
+            [
+              14.50063,
+              52.275636
+            ],
+            [
+              14.500993,
+              52.275585
+            ],
+            [
+              14.501417,
+              52.275525
+            ],
+            [
+              14.501531,
+              52.275764
+            ]
+          ]
+        ]
       }
     },
     {
       "type": "Feature",
-      "properties": { "name": "dezentral" },
+      "properties": {
+        "slug": "zirkus-mond-turmbuehnchen"
+      },
       "geometry": {
         "type": "Polygon",
-        "coordinates": [[
-          [14.4845, 52.2839],
-          [14.4875, 52.2839],
-          [14.4875, 52.2821],
-          [14.4845, 52.2821],
-          [14.4845, 52.2839]
-        ]]
+        "coordinates": [
+          [
+            [
+              14.496925,
+              52.276516
+            ],
+            [
+              14.496939,
+              52.276411
+            ],
+            [
+              14.496837,
+              52.276226
+            ],
+            [
+              14.497339,
+              52.276163
+            ],
+            [
+              14.497492,
+              52.276436
+            ],
+            [
+              14.496925,
+              52.276516
+            ]
+          ]
+        ]
       }
     },
     {
       "type": "Feature",
-      "properties": { "name": "mirage" },
+      "properties": {
+        "slug": "zirkus-mond-zelt"
+      },
       "geometry": {
         "type": "Polygon",
-        "coordinates": [[
-          [14.4885, 52.2839],
-          [14.4915, 52.2839],
-          [14.4915, 52.2821],
-          [14.4885, 52.2821],
-          [14.4885, 52.2839]
-        ]]
+        "coordinates": [
+          [
+            [
+              14.496514,
+              52.276578
+            ],
+            [
+              14.496365,
+              52.276291
+            ],
+            [
+              14.496821,
+              52.276228
+            ],
+            [
+              14.496909,
+              52.276405
+            ],
+            [
+              14.496881,
+              52.276521
+            ],
+            [
+              14.496514,
+              52.276578
+            ]
+          ]
+        ]
       }
     },
     {
       "type": "Feature",
-      "properties": { "name": "neuro-divers" },
+      "properties": {
+        "slug": "schweissperle"
+      },
       "geometry": {
         "type": "Polygon",
-        "coordinates": [[
-          [14.4925, 52.2839],
-          [14.4955, 52.2839],
-          [14.4955, 52.2821],
-          [14.4925, 52.2821],
-          [14.4925, 52.2839]
-        ]]
+        "coordinates": [
+          [
+            [
+              14.495101,
+              52.276442
+            ],
+            [
+              14.495049,
+              52.276191
+            ],
+            [
+              14.495705,
+              52.276123
+            ],
+            [
+              14.495779,
+              52.27622
+            ],
+            [
+              14.495844,
+              52.276294
+            ],
+            [
+              14.495761,
+              52.276365
+            ],
+            [
+              14.495691,
+              52.276425
+            ],
+            [
+              14.495101,
+              52.276442
+            ]
+          ]
+        ]
       }
     },
     {
       "type": "Feature",
-      "properties": { "name": "schweissperle" },
+      "properties": {
+        "slug": "strandflitzer"
+      },
       "geometry": {
         "type": "Polygon",
-        "coordinates": [[
-          [14.4965, 52.2839],
-          [14.4995, 52.2839],
-          [14.4995, 52.2821],
-          [14.4965, 52.2821],
-          [14.4965, 52.2839]
-        ]]
+        "coordinates": [
+          [
+            [
+              14.492743,
+              52.276411
+            ],
+            [
+              14.492738,
+              52.276156
+            ],
+            [
+              14.493662,
+              52.276178
+            ],
+            [
+              14.493703,
+              52.276423
+            ],
+            [
+              14.492743,
+              52.276411
+            ]
+          ]
+        ]
       }
     },
     {
       "type": "Feature",
-      "properties": { "name": "skalahara" },
+      "properties": {
+        "slug": "community-corner"
+      },
       "geometry": {
         "type": "Polygon",
-        "coordinates": [[
-          [14.5005, 52.2839],
-          [14.5035, 52.2839],
-          [14.5035, 52.2821],
-          [14.5005, 52.2821],
-          [14.5005, 52.2839]
-        ]]
+        "coordinates": [
+          [
+            [
+              14.494331,
+              52.276443
+            ],
+            [
+              14.494361,
+              52.276218
+            ],
+            [
+              14.494723,
+              52.276213
+            ],
+            [
+              14.494737,
+              52.27644
+            ],
+            [
+              14.494331,
+              52.276443
+            ]
+          ]
+        ]
       }
     },
     {
       "type": "Feature",
-      "properties": { "name": "strandflitzer" },
+      "properties": {
+        "slug": "neustockland"
+      },
       "geometry": {
         "type": "Polygon",
-        "coordinates": [[
-          [14.5045, 52.2839],
-          [14.5075, 52.2839],
-          [14.5075, 52.2821],
-          [14.5045, 52.2821],
-          [14.5045, 52.2839]
-        ]]
+        "coordinates": [
+          [
+            [
+              14.484982,
+              52.276486
+            ],
+            [
+              14.485438,
+              52.276465
+            ],
+            [
+              14.485769,
+              52.276538
+            ],
+            [
+              14.485594,
+              52.276649
+            ],
+            [
+              14.485378,
+              52.276753
+            ],
+            [
+              14.485247,
+              52.276738
+            ],
+            [
+              14.485127,
+              52.276658
+            ],
+            [
+              14.484982,
+              52.276486
+            ]
+          ]
+        ]
       }
     },
     {
       "type": "Feature",
-      "properties": { "name": "zirkus-mond" },
+      "properties": {
+        "slug": "atlantis"
+      },
       "geometry": {
         "type": "Polygon",
-        "coordinates": [[
-          [14.5085, 52.2839],
-          [14.5115, 52.2839],
-          [14.5115, 52.2821],
-          [14.5085, 52.2821],
-          [14.5085, 52.2839]
-        ]]
+        "coordinates": [
+          [
+            [
+              14.484028,
+              52.276176
+            ],
+            [
+              14.483732,
+              52.275682
+            ],
+            [
+              14.484557,
+              52.275523
+            ],
+            [
+              14.484883,
+              52.276005
+            ],
+            [
+              14.484028,
+              52.276176
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "slug": "stroboklo"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.483769,
+              52.275357
+            ],
+            [
+              14.483739,
+              52.275216
+            ],
+            [
+              14.48417,
+              52.275191
+            ],
+            [
+              14.484246,
+              52.275329
+            ],
+            [
+              14.483769,
+              52.275357
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "slug": "schlupfloch"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.482824,
+              52.275148
+            ],
+            [
+              14.482937,
+              52.274953
+            ],
+            [
+              14.483482,
+              52.275105
+            ],
+            [
+              14.483393,
+              52.275332
+            ],
+            [
+              14.482932,
+              52.275381
+            ],
+            [
+              14.482824,
+              52.275148
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "slug": "porto-loco"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.482566,
+              52.274787
+            ],
+            [
+              14.482474,
+              52.274467
+            ],
+            [
+              14.482792,
+              52.27426
+            ],
+            [
+              14.483304,
+              52.274173
+            ],
+            [
+              14.483688,
+              52.274696
+            ],
+            [
+              14.483483,
+              52.274937
+            ],
+            [
+              14.482766,
+              52.274906
+            ],
+            [
+              14.482566,
+              52.274787
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "slug": "sektamt"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.482488,
+              52.274
+            ],
+            [
+              14.482706,
+              52.273684
+            ],
+            [
+              14.483073,
+              52.27377
+            ],
+            [
+              14.482776,
+              52.274075
+            ],
+            [
+              14.482488,
+              52.274
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "slug": "unterholz"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.483102,
+              52.272873
+            ],
+            [
+              14.482851,
+              52.272996
+            ],
+            [
+              14.482556,
+              52.273079
+            ],
+            [
+              14.482355,
+              52.272675
+            ],
+            [
+              14.482951,
+              52.272371
+            ],
+            [
+              14.483102,
+              52.272873
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "slug": "waldtraut"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.482227,
+              52.271946
+            ],
+            [
+              14.481786,
+              52.271634
+            ],
+            [
+              14.482273,
+              52.271422
+            ],
+            [
+              14.48269,
+              52.271687
+            ],
+            [
+              14.482872,
+              52.271942
+            ],
+            [
+              14.482227,
+              52.271946
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "slug": "mirage-glimmer"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.502813,
+              52.275712
+            ],
+            [
+              14.502683,
+              52.275373
+            ],
+            [
+              14.502916,
+              52.275326
+            ],
+            [
+              14.502998,
+              52.275436
+            ],
+            [
+              14.503047,
+              52.275529
+            ],
+            [
+              14.503106,
+              52.275688
+            ],
+            [
+              14.502813,
+              52.275712
+            ]
+          ]
+        ]
       }
     }
   ]
