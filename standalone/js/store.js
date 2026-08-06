@@ -67,6 +67,23 @@ export async function loadData() {
     }));
 }
 
+// Re-fetches just timetable.json and swaps it in — mirrors music.js's
+// refreshMusic() (same networkFirst SW strategy, see sw.js) so the Program
+// list / grid Timetable pick up edits made to the underlying JSON while the
+// app is sitting open in the background, not just on next full reload.
+// Callers must re-run mergeMusicIntoTimetable() afterwards, since this
+// replaces store.pageData.timetable wholesale (losing any previously merged
+// music.json events) and re-render whatever page is currently visible.
+export async function refreshTimetableData() {
+    try {
+        store.pageData.timetable = await fetchLocalized(DATA_FILES.timetable, store.lang);
+        return true;
+    } catch (e) {
+        console.error('Failed to refresh timetable', e);
+        return false;
+    }
+}
+
 // Manual "refresh" action, triggered from the drop-up menu. Bypasses the
 // service worker's caching entirely (see fetchLocalized's forceRefresh
 // param / sw.js's networkOnly()) so a stale offline cache can't silently
