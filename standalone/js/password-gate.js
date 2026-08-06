@@ -8,7 +8,7 @@ import { t } from './i18n.js';
 // app.js's init() (`if (!passwordGateOK()) await showPasswordGate();`).
 
 const GATE_KEY = 'bucht-2026-gate-passed';
-const GATE_PASSWORD = 'bucht26';
+const GATE_PASSWORD = 'Buchtischmuchti26!';
 
 export function passwordGateOK() {
     try { return localStorage.getItem(GATE_KEY) === '1'; }
