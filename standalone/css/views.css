@@ -1276,6 +1276,10 @@ span.tt-event-stage {
     overflow-x: auto;
     flex: 1 1 auto;
     min-width: 0;
+    /* Match .tt-day-tabs / .info-tabs / .gtt-scroll: hide the native
+       scrollbar in Firefox too (the ::-webkit rule below only covers
+       WebKit/Blink). */
+    scrollbar-width: none;
     padding: 4px 0 12px;
     -webkit-overflow-scrolling: touch;
 }
@@ -1350,6 +1354,12 @@ span.tt-event-stage {
        bar is suppressed. Firefox uses scrollbar-width, WebKit/Blink use
        the pseudo-element. */
     scrollbar-width: none;
+    /* Trap scroll gestures inside the grid on mobile: without this, once
+       the user hits the horizontal or vertical edge, the swipe chains
+       out to the page/browser — which on Android Chrome triggers pull-
+       to-refresh, on iOS scrolls the underlying document. `contain`
+       stops that chaining without disabling normal scrolling. */
+    overscroll-behavior: contain;
 }
 
 .gtt-scroll::-webkit-scrollbar {
