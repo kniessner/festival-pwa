@@ -7,7 +7,7 @@
  *   - Cross-origin assets        → Cache-First only for CORS/basic responses
  */
 
-const CACHE_VERSION = '1786003844';
+const CACHE_VERSION = '1786031884';
 const APP_NAME = 'bucht-standalone';
 const CACHE_NAME = `${APP_NAME}-v${CACHE_VERSION}`;
 
@@ -320,7 +320,7 @@ self.addEventListener('fetch', e => {
     if (isLocalAsset(url)) {
         if (url.pathname.includes('/data/') && url.searchParams.has('forceRefresh')) {
             e.respondWith(networkOnly(request));
-        } else if (url.pathname.endsWith('notifications.json') || url.pathname.endsWith('music.json')) {
+        } else if (url.pathname.endsWith('notifications.json') || url.pathname.endsWith('music.json') || url.pathname.endsWith('timetable.json')) {
             e.respondWith(networkFirst(request));
         } else if (url.pathname.includes('/data/')) {
             e.respondWith(staleWhileRevalidate(request, e));

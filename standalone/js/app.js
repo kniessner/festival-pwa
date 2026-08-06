@@ -1,4 +1,4 @@
-import { loadData, loadManifest, refreshAllData } from './store.js';
+import { loadData, loadManifest, refreshAllData, refreshTimetableData } from './store.js';
 import { loadPage, renderNav } from './router.js';
 import { setupSearch, scrollToItem, closeSearchModal } from './search.js';
 import { setDay, toggleFilterPanel, resetFilters, toggleEventDetail, setFilterValue, setEventType, prepareJumpToEvent } from './views/timetable.js';
@@ -72,19 +72,23 @@ async function init() {
     await showPushPromptIfNeeded();
     maybeShowNotifications();
     setupNotificationsRefresh();
-    setupMusicRefresh();
+    setupTimetableRefresh();
 }
 
-// Merging fresh music into store.pageData.timetable doesn't by itself update
-// whatever's already on screen — the Program list / grid Timetable render
-// once from a snapshot. If the user is looking at either when new music
-// data comes in, re-render so it actually becomes visible without them
-// having to navigate away and back.
-function setupMusicRefresh() {
+// Re-fetching timetable.json/music.json doesn't by itself update whatever's
+// already on screen — the Program list / grid Timetable render once from a
+// snapshot. If the user is looking at either when new data comes in
+// (edited timetable.json, a new/changed music.json entry), re-render so it
+// actually becomes visible without them having to navigate away and back.
+// Both files are re-fetched every time (not just music) since either can
+// change independently and mergeMusicIntoTimetable() needs a fresh
+// store.pageData.timetable as its base or a stale one gets re-merged.
+function setupTimetableRefresh() {
     document.addEventListener('visibilitychange', () => {
         if (document.visibilityState !== 'visible') return;
-        refreshMusic().then(ok => {
-            if (ok && ['timetable', 'grid'].includes(PAGES[store.currentPage]?.slug)) {
+        Promise.all([refreshTimetableData(), refreshMusic()]).then(([ttOk, musicOk]) => {
+            mergeMusicIntoTimetable();
+            if ((ttOk || musicOk) && ['timetable', 'grid'].includes(PAGES[store.currentPage]?.slug)) {
                 goToPage(store.currentPage);
             }
         });
