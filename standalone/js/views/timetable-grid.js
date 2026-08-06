@@ -125,6 +125,23 @@ function toContinuousMinutes(time) {
     return h * 60 + m;
 }
 
+/**
+ * Build the HTML for the vertical day-boundary dividers in horizontal mode.
+ * One `.gtt-day-divider` per gap between adjacent day-blocks (so
+ * `blocks.slice(1)` — no divider before the first block), positioned at the
+ * midpoint of that gap. `originOffset` shifts every divider right by that
+ * many pixels: 0 for the ruler (which is already offset past the sticky
+ * corner column), STAGE_LABEL_WIDTH for the track (which starts at x=0 and
+ * has the sticky stage-label column occupying the first STAGE_LABEL_WIDTH
+ * pixels). Kept as a small pure function so ruler and track can't drift
+ * apart in their offset arithmetic.
+ */
+export function buildDayDividers(blocks, originOffset) {
+    return blocks.slice(1).map(b =>
+        `<div class="gtt-day-divider" style="left:${originOffset + b._offset - DAY_GAP / 2}px"></div>`
+    ).join('');
+}
+
 // Horizontal mode's day-block offsets from the most recent render, keyed by day
 // value — lets the day tabs jump-scroll the continuous strip, and lets the
 // scroll handler below figure out which day is currently in view.
@@ -452,9 +469,18 @@ function renderHorizontalLayout({ data, header, track, blocks }) {
         }
     });
 
+    // Vertical day-boundary dividers, rendered both in the ruler (so the
+    // DAY_GAP doesn't visually inflate the last hour cell of each day-block)
+    // and in the track (across all rows). Ruler offsets are relative to
+    // .gtt-hour-ruler (no STAGE_LABEL_WIDTH); track offsets are relative to
+    // .gtt-track (which starts at x=0, so we add STAGE_LABEL_WIDTH to skip
+    // the sticky stage-label column).
+    const rulerDayDividers = buildDayDividers(blocks, 0);
+    const dividers = buildDayDividers(blocks, STAGE_LABEL_WIDTH);
+
     header.innerHTML = `
         <div class="gtt-corner gtt-corner-day" id="gttCornerDay" style="width:${STAGE_LABEL_WIDTH}px"></div>
-        <div class="gtt-hour-ruler" style="width:${gridWidth}px">${hourLabels.join('')}</div>
+        <div class="gtt-hour-ruler" style="width:${gridWidth}px">${hourLabels.join('')}${rulerDayDividers}</div>
     `;
 
     // Row height: the tallest lane-count that stage needs on any single day.
@@ -477,11 +503,6 @@ function renderHorizontalLayout({ data, header, track, blocks }) {
             <div class="gtt-stagerow" style="width:${gridWidth}px">${blocksHtml}</div>
         </div>`;
     }).join('');
-
-    // Vertical day-boundary dividers spanning every stage row.
-    const dividers = blocks.slice(1).map(b =>
-        `<div class="gtt-day-divider" style="left:${STAGE_LABEL_WIDTH + b._offset - DAY_GAP / 2}px"></div>`
-    ).join('');
 
     const todayBlock = blocks.find(b => b.dayValue === getEffectiveFestivalDay());
     let nowLine = '';
