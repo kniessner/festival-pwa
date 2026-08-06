@@ -136,7 +136,7 @@ function toContinuousMinutes(time) {
  * pixels). Kept as a small pure function so ruler and track can't drift
  * apart in their offset arithmetic.
  */
-export function buildDayDividers(blocks, originOffset) {
+function buildDayDividers(blocks, originOffset) {
     return blocks.slice(1).map(b =>
         `<div class="gtt-day-divider" style="left:${originOffset + b._offset - DAY_GAP / 2}px"></div>`
     ).join('');
