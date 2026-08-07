@@ -57,12 +57,17 @@ const WEST_STAGES = [
     'neustockland',
 ];
 
-// Combined geojson bbox centre (venues + food + stages) and starting zoom.
-// The elongated east-west axis fits a portrait phone once we rotate the
-// camera 90° CCW (bearing: -90 → north-on-the-right).
-const MAP_CENTER = [14.4935, 52.27465];
-const MAP_ZOOM = 14.8;
-const MAP_BEARING = -90;
+// Combined bbox of the 16 real stage polygons. Used at load to fit the
+// initial view to every stage the user might want to look at, with a bit
+// of padding for the page header and rotation slack. Recomputing this
+// live from the geojson works too but adds a source-loaded await that
+// visibly "jumps" the map — hard-coded values keep the first frame
+// already on-target.
+//   stages lng: 14.4826..14.5032, lat: 52.2713..52.2765
+const STAGES_BBOX = [
+    [14.4820, 52.2708], // SW
+    [14.5038, 52.2770], // NE
+];
 
 // ─── View ──────────────────────────────────────────────────────────────
 
@@ -130,22 +135,29 @@ function createMap(stage, gestureState) {
             // dreamy blue bg.jpg through the container behind it.
             layers: [],
         },
-        center: MAP_CENTER,
-        zoom: MAP_ZOOM,
+        // Initial bounds cover every stage polygon plus some padding. The
+        // rotation (bearing) is baked into `bounds` at construction time
+        // so the very first frame already shows the whole festival strip.
+        bounds: STAGES_BBOX,
+        fitBoundsOptions: {
+            // Pin the bearing INSIDE fit options so MapLibre computes the
+            // fit WITH the rotation baked in. Without this, fitBounds sets
+            // up the camera at bearing 0 first and only rotates afterwards,
+            // which on a landscape viewport lands on a wider zoom than we
+            // want and defeats the whole point of the portrait rotation.
+            bearing: -90,
+            padding: { top: 60, right: 30, bottom: 30, left: 30 },
+        },
         minZoom: 13,
         maxZoom: 19,
-        bearing: MAP_BEARING,
+        bearing: -90,
         pitch: 0,
-        // Disable attribution auto-collapse so the required OSM/MapTiler
-        // credit stays readable on a phone where it would otherwise fold
-        // into a tiny (i) button.
         attributionControl: { compact: false },
     });
 
-    map.addControl(
-        new maplibregl.NavigationControl({ visualizePitch: false }),
-        'top-right',
-    );
+    // Zoom-in/-out buttons and rotate-reset intentionally omitted — the
+    // whole interaction is pinch / drag on touch. Attribution stays
+    // (required by MapTiler + OSM).
 
     // Wire up gesture tracking so the resize handler above knows when to
     // skip. `touchstart` and `pointerdown` both trigger; either works.

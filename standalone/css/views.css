@@ -1841,10 +1841,23 @@ span.tt-event-stage {
 /* ── Festival Map view (interactive MapLibre) ─────────────────────────── */
 
 .page-map main {
-    /* The bg.jpg (defined on the app-wide body already) shows through the
-       MapLibre canvas wherever the style hasn't painted geometry. Nothing
-       page-map-specific to do here beyond removing default padding. */
+    /* The whole app is a phone-shaped column (max-width: 650px) for
+       readable text pages — the map view wants every horizontal pixel.
+       Break out of the column just on /map: full width, no side border,
+       no gradient (the bg.jpg carries the aesthetic edge-to-edge). */
+    max-width: none;
+    width: 100%;
+    border: none;
+    box-shadow: none;
+    background: transparent;
+    /* Remove default content padding so the MapLibre canvas can also
+       stretch the full width. */
     padding: 0;
+}
+
+.page-map .content {
+    padding: 0;
+    margin: 0;
 }
 
 .festival-map {
