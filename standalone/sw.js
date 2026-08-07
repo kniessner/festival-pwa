@@ -94,6 +94,7 @@ const SHELL_ASSETS = [
     './data/helenesee-shore.geojson',
     './data/venues.geojson',
     './data/food.geojson',
+    './data/osm-features.geojson',
     './data/en/timetable.json',
     './data/_manifest.json'
 ];
