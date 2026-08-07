@@ -198,6 +198,11 @@ async function build() {
     const fontCount = copyDir(path.join(ROOT_DIR, 'fonts'), path.join(DIST_DIR, 'fonts'));
     console.log(`   ✅ fonts/* (${fontCount} files, copied as-is)`);
 
+    if (fs.existsSync(path.join(ROOT_DIR, 'vendor'))) {
+        const vendorCount = copyDir(path.join(ROOT_DIR, 'vendor'), path.join(DIST_DIR, 'vendor'));
+        console.log(`   ✅ vendor/* (${vendorCount} files, copied as-is)`);
+    }
+
     copyJsonDir(path.join(ROOT_DIR, 'data'), path.join(DIST_DIR, 'data'));
     console.log('   ✅ data/**/*.json (minified)');
 
