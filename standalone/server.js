@@ -29,8 +29,36 @@ const MIME_TYPES = {
     '.woff': 'font/woff',
     '.woff2': 'font/woff2',
     '.ttf': 'font/ttf',
-    '.mp4': 'video/mp4'
+    '.mp4': 'video/mp4',
+    // PMTiles archives (a single-file, HTTP-range-served vector tile
+    // store). Served with an octet-stream mime; the important part is
+    // that this server honours HTTP Range requests — see the request
+    // handler below — without which the pmtiles client can't read tiles.
+    '.pmtiles': 'application/octet-stream'
 };
+
+// Parse a `bytes=start-end` Range header into concrete indices. Returns
+// null on missing / malformed header, `{ start, end }` otherwise, with
+// `end` clamped to the file size minus one.
+function parseRange(header, fileSize) {
+    if (!header) return null;
+    const m = /^bytes=(\d*)-(\d*)$/.exec(header);
+    if (!m) return null;
+    let start = m[1] ? Number(m[1]) : NaN;
+    let end = m[2] ? Number(m[2]) : NaN;
+    if (Number.isNaN(start) && Number.isNaN(end)) return null;
+    if (Number.isNaN(start)) {
+        // "-N" means "the last N bytes"
+        start = Math.max(0, fileSize - end);
+        end = fileSize - 1;
+    } else if (Number.isNaN(end)) {
+        end = fileSize - 1;
+    } else {
+        end = Math.min(end, fileSize - 1);
+    }
+    if (start > end || start >= fileSize) return null;
+    return { start, end };
+}
 
 function send404(res) {
     res.writeHead(404, { 'Content-Type': 'text/plain; charset=utf-8' });
@@ -59,13 +87,47 @@ const server = http.createServer((req, res) => {
             send404(res);
             return;
         }
+
+        // If the caller sent a Range header, serve a 206 Partial Content
+        // via a streamed read from the requested byte offset. Required by
+        // pmtiles (data/basemap.pmtiles). For non-range requests we fall
+        // through to the original readFile path.
+        if (req.headers.range) {
+            fs.stat(filePath, (statErr, fileStat) => {
+                if (statErr || !fileStat.isFile()) { send404(res); return; }
+                const range = parseRange(req.headers.range, fileStat.size);
+                if (!range) {
+                    res.writeHead(416, {
+                        'Content-Range': `bytes */${fileStat.size}`,
+                    });
+                    res.end();
+                    return;
+                }
+                const ext = path.extname(filePath).toLowerCase();
+                res.writeHead(206, {
+                    'Content-Type': MIME_TYPES[ext] || 'application/octet-stream',
+                    'Accept-Ranges': 'bytes',
+                    'Content-Range': `bytes ${range.start}-${range.end}/${fileStat.size}`,
+                    'Content-Length': range.end - range.start + 1,
+                });
+                if (req.method === 'HEAD') { res.end(); return; }
+                fs.createReadStream(filePath, {
+                    start: range.start, end: range.end,
+                }).pipe(res);
+            });
+            return;
+        }
+
         fs.readFile(filePath, (readErr, data) => {
             if (readErr) {
                 send404(res);
                 return;
             }
             const ext = path.extname(filePath).toLowerCase();
-            res.writeHead(200, { 'Content-Type': MIME_TYPES[ext] || 'application/octet-stream' });
+            res.writeHead(200, {
+                'Content-Type': MIME_TYPES[ext] || 'application/octet-stream',
+                'Accept-Ranges': 'bytes',
+            });
             res.end(req.method === 'HEAD' ? undefined : data);
         });
     });
