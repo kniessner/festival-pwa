@@ -7,7 +7,7 @@
  *   - Cross-origin assets        → Cache-First only for CORS/basic responses
  */
 
-const CACHE_VERSION = '1786126324';
+const CACHE_VERSION = '1786129731';
 const APP_NAME = 'bucht-standalone';
 const CACHE_NAME = `${APP_NAME}-v${CACHE_VERSION}`;
 
@@ -38,6 +38,8 @@ const SHELL_ASSETS = [
     './manifest.json',
     './vendor/maplibre-gl.js',
     './vendor/maplibre-gl.css',
+    './vendor/pmtiles.js',
+    './data/basemap.pmtiles',
     './icons/icon-192.png',
     './icons/icon-512.png',
     './icons/icon-180.png',
@@ -287,9 +289,94 @@ async function crossOriginAsset(request) {
     }
 }
 
+// ── HTTP Range serving from cache (for pmtiles) ────────────────────
+
+// Parse `bytes=A-B` → { start, end } or null. Only the plain single-range
+// form is supported; that's all pmtiles.js ever sends. Suffix ranges
+// (`bytes=-N`) are technically valid HTTP but pmtiles doesn't emit them,
+// so we skip that branch to keep the parser trivial.
+function parseByteRange(header, size) {
+    if (!header) return null;
+    const m = /^bytes=(\d+)-(\d*)$/.exec(header.trim());
+    if (!m) return null;
+    const start = Number(m[1]);
+    const end = m[2] === '' ? size - 1 : Math.min(Number(m[2]), size - 1);
+    if (Number.isNaN(start) || Number.isNaN(end)) return null;
+    if (start > end || start >= size) return null;
+    return { start, end };
+}
+
+// Serve a Range request from the SW cache when the full file is present.
+// Returns a 206 Partial Content response with the requested byte slice,
+// or null when the resource isn't cached (caller falls back to network).
+async function rangeFromCacheOrNetwork(request) {
+    const range = request.headers.get('range');
+    try {
+        const cache = await caches.open(CACHE_NAME);
+        // Match against the URL only — our precache stores a full-file
+        // Response keyed by the plain request; a range-header'd Request
+        // would fail to match unless we normalise.
+        const cached = await cache.match(new Request(request.url));
+        if (cached) {
+            const fullBuffer = await cached.arrayBuffer();
+            const parsed = parseByteRange(range, fullBuffer.byteLength);
+            if (!parsed) {
+                return new Response(null, {
+                    status: 416,
+                    headers: {
+                        'Content-Range': `bytes */${fullBuffer.byteLength}`,
+                    },
+                });
+            }
+            const slice = fullBuffer.slice(parsed.start, parsed.end + 1);
+            return new Response(slice, {
+                status: 206,
+                statusText: 'Partial Content',
+                headers: {
+                    'Content-Type':
+                        cached.headers.get('Content-Type') ||
+                        'application/octet-stream',
+                    'Content-Range':
+                        `bytes ${parsed.start}-${parsed.end}/${fullBuffer.byteLength}`,
+                    'Content-Length': String(slice.byteLength),
+                    'Accept-Ranges': 'bytes',
+                    'Cache-Control': 'public, max-age=31536000, immutable',
+                },
+            });
+        }
+    } catch (err) {
+        console.log('[SW] range from cache failed', err.message);
+    }
+    // Cache miss or error → hand to the network. If we're offline this
+    // rejects; a 503 keeps pmtiles's promise chain from swallowing the
+    // error silently.
+    try {
+        return await fetch(request);
+    } catch {
+        return new Response('Range not available offline', { status: 503 });
+    }
+}
+
 self.addEventListener('fetch', e => {
     const { request } = e;
     if (request.method !== 'GET') return;
+
+    // Range requests need special handling. Two cases:
+    //  • The resource IS precached (e.g. basemap.pmtiles): slice bytes
+    //    out of the cached full-file response and return a synthetic 206.
+    //    Without this, offline pmtiles reads fail; the network layer
+    //    can't reach the server, and cache-first would hand back a full
+    //    200 which pmtiles rejects with "content-length exceeding request".
+    //  • The resource ISN'T precached: pass through to the network so
+    //    the origin server can serve a real 206 (dev server does this;
+    //    prod hosts almost always do).
+    if (request.headers.has('range')) {
+        const url = new URL(request.url);
+        if (isLocalAsset(url)) {
+            e.respondWith(rangeFromCacheOrNetwork(request));
+        }
+        return;
+    }
 
     const url = new URL(request.url);
 
