@@ -172,12 +172,12 @@ function createMap(stage, gestureState) {
 
     map.on('load', () => addOverlayLayers(map));
     map.on('error', (e) => {
+        // Surface style / source errors to the console so a broken
+        // pmtiles fetch or missing tile URL doesn't fail silently. In
+        // prod this stays quiet unless something actually breaks.
         // eslint-disable-next-line no-console
         console.error('[festival-map] MapLibre error', e && (e.error || e));
     });
-    // Diagnostic hook for the dev console — lets a script grab the map
-    // instance without walking through pmtiles internals.
-    if (typeof window !== 'undefined') window.__festivalMap = map;
     return map;
 }
 
