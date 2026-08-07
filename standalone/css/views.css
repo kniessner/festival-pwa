@@ -1838,3 +1838,80 @@ span.tt-event-stage {
 .gtt-detail-done:active {
     transform: scale(0.98);
 }
+/* ── Festival Map view (interactive MapLibre) ─────────────────────────── */
+
+.page-map main {
+    /* The bg.jpg (defined on the app-wide body already) shows through the
+       MapLibre canvas wherever the style hasn't painted geometry. Nothing
+       page-map-specific to do here beyond removing default padding. */
+    padding: 0;
+}
+
+.festival-map {
+    /* Height is set at mount by views/map.js to fill the remaining
+       viewport under the page header — the header stack differs on phone
+       vs desktop, so a JS-measured height is more robust than calc(). */
+    position: relative;
+    width: 100%;
+    background: transparent;
+    overflow: hidden;
+    /* Let MapLibre own every gesture inside the container. Without this
+       the browser's default pan/pinch can intercept single-finger drags
+       on iOS before MapLibre sees them. */
+    touch-action: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.festival-map-error {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    padding: 24px;
+    text-align: center;
+}
+
+/* ── Popup styling (matches the cream + magenta palette of the map) ── */
+
+.maplibregl-popup .maplibregl-popup-content {
+    background: #f2e9dc !important;
+    color: #201020;
+    border-radius: 6px;
+    padding: 10px 12px !important;
+    box-shadow: 0 4px 14px rgba(30, 10, 30, 0.35) !important;
+    font-family: Lato, -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.maplibregl-popup-tip {
+    border-top-color: #f2e9dc !important;
+    border-bottom-color: #f2e9dc !important;
+}
+
+.festival-map-popup-title {
+    font-weight: 700;
+    font-size: 14px;
+    margin-bottom: 4px;
+    letter-spacing: 0.02em;
+}
+
+.festival-map-popup-cat {
+    display: inline-block;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #8b235f;
+    background: rgba(139, 35, 95, 0.1);
+    padding: 2px 6px;
+    border-radius: 3px;
+    margin-bottom: 6px;
+}
+
+.festival-map-popup-desc {
+    font-size: 12px;
+    line-height: 1.4;
+    color: #4a3040;
+    font-style: italic;
+}

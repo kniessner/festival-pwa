@@ -62,8 +62,11 @@ const SHELL_ASSETS = [
     './js/views/timetable.js',
     './js/views/timetable-grid.js',
     './js/views/info.js',
+    './js/views/map.js',
     './js/views/favorites.js',
     './manifest.json',
+    './vendor/maplibre-gl.js',
+    './vendor/maplibre-gl.css',
     './icons/icon-192.png',
     './icons/icon-512.png',
     './icons/icon-180.png',
@@ -72,6 +75,9 @@ const SHELL_ASSETS = [
     './data/info.json',
     './data/timetable.json',
     './data/stages.geojson',
+    './data/helenesee-shore.geojson',
+    './data/venues.geojson',
+    './data/food.geojson',
     './data/en/timetable.json',
     './data/_manifest.json'
 ];
