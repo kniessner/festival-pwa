@@ -1838,3 +1838,56 @@ span.tt-event-stage {
 .gtt-detail-done:active {
     transform: scale(0.98);
 }
+/* ── Festival map view ─────────────────────────────────────────────── */
+.page-map .content {
+    padding: 0;
+}
+
+.festival-map {
+    /* The stage is a viewport-locked window: the <img> inside can grow
+       beyond it via CSS transform, but the frame itself must not scroll.
+       `touch-action: none` disables the browser's default gesture handling
+       (scroll/pinch-zoom) so our pointer-events code owns every touch.
+       Height is set at runtime by views/map.js to fill the remaining
+       viewport below the page header — that avoids hard-coding a header
+       height that varies between mobile and desktop layouts. */
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    touch-action: none;
+    user-select: none;
+    background: var(--bg, #080943);
+}
+
+.festival-map-img {
+    /* Sized once by the browser to fit inside the stage; the transform
+       (translate + scale) is what our pinch/pan controller writes to. */
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    transform-origin: center center;
+    will-change: transform;
+    -webkit-user-drag: none;
+    user-select: none;
+    pointer-events: none;
+}
+
+.festival-map-hint {
+    position: absolute;
+    bottom: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 8px 14px;
+    background: rgba(0, 0, 0, 0.55);
+    color: var(--text, #f2e9dc);
+    font-size: 0.85rem;
+    border-radius: 999px;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    z-index: 1;
+}
+
+.festival-map-hint.hidden {
+    opacity: 0;
+}

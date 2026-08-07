@@ -7,7 +7,7 @@
  *   - Cross-origin assets        → Cache-First only for CORS/basic responses
  */
 
-const CACHE_VERSION = '1786032614';
+const CACHE_VERSION = '1786121497';
 const APP_NAME = 'bucht-standalone';
 const CACHE_NAME = `${APP_NAME}-v${CACHE_VERSION}`;
 
@@ -41,6 +41,7 @@ const SHELL_ASSETS = [
     './icons/icon-180.png',
     './images/frame.png',
     './images/datum.png',
+    './images/festival-map.png',
     './data/info.json',
     './data/timetable.json',
     './data/stages.geojson',
