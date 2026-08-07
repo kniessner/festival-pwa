@@ -19,10 +19,14 @@ const PNG_INFO_LINE = '#7a1c1c';
 const PNG_CREAM = '#f2e9dc';
 const PNG_STAGE_LINE = '#e94a8c';
 const PNG_SHORE_LINE = '#f2e9dc';
-// Additional palette used only by the pmtiles basemap style:
-//   LAND_DEEP  the deep dry-land magenta that dominates the PNG's west
-//   LAND_MID   a slightly lighter mid-magenta "earth" fill on top of it
-//   WATER      dark navy blue for lakes/rivers, matching Helenesee's tone
+// Colours used to paint the OSM-derived zone polygons (beaches + camping
+// grounds). Sandy tan for beaches leans into the shore aesthetic; softer
+// magenta for the campground blocks reads as "land within the festival
+// footprint" without competing with the stage magenta.
+const PNG_BEACH = '#e8c98a';
+const PNG_BEACH_LINE = '#a37b3e';
+const PNG_CAMPING = '#a53357';
+const PNG_CAMPING_LINE = '#7d1b2b';
 const PNG_LAND_DEEP = '#5c1c47';
 const PNG_LAND_MID = '#8b235f';
 const PNG_WATER = '#1e2a4a';
@@ -240,6 +244,58 @@ function buildStyle() {
 // ─── Overlay layers (geojsons on top of the basemap) ─────────────────
 
 function addOverlayLayers(map) {
+    // OSM zones — sandy Hauptstrand + Weststrand beach polygons and the
+    // three recreation-ground blocks (Eurocamp Helenesee, Bungalowsiedlung,
+    // an unnamed inland rec ground). Sit at the bottom of the overlay
+    // stack so all festival features render on top. See data/osm-features
+    // for the underlying tags.
+    map.addSource('osm-features-src', {
+        type: 'geojson',
+        data: 'data/osm-features.geojson',
+    });
+    map.addLayer({
+        id: 'osm-recreation',
+        source: 'osm-features-src',
+        type: 'fill',
+        filter: ['==', ['get', 'kind'], 'recreation'],
+        paint: {
+            'fill-color': PNG_CAMPING,
+            'fill-opacity': 0.55,
+        },
+    });
+    map.addLayer({
+        id: 'osm-recreation-outline',
+        source: 'osm-features-src',
+        type: 'line',
+        filter: ['==', ['get', 'kind'], 'recreation'],
+        paint: {
+            'line-color': PNG_CAMPING_LINE,
+            'line-width': 1.0,
+            'line-opacity': 0.75,
+        },
+    });
+    map.addLayer({
+        id: 'osm-beach',
+        source: 'osm-features-src',
+        type: 'fill',
+        filter: ['==', ['get', 'kind'], 'beach'],
+        paint: {
+            'fill-color': PNG_BEACH,
+            'fill-opacity': 0.75,
+        },
+    });
+    map.addLayer({
+        id: 'osm-beach-outline',
+        source: 'osm-features-src',
+        type: 'line',
+        filter: ['==', ['get', 'kind'], 'beach'],
+        paint: {
+            'line-color': PNG_BEACH_LINE,
+            'line-width': 0.8,
+            'line-opacity': 0.7,
+        },
+    });
+
     // Helenesee north shore — the OSM Helenesee polygon clipped to the
     // festival bbox on the north half (see standalone/data/helenesee-shore.geojson).
     map.addSource('shore-src', {
