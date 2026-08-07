@@ -19,14 +19,18 @@ const PNG_INFO_LINE = '#7a1c1c';
 const PNG_CREAM = '#f2e9dc';
 const PNG_STAGE_LINE = '#e94a8c';
 const PNG_SHORE_LINE = '#f2e9dc';
+// Additional palette used only by the pmtiles basemap style:
+//   LAND_DEEP  the deep dry-land magenta that dominates the PNG's west
+//   LAND_MID   a slightly lighter mid-magenta "earth" fill on top of it
+//   WATER      dark navy blue for lakes/rivers, matching Helenesee's tone
+const PNG_LAND_DEEP = '#5c1c47';
+const PNG_LAND_MID = '#8b235f';
+const PNG_WATER = '#1e2a4a';
 
-// MapTiler satellite verification underlay. Same key the fusion-map POC
-// used. The satellite tiles are online-only — everything else on this
-// map (JS, CSS, geojsons, bg image) is precached and works offline; the
-// satellite gracefully turns into empty tiles when offline, which the
-// user reads as "no ground image available", not "map broken".
+// MapTiler still hosts the glyph fontstack we use for labels via
+// text-font; the vendored maplibre-gl.js does not include any built-in
+// glyphs, so this URL is required until we self-host SDF glyphs (fontnik).
 const MAPTILER_KEY = '06rHa9F6cOokrirDiPlF';
-const SATELLITE_TILES = `https://api.maptiler.com/tiles/satellite-v2/{z}/{x}/{y}.jpg?key=${MAPTILER_KEY}`;
 
 // Font stack we ship as a first pass. MapTiler's fontstack doesn't
 // include Megan Display; Metropolis Bold Italic is the closest match.
@@ -124,17 +128,18 @@ function createMap(stage, gestureState) {
         return null;
     }
 
+    // Register the pmtiles:// protocol so MapLibre can read our
+    // precached Protomaps slice. addProtocol is a global registration —
+    // if this view is remounted the second call overwrites with the same
+    // handler, which is a no-op.
+    if (window.pmtiles) {
+        const protocol = new window.pmtiles.Protocol();
+        maplibregl.addProtocol('pmtiles', protocol.tile);
+    }
+
     const map = new maplibregl.Map({
         container: stage,
-        style: {
-            version: 8,
-            glyphs: `https://api.maptiler.com/fonts/{fontstack}/{range}.pbf?key=${MAPTILER_KEY}`,
-            sources: {},
-            // No background layer: the MapLibre canvas is transparent and
-            // the page's page-map body class (see views.css) paints the
-            // dreamy blue bg.jpg through the container behind it.
-            layers: [],
-        },
+        style: buildStyle(),
         // Initial bounds cover every stage polygon plus some padding. The
         // rotation (bearing) is baked into `bounds` at construction time
         // so the very first frame already shows the whole festival strip.
@@ -165,31 +170,78 @@ function createMap(stage, gestureState) {
     stage.addEventListener('pointerup', () => { gestureState.active = false; });
     stage.addEventListener('pointercancel', () => { gestureState.active = false; });
 
-    map.on('load', () => addLayers(map));
+    map.on('load', () => addOverlayLayers(map));
+    map.on('error', (e) => {
+        // eslint-disable-next-line no-console
+        console.error('[festival-map] MapLibre error', e && (e.error || e));
+    });
+    // Diagnostic hook for the dev console — lets a script grab the map
+    // instance without walking through pmtiles internals.
+    if (typeof window !== 'undefined') window.__festivalMap = map;
     return map;
 }
 
-// ─── Layer stack ───────────────────────────────────────────────────────
+// Tier A illustrated basemap: Protomaps vector data (data/basemap.pmtiles)
+// painted in the PNG's palette — land tinted magenta, water dark navy,
+// no roads, no POIs, no labels. Everything the user actually wants
+// (stages, venues, food) sits on top via addOverlayLayers().
+//
+// Layer names come from Protomaps' schema:
+// https://docs.protomaps.com/basemaps/layers  (earth, water, roads,
+// places, pois, landcover, landuse, boundaries, buildings). Tier A uses
+// only earth + water.
+function buildStyle() {
+    return {
+        version: 8,
+        glyphs: `https://api.maptiler.com/fonts/{fontstack}/{range}.pbf?key=${MAPTILER_KEY}`,
+        sources: {
+            basemap: {
+                type: 'vector',
+                url: 'pmtiles://data/basemap.pmtiles',
+                attribution:
+                    '\u00a9 <a href="https://openstreetmap.org" target="_blank">OpenStreetMap</a> \u00b7 <a href="https://protomaps.com" target="_blank">Protomaps</a>',
+            },
+        },
+        layers: [
+            // Solid dark-magenta "canvas" behind everything. Also fills
+            // the tiny strip outside the pmtiles bbox during panning.
+            {
+                id: 'background',
+                type: 'background',
+                paint: { 'background-color': PNG_LAND_DEEP },
+            },
+            // Land polygon from Protomaps' `earth` source-layer. 0.85
+            // opacity lets the darker background bleed through slightly
+            // for a bit of tonal variation.
+            {
+                id: 'earth',
+                source: 'basemap',
+                'source-layer': 'earth',
+                type: 'fill',
+                paint: {
+                    'fill-color': PNG_LAND_MID,
+                    'fill-opacity': 0.85,
+                },
+            },
+            // Water polygons — lakes, rivers, ocean. Dark navy blue
+            // mimics the PNG's Helenesee.
+            {
+                id: 'water',
+                source: 'basemap',
+                'source-layer': 'water',
+                type: 'fill',
+                paint: {
+                    'fill-color': PNG_WATER,
+                    'fill-opacity': 1.0,
+                },
+            },
+        ],
+    };
+}
 
-function addLayers(map) {
-    // Satellite verification underlay (raster-opacity 0.5). Sits at the
-    // bottom of the layer stack: illustrated polygons + labels render on
-    // top so the tester can visually check that a stage/venue polygon
-    // sits on the right patch of ground. Purely a QA layer for now — a
-    // later toggle can hide it for the user-facing view.
-    map.addSource('satellite-src', {
-        type: 'raster',
-        tiles: [SATELLITE_TILES],
-        tileSize: 256,
-        attribution: '© MapTiler © OpenStreetMap contributors',
-    });
-    map.addLayer({
-        id: 'satellite',
-        source: 'satellite-src',
-        type: 'raster',
-        paint: { 'raster-opacity': 0.5 },
-    });
+// ─── Overlay layers (geojsons on top of the basemap) ─────────────────
 
+function addOverlayLayers(map) {
     // Helenesee north shore — the OSM Helenesee polygon clipped to the
     // festival bbox on the north half (see standalone/data/helenesee-shore.geojson).
     map.addSource('shore-src', {

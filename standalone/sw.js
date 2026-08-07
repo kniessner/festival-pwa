@@ -67,6 +67,8 @@ const SHELL_ASSETS = [
     './manifest.json',
     './vendor/maplibre-gl.js',
     './vendor/maplibre-gl.css',
+    './vendor/pmtiles.js',
+    './data/basemap.pmtiles',
     './icons/icon-192.png',
     './icons/icon-512.png',
     './icons/icon-180.png',
@@ -319,6 +321,12 @@ async function crossOriginAsset(request) {
 self.addEventListener('fetch', e => {
     const { request } = e;
     if (request.method !== 'GET') return;
+
+    // Range requests (pmtiles) MUST bypass the cache-first / SWR paths —
+    // both hand back a full-file 200 from cache, which pmtiles rejects
+    // ("content-length exceeding request"). Fall through to the network
+    // and let node/server.js honour the Range header directly.
+    if (request.headers.has('range')) return;
 
     const url = new URL(request.url);
 
