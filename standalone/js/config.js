@@ -3,7 +3,8 @@ export const PAGES = [
     { slug: 'favorites', labelKey: 'nav.favorites', icon: 'plan.svg' },
     { slug: 'timetable', labelKey: 'nav.timetable', icon: 'program.svg' },
     { slug: 'grid', labelKey: 'nav.grid', icon: 'timetable.svg' },
-    { slug: 'info', labelKey: 'nav.info', icon: 'info.svg' }
+    { slug: 'info', labelKey: 'nav.info', icon: 'info.svg' },
+    { slug: 'map', labelKey: 'nav.festivalmap', icon: 'plan.svg' }
 ];
 export const DATA_FILES = { info: 'info.json', timetable: 'timetable.json', notifications: 'notifications.json', music: 'music.json' };
 export const FAV_KEY = 'bucht-favorites';
