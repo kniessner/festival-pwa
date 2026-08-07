@@ -203,6 +203,11 @@ async function build() {
         console.log(`   ✅ vendor/* (${vendorCount} files, copied as-is)`);
     }
 
+    if (fs.existsSync(path.join(ROOT_DIR, 'glyphs'))) {
+        const glyphCount = copyDir(path.join(ROOT_DIR, 'glyphs'), path.join(DIST_DIR, 'glyphs'));
+        console.log(`   ✅ glyphs/* (${glyphCount} files, copied as-is)`);
+    }
+
     copyJsonDir(path.join(ROOT_DIR, 'data'), path.join(DIST_DIR, 'data'));
     console.log('   ✅ data/**/*.json (minified)');
 

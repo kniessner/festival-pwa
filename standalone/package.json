@@ -14,6 +14,7 @@
   },
   "devDependencies": {
     "esbuild": "^0.28.1",
+    "fontnik": "^0.7.7",
     "sharp": "^0.35.3"
   },
   "allowScripts": {
