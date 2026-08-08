@@ -1881,7 +1881,54 @@ span.tt-event-stage {
     user-select: none;
 }
 
-/* Static PNG variant — the <img> lives inside .festival-map and gets
+/* Fade the map's canvas out to transparent on all four edges so the
+   page background (bg.jpg's dreamy navy, same tone as the water) bleeds
+   into the map's border and it reads as though the map has a soft
+   natural margin instead of a hard rectangular crop.
+
+   Applied to .maplibregl-canvas-container (not .festival-map itself)
+   so the attribution control and any other MapLibre controls in
+   .maplibregl-control-container stay crisp and readable.
+
+   How it works: two linear-gradient mask images, one horizontal, one
+   vertical, composited with `intersect` (Chrome/Firefox/Safari 15.4+)
+   or `-webkit-mask-composite: source-in` (older Safari). "Intersect"
+   means a pixel is only shown where BOTH gradients are opaque — the
+   center stays fully visible, edges fade linearly, and corners fade
+   extra (because both gradients are transparent there), giving a
+   pleasant rounded-corner feel without an explicit border-radius. */
+.festival-map .maplibregl-canvas-container {
+    --festival-map-fade: 44px;
+    -webkit-mask-image:
+        linear-gradient(to right,
+            transparent 0,
+            #000 var(--festival-map-fade),
+            #000 calc(100% - var(--festival-map-fade)),
+            transparent 100%),
+        linear-gradient(to bottom,
+            transparent 0,
+            #000 var(--festival-map-fade),
+            #000 calc(100% - var(--festival-map-fade)),
+            transparent 100%);
+    -webkit-mask-composite: source-in;
+    mask-image:
+        linear-gradient(to right,
+            transparent 0,
+            #000 var(--festival-map-fade),
+            #000 calc(100% - var(--festival-map-fade)),
+            transparent 100%),
+        linear-gradient(to bottom,
+            transparent 0,
+            #000 var(--festival-map-fade),
+            #000 calc(100% - var(--festival-map-fade)),
+            transparent 100%);
+    mask-composite: intersect;
+    mask-mode: alpha;
+    mask-repeat: no-repeat;
+    mask-size: 100% 100%;
+}
+
+/* Static (illustrated PNG) variant — the <img> lives inside .festival-map and gets
    translated/scaled by the pinch-zoom controller in map-static.js. */
 .festival-map-img {
     display: block;
