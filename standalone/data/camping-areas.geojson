@@ -1,4 +1,4 @@
 {"type":"FeatureCollection","features":[
-{"type":"Feature","properties":{"text":"Camp Taucher"},"geometry":{"type":"Polygon","coordinates":[[[14.4948074,52.276617],[14.4890248,52.2767016],[14.4889787,52.27735],[14.4943005,52.2782944],[14.4942545,52.2782944],[14.4948074,52.276617]]]}},
-{"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[14.4856778,52.2758263]}}
+{"type":"Feature","properties":{"text":"Camp Taucher"},"geometry":{"type":"Polygon","coordinates":[[[14.4948074,52.276617],[14.4890248,52.2767016],[14.4889787,52.27735],[14.4943005,52.2782944],[14.4948074,52.276617]]]}},
+{"type":"Feature","properties":{"text":"Camp Qualle"},"geometry":{"type":"Polygon","coordinates":[[[14.4948536,52.2768609],[14.4945691,52.2778704],[14.5002158,52.2786013],[14.5009269,52.2760428],[14.4948536,52.2768609]]]}}
 ]}
