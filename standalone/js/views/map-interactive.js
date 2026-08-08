@@ -188,7 +188,7 @@ function createMap(stage, gestureState) {
         // this value is only relevant if we later loosen maxBounds.
         // Kept at 12 so there's headroom without a redeploy.
         minZoom: 12,
-        maxZoom: 17,
+        maxZoom: 19,
         // Disable the built-in AttributionControl — it's hardcoded to
         // bottom-right. We add our own below at bottom-left instead.
         attributionControl: false,
