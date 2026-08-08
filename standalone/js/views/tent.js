@@ -53,6 +53,7 @@ const TENT_HEIGHT = 60;
 // the new `-fill` / `-outline` / `-point` / `-label` here or (better)
 // refactor both sites to consume the same source of truth.
 const DIM_LAYERS = [
+    'camping-areas-fill', 'camping-areas-outline', 'camping-areas-point', 'camping-areas-label',
     'gastro-fill',    'gastro-outline',    'gastro-point',    'gastro-label',
     'produktion-fill','produktion-outline','produktion-point','produktion-label',
     'stages-fill',    'stages-outline',    'stages-point',    'stages-label',
