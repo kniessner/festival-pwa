@@ -2039,6 +2039,66 @@ span.tt-event-stage {
         drop-shadow(0 0 1px var(--map-user-cone-halo-dark));
 }
 
+/* ── Attribution ─ vertical stripe up the left edge ──────────────────
+   MapLibre puts the attribution in .maplibregl-ctrl-attrib inside a
+   .maplibregl-ctrl-bottom-left wrapper. We rotate it −90° pivoted on
+   the wrapper's bottom-left corner so the whole line reads upward
+   from the corner instead of stretching horizontally across the map's
+   bottom edge.
+
+   Legal note: the OSM + Protomaps attribution is a copyright
+   requirement, so we preserve every character — rotation only, no
+   truncation. */
+.festival-map .maplibregl-ctrl-bottom-left {
+    /* Zero out the default 10 px inset so the rotation pivot sits
+       exactly at the map's bottom-left corner. */
+    margin: 0 !important;
+    padding: 0 !important;
+}
+.festival-map .maplibregl-ctrl-bottom-left .maplibregl-ctrl-attrib {
+    /* Rotate around the element's bottom-left corner so the pivot
+       and the map corner coincide. After rotation the element
+       extends upward along the left edge.
+
+       Gotcha: rotate(-90deg) around "0 100%" leaves the element
+       extending `originalHeight` px to the LEFT of the pivot (its
+       pre-rotation height becomes its post-rotation width, drawn on
+       the left side of the pivot). The map has `overflow: hidden`,
+       so without a compensating shift the whole line gets clipped
+       off-screen. margin-left before the transform pushes the pivot
+       right by the same amount so the visible text lands flush
+       against the map's left edge. */
+    transform-origin: 0 100%;
+    transform: rotate(-90deg);
+    white-space: nowrap;
+    /* Kill MapLibre's default pill background + shadow — we want a
+       thin cream line on the map, not a chip. */
+    background: transparent !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    padding: 4px 8px;
+    /* margin-left compensates for the rotated element extending
+       `originalHeight` px LEFT of the pivot (see gotcha above).
+       Every other side stays at 0. */
+    margin: 0 0 0 22px;
+    font-size: 10px;
+    line-height: 1.1;
+    color: rgba(242, 233, 220, 0.75);
+    /* The rotated element has an invisibly large hit box — disable
+       pointer events on the container itself so touches near the
+       left edge of the map don't get eaten. Individual links get
+       pointer events back below. */
+    pointer-events: none;
+}
+.festival-map .maplibregl-ctrl-bottom-left .maplibregl-ctrl-attrib a {
+    color: rgba(242, 233, 220, 0.9);
+    text-decoration: none;
+    pointer-events: auto;
+}
+.festival-map .maplibregl-ctrl-bottom-left .maplibregl-ctrl-attrib a:hover {
+    text-decoration: underline;
+}
+
 /* ── "Where is my tent?" draggable marker ────────────────────────────
    Vanilla-JS port of the React tent feature. The DOM is created in
    js/views/tent.js:startTent() with .style.width / height set in
