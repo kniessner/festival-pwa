@@ -1853,6 +1853,11 @@ span.tt-event-stage {
     /* Remove default content padding so the MapLibre canvas can also
        stretch the full width. */
     padding: 0;
+    /* base.css's main sets overflow-y: scroll (always-on scrollbar),
+       which reserves ~4px on the right edge and shows as a stripe of
+       page background beside the map. The map view fills the viewport
+       and has no scrollable text — turn the reserved gutter off. */
+    overflow-y: hidden;
 }
 
 .page-map .content {
@@ -1916,6 +1921,83 @@ span.tt-event-stage {
    it a 16px-padded wrapper of the same shape as the timetable's row. */
 .map-tabs-wrap {
     padding: 0 16px;
+}
+
+/* ── User location marker + heading cone ─────────────────────────────── */
+
+/* Palette hooks for js/views/user-location.js. Kept local to this
+   file (not tokens.css) because the map view is the only consumer,
+   and the tones are picked to read against the illustrated magenta
+   land — not against app-wide surfaces. */
+:root {
+    --map-user-location-dot: #f2e9dc;
+    --map-user-location-accuracy: rgba(242, 233, 220, 0.22);
+    --map-user-cone-halo-light: rgba(242, 233, 220, 0.85);
+    --map-user-cone-halo-dark: rgba(28, 7, 22, 0.4);
+}
+
+/* MapLibre paints .maplibregl-user-location-dot into the marker's DOM
+   itself. We repaint it (and its pulse pseudo-element) with our cream
+   accent so it reads against the illustrated magenta land. */
+.maplibregl-user-location-dot {
+    background-color: var(--map-user-location-dot) !important;
+}
+.maplibregl-user-location-dot::before {
+    background-color: var(--map-user-location-dot) !important;
+}
+.maplibregl-user-location-accuracy-circle {
+    background-color: var(--map-user-location-accuracy) !important;
+}
+
+/* Wrapper for the custom marker. Dot-sized so its center coincides
+   with the dot center — the cone is positioned relative to that
+   center, so Marker.setRotation pivots the cone tip on the dot. */
+.user-location-marker {
+    position: relative;
+    width: 18px;
+    height: 18px;
+}
+
+/* Heading cone. Sits above the dot (pre-rotation), pointing up.
+   Marker.setRotation(h) rotates the whole wrapper, so the cone tip
+   traces the compass heading around the dot. Hidden by default;
+   fades in when the has-heading modifier is set, which only happens
+   after the first orientation event with usable values. */
+.user-heading-cone {
+    position: absolute;
+    /* Push the tip just outside the dot edge instead of the wrapper
+       center. The wrapper is 18px, MapLibre's dot is 15×15, so a 10px
+       offset clears the dot in every rotation with a 1px gap. */
+    bottom: calc(50% + 10px);
+    left: 50%;
+    /* iOS-Maps-like proportions: wide angle (~80°), short reach. The
+       SVG viewBox (60x36) drives the angle; this box just sets pixel
+       scale. Centered on the dot via margin-left = -width/2. */
+    width: 60px;
+    height: 36px;
+    margin-left: -30px;
+    pointer-events: none;
+    /* SVG gradient stops resolve `stop-color: currentColor`, so this
+       is the single knob for the cone color. */
+    color: var(--map-user-location-dot);
+    opacity: 0;
+    transition: opacity 0.25s ease-out;
+}
+
+.user-location-marker.has-heading .user-heading-cone {
+    opacity: 1;
+}
+
+.user-heading-cone svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    /* Two stacked shadows so the cone reads against any basemap tone.
+       Soft cream glow for contrast on the dark magenta land; thin
+       dark edge for contrast on the sandy beach strip. */
+    filter:
+        drop-shadow(0 0 1.5px var(--map-user-cone-halo-light))
+        drop-shadow(0 0 1px var(--map-user-cone-halo-dark));
 }
 
 .map-body {

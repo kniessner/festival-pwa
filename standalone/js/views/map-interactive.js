@@ -8,6 +8,7 @@ import { escapeHtml } from '../ui.js';
 import { attachStageSizing } from './map-common.js';
 import basemapLayers from './basemap-layers.js';
 import { PALETTE } from './map-palette.js';
+import { startUserLocation } from './user-location.js';
 
 // ─── Overlay palette ──────────────────────────────────────────────────
 //
@@ -58,6 +59,17 @@ const STAGES_BBOX = [
     [14.5038, 52.2770], // NE
 ];
 
+// Rough pan-limit bounds — keep the user from scrolling far outside
+// the festival footprint. Roughly ±500 m around STAGES_BBOX (≈ 0.008°
+// longitude / 0.005° latitude at this latitude): wide enough that a
+// two-finger drag doesn't feel cramped, tight enough that the user
+// never ends up staring at empty magenta land far from anything.
+// Jacob will finetune after review.
+const MAP_MAX_BOUNDS = [
+    [14.4750, 52.2650], // SW
+    [14.5120, 52.2830], // NE
+];
+
 // ─── View ──────────────────────────────────────────────────────────────
 
 export function renderInteractiveMap(container) {
@@ -102,6 +114,13 @@ export function renderInteractiveMap(container) {
         cancelled = true;
         cancelAnimationFrame(rafId);
         detachSizing();
+        // User-location has its own listeners (watchPosition,
+        // deviceorientation, visibilitychange, pointerdown-for-iOS).
+        // Stop them BEFORE map.remove() so a straggling orientation
+        // event can't try to write to a detached marker.
+        if (map && typeof map.__userLocationStop === 'function') {
+            try { map.__userLocationStop(); } catch (_) { /* nothing */ }
+        }
         try {
             if (map) map.remove();
         } catch (err) {
@@ -134,6 +153,11 @@ function createMap(stage, gestureState) {
         // rotation (bearing) is baked into `bounds` at construction time
         // so the very first frame already shows the whole festival strip.
         bounds: STAGES_BBOX,
+        // Pan-limit — the user physically can't drag the camera outside
+        // this bbox. MapLibre also implicitly bumps minZoom so the user
+        // can't zoom out past the point where maxBounds would fit inside
+        // the viewport, which is exactly what we want.
+        maxBounds: MAP_MAX_BOUNDS,
         fitBoundsOptions: {
             // Pin the bearing INSIDE fit options so MapLibre computes the
             // fit WITH the rotation baked in. Without this, fitBounds sets
@@ -161,6 +185,14 @@ function createMap(stage, gestureState) {
     stage.addEventListener('pointercancel', () => { gestureState.active = false; });
 
     map.on('load', () => addOverlayLayers(map));
+
+    // User-location dot + heading cone. Started once the style is
+    // ready so the marker can attach cleanly; the returned stop
+    // function is stashed on the map for renderInteractiveMap's
+    // teardown callback to invoke.
+    map.on('load', () => {
+        map.__userLocationStop = startUserLocation(map);
+    });
 
     // Track whether we've already surfaced a hard failure so we don't
     // paint the error overlay on top of a working map when a
