@@ -26,6 +26,7 @@
 import { safeGetJSON, safeSetJSON } from '../helpers/safe-storage.js';
 import { t } from '../i18n.js';
 import { FELT_LAYERS } from './map-layers.js';
+import { isPointInPolygon } from '../helpers/point-in-polygon.js';
 
 // ─── Config ──────────────────────────────────────────────────────────
 
@@ -39,6 +40,26 @@ export const TENT_INITIAL_POSITION = [14.502449976129924, 52.27739273160731];
 // personal and re-used across festival editions if the user keeps the
 // app installed.
 const TENT_POSITION_KEY = 'bucht-tent-position';
+
+// Allowed drop area for the tent — an irregular polygon covering the
+// camping strip. On dragend we snap the tent back into this area if
+// the user released outside it. Vertex order is Jacob's (2026-08-08);
+// the ring is auto-closed by the ray-cast algorithm (j = length - 1),
+// so no explicit closing vertex needed. Ray-casting uses the even-odd
+// rule — self-intersecting polygons may leave interior "holes", but
+// so far the geometry Jacob provided doesn't hit a case where that
+// matters for user experience.
+const TENT_ALLOWED_AREA = [
+    [14.4888418, 52.2768557],
+    [14.4888418, 52.2774039],
+    [14.5136061, 52.2807681],
+    [14.5068041, 52.2755847],
+    [14.5293688, 52.2762825],
+];
+
+function isInAllowedArea(lng, lat) {
+    return isPointInPolygon([lng, lat], TENT_ALLOWED_AREA);
+}
 
 // Marker base size + zoom-scaling constants copied verbatim from the
 // React port. `Math.pow(2, zoom) * INTERPOLATION_FACTOR` is the
@@ -265,11 +286,57 @@ export function startTent(map) {
     // stable reference by identity.
     const snapshotRef = { current: null };
 
-    // Drag lifecycle: dim overlays on start, persist + restore on end.
-    marker.on('dragstart', () => applyDragPaint(map, snapshotRef));
+    // Track the last position the tent passed through inside the
+    // allowed area during the current drag. On dragend, if the final
+    // pos is outside the area, we snap the tent back to this value.
+    // Falls back to TENT_INITIAL_POSITION if the whole drag stayed
+    // outside (theoretical — the tent starts inside the area, so this
+    // path is defensive).
+    let lastValidPos = null;
+
+    // Drag lifecycle:
+    //   dragstart: dim non-camping overlays, capture initial valid pos.
+    //   drag:      per-frame area check. If pointer strays outside the
+    //              allowed polygon, tag the marker with .invalid so
+    //              CSS fades it to signal "can't drop here". If inside,
+    //              remember the pos as the fallback snap-target.
+    //   dragend:   if final pos is inside → persist. If outside → snap
+    //              back to lastValidPos and persist that.
+    marker.on('dragstart', () => {
+        applyDragPaint(map, snapshotRef);
+        const p = marker.getLngLat();
+        lastValidPos = isInAllowedArea(p.lng, p.lat) ? { lng: p.lng, lat: p.lat } : null;
+    });
+    marker.on('drag', () => {
+        const { lng, lat } = marker.getLngLat();
+        const el = marker.getElement();
+        if (isInAllowedArea(lng, lat)) {
+            lastValidPos = { lng, lat };
+            el.classList.remove('invalid');
+        } else {
+            el.classList.add('invalid');
+        }
+    });
     marker.on('dragend', () => {
         const { lng, lat } = marker.getLngLat();
-        savePosition(lng, lat);
+        const el = marker.getElement();
+        el.classList.remove('invalid');
+
+        let finalLng, finalLat;
+        if (isInAllowedArea(lng, lat)) {
+            finalLng = lng;
+            finalLat = lat;
+        } else if (lastValidPos) {
+            finalLng = lastValidPos.lng;
+            finalLat = lastValidPos.lat;
+            marker.setLngLat([finalLng, finalLat]);
+        } else {
+            finalLng = TENT_INITIAL_POSITION[0];
+            finalLat = TENT_INITIAL_POSITION[1];
+            marker.setLngLat([finalLng, finalLat]);
+        }
+
+        savePosition(finalLng, finalLat);
         restorePaint(map, snapshotRef);
         // Close the "drag me" hint permanently after first placement —
         // subsequent drags don't need re-onboarding.
