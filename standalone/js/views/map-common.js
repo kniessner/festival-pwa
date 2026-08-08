@@ -6,18 +6,58 @@
 // polygon over the festival area. Format is MapLibre's LngLatBounds:
 // [[minLng, minLat], [maxLng, maxLat]].
 //
-// Loosened to ≈ 3 km lat span so the mobile viewport can fit the
-// whole festival at a comfortable zoom on load. Longitude range
-// unchanged from Jacob's round-4 polygon; latitude range pushed
-// ±670 m beyond it (N/S ends).
+// The venue's native N-S extent (3.22 km) is slightly larger than
+// its E-W extent (2.91 km). Two bounds sets:
 //
-// Exported here (not in map-interactive.js) so both the interactive
-// map and the map-controls module can read it without pulling in
-// each other.
+//   MAP_MAX_BOUNDS         tight, matches the venue.
+//                          Used for portrait viewports (mobile PWA,
+//                          which is orientation-locked to portrait
+//                          per manifest.json). Anyone actually AT the
+//                          festival opening the app on their phone.
+//
+//   MAP_MAX_BOUNDS_WIDE    N-S loosened by ~1.1 km each side.
+//                          Used for landscape-shaped viewports
+//                          (desktop, rotated browser tab). Fixes the
+//                          "only diagonal panning" bug: when the
+//                          viewport aspect ratio is wider than the
+//                          bounds aspect ratio, MapLibre's implicit
+//                          minZoom clamps N-S to zero-slack while
+//                          leaving E-W free — combined with the
+//                          -73° bearing, the only unclamped world
+//                          axis lands on the screen as a diagonal.
+//
+// Exported here so both the interactive map and the map-controls
+// module can read them without pulling in each other. `MAP_MAX_BOUNDS`
+// stays exported for legacy call sites and matches the tight bounds
+// used by isNearFestival() below (looser bounds would over-broaden
+// the "is the user at the festival" check).
 export const MAP_MAX_BOUNDS = [
     [14.478404931523073, 52.26177184691164],   // SW
     [14.521079717325279, 52.290739744887185],  // NE
 ];
+
+export const MAP_MAX_BOUNDS_WIDE = [
+    [14.478404931523073, 52.25177],            // SW: ~1.1 km south of tight
+    [14.521079717325279, 52.30074],            // NE: ~1.1 km north of tight
+];
+
+/**
+ * Pick the right maxBounds for the current viewport. Called once at
+ * map init (map-interactive.js). Not re-computed on resize — window
+ * resizes mid-session are rare (installed PWA is portrait-locked;
+ * a browser-tab user rotating their phone mid-map-view is a<1%
+ * scenario). If we ever need it, call `map.setMaxBounds(...)` from
+ * a resize listener.
+ *
+ * The threshold (1.1) is deliberately just above the bounds' own
+ * aspect ratio (2.91 / 3.22 = 0.90): anything materially wider than
+ * the venue-shape needs the wide bounds; anything portrait-shaped
+ * stays on the tight ones.
+ */
+export function pickMaxBounds(viewportWidth, viewportHeight) {
+    const aspect = viewportWidth / viewportHeight;
+    return aspect > 1.1 ? MAP_MAX_BOUNDS_WIDE : MAP_MAX_BOUNDS;
+}
 
 // Buffer around MAP_MAX_BOUNDS for the "is the user actually at the
 // festival?" check used by the locate-me control. 0.05 deg is

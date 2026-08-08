@@ -8,11 +8,15 @@
 // grows to fit the widest label but is bounded so it never crosses
 // the right edge on narrow phones.
 //
-// Dismissal: backdrop click, escape key, entry-pick. The map beneath
-// the popover stays fully interactive (backdrop is pointer-events:
-// none except a single transparent tap-target strip below the card
-// itself, which is where an outside-click actually lands). We match
-// fusion's behaviour: pan/pinch on the map does NOT close the popover.
+// Dismissal: backdrop click, escape key, entry-pick. Behaviour:
+//   - the overlay wrapper has `pointer-events: none` (see views.css
+//     .festival-map-flyto) so pan / pinch / feature-tap on the map
+//     underneath all pass through untouched;
+//   - the card itself has `pointer-events: auto` so its buttons work;
+//   - close-on-outside-click is done by a document-level `click`
+//     listener that fires only for a tap-and-release (not for a
+//     pan/pinch gesture on the map) — registered inside a rAF so the
+//     opening click on the fly-to button doesn't self-close.
 //
 // Single-instance: only one popover per stage. Re-opening closes an
 // existing one first, so a stray click can't spawn two side-by-side.
@@ -203,7 +207,7 @@ function handleEntryPick(map, stage, poi) {
 // our moveend listener and the closure is GC'd with the rest of the
 // map — no module-scoped variables hold on to it across mounts.
 //
-// Two ways an armed pulse can be cancelled:
+// Three ways an armed pulse can be cancelled:
 //   (a) A second POI tap arrives during the previous flyTo. We detach
 //       the old handler before arming the new one — without this,
 //       MapLibre would fire moveend when it aborts the first flyTo
@@ -212,8 +216,14 @@ function handleEntryPick(map, stage, poi) {
 //       which aborts the animation. We detach the handler so the
 //       ring doesn't appear at the abandoned target while the user is
 //       already looking somewhere else.
+//   (c) ANOTHER programmatic flyTo starts (e.g. the locate-me button
+//       is tapped mid-flight). That path lives in map-controls.js
+//       and calls cancelPendingPulse() explicitly — this handler
+//       exports it so the locate button can reach it. Explicit is
+//       safer than depending on MapLibre's event ordering when a
+//       flyTo is interrupted by another flyTo.
 // ─────────────────────────────────────────────────────────────────────────────────────
-function cancelPendingPulse(map) {
+export function cancelPendingPulse(map) {
     const s = map.__pulseState;
     if (!s) return;
     if (s.moveendHandler) map.off('moveend', s.moveendHandler);
