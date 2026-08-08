@@ -20,13 +20,11 @@
 import { t } from '../i18n.js';
 import { store } from '../store.js';
 import { POI_LIST } from '../helpers/festival-pois.js';
+import { MAP_CLOSE_ZOOM, MAP_FLYTO_DURATION_MS } from './map-common.js';
 
-// Fly-to camera behaviour. Zoom is deep on purpose — the user
-// picked a specific POI, so the fly-to should land close enough
-// that the exact location is unmistakable. maxZoom is 19, so 18
-// leaves one full pinch of headroom.
-const FLYTO_ZOOM = 18;
-const FLYTO_DURATION_MS = 1200;
+// Fly-to camera behaviour. Zoom + duration shared with the locate-me
+// button via map-common.js so the two controls can't drift out of
+// sync. See MAP_CLOSE_ZOOM there for rationale.
 // Delay before the ripple auto-removes. Must be at least as long as
 // the .poi-pulse-ring CSS animation (1.8 s) plus a small buffer.
 const PULSE_MARKER_LIFETIME_MS = 2300;
@@ -54,13 +52,32 @@ export function openFlyToMenu(map, stage) {
 
     const overlay = buildOverlay(map, stage);
     stage.appendChild(overlay);
+    const card = overlay.querySelector('.festival-map-flyto-card');
 
     const onKeyDown = (e) => {
         if (e.key === 'Escape') closeFlyToMenu(stage);
     };
     document.addEventListener('keydown', onKeyDown);
 
-    state.set(stage, { overlay, onKeyDown });
+    // Outside-click dismissal. Deferred one animation frame so the
+    // POINTERDOWN/CLICK sequence that opened the menu (via the fly-to
+    // button) doesn't itself land in this listener and close on the
+    // same tick.
+    //
+    // Uses `click`, not `pointerdown`, on purpose: `pointerdown` would
+    // fire on the first frame of a pan/pinch gesture over the map and
+    // eagerly close the menu, contradicting Jacob's design intent that
+    // the map stays fully interactive underneath. `click` only fires
+    // for a tap-and-release with negligible movement, so a gesture on
+    // the map goes through to MapLibre without dismissing the popover.
+    const onDocClick = (e) => {
+        if (!card.contains(e.target)) closeFlyToMenu(stage);
+    };
+    const rafId = requestAnimationFrame(() => {
+        document.addEventListener('click', onDocClick);
+    });
+
+    state.set(stage, { overlay, onKeyDown, onDocClick, rafId, triggerEl: document.activeElement });
 
     // Focus the first entry so keyboard users can Tab through the list
     // immediately. rAF so the browser has painted the popover first
@@ -76,8 +93,19 @@ export function closeFlyToMenu(stage) {
     const entry = state.get(stage);
     if (!entry) return;
     document.removeEventListener('keydown', entry.onKeyDown);
+    // rafId may be pending (menu opened and closed within one frame)
+    // or already-fired (typical). cancel it either way; also detach
+    // the listener in case it already installed.
+    if (entry.rafId != null) cancelAnimationFrame(entry.rafId);
+    if (entry.onDocClick) document.removeEventListener('click', entry.onDocClick);
     if (entry.overlay.parentNode) entry.overlay.parentNode.removeChild(entry.overlay);
     state.delete(stage);
+    // Restore focus to whatever was focused before we opened — usually
+    // the fly-to button. Keyboard / screen-reader users otherwise get
+    // dropped on <body> and lose their place.
+    if (entry.triggerEl && typeof entry.triggerEl.focus === 'function') {
+        try { entry.triggerEl.focus(); } catch (_) { /* nothing */ }
+    }
 }
 
 export function isFlyToMenuOpen(stage) {
@@ -89,17 +117,19 @@ export function isFlyToMenuOpen(stage) {
 function buildOverlay(map, stage) {
     const overlay = document.createElement('div');
     overlay.className = POPOVER_CLASS;
-
-    // Backdrop = the container itself outside the card. Clicking it
-    // closes the popover; clicks INSIDE the card don't bubble to it.
-    overlay.addEventListener('click', (e) => {
-        if (e.target === overlay) closeFlyToMenu(stage);
-    });
+    // No click handler on the overlay itself: dismissal is done by
+    // the document-level `click` listener wired in openFlyToMenu, so
+    // that pan/pinch on the map underneath doesn't trigger a close.
 
     const card = document.createElement('div');
     card.className = 'festival-map-flyto-card';
     card.setAttribute('role', 'menu');
     card.setAttribute('aria-label', t('map.flyto.title'));
+    // Belt-and-braces stopPropagation on the card: even though the
+    // document-level close-on-outside listener explicitly checks
+    // `!card.contains(e.target)`, stopping here means a picky future
+    // refactor of that listener can't accidentally close on a click
+    // inside the card.
     card.addEventListener('click', (e) => e.stopPropagation());
 
     // Small header so the list reads as intentional, not just a stack
@@ -147,8 +177,8 @@ function handleEntryPick(map, stage, poi) {
 
     map.flyTo({
         center: target,
-        zoom: FLYTO_ZOOM,
-        duration: FLYTO_DURATION_MS,
+        zoom: MAP_CLOSE_ZOOM,
+        duration: MAP_FLYTO_DURATION_MS,
         // essential = don't respect prefers-reduced-motion. The
         // animation IS the "here you go" feedback — a jump would
         // leave the user disoriented.
@@ -165,23 +195,63 @@ function handleEntryPick(map, stage, poi) {
     armPulseOnMoveEnd(map, target);
 }
 
-// ─── Ripple state (module-scoped: the fly-to menu is a singleton per
-// map instance anyway; multiple maps would each mount their own popover
-// but share this state harmlessly as long as .off() unhooks the right
-// handler). ─────────────────────────────────────────────────────────
-let pendingPulseHandler = null;
+// ─── Ripple lifecycle
+//
+// Handler state is stashed on the map instance (map.__pulseState) so
+// there's exactly one per MapLibre map. If the user tears down /map
+// while a flyTo is in flight, MapLibre's .off() during .remove() drops
+// our moveend listener and the closure is GC'd with the rest of the
+// map — no module-scoped variables hold on to it across mounts.
+//
+// Two ways an armed pulse can be cancelled:
+//   (a) A second POI tap arrives during the previous flyTo. We detach
+//       the old handler before arming the new one — without this,
+//       MapLibre would fire moveend when it aborts the first flyTo
+//       and paint the ring at the OLD coord.
+//   (b) The user starts a gesture (drag/pinch/zoom) during the flyTo,
+//       which aborts the animation. We detach the handler so the
+//       ring doesn't appear at the abandoned target while the user is
+//       already looking somewhere else.
+// ─────────────────────────────────────────────────────────────────────────────────────
+function cancelPendingPulse(map) {
+    const s = map.__pulseState;
+    if (!s) return;
+    if (s.moveendHandler) map.off('moveend', s.moveendHandler);
+    if (s.gestureHandler) {
+        map.off('dragstart',  s.gestureHandler);
+        map.off('pitchstart', s.gestureHandler);
+        map.off('zoomstart',  s.gestureHandler);
+    }
+    map.__pulseState = null;
+}
 
 function armPulseOnMoveEnd(map, coord) {
-    if (pendingPulseHandler) {
-        map.off('moveend', pendingPulseHandler);
-        pendingPulseHandler = null;
-    }
-    const handler = () => {
-        pendingPulseHandler = null;
+    cancelPendingPulse(map);
+
+    // Named handlers so both firing and gesture-cancel can .off()
+    // by reference.
+    const moveendHandler = () => {
+        // moveend fires ONCE (we used .once). Detach the gesture
+        // guards manually so they don't outlive the pulse.
+        if (map.__pulseState) {
+            map.off('dragstart',  map.__pulseState.gestureHandler);
+            map.off('pitchstart', map.__pulseState.gestureHandler);
+            map.off('zoomstart',  map.__pulseState.gestureHandler);
+        }
+        map.__pulseState = null;
         pulseAtCoord(map, coord);
     };
-    pendingPulseHandler = handler;
-    map.once('moveend', handler);
+    const gestureHandler = () => {
+        // User grabbed the camera mid-flyTo. Abandon the pulse — the
+        // target coord is no longer where the user is looking.
+        cancelPendingPulse(map);
+    };
+
+    map.__pulseState = { moveendHandler, gestureHandler };
+    map.once('moveend', moveendHandler);
+    map.on('dragstart',  gestureHandler);
+    map.on('pitchstart', gestureHandler);
+    map.on('zoomstart',  gestureHandler);
 }
 
 // Anchor a briefly-lived Marker at `coord` and let CSS animate the

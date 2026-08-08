@@ -12,20 +12,16 @@
 
 import { t } from '../i18n.js';
 import { store } from '../store.js';
-import { isNearFestival } from './map-common.js';
+import {
+    isNearFestival,
+    MAP_CLOSE_ZOOM,
+    MAP_FLYTO_DURATION_MS,
+} from './map-common.js';
 import { showMapToast } from './map-toast.js';
 import { openFlyToMenu, closeFlyToMenu } from './map-flyto.js';
 
-// Zoom target for the fly-to. Matches map-flyto.js#FLYTO_ZOOM (18)
-// so the two navigation controls land the camera at the same close-
-// in scale — they read as siblings visually and behaviourally. maxZoom
-// is 19, so 18 still leaves one pinch of headroom.
-const LOCATE_ZOOM = 18;
-
-// Camera animation duration (ms). MapLibre's default is 1000 but the
-// festival map is small; the swoop finishes fast so the fix feels
-// responsive.
-const FLY_DURATION_MS = 1200;
+// (Zoom + duration constants live in map-common.js so the fly-to
+// menu and the locate button can't drift out of sync.)
 
 /**
  * Mount the map control group.
@@ -92,11 +88,19 @@ function buildFlyToButton() {
 // The click handler is deliberately synchronous:
 //   1. If we have a valid, near-festival fix -> flyTo it.
 //   2. Otherwise -> toast and bail. We do NOT re-request permission
-//      from here: the browser's geolocation API only prompts on the
-//      first navigator.geolocation.watchPosition/.getCurrentPosition
-//      call of the session, and any subsequent call inside a denied
-//      state is a silent no-op. The right place to (re-)prompt is the
-//      onboarding flow, which is exactly where we send the user.
+//      from here. Permission state is one of:
+//        - granted : the shared watch (js/location.js) will keep
+//                    delivering fixes; a toast now would race an
+//                    imminent fix, so we bail.
+//        - denied  : subsequent getCurrentPosition / watchPosition
+//                    calls are silent no-ops until the user changes
+//                    the site's permission in browser settings, which
+//                    they can't do from a button click. Toast + link
+//                    them mentally back to onboarding is the best we
+//                    can do without adding a settings flow.
+//        - prompt  : we already asked during onboarding. Re-asking
+//                    on a random button click feels worse than a
+//                    quiet toast pointing them at the same flow.
 function handleLocateClick(map, stage) {
     const loc = store.userLocation;
     const hasFix =
@@ -119,14 +123,15 @@ function handleLocateClick(map, stage) {
         return;
     }
 
-    // Preserve bearing + pitch (respects whatever orientation the user
-    // has set) and force zoom to LOCATE_ZOOM so the fix reads at the
-    // right scale regardless of where the camera was.
     map.flyTo({
         center: [loc.longitude, loc.latitude],
-        zoom: LOCATE_ZOOM,
-        duration: FLY_DURATION_MS,
-        essential: true, // don't respect prefers-reduced-motion: the
-                         // animation IS the "here you are" feedback.
+        zoom: MAP_CLOSE_ZOOM,
+        duration: MAP_FLYTO_DURATION_MS,
+        // essential = don't respect prefers-reduced-motion: the
+        // animation IS the "here you are" feedback.
+        // Note: no pulse ring here (unlike the fly-to POI menu) —
+        // the user-location dot IS its "here you are" marker, so a
+        // second ripple on top would feel redundant.
+        essential: true,
     });
 }
