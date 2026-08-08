@@ -18,7 +18,7 @@ import {
     MAP_FLYTO_DURATION_MS,
 } from './map-common.js';
 import { showMapToast } from './map-toast.js';
-import { openFlyToMenu, closeFlyToMenu } from './map-flyto.js';
+import { openFlyToMenu, closeFlyToMenu, cancelPendingPulse } from './map-flyto.js';
 
 // (Zoom + duration constants live in map-common.js so the fly-to
 // menu and the locate button can't drift out of sync.)
@@ -122,6 +122,14 @@ function handleLocateClick(map, stage) {
         showMapToast(stage, t('map.notAtFestival'));
         return;
     }
+
+    // Cancel any POI-pulse handler that's waiting on the previous
+    // flyTo's moveend. Without this, tapping locate mid-POI-flight
+    // could paint the ring at the abandoned POI coord instead of
+    // being silently discarded — event ordering when one flyTo
+    // interrupts another is implementation-defined in MapLibre, so
+    // we don't want to depend on the gesture handler catching this.
+    cancelPendingPulse(map);
 
     map.flyTo({
         center: [loc.longitude, loc.latitude],

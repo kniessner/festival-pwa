@@ -4,7 +4,7 @@
 // tab dispatcher (map.js) can mount either variant.
 
 import { t } from '../i18n.js';
-import { attachStageSizing, MAP_MAX_BOUNDS } from './map-common.js';
+import { attachStageSizing, MAP_MAX_BOUNDS, pickMaxBounds } from './map-common.js';
 import basemapLayers from './basemap-layers.js';
 import { PALETTE } from './map-palette.js';
 import { startUserLocation } from './user-location.js';
@@ -181,7 +181,13 @@ function createMap(stage, gestureState) {
         // this bbox. MapLibre also implicitly bumps minZoom so the user
         // can't zoom out past the point where maxBounds would fit inside
         // the viewport, which is exactly what we want.
-        maxBounds: MAP_MAX_BOUNDS,
+        //
+        // Responsive: picks the tight venue-shaped bounds for portrait
+        // viewports (mobile PWA, orientation-locked) and a wider N-S
+        // set for landscape/desktop viewports where the tight bounds
+        // would pin N-S movement to zero and cause "only diagonal
+        // panning" (see MAP_MAX_BOUNDS_WIDE comment in map-common.js).
+        maxBounds: pickMaxBounds(window.innerWidth, window.innerHeight),
         // Soft zoom floor. maxBounds already enforces its own implicit
         // floor (whatever zoom makes the bounds fit the viewport), so
         // this value is only relevant if we later loosen maxBounds.
@@ -191,7 +197,36 @@ function createMap(stage, gestureState) {
         // Disable the built-in AttributionControl — it's hardcoded to
         // bottom-right. We add our own below at bottom-left instead.
         attributionControl: false,
+        // Lock bearing + pitch — our DEFAULT_CAMERA sets both
+        // deliberately (bearing -73° to align with the festival's
+        // major axis, pitch 30° for a slight 3D feel), so ANY user
+        // gesture that changed either would fight the intended camera.
+        // MapLibre's default gesture set silently permits both:
+        //
+        //   - dragRotate         : rotation via right-click drag (desktop)
+        //                          or two-finger touch (some devices)
+        //   - touchPitch         : two-finger vertical-parallel drag
+        //                          on touch adjusts pitch
+        //   - touchZoomRotate    : pinch + twist — twist rotates the map
+        //
+        // Symptom in the wild (2026-08-08): a user reported "I could
+        // only pan diagonally". Almost certainly a stray two-finger
+        // touch triggered touchPitch or the rotate part of
+        // touchZoomRotate, tilting/rotating the map so subsequent
+        // single-finger pan felt off-axis in world coords.
+        //
+        // We disable them below (after construction — the Map
+        // constructor doesn't expose these as options). Pinch-zoom
+        // stays enabled via touchZoomRotate.disableRotation() rather
+        // than .disable(), so users keep the zoom half of that handler.
+        dragRotate: false,
+        pitchWithRotate: false,
     });
+
+    // Complete the gesture lockdown that the constructor options above
+    // couldn't reach:
+    map.touchZoomRotate.disableRotation();
+    map.touchPitch.disable();
 
     // Attribution at bottom-left. Legal requirement (OSM + Protomaps)
     // so it stays visible; moved off bottom-right because MapLibre's
