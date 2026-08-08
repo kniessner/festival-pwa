@@ -1886,18 +1886,20 @@ span.tt-event-stage {
    into the map's border and it reads as though the map has a soft
    natural margin instead of a hard rectangular crop.
 
-   Applied to .maplibregl-canvas-container (not .festival-map itself)
-   so the attribution control and any other MapLibre controls in
-   .maplibregl-control-container stay crisp and readable.
+   Applied to .maplibregl-canvas (not .maplibregl-canvas-container:
+   MapLibre gives the container `position: static; height: 0` and puts
+   an absolutely-positioned canvas inside, so a mask on the container
+   hides the whole map because the container has zero measurable size).
+   Attribution + any future controls live in .maplibregl-control-container
+   (sibling of the canvas container) and stay crisp.
 
    How it works: two linear-gradient mask images, one horizontal, one
-   vertical, composited with `intersect` (Chrome/Firefox/Safari 15.4+)
-   or `-webkit-mask-composite: source-in` (older Safari). "Intersect"
-   means a pixel is only shown where BOTH gradients are opaque — the
-   center stays fully visible, edges fade linearly, and corners fade
-   extra (because both gradients are transparent there), giving a
-   pleasant rounded-corner feel without an explicit border-radius. */
-.festival-map .maplibregl-canvas-container {
+   vertical, composited with `intersect`. "Intersect" means a pixel is
+   only shown where BOTH gradients are opaque — the center stays fully
+   visible, edges fade linearly, and corners fade extra (both gradients
+   transparent there), giving a pleasant rounded-corner feel without
+   an explicit border-radius. */
+.festival-map .maplibregl-canvas {
     --festival-map-fade: 44px;
     -webkit-mask-image:
         linear-gradient(to right,
