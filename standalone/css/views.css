@@ -2079,8 +2079,10 @@ span.tt-event-stage {
     padding: 4px 8px;
     /* margin-left compensates for the rotated element extending
        `originalHeight` px LEFT of the pivot (see gotcha above).
-       Every other side stays at 0. */
-    margin: 0 0 0 22px;
+       margin-bottom lifts the whole stripe 10 px off the map edge so
+       on beveled-corner devices (iPhone rounded bottom-left) it isn't
+       clipped by the corner mask. */
+    margin: 0 0 10px 22px;
     font-size: 10px;
     line-height: 1.1;
     color: rgba(242, 233, 220, 0.75);

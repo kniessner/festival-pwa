@@ -111,6 +111,7 @@ function localiseAndOpen() {
     setText('onboardingHeadline', 'onb.headline');
     setText('onboardingIntro', 'onb.intro');
     setText('onboardingFeatureTimetable', 'onb.featureTimetable');
+    setText('onboardingFeatureMap', 'onb.featureMap');
     setText('onboardingDisclaimer', 'onb.disclaimer');
     setText('onboardingPrivacyTitle', 'onb.privacyTitle');
     setText('onboardingPrivacyBody', 'onb.privacyBody');

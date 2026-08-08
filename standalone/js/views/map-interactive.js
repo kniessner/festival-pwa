@@ -41,7 +41,18 @@ const PNG_CREAM = PALETTE.cream;
 // Latin-1 glyph ranges already cover every character our labels use
 // (ASCII + ÄÖÜßäöü), so the fallback isn't needed.
 const FONT_DISPLAY = ['Megan Display'];
-const FONT_HELPER = ['Instrument Sans Italic'];
+// Fontstack for overlay labels. "Megan Display" is the festival's
+// brand display face (banners + poster title) and gives the map a
+// strong identity match with the rest of the app. Every glyph we
+// need is in the Latin-1 range, and the SDF PBFs are already
+// bundled at standalone/glyphs/Megan Display/.
+//
+// Note: MapLibre `text-font` supports multi-font fallback ONLY when
+// the glyph server returns composited PBFs (fontnik.composite at
+// build time). Our server serves single-font PBFs, so this must be
+// a single-element stack. If we ever want fallback, extend
+// scripts/generate-glyphs.js to also emit composited stacks.
+const FONT_HELPER = ['Megan Display'];
 
 // (Stage-slug two-tone matching removed — old data/stages.geojson had
 // per-stage slugs; the new Felt-derived stages.geojson uses a
@@ -321,22 +332,18 @@ function addOverlayLayers(map) {
         // tent.js#applyDragPaint.
         const isCamping = id === 'camping-areas';
         const fillOpacity = isCamping ? 0.22 : 0.5;
-        const lineOpacity = isCamping ? 0.55 : 0.9;
 
-        // Polygon / MultiPolygon fill + outline.
+        // Polygon / MultiPolygon fill. Outline layer removed (Jacob's
+         // 2026-08-08 experiment): borderless overlays let the polygon
+         // colour breathe against the base map, and the tent's
+         // dim-during-drag pattern still works because tent.js probes
+         // layers via map.getLayer(id) before touching them.
         map.addLayer({
             id: id + '-fill',
             source: id,
             type: 'fill',
             filter: ['==', ['geometry-type'], 'Polygon'],
             paint: { 'fill-color': color, 'fill-opacity': fillOpacity },
-        });
-        map.addLayer({
-            id: id + '-outline',
-            source: id,
-            type: 'line',
-            filter: ['==', ['geometry-type'], 'Polygon'],
-            paint: { 'line-color': color, 'line-width': 1.2, 'line-opacity': lineOpacity },
         });
 
         // Point features (Felt Markers / Circles come through as Points).
