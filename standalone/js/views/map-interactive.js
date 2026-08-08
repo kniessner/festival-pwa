@@ -72,8 +72,8 @@ const DEFAULT_CAMERA = {
 // polygon over the festival area. Format is MapLibre's LngLatBounds:
 // [[minLng, minLat], [maxLng, maxLat]].
 const MAP_MAX_BOUNDS = [
-    [14.479173243086275, 52.26797783238317], // SW  (−50 m west, +50 m south)
-    [14.517810044831663, 52.28324188136173], // NE  (+100 m north)
+    [14.478600, 52.266800], // SW  (≈ 40 m further west, ≈ 130 m further south)
+    [14.518400, 52.283800], // NE  (≈ 40 m further east, ≈ 60 m further north)
 ];
 
 // ─── View ──────────────────────────────────────────────────────────────
