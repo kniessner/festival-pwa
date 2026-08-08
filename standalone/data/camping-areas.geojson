@@ -1,5 +1,6 @@
 {"type":"FeatureCollection","features":[
 {"type":"Feature","properties":{"text":"Camp Taucher"},"geometry":{"type":"Polygon","coordinates":[[[14.4948074,52.276617],[14.4890248,52.2767016],[14.4889787,52.27735],[14.4943005,52.2782944],[14.4948074,52.276617]]]}},
 {"type":"Feature","properties":{"text":"Camp Qualle"},"geometry":{"type":"Polygon","coordinates":[[[14.4948536,52.2768609],[14.4945691,52.2778704],[14.5002158,52.2786013],[14.5009269,52.2760428],[14.4948536,52.2768609]]]}},
-{"type":"Feature","properties":{"text":"Camp Stille Fische"},"geometry":{"type":"Polygon","coordinates":[[[14.5012833,52.2775887],[14.5010131,52.2792088],[14.5066331,52.2798039],[14.5069393,52.2781839],[14.5012833,52.2775887]]]}}
+{"type":"Feature","properties":{"text":"Camp Stille Fische"},"geometry":{"type":"Polygon","coordinates":[[[14.5012833,52.2775887],[14.5010131,52.2792088],[14.5066331,52.2798039],[14.5069393,52.2781839],[14.5012833,52.2775887]]]}},
+{"type":"Feature","properties":{"text":"Camp Waschbär"},"geometry":{"type":"Polygon","coordinates":[[[14.5062188,52.2753074],[14.500959,52.276145],[14.5007789,52.2771589],[14.5070654,52.2779304],[14.5073536,52.277192],[14.5089207,52.2772691],[14.5062188,52.2753074]]]}}
 ]}
