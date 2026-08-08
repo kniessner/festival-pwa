@@ -420,6 +420,33 @@ function addOverlayLayers(map) {
             textOpacity = 1;
         }
 
+        // Layer priorities for collision resolution. Lower sort-key
+        // = drawn/placed first = wins any label overlap when
+        // text-allow-overlap is false. This is what lets us keep
+        // collision on (labels dropping when they'd overlap, so the
+        // map stays readable) while still guaranteeing the anchor
+        // tier (stages + camps) never gets dropped by less-important
+        // infrastructure labels.
+        const symbolSortKey =
+            id === 'stages'         ?  0 :
+            id === 'camping-areas'  ?  1 :
+            10;
+
+        // Font stack per tier. Megan Display is the festival's brand
+        // display face and works at the anchor sizes (17 / 15 px);
+        // for the tighter infrastructure labels we switch to Lato
+        // Regular — a text face designed to stay legible at small
+        // sizes, with narrower glyph metrics (so collision boxes are
+        // smaller and fewer labels get dropped).
+        //
+        // Both fontstacks have SDF PBFs bundled under
+        // standalone/glyphs/; multi-font fallback is a single-element
+        // stack (see FONT_HELPER note above).
+        const textFont =
+            (id === 'stages' || id === 'camping-areas')
+                ? ['Megan Display']
+                : ['Lato Regular'];
+
         map.addLayer({
             id: id + '-label',
             source: id,
@@ -427,33 +454,36 @@ function addOverlayLayers(map) {
             filter: ['has', 'text'],
             layout: {
                 'text-field': ['get', 'text'],
-                'text-font': FONT_HELPER,
+                'text-font': textFont,
                 // Anchor labels get bigger sizes so they read at
                 // glance-zoom without a pinch: stages are the primary
                 // wayfinding target, camp names the second. Everything
                 // else stays at the compact 11 px so infrastructure
                 // clusters (DIXIs, shower containers, etc) don't shout.
                 'text-size':
-                    id === 'stages'         ? 17 :
-                    id === 'camping-areas'  ? 15 :
+                    id === 'stages'         ? 14 :
+                    id === 'camping-areas'  ? 13 :
                     11,
                 'text-anchor': 'center',
                 'text-max-width': 8,
-                // Anchor tiers (stages + camping-areas) are wayfinding-
-                // critical and must NEVER be dropped by MapLibre's
-                // collision heuristic. With allow-overlap = false,
-                // 42 stage features + 12 camp features at 15–17 px
-                // labels overlap each other and with infrastructure
-                // labels enough that most/all get dropped at default
-                // zoom — which is exactly the "no stages visible" bug
-                // Jacob reported. Force them always visible; let the
-                // infrastructure tier keep normal collision so it
-                // hides behind the anchors instead of drowning them.
+                // Collision policy: stages + camps are wayfinding-
+                // critical and must never drop out. With allow-overlap
+                // false, MapLibre's collision heuristic hides most
+                // stages at low zoom (there are 16 in a 400 m strip —
+                // physically doesn't fit at 13–17 px). Force them
+                // rendered; the reduced noise from the tier fades
+                // (produktion + toilets hidden until zoom 16), the
+                // booth-feature purge, and the Lato Regular
+                // narrow-glyph swap for infra means the overlap that
+                // remains reads OK. Infrastructure labels keep normal
+                // collision so they hide behind anchors instead of
+                // drowning them.
                 'text-allow-overlap': (id === 'stages' || id === 'camping-areas'),
                 'text-optional': !(id === 'stages' || id === 'camping-areas'),
                 'text-padding': 2,
                 'text-rotation-alignment': 'viewport',
                 'text-pitch-alignment': 'viewport',
+                'symbol-sort-key': symbolSortKey,
             },
             paint: {
                 'text-color': PNG_CREAM,
