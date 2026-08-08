@@ -152,7 +152,16 @@ function buildServiceWorker(jsFiles) {
         return;
     }
 
-    const assets = [...match[1].matchAll(/'([^']+)'/g)].map(m => m[1]);
+    // Strip block + line comments from the array body BEFORE extracting
+    // quoted strings. Comments in the source may contain apostrophes
+    // (e.g. "the map's label typography") that would otherwise fool
+    // the `'([^']+)'` regex into capturing everything from the
+    // apostrophe until the next single quote as a fake asset path,
+    // corrupting the whole precache list from that point on.
+    const stripped = match[1]
+        .replace(/\/\*[\s\S]*?\*\//g, '')
+        .replace(/\/\/[^\n]*/g, '');
+    const assets = [...stripped.matchAll(/'([^']+)'/g)].map(m => m[1]);
 
     // Every real js/*.js file must be precached (see sw.js's own MAINTENANCE
     // comment) or an installed-then-offline user hits a broken app the first

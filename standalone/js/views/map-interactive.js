@@ -371,7 +371,11 @@ function addOverlayLayers(map) {
             layout: {
                 'text-field': ['get', 'text'],
                 'text-font': FONT_HELPER,
-                'text-size': 11,
+                // Stages get a bigger label so the floor names read
+                // clearly at glance-zoom; other overlays stay at the
+                // compact 11 px so infrastructure clusters (DIXIs,
+                // shower containers, etc) don't shout.
+                'text-size': id === 'stages' ? 15 : 11,
                 'text-anchor': 'center',
                 'text-max-width': 8,
                 'text-allow-overlap': false,
