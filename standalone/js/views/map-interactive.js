@@ -162,7 +162,12 @@ function createMap(stage, gestureState) {
             // which on a landscape viewport lands on a wider zoom than we
             // want and defeats the whole point of the portrait rotation.
             bearing: -90,
-            padding: { top: 60, right: 30, bottom: 30, left: 30 },
+            // Bigger padding → lower zoom (fitBounds squeezes the bbox
+            // into viewport-minus-padding, so more padding ⇒ more
+            // sky around the festival). Roughly 2× the initial
+            // values; increase further if Jacob wants the camera
+            // even higher.
+            padding: { top: 120, right: 100, bottom: 100, left: 100 },
         },
         minZoom: 13,
         maxZoom: 19,
