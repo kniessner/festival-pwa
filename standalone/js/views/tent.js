@@ -79,6 +79,15 @@ const HIGHLIGHT_OVERRIDES = [
     ['camping-areas-label',   'text-opacity', 1.0],   // already 1.0, but explicit for symmetry
 ];
 
+// Layers whose zoom range gets widened to [0, 24] during drag so
+// their labels stay visible regardless of any minzoom/maxzoom gating
+// we add later for the ambient (non-drag) view. Camping-area labels
+// are the "which camp am I dropping into?" affordance and must NOT be
+// gated away when the user picks up the tent, even if we hide them at
+// low zoom during normal viewing. Snapshot + restore mirrors the
+// paint-property approach.
+const FORCE_VISIBLE_DURING_DRAG = ['camping-areas-label'];
+
 // ─── Storage ─────────────────────────────────────────────────────────
 
 function isValidPos(v) {
@@ -110,16 +119,19 @@ function paintKeyFor(layerId) {
     return null;
 }
 
-// Snapshot pre-drag paint values so restore reads from the actual
-// live state rather than a hardcoded mirror of addOverlayLayers. Keeps
-// tent.js and map-interactive.js decoupled: change camping-areas'
-// default fill-opacity in map-interactive.js and this file doesn't
-// need to know.
+// Snapshot pre-drag paint values + zoom ranges so restore reads from
+// the actual live state rather than a hardcoded mirror of
+// addOverlayLayers. Keeps tent.js and map-interactive.js decoupled:
+// change camping-areas' default fill-opacity (or add a minzoom on the
+// -label layer) in map-interactive.js and this file doesn't need to
+// know.
 //
-// Structure: Map<layerId, Map<paintKey, originalValue>>. The snapshot
-// belongs to a single startTent() invocation — owned by that closure,
-// NOT module-scoped, so two overlapping tent lifetimes (HMR, PiP, a
-// future split view) wouldn't clobber each other's restore state.
+// Snapshot shape: { paint: Map<layerId, Map<paintKey, value>>,
+//                   zoom:  Map<layerId, { minzoom, maxzoom }> }
+// The snapshot belongs to a single startTent() invocation — owned by
+// that closure, NOT module-scoped, so two overlapping tent lifetimes
+// (HMR, PiP, a future split view) wouldn't clobber each other's
+// restore state.
 function snapshotPaint(map) {
     const snap = new Map();
     const record = (id, key) => {
@@ -139,8 +151,25 @@ function snapshotPaint(map) {
     return snap;
 }
 
+function snapshotZoomRanges(map) {
+    const snap = new Map();
+    for (const id of FORCE_VISIBLE_DURING_DRAG) {
+        const layer = map.getLayer(id);
+        if (!layer) continue;
+        // MapLibre layer objects expose minzoom/maxzoom as numbers,
+        // defaulting to 0 / 24 when unset. Capture both so restore is
+        // exactly reversible whether or not the layer had explicit
+        // gating.
+        snap.set(id, { minzoom: layer.minzoom, maxzoom: layer.maxzoom });
+    }
+    return snap;
+}
+
 function applyDragPaint(map, snapshotRef) {
-    snapshotRef.current = snapshotPaint(map);
+    snapshotRef.current = {
+        paint: snapshotPaint(map),
+        zoom: snapshotZoomRanges(map),
+    };
     // Fade every non-camping overlay to FADE_OPACITY.
     for (const id of FADE_LAYERS) {
         if (!map.getLayer(id)) continue;
@@ -153,19 +182,31 @@ function applyDragPaint(map, snapshotRef) {
         if (!map.getLayer(id)) continue;
         try { map.setPaintProperty(id, key, val); } catch (_) { /* nothing */ }
     }
+    // Widen zoom range on FORCE_VISIBLE_DURING_DRAG layers so any
+    // ambient minzoom/maxzoom gating (added later for the non-drag
+    // view) is temporarily bypassed. 0 / 24 covers every zoom the
+    // camera can reach.
+    for (const id of FORCE_VISIBLE_DURING_DRAG) {
+        if (!map.getLayer(id)) continue;
+        try { map.setLayerZoomRange(id, 0, 24); } catch (_) { /* nothing */ }
+    }
 }
 
-// Restore paint props from the pre-drag snapshot. If no snapshot
-// exists (e.g. stop() called before any drag ever happened), this is
-// a no-op — nothing to undo.
+// Restore paint props + zoom ranges from the pre-drag snapshot. If no
+// snapshot exists (e.g. stop() called before any drag ever happened),
+// this is a no-op — nothing to undo.
 function restorePaint(map, snapshotRef) {
     const snap = snapshotRef.current;
     if (!snap) return;
-    for (const [id, inner] of snap) {
+    for (const [id, inner] of snap.paint) {
         if (!map.getLayer(id)) continue;
         for (const [key, val] of inner) {
             try { map.setPaintProperty(id, key, val); } catch (_) { /* nothing */ }
         }
+    }
+    for (const [id, { minzoom, maxzoom }] of snap.zoom) {
+        if (!map.getLayer(id)) continue;
+        try { map.setLayerZoomRange(id, minzoom ?? 0, maxzoom ?? 24); } catch (_) { /* nothing */ }
     }
     snapshotRef.current = null;
 }
