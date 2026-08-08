@@ -60,15 +60,18 @@ const STAGES_BBOX = [
 ];
 
 // Rough pan-limit bounds — keep the user from scrolling far outside
-// the festival footprint. Longitude padding stays tight (≈ 500 m)
-// because the festival's east-west axis IS its long side and the
-// stages fill it; latitude padding is looser (≈ 1.3 km per side)
-// because at bearing -90 latitude runs left-right on screen and
-// Jacob wanted more breathing room there.
-// Jacob will finetune after review.
+// the festival footprint. The map is rotated 90° CW (bearing -90),
+// so on screen:
+//   west  = top       east   = bottom
+//   south = left      north  = right
+// Longitude padding is asymmetric — tight on the west (top of screen,
+// where the festival's west shore already lives at the viewport edge)
+// and generous on the east (bottom of screen). Latitude padding is
+// symmetric and looser (≈ 1.3 km each way) for breathing room on the
+// left/right of screen. Jacob will finetune again after review.
 const MAP_MAX_BOUNDS = [
-    [14.4750, 52.2590], // SW
-    [14.5120, 52.2890], // NE
+    [14.4790, 52.2590], // SW  (west  = tight top pad)
+    [14.5170, 52.2890], // NE  (east  = loose bottom pad)
 ];
 
 // ─── View ──────────────────────────────────────────────────────────────
@@ -172,8 +175,17 @@ function createMap(stage, gestureState) {
         maxZoom: 19,
         bearing: -90,
         pitch: 0,
-        attributionControl: { compact: false },
+        // Disable the built-in AttributionControl — it's hardcoded to
+        // bottom-right. We add our own below at bottom-left instead.
+        attributionControl: false,
     });
+
+    // Attribution at bottom-left. Legal requirement (OSM + Protomaps)
+    // so it stays visible; moved off bottom-right because MapLibre's
+    // default position collides with the drop-up menu FAB in that
+    // corner. `compact: false` forces the full attribution line to
+    // render inline instead of collapsing behind an (i) button.
+    map.addControl(new maplibregl.AttributionControl({ compact: false }), 'bottom-left');
 
     // Zoom-in/-out buttons and rotate-reset intentionally omitted — the
     // whole interaction is pinch / drag on touch. Attribution stays

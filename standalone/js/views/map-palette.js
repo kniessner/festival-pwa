@@ -36,12 +36,16 @@ export const PALETTE = {
     stageRedMid:     '#bb2f4c',
     stageRedBright:  '#cb3540',
 
-    // Water — Helenesee navy, from lakebed depth to shore shimmer.
-    waterDeepest:    '#181f3a',   // deepest / night-sky
-    waterMain:       '#234999',   // Helenesee body
-    waterAlt:        '#224b9b',
-    waterLap:        '#4b6c95',   // shallow / shore lap
-    waterShadow:     '#30354e',
+    // Water — Helenesee. Primary tone is the app's brand navy
+    // (#080943 = --bg in tokens.css) so the lake reads as "same water
+    // that fills the app background", making the map feel like it's
+    // set on the same surface as the rest of the UI. The other water
+    // tones stay warmer for depth/lap detail if we ever need them.
+    waterDeepest:    '#050628',   // deeper than brand navy, night-sky
+    waterMain:       '#080943',   // brand navy — Helenesee body
+    waterAlt:        '#0d1152',
+    waterLap:        '#3a3f7a',   // shallow / shore lap
+    waterShadow:     '#1a1e42',
 
     // Ink lines — building outlines, road casings, deep detail.
     inkDeepest:      '#1c0716',
