@@ -63,8 +63,8 @@ const STAGES_BBOX = [
 // polygon over the festival area. Format is MapLibre's LngLatBounds:
 // [[minLng, minLat], [maxLng, maxLat]].
 const MAP_MAX_BOUNDS = [
-    [14.477770089473779, 52.267901161007046], // SW
-    [14.51815926157343,  52.28141349903211],  // NE
+    [14.478443243086275, 52.26842783238317], // SW
+    [14.517810044831663, 52.28234188136173], // NE
 ];
 
 // ─── View ──────────────────────────────────────────────────────────────
