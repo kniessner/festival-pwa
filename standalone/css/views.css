@@ -1896,7 +1896,7 @@ span.tt-event-stage {
    Single vertical linear-gradient — no mask-composite needed since
    we're not intersecting two gradients any more. */
 .festival-map .maplibregl-canvas {
-    --festival-map-fade-top: 72px;
+    --festival-map-fade-top: 50px;
     --festival-map-fade-bottom: 90px;
     -webkit-mask-image: linear-gradient(to bottom,
         transparent 0,
