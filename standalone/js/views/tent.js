@@ -60,7 +60,7 @@ const DIM_LAYERS = [
     'sterne-fill',    'sterne-outline',    'sterne-point',
     'toilets-showers-fill', 'toilets-showers-outline', 'toilets-showers-point',
 ];
-const DIM_OPACITY = 0.15;
+const DIM_OPACITY = 0;
 
 // ─── Storage ─────────────────────────────────────────────────────────
 
