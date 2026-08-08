@@ -20,11 +20,12 @@ export const MAP_MAX_BOUNDS = [
 ];
 
 // Buffer around MAP_MAX_BOUNDS for the "is the user actually at the
-// festival?" check used by the locate-me control. 0.05 deg ≈ 5.5 km
-// at this latitude — matches fusion's isNearFestival (see
-// pwa_test/src/Map/helpers/bounds.ts). The buffer is generous on
-// purpose: someone driving to the site who's a few km out still
-// gets "you're near, here's the map" instead of an obtuse toast.
+// festival?" check used by the locate-me control. 0.05 deg is
+// asymmetric because a degree of longitude at 52.27°N is smaller
+// than a degree of latitude: buffer works out to ~5.5 km N-S and
+// ~3.4 km E-W. Fine — the point is "roughly close", not a strict
+// isochrone. Matches fusion's isNearFestival (see
+// pwa_test/src/Map/helpers/bounds.ts).
 const NEAR_FESTIVAL_BUFFER_DEG = 0.05;
 
 export function isNearFestival(longitude, latitude) {
@@ -38,6 +39,15 @@ export function isNearFestival(longitude, latitude) {
         latitude  <= neLat + NEAR_FESTIVAL_BUFFER_DEG
     );
 }
+
+// Shared "land close-in" camera targets. Both the locate-me button
+// and the fly-to POI menu land at the same zoom so the two controls
+// feel like siblings behaviourally as well as visually. maxZoom is
+// 19, so 18 leaves one full pinch of headroom for the user to look
+// around from wherever they land. Duration matches too — same
+// perceived weight of "jumping to a place".
+export const MAP_CLOSE_ZOOM = 18;
+export const MAP_FLYTO_DURATION_MS = 1200;
 
 // Size the map's stage element to fill the remaining viewport under
 // whatever page chrome sits above it. Both variants use the exact same

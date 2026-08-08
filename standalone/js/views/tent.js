@@ -69,11 +69,6 @@ const TENT_SHRINK_END_ZOOM   = 22;   // interp target. maxZoom is 19,
                                      // "comfortable-at-close-up" size
                                      // Jacob asked for.
 
-// Legacy re-export: TENT_HEIGHT was the marker's fixed base size in
-// the previous formula and is used elsewhere (drag-me popup offsets,
-// pointer-hit padding). Keeping the name means callers stay green.
-const TENT_HEIGHT = TENT_HEIGHT_MAX;
-
 // Overlay drag effect:
 //   camping-areas subset  — HIGHLIGHTED (opacity bump + thicker
 //                          outline) so the tent drag reads as "drop
@@ -270,9 +265,9 @@ export function startTent(map) {
     // beyond the base size; the SVG scales inside via background-size.
     const tentEl = document.createElement('div');
     tentEl.className = 'tent-marker';
-    const baseWidth = TENT_HEIGHT * ASPECT_RATIO;
+    const baseWidth = TENT_HEIGHT_MAX * ASPECT_RATIO;
     tentEl.style.width = baseWidth + 'px';
-    tentEl.style.height = TENT_HEIGHT + 'px';
+    tentEl.style.height = TENT_HEIGHT_MAX + 'px';
 
     const persisted = readStoredPosition();
     const startPos = persisted ?? { lng: TENT_INITIAL_POSITION[0], lat: TENT_INITIAL_POSITION[1] };

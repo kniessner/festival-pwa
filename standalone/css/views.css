@@ -2069,15 +2069,19 @@ span.tt-event-stage {
     inset: 0;
     z-index: 6; /* above the toast (z 5) so a stale toast can't cover
                    the newly-opened menu. */
-    /* No pointer-events on the wrapper itself except where its child
-       card sits; see backdrop-click handler in js/views/map-flyto.js
-       which filters by e.target === overlay. */
-    pointer-events: auto;
+    /* Transparent to pointer events — the map beneath the popover
+       stays fully interactive (pinch, pan, tap on features). The
+       card below re-enables pointer-events on itself so its buttons
+       still work. Close-on-outside-click is handled by a document-
+       level `click` listener in js/views/map-flyto.js. */
+    pointer-events: none;
     background: transparent;
 }
 
 .festival-map-flyto-card {
     position: absolute;
+    /* Card is the only click-target inside the overlay. */
+    pointer-events: auto;
     /* Anchored to sit ABOVE the button group, aligned to its left
        edge. Vertical: 90 px lines up with the top of the 44 px
        control buttons (26 px bottom-inset + 44 px height + 20 px
