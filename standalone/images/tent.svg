@@ -1,13 +1,15 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 56 72" width="56" height="72">
   <!--
     Bespoke "where is my tent" marker for the Bucht der Träumer map.
-    Cream drop-pin (#f2e9dc) with ink stroke; tent glyph inside is
-    Boxicons `tent` (MIT), scaled and re-centred to sit in the pin's
-    head. Drop-shadow is applied via CSS on .tent-marker so it composes
-    with the marker's zoom-scaling — no inline filter here.
+    Beach-sand drop-pin (#e8c98a) with ink stroke — same palette tone
+    as the user-location dot, so the two "about me" markers read as
+    a pair. Tent glyph inside is Boxicons `tent` (MIT), scaled and
+    re-centred to sit in the pin's head. Drop-shadow is applied via
+    CSS on .tent-marker so it composes with the marker's zoom-scaling
+    — no inline filter here.
   -->
   <path d="M28 0C13 0 0 12 0 27c0 19 28 45 28 45s28-26 28-45C56 12 43 0 28 0z"
-        fill="#f2e9dc" stroke="#1c0716" stroke-width="1.8"/>
+        fill="#e8c98a" stroke="#1c0716" stroke-width="1.8"/>
   <!--
     Boxicons `tent` glyph (viewBox 24×24). Scaled 1.25× and translated
     so its centre lands at (28, 26) — the pin head's visual middle.
