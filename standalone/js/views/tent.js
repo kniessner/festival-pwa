@@ -50,14 +50,14 @@ const TENT_HEIGHT = 60;
 
 // Overlay layer ids we dim during a drag. Kept in sync with the
 // FELT_LAYERS table in map-interactive.js — if that list grows, add
-// the new `-fill` / `-outline` / `-point` here or (better) refactor
-// both sites to consume the same source of truth.
+// the new `-fill` / `-outline` / `-point` / `-label` here or (better)
+// refactor both sites to consume the same source of truth.
 const DIM_LAYERS = [
-    'gastro-fill',    'gastro-outline',    'gastro-point',
-    'produktion-fill','produktion-outline','produktion-point',
-    'stages-fill',    'stages-outline',    'stages-point',
-    'sterne-fill',    'sterne-outline',    'sterne-point',
-    'toilets-showers-fill', 'toilets-showers-outline', 'toilets-showers-point',
+    'gastro-fill',    'gastro-outline',    'gastro-point',    'gastro-label',
+    'produktion-fill','produktion-outline','produktion-point','produktion-label',
+    'stages-fill',    'stages-outline',    'stages-point',    'stages-label',
+    'sterne-fill',    'sterne-outline',    'sterne-point',    'sterne-label',
+    'toilets-showers-fill', 'toilets-showers-outline', 'toilets-showers-point', 'toilets-showers-label',
 ];
 const DIM_OPACITY = 0;
 
@@ -82,11 +82,13 @@ function savePosition(lng, lat) {
 
 // MapLibre's setPaintProperty needs the actual paint key per layer
 // type — 'fill-opacity' for fill, 'line-opacity' for line, 'circle-
-// opacity' for circle. We infer the key from the layer id suffix.
+// opacity' for circle, 'text-opacity' for symbol (label). We infer
+// the key from the layer id suffix.
 function paintKeyFor(layerId) {
     if (layerId.endsWith('-fill')) return 'fill-opacity';
     if (layerId.endsWith('-outline')) return 'line-opacity';
     if (layerId.endsWith('-point')) return 'circle-opacity';
+    if (layerId.endsWith('-label')) return 'text-opacity';
     return null;
 }
 
@@ -106,6 +108,7 @@ const RESTORE_OPACITY = {
     'fill-opacity': 0.5,   // matches addOverlayLayers fill-opacity
     'line-opacity': 0.9,   //   ditto outline
     'circle-opacity': 1.0, //   circles paint fully opaque
+    'text-opacity': 1.0,   //   labels paint fully opaque
 };
 
 function restoreLayerOpacity(map) {
