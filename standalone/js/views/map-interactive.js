@@ -363,6 +363,44 @@ function addOverlayLayers(map) {
         // Labels — the Felt `text` property is the human-readable name
         // for the feature. Rendered at every zoom for now; Jacob will
         // finetune zoom stops once we've decided which layers stay.
+        // Labels — tier-based zoom-fade so the map isn't a soup of
+        // names at overview zoom. Each layer's tier maps to a fade band
+        // (0.5 zoom wide) below which the label is fully transparent
+        // and above which it's fully opaque:
+        //
+        //   always      — stages, camping-areas (opacity: 1 at every zoom)
+        //   close (15+) — gastro, sterne     (fade 14.5 → 15.0)
+        //   veryClose   — produktion, toilets-showers (fade 15.5 → 16.0)
+        //
+        // Produktion has ONE always-visible exception: the "Eclipse"
+        // feature is a headline POI and stays visible at every zoom.
+        // Encoded as a `case` expression so a single symbol layer
+        // still covers the whole produktion feature set.
+        //
+        // Tent-drag override: startTent()#applyDragPaint sets a scalar
+        // FADE_OPACITY (0.2) on every non-camping label, which
+        // overrides the interpolate expression for the duration of
+        // the drag. Snapshot captures the original expression object
+        // via map.getPaintProperty() so restore returns the tier fade
+        // exactly as it was.
+        const fadeClose     = ['interpolate', ['linear'], ['zoom'], 14.5, 0, 15.0, 1];
+        const fadeVeryClose = ['interpolate', ['linear'], ['zoom'], 15.5, 0, 16.0, 1];
+        let textOpacity;
+        if (id === 'stages' || id === 'camping-areas') {
+            textOpacity = 1;
+        } else if (id === 'gastro' || id === 'sterne') {
+            textOpacity = fadeClose;
+        } else if (id === 'produktion') {
+            textOpacity = ['case',
+                ['==', ['get', 'text'], 'Eclipse'], 1,
+                fadeVeryClose,
+            ];
+        } else if (id === 'toilets-showers') {
+            textOpacity = fadeVeryClose;
+        } else {
+            textOpacity = 1;
+        }
+
         map.addLayer({
             id: id + '-label',
             source: id,
@@ -388,6 +426,7 @@ function addOverlayLayers(map) {
                 'text-color': PNG_CREAM,
                 'text-halo-color': PNG_MAGENTA_HALO,
                 'text-halo-width': 1.4,
+                'text-opacity': textOpacity,
             },
         });
     }
