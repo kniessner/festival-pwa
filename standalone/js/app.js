@@ -5,6 +5,7 @@ import { setDay, toggleFilterPanel, resetFilters, toggleEventDetail, setFilterVa
 import { setGridDay, openGridEventDetail, closeGridEventDetail, toggleGridScrollMode, setEventType as setGridEventType } from './views/timetable-grid.js';
 import { store } from './store.js';
 import { switchInfoTab } from './views/info.js';
+import { switchMapView } from './views/map.js';
 import { toggleFavFromCard, setFavTab } from './views/favorites.js';
 import { setupInstallTracking, setupOfflineIndicator, dismissInstallCard, triggerInstall } from './install.js';
 import { showToast } from './ui.js';
@@ -282,6 +283,7 @@ const actions = {
     'toggle-faq': el => toggleFaqItem(el),
     'toggle-lang': () => setLangAndRefresh(store.lang === 'de' ? 'en' : 'de'),
     'switch-info-tab': el => switchInfoTab(el.dataset.tab),
+    'switch-map-view': el => switchMapView(el.dataset.view),
     'toggle-search-bar': () => toggleSearchBar(),
     'close-search-bar': () => closeSearchBar(),
     'dismiss-install-card': () => { dismissInstallCard(); refreshInstallCardIfVisible(); },
