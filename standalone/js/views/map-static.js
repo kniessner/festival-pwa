@@ -7,7 +7,7 @@ import { attachStageSizing } from './map-common.js';
 
 // The map PNG lives in the precached SHELL_ASSETS list so it works offline
 // after the SW's install step — see standalone/sw.js.
-const MAP_IMAGE = 'images/festival-map.png';
+const MAP_IMAGE = 'images/festival-map.webp';
 
 export function renderStaticMap(container) {
     container.innerHTML = `
