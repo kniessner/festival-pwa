@@ -59,19 +59,12 @@ const STAGES_BBOX = [
     [14.5038, 52.2770], // NE
 ];
 
-// Rough pan-limit bounds — keep the user from scrolling far outside
-// the festival footprint. The map is rotated 90° CW (bearing -90),
-// so on screen:
-//   west  = top       east   = bottom
-//   south = left      north  = right
-// Longitude padding is asymmetric — tight on the west (top of screen,
-// where the festival's west shore already lives at the viewport edge)
-// and generous on the east (bottom of screen). Latitude padding is
-// symmetric and looser (≈ 1.3 km each way) for breathing room on the
-// left/right of screen. Jacob will finetune again after review.
+// Pan-limit bounds — hand-picked by Jacob (2026-08-08) from a felt
+// polygon over the festival area. Format is MapLibre's LngLatBounds:
+// [[minLng, minLat], [maxLng, maxLat]].
 const MAP_MAX_BOUNDS = [
-    [14.4790, 52.2590], // SW  (west  = tight top pad)
-    [14.5170, 52.2890], // NE  (east  = loose bottom pad)
+    [14.47923110082644, 52.268736615906164], // SW
+    [14.51706130275221, 52.2816891634412],   // NE
 ];
 
 // ─── View ──────────────────────────────────────────────────────────────
