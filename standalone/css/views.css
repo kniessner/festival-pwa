@@ -1962,8 +1962,15 @@ span.tt-event-stage {
    and the tones are picked to read against the illustrated magenta
    land — not against app-wide surfaces. */
 :root {
-    --map-user-location-dot: #f2e9dc;
-    --map-user-location-accuracy: rgba(242, 233, 220, 0.22);
+    /* beachSand `#e8c98a` from PALETTE — the one palette tone that
+       isn't used by any overlay layer, contrasts well against magenta
+       land, navy water, and its own home (the sandy shore strip).
+       Cream is left to the text/label role so the pin reads as
+       "you are here" instead of "just another label". */
+    --map-user-location-dot: #e8c98a;
+    --map-user-location-accuracy: rgba(232, 201, 138, 0.22);
+    /* Halos stay two-tone: warm cream sparkle + thin dark edge, so
+       the cone survives on the beach and on the deep water. */
     --map-user-cone-halo-light: rgba(242, 233, 220, 0.85);
     --map-user-cone-halo-dark: rgba(28, 7, 22, 0.4);
 }
