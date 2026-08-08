@@ -300,9 +300,9 @@ function buildStyle() {
 // separable by eye. Deliberately loud/high-contrast for the analysis
 // pass — will be re-tuned into the illustrated palette after review.
 const FELT_LAYERS = [
-    { id: 'gastro',          file: 'gastro.geojson',          color: '#ff9540' },
     { id: 'produktion',      file: 'produktion.geojson',      color: '#8b7fa8' },
     { id: 'stages',          file: 'stages.geojson',          color: '#c22a4c' },
+    { id: 'gastro',          file: 'gastro.geojson',          color: '#ff9540' },
     { id: 'sterne',          file: 'sterne.geojson',          color: '#ffd166' },
     { id: 'toilets-showers', file: 'toilets-showers.geojson', color: '#4ecdc4' },
 ];
