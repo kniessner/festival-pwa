@@ -96,11 +96,11 @@ const SHELL_ASSETS = [
     './images/festival-map.png',
     './data/info.json',
     './data/timetable.json',
+    './data/gastro.geojson',
+    './data/produktion.geojson',
     './data/stages.geojson',
-    './data/helenesee-shore.geojson',
-    './data/venues.geojson',
-    './data/food.geojson',
-    './data/osm-features.geojson',
+    './data/sterne.geojson',
+    './data/toilets-showers.geojson',
     './data/en/timetable.json',
     './data/_manifest.json'
 ];
