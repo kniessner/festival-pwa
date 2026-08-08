@@ -62,18 +62,22 @@ const STAGES_BBOX = [
 // Rotate/tilt/zoom-out are allowed within maxBounds; every re-entry
 // to /map resets to these values.
 const DEFAULT_CAMERA = {
-    center: [14.498805, 52.272140],
-    zoom: 13.82,
-    bearing: -63.0,
-    pitch: 24.7,
+    center: [14.494747, 52.274408],
+    zoom: 14.33,
+    bearing: -78.1,
+    pitch: 30.6,
 };
 
 // Pan-limit bounds — hand-picked by Jacob (2026-08-08) from a felt
 // polygon over the festival area. Format is MapLibre's LngLatBounds:
 // [[minLng, minLat], [maxLng, maxLat]].
 const MAP_MAX_BOUNDS = [
-    [14.478404931523073, 52.26777184691164],  // SW
-    [14.521079717325279, 52.283739744887185], // NE
+    // Loosened to ≈ 3 km lat span so the mobile viewport can fit
+    // the whole festival at a comfortable zoom on load. Longitude
+    // range unchanged from Jacob's round-4 polygon; latitude range
+    // pushed ±670 m beyond it (N/S ends).
+    [14.478404931523073, 52.26177184691164],   // SW
+    [14.521079717325279, 52.290739744887185],  // NE
 ];
 
 // ─── View ──────────────────────────────────────────────────────────────
