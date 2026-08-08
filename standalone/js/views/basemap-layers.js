@@ -3,7 +3,7 @@
 // Source: protomaps-themes-base@4.5.0::noLabelsWithCustomTheme("basemap", …)
 // Palette source: js/views/map-palette.js (BASEMAP_THEME_OVERRIDE)
 // Total layers: 58
-// Anchor palette: canvasDeep=#5c1c47, earth=#832e63, water=#234999
+// Anchor palette: canvasDeep=#5c1c47, earth=#832e63, water=#080943
 //
 // To regenerate:  npm run build:basemap
 
@@ -404,7 +404,7 @@ export default [
     "source": "basemap",
     "source-layer": "water",
     "paint": {
-      "fill-color": "#234999"
+      "fill-color": "#080943"
     }
   },
   {
@@ -419,7 +419,7 @@ export default [
       "stream"
     ],
     "paint": {
-      "line-color": "#234999",
+      "line-color": "#080943",
       "line-width": 0.5
     }
   },
@@ -435,7 +435,7 @@ export default [
       "river"
     ],
     "paint": {
-      "line-color": "#234999",
+      "line-color": "#080943",
       "line-width": [
         "interpolate",
         [
