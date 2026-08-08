@@ -418,11 +418,15 @@ function addOverlayLayers(map) {
             layout: {
                 'text-field': ['get', 'text'],
                 'text-font': FONT_HELPER,
-                // Stages get a bigger label so the floor names read
-                // clearly at glance-zoom; other overlays stay at the
-                // compact 11 px so infrastructure clusters (DIXIs,
-                // shower containers, etc) don't shout.
-                'text-size': id === 'stages' ? 15 : 11,
+                // Anchor labels get bigger sizes so they read at
+                // glance-zoom without a pinch: stages are the primary
+                // wayfinding target, camp names the second. Everything
+                // else stays at the compact 11 px so infrastructure
+                // clusters (DIXIs, shower containers, etc) don't shout.
+                'text-size':
+                    id === 'stages'         ? 17 :
+                    id === 'camping-areas'  ? 15 :
+                    11,
                 'text-anchor': 'center',
                 'text-max-width': 8,
                 'text-allow-overlap': false,
