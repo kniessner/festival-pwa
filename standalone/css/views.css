@@ -2049,6 +2049,153 @@ span.tt-event-stage {
     transform: translate(-50%, 0);
 }
 
+/* ── Fly-to popover (opens above the fly-to button) ────────────────────
+   Small contextual menu mounted inside .festival-map. The overlay
+   itself fills the map so a backdrop-click closes the menu, but the
+   card is bottom-left anchored and cream so it feels like a native
+   contextual menu attached to the button below it.
+
+   Interaction contract:
+     .festival-map-flyto             overlay wrapper (backdrop hit target)
+     .festival-map-flyto-card        the cream popover itself
+     .festival-map-flyto-entry       one tap row per POI
+
+   Map underneath stays interactive: the overlay is transparent to
+   pointer events on everything except the card and the card's own
+   rows. This matches fusion's legend-modal behaviour (map still pans
+   with an open legend). */
+.festival-map-flyto {
+    position: absolute;
+    inset: 0;
+    z-index: 6; /* above the toast (z 5) so a stale toast can't cover
+                   the newly-opened menu. */
+    /* No pointer-events on the wrapper itself except where its child
+       card sits; see backdrop-click handler in js/views/map-flyto.js
+       which filters by e.target === overlay. */
+    pointer-events: auto;
+    background: transparent;
+}
+
+.festival-map-flyto-card {
+    position: absolute;
+    /* Anchored to sit ABOVE the button group, aligned to its left
+       edge. Vertical: 90 px lines up with the top of the 44 px
+       control buttons (26 px bottom-inset + 44 px height + 20 px
+       gap = 90 px), same math as the attribution stripe. */
+    left: 20px;
+    bottom: calc(90px + env(safe-area-inset-bottom));
+    /* Bounded so it never crosses the right edge on narrow phones
+       (320 px viewport minus 20 px left inset minus 20 px right
+       safety = 280 px cap). */
+    min-width: 240px;
+    max-width: min(280px, calc(100% - 40px));
+    background: var(--bg-card);
+    color: var(--text);
+    border-radius: var(--card-radius, 20px);
+    padding: 12px 8px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    /* Prevent MapLibre's touch-action: none on .festival-map from
+       swallowing scroll on tall popovers (won't happen with 4 rows
+       but future-proofs). */
+    touch-action: manipulation;
+    /* Subtle open animation — fade + rise 6 px so the popover
+       feels attached to the button it emerges from. */
+    animation: festival-map-flyto-in 0.18s ease-out;
+}
+
+@keyframes festival-map-flyto-in {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.festival-map-flyto-header {
+    font-family: var(--wp--preset--font-family--megan-display, 'Megan Display'), serif;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-on-card, rgba(27, 25, 42, 0.65));
+    padding: 4px 12px 6px;
+}
+
+.festival-map-flyto-entry {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    background: transparent;
+    border: none;
+    border-radius: 12px;
+    color: var(--text);
+    text-align: left;
+    font-size: 1rem;
+    line-height: 1.2;
+    cursor: pointer;
+    min-height: 44px;
+    transition: background-color 0.12s ease;
+}
+
+.festival-map-flyto-entry:hover,
+.festival-map-flyto-entry:focus-visible {
+    background: rgba(15, 18, 130, 0.08);
+    outline: none;
+}
+
+.festival-map-flyto-entry:focus-visible {
+    box-shadow: 0 0 0 2px var(--accent-pink);
+}
+
+.festival-map-flyto-entry:active {
+    background: rgba(15, 18, 130, 0.14);
+}
+
+.festival-map-flyto-icon {
+    display: block;
+    width: 28px;
+    height: 28px;
+    flex-shrink: 0;
+}
+
+.festival-map-flyto-label {
+    flex: 1;
+    font-family: var(--font-body, 'Instrument Sans'), sans-serif;
+}
+
+/* ── POI quick-jump ripple (fires after a fly-to settles) ────────────────
+   Ported from pwa_test/src/index.css. A single ring inside a
+   MapLibre Marker at the target coord, so the ring stays glued to
+   the world position while the camera is still moving. CSS handles
+   the whole animation — JS just mounts / unmounts the marker.
+
+   Colour: beach-sand (#e8c98a) — the app's "about me" accent shared
+   with the tent marker, user-dot, and locate-me FAB. Reads warmly
+   against the magenta land + navy water without competing with the
+   pink menu FAB. */
+@keyframes poi-pulse {
+    0%   { transform: scale(0.3); opacity: 1; }
+    70%  {                        opacity: 0.45; }
+    100% { transform: scale(3.2); opacity: 0; }
+}
+
+.poi-pulse {
+    position: relative;
+    width: 32px;
+    height: 32px;
+    pointer-events: none;
+}
+
+.poi-pulse-ring {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    border: 3px solid #e8c98a;
+    background-color: rgba(232, 201, 138, 0.35);
+    animation: poi-pulse 1.8s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+    will-change: transform, opacity;
+}
+
 
 /* Tab strip that lets the user switch between the interactive MapLibre
    view and the static illustrated PNG. Reuses the timetable's

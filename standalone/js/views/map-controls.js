@@ -14,12 +14,13 @@ import { t } from '../i18n.js';
 import { store } from '../store.js';
 import { isNearFestival } from './map-common.js';
 import { showMapToast } from './map-toast.js';
+import { openFlyToMenu, closeFlyToMenu } from './map-flyto.js';
 
-// Zoom target for the fly-to. Matches Jacob's design intent that
-// "locate me" only means something at close-in zoom — the marker is
-// too small to read at overview zoom, so forcing 16.5 puts the user
-// squarely in "I can see the stages around me" range.
-const LOCATE_ZOOM = 16.5;
+// Zoom target for the fly-to. Matches map-flyto.js#FLYTO_ZOOM (18)
+// so the two navigation controls land the camera at the same close-
+// in scale — they read as siblings visually and behaviourally. maxZoom
+// is 19, so 18 still leaves one pinch of headroom.
+const LOCATE_ZOOM = 18;
 
 // Camera animation duration (ms). MapLibre's default is 1000 but the
 // festival map is small; the swoop finishes fast so the fix feels
@@ -38,15 +39,27 @@ export function createMapControls(map, stage) {
     group.className = 'festival-map-controls';
 
     const locateBtn = buildLocateButton();
+    // Order matters visually: locate on the left (mirrors the menu
+    // FAB's role as the primary action per corner), fly-to on the
+    // right, so they read as "where am I / where to next" left-to-right.
+    const flyToBtn = buildFlyToButton();
     group.appendChild(locateBtn);
+    group.appendChild(flyToBtn);
 
     stage.appendChild(group);
 
     const onLocateClick = () => handleLocateClick(map, stage);
     locateBtn.addEventListener('click', onLocateClick);
 
+    const onFlyToClick = () => openFlyToMenu(map, stage);
+    flyToBtn.addEventListener('click', onFlyToClick);
+
     return () => {
         locateBtn.removeEventListener('click', onLocateClick);
+        flyToBtn.removeEventListener('click', onFlyToClick);
+        // Close a possibly-open popover so its escape-key listener is
+        // unhooked before the map goes away.
+        closeFlyToMenu(stage);
         if (group.parentNode) group.parentNode.removeChild(group);
     };
 }
@@ -58,6 +71,19 @@ function buildLocateButton() {
     btn.setAttribute('aria-label', t('map.locateMe'));
     btn.innerHTML = `
         <img src="images/locate.svg" alt="" class="festival-map-control-icon"
+             width="20" height="20">
+    `;
+    return btn;
+}
+
+function buildFlyToButton() {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'festival-map-control-btn festival-map-flyto-btn';
+    btn.setAttribute('aria-label', t('map.flyto.title'));
+    btn.setAttribute('aria-haspopup', 'menu');
+    btn.innerHTML = `
+        <img src="images/fly-navigation.svg" alt="" class="festival-map-control-icon"
              width="20" height="20">
     `;
     return btn;
