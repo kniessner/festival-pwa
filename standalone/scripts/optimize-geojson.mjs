@@ -9,9 +9,14 @@
  * Idempotent. Safe to re-run any time the Felt export refreshes.
  *
  * Whitelist rationale (2026-08-08):
- *   text        — popup title + map label
- *   description — popup body
- *   symbol      — popup category badge
+ *   text        — label rendered by the -label symbol layer + used by
+ *                 the tent's initial-drop logic for future features
+ *
+ * `description` and `symbol` were kept while the click-popup existed;
+ * that popup was removed in f3f8a5e so those two fields no longer
+ * have a runtime consumer. Rerunning this script now strips them.
+ * Add them back to KEEP_PROPS if a future feature (e.g. tap-to-detail
+ * bottom sheet) needs them again.
  *
  * Everything else in the raw Felt export (id, parentId, type, _shape,
  * radius, rotation, color) is unused by the code. Colour is set from
@@ -29,7 +34,7 @@ import { fileURLToPath } from 'node:url';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const DATA_DIR = join(__dirname, '..', 'data');
 
-const KEEP_PROPS = new Set(['text', 'description', 'symbol']);
+const KEEP_PROPS = new Set(['text']);
 const COORD_PRECISION = 6;
 
 const round = (n) => Number(n.toFixed(COORD_PRECISION));

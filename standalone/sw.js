@@ -7,7 +7,7 @@
  *   - Cross-origin assets        → Cache-First only for CORS/basic responses
  */
 
-const CACHE_VERSION = '1786194667';
+const CACHE_VERSION = '1786195980';
 const APP_NAME = 'bucht-standalone';
 const CACHE_NAME = `${APP_NAME}-v${CACHE_VERSION}`;
 
@@ -70,6 +70,7 @@ const SHELL_ASSETS = [
     './js/views/basemap-layers.js',
     './js/views/user-location.js',
     './js/views/tent.js',
+    './js/views/map-layers.js',
     './js/views/favorites.js',
     './manifest.json',
     './vendor/maplibre-gl.js',

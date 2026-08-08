@@ -25,6 +25,7 @@
 
 import { safeGetJSON, safeSetJSON } from '../helpers/safe-storage.js';
 import { t } from '../i18n.js';
+import { FELT_LAYERS } from './map-layers.js';
 
 // ─── Config ──────────────────────────────────────────────────────────
 
@@ -54,25 +55,26 @@ const TENT_HEIGHT = 60;
 //                          me on one of these"
 //   everything else       — FADED to 0.2 so the highlighted camps pop
 //
-// Layer ids kept in sync with map-interactive.js#FELT_LAYERS. If that
-// list grows, extend both FADE_LAYERS and (if it's a new highlight
-// group) HIGHLIGHT_OVERRIDES. Better long-term: refactor both sites
-// to share a single source of truth.
-const FADE_LAYERS = [
-    'gastro-fill',          'gastro-outline',          'gastro-point',          'gastro-label',
-    'produktion-fill',      'produktion-outline',      'produktion-point',      'produktion-label',
-    'stages-fill',          'stages-outline',          'stages-point',          'stages-label',
-    'sterne-fill',          'sterne-outline',          'sterne-point',          'sterne-label',
-    'toilets-showers-fill', 'toilets-showers-outline', 'toilets-showers-point', 'toilets-showers-label',
-];
+// FADE_LAYERS is derived from map-interactive.js#FELT_LAYERS so adding
+// a new overlay group there automatically extends the fade set here —
+// map-interactive.js is now the single source of truth.
+
+// The one overlay group we highlight instead of fade. If we ever want
+// to promote another layer to the same "drop target" role, add it
+// here and give it HIGHLIGHT_OVERRIDES entries.
+const HIGHLIGHT_LAYER_ID = 'camping-areas';
+
+const FADE_LAYERS = FELT_LAYERS
+    .filter(({ id }) => id !== HIGHLIGHT_LAYER_ID)
+    .flatMap(({ id }) => [id + '-fill', id + '-outline', id + '-point', id + '-label']);
 const FADE_OPACITY = 0.2;
 
 // Paint-property overrides applied to the camping-areas layers during
 // drag. Each entry: [layerId, paintKey, dragValue]. On drop they're
-// restored to DEFAULT_PAINT[paintKey].
+// restored to whatever the snapshot captured pre-drag.
 const HIGHLIGHT_OVERRIDES = [
-    ['camping-areas-fill',    'fill-opacity', 0.75],  // pop from 0.5
-    ['camping-areas-outline', 'line-opacity', 1.0],   // pop from 0.9
+    ['camping-areas-fill',    'fill-opacity', 0.75],  // pop from map-interactive.js default
+    ['camping-areas-outline', 'line-opacity', 1.0],   //   ditto
     ['camping-areas-outline', 'line-width',   2.6],   // thicken from 1.2
     ['camping-areas-label',   'text-opacity', 1.0],   // already 1.0, but explicit for symmetry
 ];
@@ -108,43 +110,37 @@ function paintKeyFor(layerId) {
     return null;
 }
 
-// Snapshot of pre-drag paint values so restore reads from the actual
+// Snapshot pre-drag paint values so restore reads from the actual
 // live state rather than a hardcoded mirror of addOverlayLayers. Keeps
-// the two files decoupled: change camping-areas' default fill-opacity
-// in map-interactive.js and tent.js doesn't need to know.
+// tent.js and map-interactive.js decoupled: change camping-areas'
+// default fill-opacity in map-interactive.js and this file doesn't
+// need to know.
 //
-// Structure: Map<layerId, Map<paintKey, originalValue>>. Populated on
-// dragstart, drained on dragend / stop().
-let dragPaintSnapshot = null;
-
+// Structure: Map<layerId, Map<paintKey, originalValue>>. The snapshot
+// belongs to a single startTent() invocation — owned by that closure,
+// NOT module-scoped, so two overlapping tent lifetimes (HMR, PiP, a
+// future split view) wouldn't clobber each other's restore state.
 function snapshotPaint(map) {
-    dragPaintSnapshot = new Map();
-    // Snapshot every FADE_LAYERS opacity + every HIGHLIGHT_OVERRIDES
-    // key/layer pair so we can restore whatever we're about to change.
+    const snap = new Map();
+    const record = (id, key) => {
+        if (!map.getLayer(id)) return;
+        try {
+            const v = map.getPaintProperty(id, key);
+            const inner = snap.get(id) ?? new Map();
+            inner.set(key, v);
+            snap.set(id, inner);
+        } catch (_) { /* nothing */ }
+    };
     for (const id of FADE_LAYERS) {
-        if (!map.getLayer(id)) continue;
         const key = paintKeyFor(id);
-        if (!key) continue;
-        try {
-            const v = map.getPaintProperty(id, key);
-            const inner = dragPaintSnapshot.get(id) ?? new Map();
-            inner.set(key, v);
-            dragPaintSnapshot.set(id, inner);
-        } catch (_) { /* nothing */ }
+        if (key) record(id, key);
     }
-    for (const [id, key] of HIGHLIGHT_OVERRIDES) {
-        if (!map.getLayer(id)) continue;
-        try {
-            const v = map.getPaintProperty(id, key);
-            const inner = dragPaintSnapshot.get(id) ?? new Map();
-            inner.set(key, v);
-            dragPaintSnapshot.set(id, inner);
-        } catch (_) { /* nothing */ }
-    }
+    for (const [id, key] of HIGHLIGHT_OVERRIDES) record(id, key);
+    return snap;
 }
 
-function applyDragPaint(map) {
-    snapshotPaint(map);
+function applyDragPaint(map, snapshotRef) {
+    snapshotRef.current = snapshotPaint(map);
     // Fade every non-camping overlay to FADE_OPACITY.
     for (const id of FADE_LAYERS) {
         if (!map.getLayer(id)) continue;
@@ -162,15 +158,16 @@ function applyDragPaint(map) {
 // Restore paint props from the pre-drag snapshot. If no snapshot
 // exists (e.g. stop() called before any drag ever happened), this is
 // a no-op — nothing to undo.
-function restorePaint(map) {
-    if (!dragPaintSnapshot) return;
-    for (const [id, inner] of dragPaintSnapshot) {
+function restorePaint(map, snapshotRef) {
+    const snap = snapshotRef.current;
+    if (!snap) return;
+    for (const [id, inner] of snap) {
         if (!map.getLayer(id)) continue;
         for (const [key, val] of inner) {
             try { map.setPaintProperty(id, key, val); } catch (_) { /* nothing */ }
         }
     }
-    dragPaintSnapshot = null;
+    snapshotRef.current = null;
 }
 
 // ─── Public API ──────────────────────────────────────────────────────
@@ -220,12 +217,19 @@ export function startTent(map) {
         marker.togglePopup();
     }
 
+    // Pre-drag paint snapshot lives in this closure — not module-scoped —
+    // so two overlapping startTent() lifetimes (HMR, future PiP-style
+    // split view, or a route flap) can't clobber each other's restore
+    // state. Wrapped in a { current } cell so apply/restore can share a
+    // stable reference by identity.
+    const snapshotRef = { current: null };
+
     // Drag lifecycle: dim overlays on start, persist + restore on end.
-    marker.on('dragstart', () => applyDragPaint(map));
+    marker.on('dragstart', () => applyDragPaint(map, snapshotRef));
     marker.on('dragend', () => {
         const { lng, lat } = marker.getLngLat();
         savePosition(lng, lat);
-        restorePaint(map);
+        restorePaint(map, snapshotRef);
         // Close the "drag me" hint permanently after first placement —
         // subsequent drags don't need re-onboarding.
         const p = marker.getPopup();
@@ -253,6 +257,6 @@ export function startTent(map) {
         stopped = true;
         try { map.off('zoom', onZoom); } catch (_) { /* nothing */ }
         try { marker.remove(); } catch (_) { /* nothing */ }
-        try { restorePaint(map); } catch (_) { /* nothing */ }
+        try { restorePaint(map, snapshotRef); } catch (_) { /* nothing */ }
     };
 }
