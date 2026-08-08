@@ -2130,20 +2130,6 @@ span.tt-event-stage {
 }
 .tent-marker:active { cursor: grabbing; }
 
-/* Applied by tent.js during drag when the tent is over ground outside
-   the TENT_ALLOWED_AREA polygon. Fades the tent to signal "can't drop
-   here"; the tent snaps back to the last valid position on release,
-   so this is purely a mid-drag affordance, not a permanent state.
-   Grayscale + reduced opacity reads as "disabled" without changing
-   the tent's silhouette. */
-.tent-marker.invalid {
-    opacity: 0.45;
-    filter:
-        grayscale(60%)
-        drop-shadow(0 1px 1px rgba(28, 7, 22, 0.55))
-        drop-shadow(0 0 4px rgba(28, 7, 22, 0.25));
-}
-
 .map-body {
     /* Wrapper that holds either variant's own container. Kept as a plain
        block; each variant sets its own inner element height via JS. */
