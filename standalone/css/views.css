@@ -2162,28 +2162,7 @@ span.tt-event-stage {
     border-bottom-color: #f2e9dc !important;
 }
 
-.festival-map-popup-title {
-    font-weight: 700;
-    font-size: 14px;
-    margin-bottom: 4px;
-    letter-spacing: 0.02em;
-}
-
-.festival-map-popup-cat {
-    display: inline-block;
-    font-size: 10px;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: #8b235f;
-    background: rgba(139, 35, 95, 0.1);
-    padding: 2px 6px;
-    border-radius: 3px;
-    margin-bottom: 6px;
-}
-
-.festival-map-popup-desc {
-    font-size: 12px;
-    line-height: 1.4;
-    color: #4a3040;
-    font-style: italic;
-}
+/* .festival-map-popup-* classes were removed together with the click
+   popup on 2026-08-08 — the -label symbol layers do the naming job
+   now. The two .maplibregl-popup rules above still theme the tent's
+   "Drag me to your tent!" popup (see js/views/tent.js). */

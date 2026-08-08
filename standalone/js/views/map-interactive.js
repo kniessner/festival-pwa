@@ -4,7 +4,6 @@
 // tab dispatcher (map.js) can mount either variant.
 
 import { t } from '../i18n.js';
-import { escapeHtml } from '../ui.js';
 import { attachStageSizing } from './map-common.js';
 import basemapLayers from './basemap-layers.js';
 import { PALETTE } from './map-palette.js';
@@ -394,33 +393,10 @@ function addOverlayLayers(map) {
         });
     }
 
-    // Click popup — reads whichever Felt layer's fill / point was hit.
-    // Layers list is derived from FELT_LAYERS so it stays in sync if we
-    // add or remove groups.
-    const interactiveLayerIds = FELT_LAYERS.flatMap(({ id }) => [
-        id + '-fill', id + '-point',
-    ]);
-    map.on('click', (e) => {
-        const features = map.queryRenderedFeatures(e.point, {
-            layers: interactiveLayerIds,
-        });
-        if (!features.length) return;
-        const f = features[0];
-        const p = f.properties || {};
-        const name = p.text || '';
-        const desc = p.description || '';
-        const cat = p.symbol || '';
-        new window.maplibregl.Popup({ closeButton: true, offset: 8 })
-            .setLngLat(e.lngLat)
-            .setHTML(`
-                <div class="festival-map-popup">
-                    <div class="festival-map-popup-title">${escapeHtml(name)}</div>
-                    ${cat ? `<div class="festival-map-popup-cat">${escapeHtml(String(cat))}</div>` : ''}
-                    ${desc ? `<div class="festival-map-popup-desc">${escapeHtml(desc)}</div>` : ''}
-                </div>
-            `)
-            .addTo(map);
-    });
+    // Click-to-popup on overlay features was removed — the labels
+    // rendered by the -label symbol layer are all the affordance we
+    // want. Nothing else in this file needs escapeHtml either, so
+    // the import above is gone.
 
     interactiveLayerIds.forEach((id) => {
         map.on('mouseenter', id, () => { map.getCanvas().style.cursor = 'pointer'; });
