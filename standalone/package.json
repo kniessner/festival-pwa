@@ -9,6 +9,7 @@
     "build": "node scripts/build.js",
     "build:basemap": "node scripts/generate-basemap-layers.mjs",
     "build:search-index": "node scripts/build-search-index.mjs",
+    "sanitize:geojson": "node scripts/sanitize-geojson.mjs",
     "optimize:geojson": "node scripts/optimize-geojson.mjs",
     "test": "node --test tests/*.mjs"
   },

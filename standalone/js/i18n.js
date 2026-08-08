@@ -49,6 +49,7 @@ const STRINGS = {
         'search.category.produktion': 'Ort',
         'search.category.toilet': 'Toilette',
         'search.category.shower': 'Dusche',
+        'search.category.landmark': 'Ort',
         // Map search: dropdown chrome.
         'search.noMatches': 'Keine Treffer',
         'search.moreResults': '+{{n}} weitere …',
@@ -196,6 +197,7 @@ const STRINGS = {
         'search.category.produktion': 'Spot',
         'search.category.toilet': 'Toilet',
         'search.category.shower': 'Shower',
+        'search.category.landmark': 'Landmark',
         // Map search: dropdown chrome.
         'search.noMatches': 'No matches',
         'search.moreResults': '+{{n}} more …',

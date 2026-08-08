@@ -39,6 +39,7 @@ const CATEGORY_BY_FILE = {
     'sterne.geojson':          'sterne',
     'produktion.geojson':      'produktion',
     'toilets-showers.geojson': null,   // split at runtime by name (toilet vs shower)
+    'landmarks.geojson':       'landmark',
 };
 
 /**
