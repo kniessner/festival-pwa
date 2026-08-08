@@ -178,25 +178,31 @@ function handleEntryPick(map, stage, poi) {
     }
 
     closeFlyToMenu(stage);
+    flyToCoordWithPulse(map, target);
+}
 
+/**
+ * Public flyTo + pulse-ring helper used by both the fly-to menu
+ * itself and by map-search (via a `map:flyTo` CustomEvent, wired in
+ * map-interactive.js). Kept here so the ripple lifecycle lives in one
+ * module.
+ *
+ * @param {maplibregl.Map} map
+ * @param {[number, number]} coord  [lng, lat]
+ */
+export function flyToCoordWithPulse(map, coord) {
+    // Cancel any pending pulse first — same reasoning as in
+    // handleLocateClick(). MapLibre's flyTo-interrupts-flyTo event
+    // ordering is implementation-defined, so we don't want to rely
+    // on it.
+    cancelPendingPulse(map);
     map.flyTo({
-        center: target,
+        center: coord,
         zoom: MAP_CLOSE_ZOOM,
         duration: MAP_FLYTO_DURATION_MS,
-        // essential = don't respect prefers-reduced-motion. The
-        // animation IS the "here you go" feedback — a jump would
-        // leave the user disoriented.
         essential: true,
     });
-
-    // Ripple ring at the POI's world coord, fired once the camera
-    // settles. See armPulseOnMoveEnd for the rapid-re-tap guarding —
-    // taps that arrive while a previous flyTo is still in progress
-    // must cancel that pulse handler, or the ring would appear at
-    // the wrong (previous) coord when the interrupted flyTo emits
-    // moveend from being aborted. Ported from
-    // pwa_test/src/Map/MapComponent.tsx#flyToPoi.
-    armPulseOnMoveEnd(map, target);
+    armPulseOnMoveEnd(map, coord);
 }
 
 // ─── Ripple lifecycle

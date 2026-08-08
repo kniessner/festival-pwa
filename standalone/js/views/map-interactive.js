@@ -10,6 +10,8 @@ import { PALETTE } from './map-palette.js';
 import { startUserLocation } from './user-location.js';
 import { startTent } from './tent.js';
 import { createMapControls } from './map-controls.js';
+import { flyToCoordWithPulse } from './map-flyto.js';
+import { closeMapSearchDropdown } from './map-search.js';
 import { removeMapToast } from './map-toast.js';
 import { FELT_LAYERS } from './map-layers.js';
 
@@ -141,6 +143,12 @@ export function renderInteractiveMap(container) {
         if (map && typeof map.__mapControlsStop === 'function') {
             try { map.__mapControlsStop(); } catch (_) { /* nothing */ }
         }
+        if (map && typeof map.__mapFlyToStop === 'function') {
+            try { map.__mapFlyToStop(); } catch (_) { /* nothing */ }
+        }
+        // Kill any open map-search dropdown so its outside-click
+        // listener can't fire against a detached document tree.
+        try { closeMapSearchDropdown(); } catch (_) { /* nothing */ }
         removeMapToast(stage);
         try {
             if (map) map.remove();
@@ -261,6 +269,19 @@ function createMap(stage, gestureState) {
         // is up so click handlers can flyTo without racing the load.
         map.__mapControlsStop = createMapControls(map, stage);
     });
+
+    // Search route: js/views/map-search.js dispatches a `map:flyTo`
+    // CustomEvent when the user picks a result. Kept as an event
+    // (rather than a direct call) because map-search doesn't own the
+    // map instance — the map does. Handler runs the same pulse-armed
+    // flyTo the fly-to menu uses, so both entry points feel identical.
+    const onMapFlyToRequest = (e) => {
+        const c = e.detail?.coord;
+        if (!Array.isArray(c) || c.length !== 2) return;
+        flyToCoordWithPulse(map, c);
+    };
+    document.addEventListener('map:flyTo', onMapFlyToRequest);
+    map.__mapFlyToStop = () => document.removeEventListener('map:flyTo', onMapFlyToRequest);
 
     // Camera-state debug helper — commented out but preserved for
     // future rounds of default-tuning. Uncomment, deploy, and every

@@ -1,0 +1,13 @@
+<!--
+    Generic location pin. Fallback icon for map-search rows and any
+    future POI row whose category doesn't have a dedicated glyph
+    (used today by shower / bar / food / awareness / entrance /
+    wristband / recycling synonym rows). Matches the 24×24 grid and
+    stroke language of `poi-tent.svg` / `poi-toilet.svg` / `poi-info.svg`
+    so the dropdown reads as one visual family.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+     stroke="currentColor" stroke-width="2" stroke-linejoin="round">
+    <path d="M12 22 s-7-7.6 -7-13 A7 7 0 0 1 19 9 c0 5.4 -7 13 -7 13 z"/>
+    <circle cx="12" cy="9" r="2.5"/>
+</svg>

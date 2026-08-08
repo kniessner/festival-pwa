@@ -1,6 +1,7 @@
 import { loadData, loadManifest, refreshAllData, refreshTimetableData } from './store.js';
 import { loadPage, renderNav } from './router.js';
 import { setupSearch, scrollToItem, closeSearchModal } from './search.js';
+import { closeMapSearchDropdown } from './views/map-search.js';
 import { setDay, toggleFilterPanel, resetFilters, toggleEventDetail, setFilterValue, setEventType, prepareJumpToEvent } from './views/timetable.js';
 import { setGridDay, openGridEventDetail, closeGridEventDetail, toggleGridScrollMode, setEventType as setGridEventType } from './views/timetable-grid.js';
 import { store } from './store.js';
@@ -117,6 +118,9 @@ function closeSearchBar() {
     document.getElementById('searchBar').classList.remove('open');
     document.getElementById('searchInput').value = '';
     closeSearchModal();
+    // Close the map-search dropdown too — same input, two possible
+    // result surfaces depending on the current route.
+    closeMapSearchDropdown();
 }
 
 function updateLangSwitcherLabel() {

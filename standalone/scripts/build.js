@@ -193,6 +193,12 @@ async function build() {
     const newVersion = execFileSync(path.join(ROOT_DIR, 'scripts', 'bump-cache-version.sh'), { encoding: 'utf8' }).trim();
     console.log(`   🔁 Cache version bumped to ${newVersion}`);
 
+    // Rebuild the map search index from the current geojsons. Kept
+    // in-tree (data/map-search-index.json) so dev servers work without
+    // an explicit build, and re-generated here so we can never ship a
+    // stale index. Cheap (< 100 ms for 100-ish features).
+    execFileSync(process.execPath, [path.join(ROOT_DIR, 'scripts', 'build-search-index.mjs')], { stdio: 'inherit' });
+
     fs.rmSync(DIST_DIR, { recursive: true, force: true });
     fs.mkdirSync(DIST_DIR, { recursive: true });
 
