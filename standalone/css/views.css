@@ -1896,16 +1896,17 @@ span.tt-event-stage {
    Single vertical linear-gradient — no mask-composite needed since
    we're not intersecting two gradients any more. */
 .festival-map .maplibregl-canvas {
-    --festival-map-fade: 72px;
+    --festival-map-fade-top: 72px;
+    --festival-map-fade-bottom: 90px;
     -webkit-mask-image: linear-gradient(to bottom,
         transparent 0,
-        #000 var(--festival-map-fade),
-        #000 calc(100% - var(--festival-map-fade)),
+        #000 var(--festival-map-fade-top),
+        #000 calc(100% - var(--festival-map-fade-bottom)),
         transparent 100%);
     mask-image: linear-gradient(to bottom,
         transparent 0,
-        #000 var(--festival-map-fade),
-        #000 calc(100% - var(--festival-map-fade)),
+        #000 var(--festival-map-fade-top),
+        #000 calc(100% - var(--festival-map-fade-bottom)),
         transparent 100%);
     mask-mode: alpha;
     mask-repeat: no-repeat;
