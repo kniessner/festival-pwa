@@ -55,11 +55,19 @@ const TENT_POSITION_KEY = 'bucht-tent-position';
 // If we ever grow the max/min tunables, revisit these in one place:
 const ASPECT_RATIO = 0.73;
 const TENT_HEIGHT_MAX = 50;   // px at overview zoom (≤ SHRINK_START)
-const TENT_HEIGHT_MIN = 28;   // px at maxZoom — still large enough to
-                              // grab under a finger, small enough to
-                              // reveal the ground it pins.
+const TENT_HEIGHT_MIN = 36;   // px floor, hit at SHRINK_END and held
+                              // from there on. Big enough to grab
+                              // under a finger at the tightest zoom;
+                              // small enough that the ground under it
+                              // is still visible.
 const TENT_SHRINK_START_ZOOM = 14;   // stays at MAX below this
-const TENT_SHRINK_END_ZOOM   = 19;   // hits MIN at this (== maxZoom)
+const TENT_SHRINK_END_ZOOM   = 22;   // interp target. maxZoom is 19,
+                                     // so we never actually reach MIN
+                                     // — at zoom 19 the tent lands at
+                                     // ~41 px (halfway-plus of the
+                                     // 50 → 36 shrink). This is the
+                                     // "comfortable-at-close-up" size
+                                     // Jacob asked for.
 
 // Legacy re-export: TENT_HEIGHT was the marker's fixed base size in
 // the previous formula and is used elsewhere (drag-me popup offsets,
