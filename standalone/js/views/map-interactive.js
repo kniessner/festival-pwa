@@ -65,7 +65,7 @@ const DEFAULT_CAMERA = {
     center: [14.496068, 52.274408],
     zoom: 14.33,
     bearing: -78.1,
-    pitch: 30.6,
+    pitch: 20,
 };
 
 // Pan-limit bounds — hand-picked by Jacob (2026-08-08) from a felt
