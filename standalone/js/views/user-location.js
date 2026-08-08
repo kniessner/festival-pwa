@@ -1,7 +1,7 @@
 // User-location marker with heading cone — imperative port of the
-// pwa_test React hooks (useDeviceHeading + useUserMarker). Bootstraps
-// geolocation.watchPosition + a smoothed deviceorientation stream, and
-// paints a MapLibre Marker with the same DOM structure the pwa_test
+// pwa_test React hooks (useDeviceHeading + useUserMarker). Consumes
+// the shared 'locationchange' stream from js/location.js plus a
+// smoothed deviceorientation stream, and paints a MapLibre Marker with the same DOM structure the pwa_test
 // map uses:
 //
 //   <div class="user-location-marker has-heading">
@@ -16,8 +16,10 @@
 // wrapper + cone (position, halo, palette) lives in css/views.css.
 //
 // Battery / lifecycle:
-//   - watchPosition is high-accuracy but stops when the caller invokes
-//     the returned cleanup (route change, map teardown).
+//   - We consume the shared 'locationchange' stream from js/location.js
+//     instead of running our own watchPosition (DRY refactor,
+//     2026-08-08). Kills the second parallel GPS subscriber the map
+//     used to run. See the module-header block below for the rationale.
 //   - deviceorientation listener detaches when document.hidden flips
 //     true (screen off / tab backgrounded).
 //   - No festival-bounds gate in this initial port — pwa_test's version
@@ -28,11 +30,13 @@
 //     as a stop-gap we trigger it on the first pointerdown on the map
 //     canvas (Android is a no-op, iOS gets a permission prompt).
 
+import { store } from '../store.js';
+import { startLocationWatch } from '../location.js';
+
 export function startUserLocation(map) {
     // ─── State + refs ─────────────────────────────────────────────────
     // Kept in closure vars because the port is imperative; the React
     // version threaded these through hook state.
-    let watchId = null;
     let marker = null;
     let lastHeading = null;         // smoothed heading, or null
     let orientationAttached = false;
@@ -195,40 +199,44 @@ export function startUserLocation(map) {
     if (rootEl) rootEl.addEventListener('pointerdown', iosTrigger, { once: true, passive: true });
 
     // ─── Geolocation ──────────────────────────────────────────────────
-    if (navigator.geolocation && navigator.geolocation.watchPosition) {
-        watchId = navigator.geolocation.watchPosition(
-            (pos) => {
-                if (removed) return;
-                const { longitude, latitude } = pos.coords;
-                ensureMarker(longitude, latitude);
-                // Apply the latest heading immediately after the marker
-                // exists so the first fix already shows the cone
-                // (subsequent orientation events keep it updated).
-                applyHeading(lastHeading);
-            },
-            (err) => {
-                // Permission denied / position unavailable / timeout.
-                // Nothing visible happens \u2014 the cone simply doesn't
-                // appear. Log at info level so we don't spam a happy
-                // path where the user just declined the prompt.
-                // eslint-disable-next-line no-console
-                console.info('[map] geolocation unavailable:', err && err.message);
-            },
-            {
-                enableHighAccuracy: true,
-                maximumAge: 5000,
-                timeout: 15000,
-            }
-        );
+    // Subscribe to the shared 'locationchange' stream instead of
+    // running our own watchPosition. If the boot path already fired
+    // (returning user with permission granted, or fresh grant in the
+    // onboarding modal) the store already has coordinates and we can
+    // drop the marker immediately.
+    //
+    // startLocationWatch() is idempotent — calling it here as a safety
+    // net covers the edge case where /map is reached without going
+    // through the boot path (deep-link, HMR, tests).
+    startLocationWatch();
+
+    function onLocationChange(event) {
+        if (removed) return;
+        const detail = event && event.detail;
+        if (!detail || detail.error) return;
+        const { longitude, latitude } = detail;
+        if (!Number.isFinite(longitude) || !Number.isFinite(latitude)) return;
+        ensureMarker(longitude, latitude);
+        // Apply the latest heading immediately after the marker exists
+        // so the first fix already shows the cone (subsequent
+        // orientation events keep it updated).
+        applyHeading(lastHeading);
+    }
+    document.addEventListener('locationchange', onLocationChange);
+
+    // Prime with whatever the store already holds — no wait for the
+    // next dispatch.
+    const initial = store.userLocation;
+    if (initial && !initial.error
+        && Number.isFinite(initial.longitude)
+        && Number.isFinite(initial.latitude)) {
+        ensureMarker(initial.longitude, initial.latitude);
     }
 
     // ─── Cleanup ──────────────────────────────────────────────────────
     return function stopUserLocation() {
         removed = true;
-        if (watchId != null && navigator.geolocation) {
-            navigator.geolocation.clearWatch(watchId);
-            watchId = null;
-        }
+        document.removeEventListener('locationchange', onLocationChange);
         detachOrientation();
         document.removeEventListener('visibilitychange', onVisibilityChange);
         if (rootEl) rootEl.removeEventListener('pointerdown', iosTrigger);
