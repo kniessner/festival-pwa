@@ -9,6 +9,7 @@ import { attachStageSizing } from './map-common.js';
 import basemapLayers from './basemap-layers.js';
 import { PALETTE } from './map-palette.js';
 import { startUserLocation } from './user-location.js';
+import { startTent } from './tent.js';
 
 // ─── Overlay palette ──────────────────────────────────────────────────
 //
@@ -131,6 +132,9 @@ export function renderInteractiveMap(container) {
         if (map && typeof map.__userLocationStop === 'function') {
             try { map.__userLocationStop(); } catch (_) { /* nothing */ }
         }
+        if (map && typeof map.__tentStop === 'function') {
+            try { map.__tentStop(); } catch (_) { /* nothing */ }
+        }
         try {
             if (map) map.remove();
         } catch (err) {
@@ -207,6 +211,10 @@ function createMap(stage, gestureState) {
     // teardown callback to invoke.
     map.on('load', () => {
         map.__userLocationStop = startUserLocation(map);
+        // Tent lives on top of the overlay layers and needs the style
+        // ready before it can dim them during drag. Started on the
+        // same 'load' tick so we don't hit a race on either.
+        map.__tentStop = startTent(map);
     });
 
     // Camera-state debug helper — commented out but preserved for
