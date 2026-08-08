@@ -1881,50 +1881,32 @@ span.tt-event-stage {
     user-select: none;
 }
 
-/* Fade the map's canvas out to transparent on all four edges so the
-   page background (bg.jpg's dreamy navy, same tone as the water) bleeds
-   into the map's border and it reads as though the map has a soft
-   natural margin instead of a hard rectangular crop.
+/* Soft-fade the map's canvas out to transparent on TOP and BOTTOM
+   only, so the page background (bg.jpg's dreamy navy) bleeds into
+   the map above and below. Left and right stay hard — the map
+   already goes edge-to-edge and cropping there felt right.
 
    Applied to .maplibregl-canvas (not .maplibregl-canvas-container:
    MapLibre gives the container `position: static; height: 0` and puts
    an absolutely-positioned canvas inside, so a mask on the container
    hides the whole map because the container has zero measurable size).
    Attribution + any future controls live in .maplibregl-control-container
-   (sibling of the canvas container) and stay crisp.
+   (sibling of the canvas element) and stay crisp.
 
-   How it works: two linear-gradient mask images, one horizontal, one
-   vertical, composited with `intersect`. "Intersect" means a pixel is
-   only shown where BOTH gradients are opaque — the center stays fully
-   visible, edges fade linearly, and corners fade extra (both gradients
-   transparent there), giving a pleasant rounded-corner feel without
-   an explicit border-radius. */
+   Single vertical linear-gradient — no mask-composite needed since
+   we're not intersecting two gradients any more. */
 .festival-map .maplibregl-canvas {
-    --festival-map-fade: 44px;
-    -webkit-mask-image:
-        linear-gradient(to right,
-            transparent 0,
-            #000 var(--festival-map-fade),
-            #000 calc(100% - var(--festival-map-fade)),
-            transparent 100%),
-        linear-gradient(to bottom,
-            transparent 0,
-            #000 var(--festival-map-fade),
-            #000 calc(100% - var(--festival-map-fade)),
-            transparent 100%);
-    -webkit-mask-composite: source-in;
-    mask-image:
-        linear-gradient(to right,
-            transparent 0,
-            #000 var(--festival-map-fade),
-            #000 calc(100% - var(--festival-map-fade)),
-            transparent 100%),
-        linear-gradient(to bottom,
-            transparent 0,
-            #000 var(--festival-map-fade),
-            #000 calc(100% - var(--festival-map-fade)),
-            transparent 100%);
-    mask-composite: intersect;
+    --festival-map-fade: 72px;
+    -webkit-mask-image: linear-gradient(to bottom,
+        transparent 0,
+        #000 var(--festival-map-fade),
+        #000 calc(100% - var(--festival-map-fade)),
+        transparent 100%);
+    mask-image: linear-gradient(to bottom,
+        transparent 0,
+        #000 var(--festival-map-fade),
+        #000 calc(100% - var(--festival-map-fade)),
+        transparent 100%);
     mask-mode: alpha;
     mask-repeat: no-repeat;
     mask-size: 100% 100%;
