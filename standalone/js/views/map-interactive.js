@@ -365,12 +365,21 @@ function addOverlayLayers(map) {
         // finetune zoom stops once we've decided which layers stay.
         // Labels — tier-based zoom-fade so the map isn't a soup of
         // names at overview zoom. Each layer's tier maps to a fade band
-        // (0.5 zoom wide) below which the label is fully transparent
-        // and above which it's fully opaque:
+        // below which the label is fully transparent and above which
+        // it's fully opaque:
         //
-        //   always      — stages, camping-areas (opacity: 1 at every zoom)
-        //   close (15+) — gastro, sterne     (fade 14.5 → 15.0)
-        //   veryClose   — produktion, toilets-showers (fade 15.5 → 16.0)
+        //   always            stages, camping-areas  (opacity 1 always)
+        //   close     (13.5+) gastro, sterne          (fade 13.0 → 13.5)
+        //   veryClose (15.0+) produktion, toilets     (fade 14.5 → 15.0)
+        //
+        // Thresholds are calibrated for the map's zoom range 12–17
+        // and DEFAULT_CAMERA.zoom = 14.11:
+        //   - at default zoom, stages / camps / gastro / sterne are
+        //     fully visible; produktion (except Eclipse) and toilets
+        //     are hidden and become visible after one pinch-in
+        //     (~ zoom 15).
+        //   - at max zoom-out (12), only stages + camps remain — clean
+        //     overview mode.
         //
         // Produktion has ONE always-visible exception: the "Eclipse"
         // feature is a headline POI and stays visible at every zoom.
@@ -383,8 +392,8 @@ function addOverlayLayers(map) {
         // the drag. Snapshot captures the original expression object
         // via map.getPaintProperty() so restore returns the tier fade
         // exactly as it was.
-        const fadeClose     = ['interpolate', ['linear'], ['zoom'], 14.5, 0, 15.0, 1];
-        const fadeVeryClose = ['interpolate', ['linear'], ['zoom'], 15.5, 0, 16.0, 1];
+        const fadeClose     = ['interpolate', ['linear'], ['zoom'], 13.0, 0, 13.5, 1];
+        const fadeVeryClose = ['interpolate', ['linear'], ['zoom'], 14.5, 0, 15.0, 1];
         let textOpacity;
         if (id === 'stages' || id === 'camping-areas') {
             textOpacity = 1;
