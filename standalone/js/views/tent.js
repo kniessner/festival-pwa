@@ -48,19 +48,34 @@ const INTERPOLATION_FACTOR = 0.0018;
 const ASPECT_RATIO = 0.73;
 const TENT_HEIGHT = 60;
 
-// Overlay layer ids we dim during a drag. Kept in sync with the
-// FELT_LAYERS table in map-interactive.js — if that list grows, add
-// the new `-fill` / `-outline` / `-point` / `-label` here or (better)
-// refactor both sites to consume the same source of truth.
-const DIM_LAYERS = [
-    'camping-areas-fill', 'camping-areas-outline', 'camping-areas-point', 'camping-areas-label',
-    'gastro-fill',    'gastro-outline',    'gastro-point',    'gastro-label',
-    'produktion-fill','produktion-outline','produktion-point','produktion-label',
-    'stages-fill',    'stages-outline',    'stages-point',    'stages-label',
-    'sterne-fill',    'sterne-outline',    'sterne-point',    'sterne-label',
+// Overlay drag effect:
+//   camping-areas subset  — HIGHLIGHTED (opacity bump + thicker
+//                          outline) so the tent drag reads as "drop
+//                          me on one of these"
+//   everything else       — FADED to 0.2 so the highlighted camps pop
+//
+// Layer ids kept in sync with map-interactive.js#FELT_LAYERS. If that
+// list grows, extend both FADE_LAYERS and (if it's a new highlight
+// group) HIGHLIGHT_OVERRIDES. Better long-term: refactor both sites
+// to share a single source of truth.
+const FADE_LAYERS = [
+    'gastro-fill',          'gastro-outline',          'gastro-point',          'gastro-label',
+    'produktion-fill',      'produktion-outline',      'produktion-point',      'produktion-label',
+    'stages-fill',          'stages-outline',          'stages-point',          'stages-label',
+    'sterne-fill',          'sterne-outline',          'sterne-point',          'sterne-label',
     'toilets-showers-fill', 'toilets-showers-outline', 'toilets-showers-point', 'toilets-showers-label',
 ];
-const DIM_OPACITY = 0;
+const FADE_OPACITY = 0.2;
+
+// Paint-property overrides applied to the camping-areas layers during
+// drag. Each entry: [layerId, paintKey, dragValue]. On drop they're
+// restored to DEFAULT_PAINT[paintKey].
+const HIGHLIGHT_OVERRIDES = [
+    ['camping-areas-fill',    'fill-opacity', 0.75],  // pop from 0.5
+    ['camping-areas-outline', 'line-opacity', 1.0],   // pop from 0.9
+    ['camping-areas-outline', 'line-width',   2.6],   // thicken from 1.2
+    ['camping-areas-label',   'text-opacity', 1.0],   // already 1.0, but explicit for symmetry
+];
 
 // ─── Storage ─────────────────────────────────────────────────────────
 
@@ -93,31 +108,44 @@ function paintKeyFor(layerId) {
     return null;
 }
 
-function setLayerOpacity(map, opacity) {
-    for (const id of DIM_LAYERS) {
+function applyDragPaint(map) {
+    // Fade every non-camping overlay to FADE_OPACITY.
+    for (const id of FADE_LAYERS) {
         if (!map.getLayer(id)) continue;
         const key = paintKeyFor(id);
         if (!key) continue;
-        try { map.setPaintProperty(id, key, opacity); } catch (_) { /* nothing */ }
+        try { map.setPaintProperty(id, key, FADE_OPACITY); } catch (_) { /* nothing */ }
+    }
+    // Highlight camping areas.
+    for (const [id, key, val] of HIGHLIGHT_OVERRIDES) {
+        if (!map.getLayer(id)) continue;
+        try { map.setPaintProperty(id, key, val); } catch (_) { /* nothing */ }
     }
 }
 
-// Restore to the "normal" opacity each layer type had before we dimmed.
-// Values match what addOverlayLayers uses in map-interactive.js — kept
-// as constants here so a dim→undim cycle is exactly reversible.
-const RESTORE_OPACITY = {
-    'fill-opacity': 0.5,   // matches addOverlayLayers fill-opacity
-    'line-opacity': 0.9,   //   ditto outline
-    'circle-opacity': 1.0, //   circles paint fully opaque
-    'text-opacity': 1.0,   //   labels paint fully opaque
+// Restore to the "normal" paint values every layer had before we
+// switched into drag mode. Values match what addOverlayLayers uses in
+// map-interactive.js so a drag→drop cycle is exactly reversible.
+const DEFAULT_PAINT = {
+    'fill-opacity':   0.5,   // matches addOverlayLayers fill-opacity
+    'line-opacity':   0.9,   //   ditto outline
+    'line-width':     1.2,   //   ditto outline width
+    'circle-opacity': 1.0,   //   circles paint fully opaque
+    'text-opacity':   1.0,   //   labels paint fully opaque
 };
 
-function restoreLayerOpacity(map) {
-    for (const id of DIM_LAYERS) {
+function restorePaint(map) {
+    // Undo the fade on non-camping overlays.
+    for (const id of FADE_LAYERS) {
         if (!map.getLayer(id)) continue;
         const key = paintKeyFor(id);
         if (!key) continue;
-        try { map.setPaintProperty(id, key, RESTORE_OPACITY[key] ?? 1); } catch (_) { /* nothing */ }
+        try { map.setPaintProperty(id, key, DEFAULT_PAINT[key] ?? 1); } catch (_) { /* nothing */ }
+    }
+    // Undo the highlight on camping.
+    for (const [id, key] of HIGHLIGHT_OVERRIDES) {
+        if (!map.getLayer(id)) continue;
+        try { map.setPaintProperty(id, key, DEFAULT_PAINT[key] ?? 1); } catch (_) { /* nothing */ }
     }
 }
 
@@ -169,11 +197,11 @@ export function startTent(map) {
     }
 
     // Drag lifecycle: dim overlays on start, persist + restore on end.
-    marker.on('dragstart', () => setLayerOpacity(map, DIM_OPACITY));
+    marker.on('dragstart', () => applyDragPaint(map));
     marker.on('dragend', () => {
         const { lng, lat } = marker.getLngLat();
         savePosition(lng, lat);
-        restoreLayerOpacity(map);
+        restorePaint(map);
         // Close the "drag me" hint permanently after first placement —
         // subsequent drags don't need re-onboarding.
         const p = marker.getPopup();
@@ -201,6 +229,6 @@ export function startTent(map) {
         stopped = true;
         try { map.off('zoom', onZoom); } catch (_) { /* nothing */ }
         try { marker.remove(); } catch (_) { /* nothing */ }
-        try { restoreLayerOpacity(map); } catch (_) { /* nothing */ }
+        try { restorePaint(map); } catch (_) { /* nothing */ }
     };
 }
