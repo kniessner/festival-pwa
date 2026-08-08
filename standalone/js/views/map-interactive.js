@@ -62,7 +62,7 @@ const STAGES_BBOX = [
 // Rotate/tilt/zoom-out are allowed within maxBounds; every re-entry
 // to /map resets to these values.
 const DEFAULT_CAMERA = {
-    center: [14.494747, 52.274408],
+    center: [14.495481, 52.274408],
     zoom: 14.33,
     bearing: -78.1,
     pitch: 30.6,
