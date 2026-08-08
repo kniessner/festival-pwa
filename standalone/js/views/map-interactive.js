@@ -547,6 +547,55 @@ function addOverlayLayers(map) {
         });
     }
 
+    // Landmarks: geographic feature labels (lake, forest, prominent
+    // real-world names) that aren't festival-produced content. Kept
+    // in a separate layer so they get their own typographic voice —
+    // italic Instrument Sans on the water, wider letter-spacing, no
+    // colour halo (they read on the navy water without one). Only one
+    // entry today ("Helene" on the lake); the same layer scales to
+    // future landmarks (forest, path names, etc.) without new code.
+    map.addSource('landmarks', {
+        type: 'geojson',
+        data: 'data/landmarks.geojson',
+    });
+    map.addLayer({
+        id: 'landmarks-label',
+        source: 'landmarks',
+        type: 'symbol',
+        filter: ['has', 'text'],
+        layout: {
+            'text-field': ['get', 'text'],
+            // Instrument Sans Italic (SDF glyphs already bundled at
+            // standalone/glyphs/) gives the water label a distinct
+            // handwritten-map feel next to the sans-serif POI labels.
+            'text-font': ['Instrument Sans Italic'],
+            'text-size': 22,
+            'text-letter-spacing': 0.14,
+            // Landmarks aren't wayfinding-critical — they're mood.
+            // Skip collision and drop out at low zoom too aggressively
+            // by letting them overlap. They rarely conflict anyway
+            // (only Helene on the lake, plenty of open water around it).
+            'text-allow-overlap': true,
+            'text-ignore-placement': true,
+            'text-rotation-alignment': 'viewport',
+            'text-pitch-alignment': 'viewport',
+            // Very low symbol-sort-key so landmarks NEVER contest POI
+            // labels for placement priority; they're background.
+            'symbol-sort-key': 100,
+        },
+        paint: {
+            'text-color': PNG_CREAM,
+            // Faint dark halo to keep readability on the navy water
+            // without shouting; less halo than POI labels because
+            // there's no busy tint underneath.
+            'text-halo-color': PNG_MAGENTA_HALO,
+            'text-halo-width': 0.8,
+            // Slightly transparent so it reads as ambient / atmospheric
+            // rather than a POI you can tap.
+            'text-opacity': 0.7,
+        },
+    });
+
     // Click-to-popup on overlay features was removed — the labels
     // rendered by the -label symbol layer are all the affordance we
     // want. Nothing else in this file needs escapeHtml either, so
