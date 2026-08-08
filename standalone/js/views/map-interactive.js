@@ -328,20 +328,28 @@ function addOverlayLayers(map) {
             data: 'data/' + file,
         });
 
+        // camping-areas gets a whisper-quiet default so the big camp
+        // polygons don't visually shout over the category overlays.
+        // They're pushed back to prominent during tent drag by
+        // tent.js#applyDragPaint.
+        const isCamping = id === 'camping-areas';
+        const fillOpacity = isCamping ? 0.22 : 0.5;
+        const lineOpacity = isCamping ? 0.55 : 0.9;
+
         // Polygon / MultiPolygon fill + outline.
         map.addLayer({
             id: id + '-fill',
             source: id,
             type: 'fill',
             filter: ['==', ['geometry-type'], 'Polygon'],
-            paint: { 'fill-color': color, 'fill-opacity': 0.5 },
+            paint: { 'fill-color': color, 'fill-opacity': fillOpacity },
         });
         map.addLayer({
             id: id + '-outline',
             source: id,
             type: 'line',
             filter: ['==', ['geometry-type'], 'Polygon'],
-            paint: { 'line-color': color, 'line-width': 1.2, 'line-opacity': 0.9 },
+            paint: { 'line-color': color, 'line-width': 1.2, 'line-opacity': lineOpacity },
         });
 
         // Point features (Felt Markers / Circles come through as Points).
