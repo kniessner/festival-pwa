@@ -40,12 +40,14 @@ export function renderMap(container) {
     activeView = DEFAULT_VIEW;
     container.innerHTML = `
         <div class="map-tabs-wrap">
-            <div class="tt-type-tabs">
-                <button class="tt-type-tab ${activeView === 'interactive' ? 'active' : ''}"
+            <div class="tt-type-tabs" role="tablist" aria-label="${t('nav.festivalmap')}">
+                <button type="button" class="tt-type-tab ${activeView === 'interactive' ? 'active' : ''}"
+                        role="tab" aria-selected="${activeView === 'interactive'}"
                         data-action="switch-map-view" data-view="interactive">
                     ${t('map.tabInteractive')}
                 </button>
-                <button class="tt-type-tab ${activeView === 'static' ? 'active' : ''}"
+                <button type="button" class="tt-type-tab ${activeView === 'static' ? 'active' : ''}"
+                        role="tab" aria-selected="${activeView === 'static'}"
                         data-action="switch-map-view" data-view="static">
                     ${t('map.tabIllustration')}
                 </button>
@@ -62,7 +64,9 @@ export function switchMapView(view) {
     if (!currentContainer || view === activeView) return;
     activeView = view;
     currentContainer.querySelectorAll('[data-action="switch-map-view"]').forEach(btn => {
-        btn.classList.toggle('active', btn.dataset.view === view);
+        const isActive = btn.dataset.view === view;
+        btn.classList.toggle('active', isActive);
+        btn.setAttribute('aria-selected', String(isActive));
     });
     mountActive();
 }

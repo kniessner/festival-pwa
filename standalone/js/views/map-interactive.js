@@ -9,6 +9,7 @@ import basemapLayers from './basemap-layers.js';
 import { PALETTE } from './map-palette.js';
 import { startUserLocation } from './user-location.js';
 import { startTent } from './tent.js';
+import { FELT_LAYERS } from './map-layers.js';
 
 // ─── Overlay palette ──────────────────────────────────────────────────
 //
@@ -47,15 +48,12 @@ const FONT_HELPER = ['Instrument Sans Italic'];
 // different property schema. Restore this if/when we switch back to
 // slug-based coloring.)
 
-// Combined bbox of the 16 real stage polygons. No longer the initial
-// view (superseded by the explicit center/zoom/bearing/pitch defaults
-// below), but kept in case we want to fit-to-stages from a control or
-// menu action later.
-// eslint-disable-next-line no-unused-vars
-const STAGES_BBOX = [
-    [14.4820, 52.2708], // SW
-    [14.5038, 52.2770], // NE
-];
+// Dead — kept commented for git-blame discoverability if we ever want
+// to add a "fit to stages" control. Superseded by DEFAULT_CAMERA above.
+// const STAGES_BBOX = [
+//     [14.4820, 52.2708], // SW
+//     [14.5038, 52.2770], // NE
+// ];
 
 // Default camera state on every fresh /map mount — hand-picked by
 // Jacob (2026-08-08) as the "maximum information on load" framing.
@@ -303,22 +301,12 @@ function buildStyle() {
 // and how to differentiate visually. See standalone/data/felt/README.md
 // for the schema.
 
-// Distinct fill color per Felt group so overlapping features are still
-// separable by eye. Deliberately loud/high-contrast for the analysis
-// pass — will be re-tuned into the illustrated palette after review.
-const FELT_LAYERS = [
-    // camping-areas sits at the bottom of the overlay stack — it's a
-    // "canvas" of large camp polygons that every category-specific
-    // layer (produktion / stages / gastro / sterne / toilets) paints
-    // on top of. Colour: muted lavender, distinct from produktion's
-    // saturated purple.
-    { id: 'camping-areas',   file: 'camping-areas.geojson',   color: '#a48bc4' },
-    { id: 'produktion',      file: 'produktion.geojson',      color: '#8b7fa8' },
-    { id: 'stages',          file: 'stages.geojson',          color: '#c22a4c' },
-    { id: 'gastro',          file: 'gastro.geojson',          color: '#ff9540' },
-    { id: 'sterne',          file: 'sterne.geojson',          color: '#ffd166' },
-    { id: 'toilets-showers', file: 'toilets-showers.geojson', color: '#4ecdc4' },
-];
+// FELT_LAYERS lives in ./map-layers.js so tent.js can import it too
+// without creating a circular map-interactive.js ↔ tent.js import
+// (which crashed at module init with "Cannot access 'FELT_LAYERS'
+// before initialization"). See that module for the schema + adding
+// a new group.
+
 
 function addOverlayLayers(map) {
     for (const { id, file, color } of FELT_LAYERS) {
@@ -396,10 +384,7 @@ function addOverlayLayers(map) {
     // Click-to-popup on overlay features was removed — the labels
     // rendered by the -label symbol layer are all the affordance we
     // want. Nothing else in this file needs escapeHtml either, so
-    // the import above is gone.
-
-    interactiveLayerIds.forEach((id) => {
-        map.on('mouseenter', id, () => { map.getCanvas().style.cursor = 'pointer'; });
-        map.on('mouseleave', id, () => { map.getCanvas().style.cursor = ''; });
-    });
+    // the import above is gone. The pointer-cursor hover loop that
+    // used to live here would have been misleading (no click target)
+    // so it was removed too.
 }
