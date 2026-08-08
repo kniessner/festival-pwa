@@ -60,14 +60,15 @@ const STAGES_BBOX = [
 ];
 
 // Rough pan-limit bounds — keep the user from scrolling far outside
-// the festival footprint. Roughly ±500 m around STAGES_BBOX (≈ 0.008°
-// longitude / 0.005° latitude at this latitude): wide enough that a
-// two-finger drag doesn't feel cramped, tight enough that the user
-// never ends up staring at empty magenta land far from anything.
+// the festival footprint. Longitude padding stays tight (≈ 500 m)
+// because the festival's east-west axis IS its long side and the
+// stages fill it; latitude padding is looser (≈ 1.3 km per side)
+// because at bearing -90 latitude runs left-right on screen and
+// Jacob wanted more breathing room there.
 // Jacob will finetune after review.
 const MAP_MAX_BOUNDS = [
-    [14.4750, 52.2650], // SW
-    [14.5120, 52.2830], // NE
+    [14.4750, 52.2590], // SW
+    [14.5120, 52.2890], // NE
 ];
 
 // ─── View ──────────────────────────────────────────────────────────────
