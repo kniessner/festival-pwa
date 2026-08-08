@@ -4,11 +4,13 @@
 // tab dispatcher (map.js) can mount either variant.
 
 import { t } from '../i18n.js';
-import { attachStageSizing } from './map-common.js';
+import { attachStageSizing, MAP_MAX_BOUNDS } from './map-common.js';
 import basemapLayers from './basemap-layers.js';
 import { PALETTE } from './map-palette.js';
 import { startUserLocation } from './user-location.js';
 import { startTent } from './tent.js';
+import { createMapControls } from './map-controls.js';
+import { removeMapToast } from './map-toast.js';
 import { FELT_LAYERS } from './map-layers.js';
 
 // ─── Overlay palette ──────────────────────────────────────────────────
@@ -77,17 +79,9 @@ const DEFAULT_CAMERA = {
     pitch: 30.7,
 };
 
-// Pan-limit bounds — hand-picked by Jacob (2026-08-08) from a felt
-// polygon over the festival area. Format is MapLibre's LngLatBounds:
-// [[minLng, minLat], [maxLng, maxLat]].
-const MAP_MAX_BOUNDS = [
-    // Loosened to ≈ 3 km lat span so the mobile viewport can fit
-    // the whole festival at a comfortable zoom on load. Longitude
-    // range unchanged from Jacob's round-4 polygon; latitude range
-    // pushed ±670 m beyond it (N/S ends).
-    [14.478404931523073, 52.26177184691164],   // SW
-    [14.521079717325279, 52.290739744887185],  // NE
-];
+// (MAP_MAX_BOUNDS lives in map-common.js now — the locate-me control
+// needs it too, and colocating map geometry constants there avoided a
+// circular map-controls <-> map-interactive import.)
 
 // ─── View ──────────────────────────────────────────────────────────────
 
@@ -143,6 +137,13 @@ export function renderInteractiveMap(container) {
         if (map && typeof map.__tentStop === 'function') {
             try { map.__tentStop(); } catch (_) { /* nothing */ }
         }
+        // Controls are DOM-only, no listeners past click, but the
+        // toast may have a pending dismiss timer — stop it explicitly
+        // so it can't try to touch a detached node after teardown.
+        if (map && typeof map.__mapControlsStop === 'function') {
+            try { map.__mapControlsStop(); } catch (_) { /* nothing */ }
+        }
+        removeMapToast(stage);
         try {
             if (map) map.remove();
         } catch (err) {
@@ -223,6 +224,9 @@ function createMap(stage, gestureState) {
         // ready before it can dim them during drag. Started on the
         // same 'load' tick so we don't hit a race on either.
         map.__tentStop = startTent(map);
+        // Controls (bottom-left button group) mounted after the style
+        // is up so click handlers can flyTo without racing the load.
+        map.__mapControlsStop = createMapControls(map, stage);
     });
 
     // Camera-state debug helper — commented out but preserved for
