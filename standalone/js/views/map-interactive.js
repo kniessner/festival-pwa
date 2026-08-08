@@ -394,16 +394,25 @@ function addOverlayLayers(map) {
         // exactly as it was.
         const fadeClose     = ['interpolate', ['linear'], ['zoom'], 13.0, 0, 13.5, 1];
         const fadeVeryClose = ['interpolate', ['linear'], ['zoom'], 14.5, 0, 15.0, 1];
+        // Produktion's per-feature override: Eclipse gets a case-based
+        // "low-zoom" value that keeps it at opacity 1 even below the
+        // fade-in band. Structured with `interpolate` on top (so the
+        // `['zoom']` input is at the top level, as MapLibre requires
+        // — nested `['zoom']` inside a `case` throws
+        // "zoom expression may only be used as input to a top-level
+        // step or interpolate"). At high zoom both branches reach 1.
+        const fadeVeryCloseWithEclipsePriority = [
+            'interpolate', ['linear'], ['zoom'],
+            14.5, ['case', ['==', ['get', 'text'], 'Eclipse'], 1, 0],
+            15.0, 1,
+        ];
         let textOpacity;
         if (id === 'stages' || id === 'camping-areas') {
             textOpacity = 1;
         } else if (id === 'gastro' || id === 'sterne') {
             textOpacity = fadeClose;
         } else if (id === 'produktion') {
-            textOpacity = ['case',
-                ['==', ['get', 'text'], 'Eclipse'], 1,
-                fadeVeryClose,
-            ];
+            textOpacity = fadeVeryCloseWithEclipsePriority;
         } else if (id === 'toilets-showers') {
             textOpacity = fadeVeryClose;
         } else {
@@ -429,8 +438,18 @@ function addOverlayLayers(map) {
                     11,
                 'text-anchor': 'center',
                 'text-max-width': 8,
-                'text-allow-overlap': false,
-                'text-optional': true,
+                // Anchor tiers (stages + camping-areas) are wayfinding-
+                // critical and must NEVER be dropped by MapLibre's
+                // collision heuristic. With allow-overlap = false,
+                // 42 stage features + 12 camp features at 15–17 px
+                // labels overlap each other and with infrastructure
+                // labels enough that most/all get dropped at default
+                // zoom — which is exactly the "no stages visible" bug
+                // Jacob reported. Force them always visible; let the
+                // infrastructure tier keep normal collision so it
+                // hides behind the anchors instead of drowning them.
+                'text-allow-overlap': (id === 'stages' || id === 'camping-areas'),
+                'text-optional': !(id === 'stages' || id === 'camping-areas'),
                 'text-padding': 2,
                 'text-rotation-alignment': 'viewport',
                 'text-pitch-alignment': 'viewport',
