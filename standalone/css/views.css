@@ -1876,6 +1876,55 @@ span.tt-event-stage {
     user-select: none;
 }
 
+/* Static PNG variant — the <img> lives inside .festival-map and gets
+   translated/scaled by the pinch-zoom controller in map-static.js. */
+.festival-map-img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    transform-origin: center center;
+    will-change: transform;
+    -webkit-user-drag: none;
+    user-select: none;
+    pointer-events: none;
+}
+
+.festival-map-hint {
+    position: absolute;
+    bottom: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 8px 14px;
+    background: rgba(0, 0, 0, 0.55);
+    color: var(--text, #f2e9dc);
+    font-size: 0.85rem;
+    border-radius: 999px;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    z-index: 1;
+}
+
+.festival-map-hint.hidden {
+    opacity: 0;
+}
+
+/* Tab strip that lets the user switch between the interactive MapLibre
+   view and the static illustrated PNG. Reuses the timetable's
+   .tt-type-tabs markup verbatim so the two look identical — that markup
+   uses `margin: 0 -16px 4px` to bleed to its parent's edges, so we give
+   it a 16px-padded wrapper of the same shape as the timetable's row. */
+.map-tabs-wrap {
+    padding: 0 16px;
+}
+
+.map-body {
+    /* Wrapper that holds either variant's own container. Kept as a plain
+       block; each variant sets its own inner element height via JS. */
+    position: relative;
+    width: 100%;
+}
+
 .festival-map-error {
     display: flex;
     align-items: center;

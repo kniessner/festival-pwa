@@ -5,7 +5,7 @@ import { renderHome } from './views/home.js';
 import { renderTimetable } from './views/timetable.js';
 import { renderGridTimetable } from './views/timetable-grid.js';
 import { renderInfo } from './views/info.js';
-import { renderMap } from './views/map.js';
+import { renderMap, teardownMap } from './views/map.js';
 import { renderFavorites } from './views/favorites.js';
 import { countValidFavorites } from './favorites.js';
 import { isPushSupported, isPushSubscribed } from './push.js';
@@ -61,6 +61,12 @@ export function loadPage(index) {
     const title = document.getElementById('pageTitle');
 
     title.textContent = t(page.labelKey);
+
+    // Tear down the previous /map mount (if any) before wiping the DOM,
+    // so MapLibre's WebGL context / workers and the static variant's
+    // window listeners don't leak across routes. Idempotent — no-op
+    // when the previous route wasn't /map.
+    teardownMap();
 
     container.innerHTML = '';
     // document.getElementById('searchResults').innerHTML = '';
