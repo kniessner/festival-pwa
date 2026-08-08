@@ -370,14 +370,15 @@ function addOverlayLayers(map) {
         //
         //   always            stages, camping-areas  (opacity 1 always)
         //   close     (13.5+) gastro, sterne          (fade 13.0 → 13.5)
-        //   veryClose (15.0+) produktion, toilets     (fade 14.5 → 15.0)
+        //   veryClose (16.0+) produktion, toilets     (fade 15.5 → 16.0)
         //
-        // Thresholds are calibrated for the map's zoom range 12–17
+        // Thresholds are calibrated for the map's zoom range 12–19
         // and DEFAULT_CAMERA.zoom = 14.11:
         //   - at default zoom, stages / camps / gastro / sterne are
         //     fully visible; produktion (except Eclipse) and toilets
-        //     are hidden and become visible after one pinch-in
-        //     (~ zoom 15).
+        //     stay hidden until the user pinches noticeably deeper
+        //     (~ zoom 16), giving gastro/sterne some breathing room
+        //     at zoom 14–15.
         //   - at max zoom-out (12), only stages + camps remain — clean
         //     overview mode.
         //
@@ -393,7 +394,7 @@ function addOverlayLayers(map) {
         // via map.getPaintProperty() so restore returns the tier fade
         // exactly as it was.
         const fadeClose     = ['interpolate', ['linear'], ['zoom'], 13.0, 0, 13.5, 1];
-        const fadeVeryClose = ['interpolate', ['linear'], ['zoom'], 14.5, 0, 15.0, 1];
+        const fadeVeryClose = ['interpolate', ['linear'], ['zoom'], 15.5, 0, 16.0, 1];
         // Produktion's per-feature override: Eclipse gets a case-based
         // "low-zoom" value that keeps it at opacity 1 even below the
         // fade-in band. Structured with `interpolate` on top (so the
@@ -403,8 +404,8 @@ function addOverlayLayers(map) {
         // step or interpolate"). At high zoom both branches reach 1.
         const fadeVeryCloseWithEclipsePriority = [
             'interpolate', ['linear'], ['zoom'],
-            14.5, ['case', ['==', ['get', 'text'], 'Eclipse'], 1, 0],
-            15.0, 1,
+            15.5, ['case', ['==', ['get', 'text'], 'Eclipse'], 1, 0],
+            16.0, 1,
         ];
         let textOpacity;
         if (id === 'stages' || id === 'camping-areas') {
