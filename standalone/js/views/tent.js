@@ -108,7 +108,43 @@ function paintKeyFor(layerId) {
     return null;
 }
 
+// Snapshot of pre-drag paint values so restore reads from the actual
+// live state rather than a hardcoded mirror of addOverlayLayers. Keeps
+// the two files decoupled: change camping-areas' default fill-opacity
+// in map-interactive.js and tent.js doesn't need to know.
+//
+// Structure: Map<layerId, Map<paintKey, originalValue>>. Populated on
+// dragstart, drained on dragend / stop().
+let dragPaintSnapshot = null;
+
+function snapshotPaint(map) {
+    dragPaintSnapshot = new Map();
+    // Snapshot every FADE_LAYERS opacity + every HIGHLIGHT_OVERRIDES
+    // key/layer pair so we can restore whatever we're about to change.
+    for (const id of FADE_LAYERS) {
+        if (!map.getLayer(id)) continue;
+        const key = paintKeyFor(id);
+        if (!key) continue;
+        try {
+            const v = map.getPaintProperty(id, key);
+            const inner = dragPaintSnapshot.get(id) ?? new Map();
+            inner.set(key, v);
+            dragPaintSnapshot.set(id, inner);
+        } catch (_) { /* nothing */ }
+    }
+    for (const [id, key] of HIGHLIGHT_OVERRIDES) {
+        if (!map.getLayer(id)) continue;
+        try {
+            const v = map.getPaintProperty(id, key);
+            const inner = dragPaintSnapshot.get(id) ?? new Map();
+            inner.set(key, v);
+            dragPaintSnapshot.set(id, inner);
+        } catch (_) { /* nothing */ }
+    }
+}
+
 function applyDragPaint(map) {
+    snapshotPaint(map);
     // Fade every non-camping overlay to FADE_OPACITY.
     for (const id of FADE_LAYERS) {
         if (!map.getLayer(id)) continue;
@@ -123,30 +159,18 @@ function applyDragPaint(map) {
     }
 }
 
-// Restore to the "normal" paint values every layer had before we
-// switched into drag mode. Values match what addOverlayLayers uses in
-// map-interactive.js so a drag→drop cycle is exactly reversible.
-const DEFAULT_PAINT = {
-    'fill-opacity':   0.5,   // matches addOverlayLayers fill-opacity
-    'line-opacity':   0.9,   //   ditto outline
-    'line-width':     1.2,   //   ditto outline width
-    'circle-opacity': 1.0,   //   circles paint fully opaque
-    'text-opacity':   1.0,   //   labels paint fully opaque
-};
-
+// Restore paint props from the pre-drag snapshot. If no snapshot
+// exists (e.g. stop() called before any drag ever happened), this is
+// a no-op — nothing to undo.
 function restorePaint(map) {
-    // Undo the fade on non-camping overlays.
-    for (const id of FADE_LAYERS) {
+    if (!dragPaintSnapshot) return;
+    for (const [id, inner] of dragPaintSnapshot) {
         if (!map.getLayer(id)) continue;
-        const key = paintKeyFor(id);
-        if (!key) continue;
-        try { map.setPaintProperty(id, key, DEFAULT_PAINT[key] ?? 1); } catch (_) { /* nothing */ }
+        for (const [key, val] of inner) {
+            try { map.setPaintProperty(id, key, val); } catch (_) { /* nothing */ }
+        }
     }
-    // Undo the highlight on camping.
-    for (const [id, key] of HIGHLIGHT_OVERRIDES) {
-        if (!map.getLayer(id)) continue;
-        try { map.setPaintProperty(id, key, DEFAULT_PAINT[key] ?? 1); } catch (_) { /* nothing */ }
-    }
+    dragPaintSnapshot = null;
 }
 
 // ─── Public API ──────────────────────────────────────────────────────
