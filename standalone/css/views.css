@@ -2039,6 +2039,35 @@ span.tt-event-stage {
         drop-shadow(0 0 1px var(--map-user-cone-halo-dark));
 }
 
+/* ── "Where is my tent?" draggable marker ────────────────────────────
+   Vanilla-JS port of the React tent feature. The DOM is created in
+   js/views/tent.js:startTent() with .style.width / height set in
+   pixels by the zoom-scale handler; this rule just handles the visual
+   affordance (the Noto tent SVG background + drag cursor + a soft
+   drop-shadow so the tent reads against magenta land and navy water
+   equally well). */
+.tent-marker {
+    background-image: url('../images/tent.svg');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    /* MapLibre applies its own cursor style while draggable; adding
+       grab here makes the affordance obvious on desktop and matches
+       what a touch user expects. */
+    cursor: grab;
+    /* Soft dark halo so the illustrated tent doesn't disappear against
+       darker overlay fills. Two-stack: a tight dark shadow reads the
+       silhouette, a wider soft one lifts it off the land. */
+    filter:
+        drop-shadow(0 1px 1px rgba(28, 7, 22, 0.55))
+        drop-shadow(0 0 4px rgba(28, 7, 22, 0.25));
+    /* Prevent iOS long-press from selecting the SVG background. */
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
+}
+.tent-marker:active { cursor: grabbing; }
+
 .map-body {
     /* Wrapper that holds either variant's own container. Kept as a plain
        block; each variant sets its own inner element height via JS. */
