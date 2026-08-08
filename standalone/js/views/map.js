@@ -80,11 +80,17 @@ export function teardownMap() {
 }
 
 function mountActive() {
+    // Guard against a stale invocation — e.g. a delayed event handler
+    // firing after teardownMap() nulled currentContainer. Today's only
+    // callers set currentContainer immediately, but the invariant is
+    // one refactor away from a null-deref if we ever async-defer a mount.
+    if (!currentContainer) return;
     if (activeCleanup) {
         activeCleanup();
         activeCleanup = null;
     }
     const body = currentContainer.querySelector('#mapBody');
+    if (!body) return;
     body.innerHTML = '';
     activeCleanup = activeView === 'static'
         ? renderStaticMap(body)

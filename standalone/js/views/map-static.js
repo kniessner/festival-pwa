@@ -122,7 +122,13 @@ function attachPinchZoom(stage, img, hint, gestureState) {
     stage.addEventListener('pointerdown', (e) => {
         // Only accept touch + mouse; explicitly ignore right/middle clicks.
         if (e.button && e.button !== 0) return;
-        stage.setPointerCapture(e.pointerId);
+        // Best-effort pointer capture — iOS has been observed to throw
+        // InvalidPointerId here when the browser loses the pointer
+        // between dispatch and this callback. A missed capture only
+        // costs us fine-grained event routing (a pointerup outside
+        // `stage` won't reach us), which is bearable; a thrown
+        // exception here would tear the whole gesture down.
+        try { stage.setPointerCapture(e.pointerId); } catch (_) { /* pointer gone */ }
         pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
         gestureState.active = true;
 
