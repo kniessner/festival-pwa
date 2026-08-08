@@ -308,6 +308,12 @@ function buildStyle() {
 // separable by eye. Deliberately loud/high-contrast for the analysis
 // pass — will be re-tuned into the illustrated palette after review.
 const FELT_LAYERS = [
+    // camping-areas sits at the bottom of the overlay stack — it's a
+    // "canvas" of large camp polygons that every category-specific
+    // layer (produktion / stages / gastro / sterne / toilets) paints
+    // on top of. Colour: muted lavender, distinct from produktion's
+    // saturated purple.
+    { id: 'camping-areas',   file: 'camping-areas.geojson',   color: '#a48bc4' },
     { id: 'produktion',      file: 'produktion.geojson',      color: '#8b7fa8' },
     { id: 'stages',          file: 'stages.geojson',          color: '#c22a4c' },
     { id: 'gastro',          file: 'gastro.geojson',          color: '#ff9540' },
