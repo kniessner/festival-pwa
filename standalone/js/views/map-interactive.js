@@ -465,9 +465,9 @@ function addOverlayLayers(map) {
                 // else stays at the compact 11 px so infrastructure
                 // clusters (DIXIs, shower containers, etc) don't shout.
                 'text-size':
-                    id === 'stages'         ? 14 :
-                    id === 'camping-areas'  ? 13 :
-                    11,
+                    id === 'stages'         ? 16 :
+                    id === 'camping-areas'  ? 15 :
+                    13,
                 'text-anchor': 'center',
                 'text-max-width': 8,
                 // Collision on for every layer. Symbol-sort-key below

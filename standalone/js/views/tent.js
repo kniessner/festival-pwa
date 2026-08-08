@@ -40,14 +40,31 @@ export const TENT_INITIAL_POSITION = [14.502449976129924, 52.27739273160731];
 // app installed.
 const TENT_POSITION_KEY = 'bucht-tent-position';
 
-// Marker base size + zoom-scaling constants copied verbatim from the
-// React port. `Math.pow(2, zoom) * INTERPOLATION_FACTOR` is the
-// interpolated height at each zoom; we floor it at TENT_HEIGHT so the
-// tent never shrinks below its base size. ASPECT_RATIO ≈ 0.73 keeps
-// the marker roughly the same footprint as the Fusion tent PNG.
-const INTERPOLATION_FACTOR = 0.0018;
+// Zoom-scaled sizing.
+//
+// The original React port used `Math.pow(2, zoom) * 0.0018` — an
+// exponential-grow curve calibrated against fusion's maxZoom = 15.6
+// (at which the tent tops out around 90 px). Bucht's maxZoom is 19,
+// which pushed the same formula to a 944 px tent at the tightest
+// zoom — the marker completely swallowed the ground it was meant to
+// pin. Ported the concept, inverted the direction: the tent stays
+// at its comfortable overview size (60 px) up to the fade-in zoom,
+// then LINEARLY shrinks to a small pin (32 px) at maxZoom, so at
+// close range you can actually see the patch of camp under it.
+//
+// If we ever grow the max/min tunables, revisit these in one place:
 const ASPECT_RATIO = 0.73;
-const TENT_HEIGHT = 60;
+const TENT_HEIGHT_MAX = 50;   // px at overview zoom (≤ SHRINK_START)
+const TENT_HEIGHT_MIN = 28;   // px at maxZoom — still large enough to
+                              // grab under a finger, small enough to
+                              // reveal the ground it pins.
+const TENT_SHRINK_START_ZOOM = 14;   // stays at MAX below this
+const TENT_SHRINK_END_ZOOM   = 19;   // hits MIN at this (== maxZoom)
+
+// Legacy re-export: TENT_HEIGHT was the marker's fixed base size in
+// the previous formula and is used elsewhere (drag-me popup offsets,
+// pointer-hit padding). Keeping the name means callers stay green.
+const TENT_HEIGHT = TENT_HEIGHT_MAX;
 
 // Overlay drag effect:
 //   camping-areas subset  — HIGHLIGHTED (opacity bump + thicker
@@ -99,6 +116,23 @@ function isValidPos(v) {
 function readStoredPosition() {
     const raw = safeGetJSON(TENT_POSITION_KEY, null);
     return isValidPos(raw) ? raw : null;
+}
+
+/**
+ * Public read of the current tent position, returned as a [lng, lat]
+ * tuple to match the POI-coord shape used by the fly-to menu (see
+ * js/helpers/festival-pois.js). Falls back to TENT_INITIAL_POSITION
+ * when the user hasn't dropped the tent yet.
+ *
+ * Kept as a fresh localStorage read (not a cached module-scoped
+ * value) so a jump-to click always reflects the latest drop, even
+ * if the user moved the tent, closed the map, and re-opened it in
+ * the same session — no cross-module sync needed.
+ */
+export function getTentPosition() {
+    const stored = readStoredPosition();
+    if (stored) return [stored.lng, stored.lat];
+    return TENT_INITIAL_POSITION;
 }
 
 function savePosition(lng, lat) {
@@ -242,10 +276,11 @@ export function startTent(map) {
     const popup = new window.maplibregl.Popup({
         closeButton: false,
         anchor: 'top',
-        // x-offset: sits 3 px right of centre initially felt too far;
-        // nudged 3 px back left so the popup arrow lines up with the
-        // vertical centre of the tent silhouette (net offset: 0 px).
-        offset: [0, 0],
+        // x-offset 0, y-offset 1: the tooltip sits directly below the
+        // marker (anchor: 'top'), and Jacob wanted a hair of breathing
+        // room so the popup's tick isn't glued to the tent silhouette.
+        // Third and hopefully last nudge on this offset.
+        offset: [0, 1],
     }).setText(t('map.tentDragMe'));
 
     const marker = new window.maplibregl.Marker({
@@ -280,15 +315,22 @@ export function startTent(map) {
         if (p && p.isOpen()) marker.togglePopup();
     });
 
-    // Zoom-scale the marker so it feels physical: bigger when close,
-    // pinned to base size when zoomed out. Named so we can `.off()`
-    // it in stop() — anonymous handlers can't be removed cleanly.
+    // Zoom-scale the marker so it feels physical: base size when
+            // zoomed out, shrinks as you pinch in so the exact ground the
+            // pin marks doesn't get covered by the marker itself. Named so
+            // we can `.off()` it in stop() — anonymous handlers can't be
+            // removed cleanly.
     const onZoom = () => {
         const z = map.getZoom();
-        const interpolatedHeight = Math.pow(2, z) * INTERPOLATION_FACTOR;
-        const interpolatedWidth = interpolatedHeight * ASPECT_RATIO;
-        tentEl.style.width = (interpolatedWidth < baseWidth ? baseWidth : interpolatedWidth) + 'px';
-        tentEl.style.height = (interpolatedHeight < TENT_HEIGHT ? TENT_HEIGHT : interpolatedHeight) + 'px';
+        // Linear interpolation across the shrink range, clamped 0–1.
+        const t = Math.max(0, Math.min(1,
+            (z - TENT_SHRINK_START_ZOOM) /
+            (TENT_SHRINK_END_ZOOM - TENT_SHRINK_START_ZOOM)
+        ));
+        const height = TENT_HEIGHT_MAX - (TENT_HEIGHT_MAX - TENT_HEIGHT_MIN) * t;
+        const width  = height * ASPECT_RATIO;
+        tentEl.style.width  = width  + 'px';
+        tentEl.style.height = height + 'px';
     };
     map.on('zoom', onZoom);
     // Run once so the initial size reflects the current zoom (else the
