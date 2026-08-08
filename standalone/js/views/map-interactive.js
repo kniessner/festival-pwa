@@ -47,17 +47,26 @@ const FONT_HELPER = ['Instrument Sans Italic'];
 // different property schema. Restore this if/when we switch back to
 // slug-based coloring.)
 
-// Combined bbox of the 16 real stage polygons. Used at load to fit the
-// initial view to every stage the user might want to look at, with a bit
-// of padding for the page header and rotation slack. Recomputing this
-// live from the geojson works too but adds a source-loaded await that
-// visibly "jumps" the map — hard-coded values keep the first frame
-// already on-target.
-//   stages lng: 14.4826..14.5032, lat: 52.2713..52.2765
+// Combined bbox of the 16 real stage polygons. No longer the initial
+// view (superseded by the explicit center/zoom/bearing/pitch defaults
+// below), but kept in case we want to fit-to-stages from a control or
+// menu action later.
+// eslint-disable-next-line no-unused-vars
 const STAGES_BBOX = [
     [14.4820, 52.2708], // SW
     [14.5038, 52.2770], // NE
 ];
+
+// Default camera state on every fresh /map mount — hand-picked by
+// Jacob (2026-08-08) as the "maximum information on load" framing.
+// Rotate/tilt/zoom-out are allowed within maxBounds; every re-entry
+// to /map resets to these values.
+const DEFAULT_CAMERA = {
+    center: [14.498805, 52.272140],
+    zoom: 13.82,
+    bearing: -63.0,
+    pitch: 24.7,
+};
 
 // Pan-limit bounds — hand-picked by Jacob (2026-08-08) from a felt
 // polygon over the festival area. Format is MapLibre's LngLatBounds:
@@ -146,33 +155,24 @@ function createMap(stage, gestureState) {
     const map = new maplibregl.Map({
         container: stage,
         style: buildStyle(),
-        // Initial bounds cover every stage polygon plus some padding. The
-        // rotation (bearing) is baked into `bounds` at construction time
-        // so the very first frame already shows the whole festival strip.
-        bounds: STAGES_BBOX,
+        // Initial view — explicit center/zoom/bearing/pitch instead of a
+        // fit-to-bounds so the tilt survives the first frame (fitBounds
+        // recomputes the camera and clobbers any pitch we hand it).
+        center: DEFAULT_CAMERA.center,
+        zoom: DEFAULT_CAMERA.zoom,
+        bearing: DEFAULT_CAMERA.bearing,
+        pitch: DEFAULT_CAMERA.pitch,
         // Pan-limit — the user physically can't drag the camera outside
         // this bbox. MapLibre also implicitly bumps minZoom so the user
         // can't zoom out past the point where maxBounds would fit inside
         // the viewport, which is exactly what we want.
         maxBounds: MAP_MAX_BOUNDS,
-        fitBoundsOptions: {
-            // Pin the bearing INSIDE fit options so MapLibre computes the
-            // fit WITH the rotation baked in. Without this, fitBounds sets
-            // up the camera at bearing 0 first and only rotates afterwards,
-            // which on a landscape viewport lands on a wider zoom than we
-            // want and defeats the whole point of the portrait rotation.
-            bearing: -90,
-            // Bigger padding → lower zoom (fitBounds squeezes the bbox
-            // into viewport-minus-padding, so more padding ⇒ more
-            // sky around the festival). Roughly 2× the initial
-            // values; increase further if Jacob wants the camera
-            // even higher.
-            padding: { top: 120, right: 100, bottom: 100, left: 100 },
-        },
-        minZoom: 13,
+        // Soft zoom floor. maxBounds already enforces its own implicit
+        // floor (whatever zoom makes the bounds fit the viewport), so
+        // this value is only relevant if we later loosen maxBounds.
+        // Kept at 12 so there's headroom without a redeploy.
+        minZoom: 12,
         maxZoom: 19,
-        bearing: -90,
-        pitch: 0,
         // Disable the built-in AttributionControl — it's hardcoded to
         // bottom-right. We add our own below at bottom-left instead.
         attributionControl: false,
@@ -204,6 +204,21 @@ function createMap(stage, gestureState) {
     map.on('load', () => {
         map.__userLocationStop = startUserLocation(map);
     });
+
+    // Camera-state debug helper — commented out but preserved for
+    // future rounds of default-tuning. Uncomment, deploy, and every
+    // gesture-settle will log the current camera and copy a
+    // paste-ready snippet to the clipboard.
+    //
+    // map.on('moveend', () => {
+    //     const c = map.getCenter();
+    //     const line = `center: [${c.lng.toFixed(6)}, ${c.lat.toFixed(6)}], zoom: ${map.getZoom().toFixed(2)}, bearing: ${map.getBearing().toFixed(1)}, pitch: ${map.getPitch().toFixed(1)}`;
+    //     // eslint-disable-next-line no-console
+    //     console.log('[map camera]', line);
+    //     if (navigator.clipboard && navigator.clipboard.writeText) {
+    //         navigator.clipboard.writeText(line).catch(() => { /* ignore */ });
+    //     }
+    // });
 
     // Track whether we've already surfaced a hard failure so we don't
     // paint the error overlay on top of a working map when a
