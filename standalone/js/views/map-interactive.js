@@ -76,7 +76,7 @@ const MAP_MAX_BOUNDS = [
     // edge later tightened to Krawal & Zunft zur Kuh (the map's
     // southernmost feature, sterne.geojson) minus 50 m so panning
     // south stops just below the last real content.
-    [14.478404931523073, 52.270767],           // SW
+    [14.478404931523073, 52.270318],           // SW  (Krawal south − 100 m)
     [14.521079717325279, 52.290739744887185],  // NE
 ];
 
