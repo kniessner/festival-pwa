@@ -466,20 +466,15 @@ function addOverlayLayers(map) {
                     11,
                 'text-anchor': 'center',
                 'text-max-width': 8,
-                // Collision policy: stages + camps are wayfinding-
-                // critical and must never drop out. With allow-overlap
-                // false, MapLibre's collision heuristic hides most
-                // stages at low zoom (there are 16 in a 400 m strip —
-                // physically doesn't fit at 13–17 px). Force them
-                // rendered; the reduced noise from the tier fades
-                // (produktion + toilets hidden until zoom 16), the
-                // booth-feature purge, and the Lato Regular
-                // narrow-glyph swap for infra means the overlap that
-                // remains reads OK. Infrastructure labels keep normal
-                // collision so they hide behind anchors instead of
-                // drowning them.
-                'text-allow-overlap': (id === 'stages' || id === 'camping-areas'),
-                'text-optional': !(id === 'stages' || id === 'camping-areas'),
+                // Collision on for every layer. Symbol-sort-key below
+                // still gives the anchor tier priority so the labels
+                // MapLibre keeps favour stages > camps > infrastructure,
+                // but nothing is force-shown any more — if a label
+                // won't fit, it drops. Cleaner map at every zoom;
+                // accept that some labels are missing at low zoom
+                // until we work out a per-feature priority scheme.
+                'text-allow-overlap': false,
+                'text-optional': true,
                 'text-padding': 2,
                 'text-rotation-alignment': 'viewport',
                 'text-pitch-alignment': 'viewport',
