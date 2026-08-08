@@ -58,7 +58,7 @@ function buildLocateButton() {
     btn.setAttribute('aria-label', t('map.locateMe'));
     btn.innerHTML = `
         <img src="images/locate.svg" alt="" class="festival-map-control-icon"
-             width="24" height="24">
+             width="20" height="20">
     `;
     return btn;
 }

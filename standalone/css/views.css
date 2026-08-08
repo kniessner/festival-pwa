@@ -1955,7 +1955,15 @@ span.tt-event-stage {
 .festival-map-controls {
     position: absolute;
     left: 20px;
-    bottom: calc(20px + env(safe-area-inset-bottom));
+    /* +6 px above the .maplibregl-canvas' bottom so the 44 px control
+       button's vertical centre lines up with the 56 px .menu-trigger
+       FAB in the opposite corner. Math:
+         menu FAB centre-y = (20 + safe-area) + 56/2 = 48 + safe-area
+         locate btn  needs bottom + 44/2 = 48 + safe-area
+                          -> bottom     = 26 + safe-area
+       If a future control here is a different height it should follow
+       the same rule: bottom-inset = 48 - (its height / 2). */
+    bottom: calc(26px + env(safe-area-inset-bottom));
     z-index: 4; /* above the maplibre canvas + fade mask, below the
                    menu FAB (z 250) if their footprints ever overlap. */
     display: flex;
@@ -1966,8 +1974,12 @@ span.tt-event-stage {
 
 .festival-map-control-btn {
     pointer-events: auto;
-    width: 56px;
-    height: 56px;
+    /* 44 px matches the .menu-modal-refresh / .menu-modal-close FAB
+       size used inside the drop-up menu — a hair smaller than the
+       .menu-trigger (56 px) which is fine: the main menu FAB is the
+       primary CTA of the app, the map controls are secondary. */
+    width: 44px;
+    height: 44px;
     border-radius: 50%;
     /* Beach-sand fill — pairs the button with the tent marker's pin
        and the user-dot, unifying every "about me" surface on the map
@@ -2000,8 +2012,11 @@ span.tt-event-stage {
 
 .festival-map-control-icon {
     display: block;
-    width: 24px;
-    height: 24px;
+    /* Scaled down from 24 px so the icon-to-button ratio matches the
+       app's other 44 px round buttons (menu-modal close/refresh, which
+       use a 1.4 rem glyph inside a 44 px shell). */
+    width: 20px;
+    height: 20px;
 }
 
 /* ── Map toast ───────────────────────────────────────────────────────
@@ -2170,15 +2185,15 @@ span.tt-event-stage {
        `originalHeight` px LEFT of the pivot (see gotcha above).
        margin-bottom lifts the stripe so it starts ABOVE the
        bottom-left locate button (see .festival-map-controls):
-         button bottom inset  = 20 px + safe-area
-         button height        = 56 px
-         gap to attribution   = 20 px  (matches menu FAB's edge inset)
+         button bottom inset  = 26 px + safe-area
+         button height        = 44 px
+         gap to attribution   = 20 px
                              ───────────────────────────────────────
-                               96 px + safe-area
+                               90 px + safe-area
        so the vertical text starts flush with a 20 px breathing gap
        above the button. Safe-area is still respected so on notched /
        beveled devices the whole stack shifts up together. */
-    margin: 0 0 calc(96px + env(safe-area-inset-bottom)) 22px;
+    margin: 0 0 calc(90px + env(safe-area-inset-bottom)) 22px;
     font-size: 10px;
     line-height: 1.1;
     color: rgba(242, 233, 220, 0.75);
