@@ -2,21 +2,45 @@ import { store } from './store.js';
 import { PAGES, pageIdx } from './config.js';
 import { escapeHtml } from './ui.js';
 import { t } from './i18n.js';
+import { onMapSearchInput, closeMapSearchDropdown } from './views/map-search.js';
+
+// The single #searchInput at the top of the app doubles as:
+//   - a map POI search on /map            (dropdown under the input)
+//   - the Program / FAQ / News search elsewhere (full-screen modal)
+//
+// We branch inside the input listener on the current page slug so
+// there's exactly one keystroke handler; both branches also close
+// each other's UI on switch, so a stale dropdown / modal never
+// bleeds across routes.
+function isOnMapRoute() {
+    return PAGES[store.currentPage]?.slug === 'map';
+}
 
 export function setupSearch() {
     const input = document.getElementById('searchInput');
     if (!input || input.dataset.searchBound) return;
     input.dataset.searchBound = 'true';
     input.addEventListener('input', (e) => {
-        const q = e.target.value.trim().toLowerCase();
+        const q = e.target.value.trim();
+        if (isOnMapRoute()) {
+            // Map mode: dropdown. Kill any stale modal from a prior route.
+            closeSearchModal();
+            onMapSearchInput(input, q);
+            return;
+        }
+        // Non-map mode: existing modal search.
+        closeMapSearchDropdown();
         if (q.length < 2) {
             closeSearchModal();
             return;
         }
-        doSearch(q);
+        doSearch(q.toLowerCase());
     });
     document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') closeSearchModal();
+        if (e.key === 'Escape') {
+            closeSearchModal();
+            closeMapSearchDropdown();
+        }
     });
 }
 
