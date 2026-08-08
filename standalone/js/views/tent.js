@@ -28,12 +28,11 @@ import { t } from '../i18n.js';
 
 // ─── Config ──────────────────────────────────────────────────────────
 
-// Initial drop location on first-ever load. Hand-picked to sit inside
-// the camping strip (north-of-stages, around lat 52.279 where the
-// Check-in, Zeltverleih, and DIXI clusters live in the Felt data),
-// far enough away from any real point-of-interest that the user
-// immediately reads it as "grab me and place me on my actual tent".
-export const TENT_INITIAL_POSITION = [14.5000, 52.2795];
+// Initial drop location on first-ever load. Hand-picked by Jacob
+// (2026-08-08) to sit inside the main camping area — nudged east of
+// the Check-in/Zeltverleih strip so it lands somewhere clearly
+// campable and reads as "grab me, drop me on my real spot".
+export const TENT_INITIAL_POSITION = [14.502449976129924, 52.27739273160731];
 
 // localStorage key. No year suffix (per Jacob) — camping location is
 // personal and re-used across festival editions if the user keeps the
