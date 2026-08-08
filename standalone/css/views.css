@@ -1897,7 +1897,7 @@ span.tt-event-stage {
    we're not intersecting two gradients any more. */
 .festival-map .maplibregl-canvas {
     --festival-map-fade-top: 50px;
-    --festival-map-fade-bottom: 90px;
+    --festival-map-fade-bottom: 100px;
     -webkit-mask-image: linear-gradient(to bottom,
         transparent 0,
         #000 var(--festival-map-fade-top),
