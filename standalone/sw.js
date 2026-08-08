@@ -66,6 +66,8 @@ const SHELL_ASSETS = [
     './js/views/map-common.js',
     './js/views/map-interactive.js',
     './js/views/map-static.js',
+    './js/views/map-palette.js',
+    './js/views/basemap-layers.js',
     './js/views/favorites.js',
     './manifest.json',
     './vendor/maplibre-gl.js',
