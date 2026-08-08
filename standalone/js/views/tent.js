@@ -242,7 +242,9 @@ export function startTent(map) {
     const popup = new window.maplibregl.Popup({
         closeButton: false,
         anchor: 'top',
-        offset: [-2, 0],
+        // x-offset 3 px right of centre so the popup doesn't sit dead
+        // under the tent silhouette (was -2, nudged +5 per Jacob).
+        offset: [3, 0],
     }).setText(t('map.tentDragMe'));
 
     const marker = new window.maplibregl.Marker({
