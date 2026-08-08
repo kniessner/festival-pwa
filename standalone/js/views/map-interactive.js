@@ -72,11 +72,11 @@ const DEFAULT_CAMERA = {
 // polygon over the festival area. Format is MapLibre's LngLatBounds:
 // [[minLng, minLat], [maxLng, maxLat]].
 const MAP_MAX_BOUNDS = [
-    // Loosened to fit the phone viewport at the default zoom; south
-    // edge later tightened to Krawal & Zunft zur Kuh (the map's
-    // southernmost feature, sterne.geojson) minus 50 m so panning
-    // south stops just below the last real content.
-    [14.478404931523073, 52.270318],           // SW  (Krawal south − 100 m)
+    // Loosened to ≈ 3 km lat span so the mobile viewport can fit
+    // the whole festival at a comfortable zoom on load. Longitude
+    // range unchanged from Jacob's round-4 polygon; latitude range
+    // pushed ±670 m beyond it (N/S ends).
+    [14.478404931523073, 52.26177184691164],   // SW
     [14.521079717325279, 52.290739744887185],  // NE
 ];
 
