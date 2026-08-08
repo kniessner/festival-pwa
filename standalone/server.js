@@ -40,6 +40,12 @@ const MIME_TYPES = {
 // Parse a `bytes=start-end` Range header into concrete indices. Returns
 // null on missing / malformed header, `{ start, end }` otherwise, with
 // `end` clamped to the file size minus one.
+//
+// KEEP IN SYNC with standalone/sw.js's parseByteRange — the two run in
+// different runtimes (Node vs service worker) so they can't share a
+// module directly. The SW version deliberately omits suffix-range
+// support (`bytes=-N`) because pmtiles.js never emits them; if that
+// ever changes, add it there too.
 function parseRange(header, fileSize) {
     if (!header) return null;
     const m = /^bytes=(\d*)-(\d*)$/.exec(header);
