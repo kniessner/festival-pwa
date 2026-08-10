@@ -1425,7 +1425,7 @@ span.tt-event-stage {
     font-family: var(--font-head);
     font-weight: 700;
     font-size: 0.75rem;
-    color: var(--stage-color, var(--text));
+    color: var(--text);
     text-align: center;
     border-right: 1px solid var(--border);
     text-transform: uppercase;
@@ -1482,7 +1482,7 @@ span.tt-event-stage {
        this, .gtt-event stayed at z-index: auto and sticky descendants
        could paint over the label on iOS Safari. */
     z-index: 1;
-    background: var(--event-color, var(--stage-color, var(--accent-pink)));
+    background: var(--event-color, var(--accent-pink));
     border-radius: 14px;
     border: 2px solid rgba(255, 255, 255, 0.3);
     padding: 6px 8px;
@@ -1623,6 +1623,38 @@ span.tt-event-stage {
     box-sizing: border-box;
     pointer-events: none;
     z-index: 1;
+}
+
+/* "You are here" for stages — sibling of .gtt-current-hour above,
+   but for the SPACE axis. Applied by applyStagePulseClasses() to
+   whichever .gtt-stagehead / .gtt-stagecol / .gtt-stagerow-wrap
+   matches store.userStage.
+
+   One colour only (matches --color-now-indicator so a user standing
+   at the right stage during the right hour sees the two red
+   indicators cross-reference at their event). The prominent visual
+   is the header outline; the row/column also get a faint red wash
+   so the eye can track down / across from the header to the events
+   without losing the column. */
+.gtt-stagehead.gtt-current-stage {
+    position: relative;
+    color: var(--color-now-indicator);
+}
+.gtt-stagehead.gtt-current-stage::before {
+    content: '';
+    position: absolute;
+    inset: 0 -1px -1px -1px;
+    /* -1px on sides covers the neighbouring stagehead's border-left
+       and the header row's border-bottom, same trick as
+       .gtt-current-hour::before above. */
+    border: 2px solid var(--color-now-indicator);
+    box-sizing: border-box;
+    pointer-events: none;
+    z-index: 1;
+}
+.gtt-stagecol.gtt-current-stage,
+.gtt-stagerow-wrap.gtt-current-stage {
+    background-color: rgba(255, 59, 59, 0.06);
 }
 
 .gtt-day-divider {
