@@ -50,6 +50,10 @@
  *   2026-08-08  Rename: Skalahara FOH → Skalahara. Preserves the
  *               only Skalahara feature in the geojson; strips the
  *               staff-only FOH suffix.
+ *   2026-08-08  Remove: any text containing "Foodcourt" (kills
+ *               "Foodcourt tent" + "Foodcourt tent 2"; both were
+ *               already blocklisted from search, this drops the
+ *               polygons + labels from the map itself too).
  *   2026-08-08  Seeblick consolidation:
  *                 Seeblick indoor → Seeblick
  *                 Seeblick Stage  → Seeblick
@@ -96,11 +100,13 @@ const REMOVE_EXACT = new Set([
 
 // ─── Rule 3: pattern removals ─────────────────────────────────────────
 const REMOVE_PATTERNS = [
-    { rx: /booth/i,      label: 'booth'    },
-    { rx: /\?/,          label: '(?)'      },
-    { rx: /^kühlung$/i,  label: 'kuehlung' },
-    // No blanket /foh/i rule — see note on REMOVE_EXACT above; add
-    // once Horst confirms Skalahara FOH is redundant.
+    { rx: /booth/i,      label: 'booth'      },
+    { rx: /\?/,          label: '(?)'        },
+    { rx: /^kühlung$/i,  label: 'kuehlung'   },
+    // Foodcourt tents — staff/logistics infrastructure, not a
+    // guest-facing eatery. Catches "Foodcourt tent" and "Foodcourt
+    // tent 2" today; future "Foodcourt tent 3" etc. still hit.
+    { rx: /foodcourt/i,  label: 'foodcourt'  },
 ];
 
 // ─── Rule 5: toilet-file label normalisation ──────────────────────────
