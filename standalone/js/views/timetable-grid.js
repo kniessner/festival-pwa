@@ -87,25 +87,13 @@ const DAY_ROLLOVER_HOUR = 6;
 const DAY_WINDOW_START = DAY_ROLLOVER_HOUR * 60;
 const DAY_WINDOW_END = (24 + DAY_ROLLOVER_HOUR) * 60;
 
-const STAGE_COLORS = {
-    'community-corner dezentral': '#5a5ad1',
-    'cuddle-poodle': '#b0327a',
-    'dezentral': '#0303d5',
-    'mirage': '#ff6f21',
-    'neuro-divers': '#1fb6a4',
-    'schweissperle': '#e0b400',
-    'skalahara': '#3ac16e',
-    'strandflitzer': '#c23b6b',
-    'walking-act': '#762c8c',
-    'zirkus-mond': '#e85d75',
-    // Sub-venues of Zirkus Mond / Mirage — shades of their parent stage's
-    // color rather than the generic fallback, so they still read as related.
-    'zirkus-mond-zelt': '#f28aa0',
-    'zirkus-mond-turmbuehnchen': '#b23a52',
-    'mirage-arco': '#ff9552',
-    'mirage-glimmer': '#ffcf5c'
-};
-function stageColor(stage) { return STAGE_COLORS[stage] || '#b0327a'; }
+// Category-color palette lives in `categoryColor()` (event blocks are
+// tinted per event category, not per stage). No STAGE_COLORS map:
+// stages don't carry an intrinsic brand colour — the only stage that
+// visually stands out is the ONE the user is currently standing in,
+// and that one is styled by the `.gtt-current-stage` CSS rule (see
+// views.css). Fusion's reference implementation matches this: every
+// row is neutral until you are in it.
 
 // Event blocks are colored by type, not by stage — matches the Figma legend
 // (Spaces/Music/Workshop/Performance). 'Music' has no data yet (stages/acts
@@ -380,7 +368,7 @@ function renderVerticalLayout({ data, header, track, stages, byStage, stageLanes
 
     header.innerHTML = '<div class="gtt-corner"></div>' + stages.map(stage => {
         const label = data.filters.stages.find(s => s.value === stage)?.label || stage;
-        return `<div class="gtt-stagehead" data-stage="${stage}" style="width:${COL_WIDTH}px;--stage-color:${stageColor(stage)}">${label}</div>`;
+        return `<div class="gtt-stagehead" data-stage="${stage}" style="width:${COL_WIDTH}px">${label}</div>`;
     }).join('');
 
     const hourLabels = [];
@@ -399,7 +387,7 @@ function renderVerticalLayout({ data, header, track, stages, byStage, stageLanes
     const stageColumns = stages.map(stage => {
         const numLanes = stageLanes.get(stage);
         const blocks = byStage.get(stage).map(ev => renderEventBlockV(ev, gridMin, numLanes)).join('');
-        return `<div class="gtt-stagecol" data-stage="${stage}" style="width:${COL_WIDTH}px;height:${gridHeight}px;--stage-color:${stageColor(stage)}">${blocks}</div>`;
+        return `<div class="gtt-stagecol" data-stage="${stage}" style="width:${COL_WIDTH}px;height:${gridHeight}px">${blocks}</div>`;
     }).join('');
 
     let nowLine = '';
