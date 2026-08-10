@@ -44,9 +44,14 @@ RSYNC_FLAGS+=(
 )
 
 # Runtime files the app actually needs. Mirrors deploy.sh's dist/ build list
-# (index.html, manifest.json, sw.js, js/, css/, data/, fonts/, images/, icons/) —
-# scripts/, docs/, .log/, and README/STRATEGY.md are dev-only and excluded.
-DEPLOY_FILES=(index.html manifest.json sw.js js css data fonts images icons)
+# (index.html, manifest.json, sw.js, js/, css/, data/, fonts/, vendor/,
+# glyphs/, images/, icons/) — scripts/, docs/, .log/, and README/STRATEGY.md
+# are dev-only and excluded. vendor/ (MapLibre GL JS + pmtiles, see
+# index.html) and glyphs/ (MapLibre's vendored SDF label glyphs, see
+# js/views/map-interactive.js) are both already precached in sw.js's
+# SHELL_ASSETS and already copied into dist/ by build.js — omitting them
+# here would silently ship a Festival Map that 404s on the live site.
+DEPLOY_FILES=(index.html manifest.json sw.js js css data fonts vendor glyphs images icons)
 
 # Every deploy ships a fresh cache-busted sw.js + index.html, so a change
 # never goes out under a version the device has already cached (see

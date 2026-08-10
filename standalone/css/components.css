@@ -48,7 +48,7 @@
     height: 36px;
     border-radius: 50%;
     border: none;
-    background: transparent;
+    background: #080a44;
     padding: 0;
     cursor: pointer;
     display: flex;
@@ -376,7 +376,12 @@
     color: rgba(27, 25, 42, 1);
 }
 
-/* Search results */
+.gtt-detail-panel .fav-star-icon  {
+    color: white;
+}
+
+
+/* results */
 
 .search-card {
     cursor: pointer;
