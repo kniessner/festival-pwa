@@ -9,6 +9,7 @@ import basemapLayers from './basemap-layers.js';
 import { PALETTE } from './map-palette.js';
 import { startUserLocation } from './user-location.js';
 import { startTent } from './tent.js';
+import { maybeShowTentIntro } from './tent-intro.js';
 import { createMapControls } from './map-controls.js';
 import { flyToCoordWithPulse } from './map-flyto.js';
 import { closeMapSearchDropdown } from './map-search.js';
@@ -263,6 +264,15 @@ function createMap(stage, gestureState) {
         // is up so click handlers can flyTo without racing the load.
         map.__mapControlsStop = createMapControls(map, stage);
     });
+
+    // One-shot "where is my tent?" onboarding dialog, gated on the
+    // twin flags in tent-intro.js (has-stored-tent + intro-completed).
+    // Fired synchronously here — the DOM shell (#tentIntroModal) lives
+    // in index.html and doesn't need the map to be ready. Rendering
+    // the modal over an already-drawn map matches fusion's UX where
+    // the tent icon peeks out from behind the overlay, hinting at
+    // what the user is about to interact with.
+    maybeShowTentIntro();
 
     // Search route: js/views/map-search.js dispatches a `map:flyTo`
     // CustomEvent when the user picks a result. Kept as an event

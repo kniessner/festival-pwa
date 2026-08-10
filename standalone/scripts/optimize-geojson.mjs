@@ -32,6 +32,16 @@
  * Coordinate precision: 6 decimals ≈ 11 cm at the equator, ≈ 7 cm at
  * lat 52°. Way finer than any Felt digitizing precision — the extra
  * decimals in the source are float noise, not signal.
+ *
+ * Feature draw order (within a single geojson):
+ * MapLibre paints fill features in the source array order — later
+ * ones overwrite earlier ones on overlap. To satisfy the "bigger
+ * underneath, smaller on top" rule uniformly (fusion-parity for the
+ * z-order pass documented in js/views/map-layers.js's FELT_LAYERS
+ * comment), features are sorted by DESCENDING polygon area before
+ * writing back. Non-fill geometries (Point / LineString) get area 0
+ * and fall to the end — their draw ordering is irrelevant to the
+ * fill layer that consumes this file.
  */
 
 import { readFileSync, writeFileSync, readdirSync, statSync } from 'node:fs';
@@ -55,6 +65,26 @@ function roundCoords(node) {
     return node;
 }
 
+// Planar polygon area via the shoelace formula. Good enough at this
+// latitude for RELATIVE ordering (we only care which of two features
+// is bigger, not the true m²). Points / LineStrings / GeometryCollections
+// return 0 so they sort to the end.
+function ringArea(ring) {
+    let a = 0;
+    for (let i = 0; i < ring.length - 1; i++) {
+        const [x1, y1] = ring[i];
+        const [x2, y2] = ring[i + 1];
+        a += x1 * y2 - x2 * y1;
+    }
+    return Math.abs(a) / 2;
+}
+function geometryArea(geom) {
+    if (!geom) return 0;
+    if (geom.type === 'Polygon')      return ringArea(geom.coordinates[0]);
+    if (geom.type === 'MultiPolygon') return geom.coordinates.reduce((s, poly) => s + ringArea(poly[0]), 0);
+    return 0;
+}
+
 function pickProps(props) {
     if (!props || typeof props !== 'object') return {};
     const out = {};
@@ -69,16 +99,23 @@ function pickProps(props) {
 }
 
 function optimize(fc) {
+    const features = fc.features.map((f) => ({
+        type: 'Feature',
+        properties: pickProps(f.properties),
+        geometry: {
+            ...f.geometry,
+            coordinates: roundCoords(f.geometry.coordinates),
+        },
+    }));
+    // Sort by descending polygon area so bigger polygons paint first
+    // (draw at low index) and smaller ones paint on top (draw at high
+    // index). Non-fill features (area 0) fall to the end but their
+    // ordering is irrelevant — they go to the -point / -label layers,
+    // not the -fill layer.
+    features.sort((a, b) => geometryArea(b.geometry) - geometryArea(a.geometry));
     return {
         type: 'FeatureCollection',
-        features: fc.features.map((f) => ({
-            type: 'Feature',
-            properties: pickProps(f.properties),
-            geometry: {
-                ...f.geometry,
-                coordinates: roundCoords(f.geometry.coordinates),
-            },
-        })),
+        features,
     };
 }
 

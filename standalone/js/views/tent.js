@@ -144,6 +144,16 @@ export function getTentPosition() {
     return TENT_INITIAL_POSITION;
 }
 
+/**
+ * True iff the user has explicitly dropped a tent (i.e. a valid
+ * position is stored). Used by tent-intro to decide whether the
+ * "where is my tent?" onboarding dialog is still relevant — someone
+ * who has already placed the tent doesn't need the pitch.
+ */
+export function hasStoredTentPosition() {
+    return readStoredPosition() !== null;
+}
+
 function savePosition(lng, lat) {
     safeSetJSON(TENT_POSITION_KEY, { lng, lat });
 }
