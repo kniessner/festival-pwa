@@ -55,10 +55,12 @@ const TOILET_COORDS = [
     [14.499453, 52.278570], // DIXI x8
 ];
 
-const FIRST_AID_COORDS = [
-    [14.500000, 52.276028], // DRK / Secu Base   (fallback = main medical)
-    [14.489471, 52.276544], // Psycare / DRK zelt
-];
+// First-aid was previously resolved to the nearer of two coords
+// (DRK / Secu Base + Psycare / DRK zelt). The Horst review consolidated
+// awareness + first-aid provisioning at the Awareness & Eclipse polygon,
+// so first-aid now points to the same coord as the Eclipse fly-to entry
+// below. FIRST_AID_COORDS deliberately removed rather than left dead
+// so a future contributor doesn't wire it back in without knowing why.
 
 const INFO_POINT_COORD = [14.494663, 52.276211]; // Info-point / Lost & Found / Kiosk / DIY station
 const ECLIPSE_COORD    = [14.489207, 52.276594]; // Awareness & Eclipse polygon centroid (produktion.geojson)
@@ -85,7 +87,13 @@ export const POI_LIST = [
     {
         id: 'tent',
         labelKey: 'map.flyto.tent',
-        icon: 'images/poi-tent.svg',
+        // Reuses the bespoke drop-pin from the draggable tent marker
+        // (images/tent.svg) instead of the outline poi-tent icon, so
+        // the fly-to entry visually reads as the same thing the user
+        // sees on the map. Self-styled (hardcoded beach-sand fill +
+        // red glyph) so it doesn't need the mask-image treatment the
+        // other poi icons use.
+        icon: 'images/tent.svg',
         // Read fresh on every click so a drag+drop from the drag-me
         // marker is reflected immediately without a store subscription.
         resolve: () => getTentPosition(),
@@ -100,7 +108,10 @@ export const POI_LIST = [
         id: 'first-aid',
         labelKey: 'map.flyto.firstAid',
         icon: 'images/poi-firstaid.svg',
-        resolve: nearestOr(FIRST_AID_COORDS),
+        // Points at the Awareness & Eclipse polygon — same coord as the
+        // Eclipse entry below, since that's where first-aid + emotional
+        // support are co-located per Horst's produktion review.
+        resolve: () => ECLIPSE_COORD,
     },
     {
         id: 'info',
