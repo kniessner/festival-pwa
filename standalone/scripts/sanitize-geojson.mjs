@@ -59,6 +59,8 @@
  *   2026-08-08  Remove: any text matching /geländegestaltung/i
  *               ("Geländegestaltung Plaform" today; future
  *               "Platform" spelling caught too).
+ *   2026-08-08  Remove: "Backstage Bar" and "BdT Foodie" (staff-
+ *               only bar / eatery, not guest-facing).
  *   2026-08-08  Seeblick consolidation:
  *                 Seeblick indoor → Seeblick
  *                 Seeblick Stage  → Seeblick
@@ -103,6 +105,9 @@ const REMOVE_EXACT = new Set([
     // hit "Skalahara FOH" — Jacob is asking Horst whether that one
     // stays or goes.
     'FOH Seeblick',
+    // Staff-only bar / eatery, not part of the guest map.
+    'Backstage Bar',
+    'BdT Foodie',
 ]);
 
 // ─── Rule 3: pattern removals ─────────────────────────────────────────
