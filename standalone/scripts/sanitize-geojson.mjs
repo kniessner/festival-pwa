@@ -56,6 +56,9 @@
  *               polygons + labels from the map itself too).
  *   2026-08-08  Rename: Shower Container → Dusche (x3 in toilets-
  *               showers). Keeps the polygons, cleans the label.
+ *   2026-08-08  Casing fixes:
+ *                 bar               → Bar
+ *                 Bar - Porto LOco  → Bar - Porto Loco
  *   2026-08-08  Remove: any text matching /geländegestaltung/i
  *               ("Geländegestaltung Plaform" today; future
  *               "Platform" spelling caught too).
@@ -95,6 +98,9 @@ const RENAMES = {
     'Skalahara FOH':              'Skalahara',
     // Shower-family relabels
     'Shower Container':           'Dusche',
+    // Casing fixes
+    'bar':                        'Bar',
+    'Bar - Porto LOco':           'Bar - Porto Loco',
 };
 
 // ─── Rule 2: exact-text removals ──────────────────────────────────────
