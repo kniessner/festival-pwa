@@ -272,6 +272,7 @@ function iconForCategory(cat) {
 const DROPDOWN_CLASS = 'festival-map-search-dropdown';
 let dropdownEl = null;
 let docClickHandler = null;
+let dismissOnLayoutHandler = null;
 let debounceId = null;
 
 /**
@@ -303,6 +304,12 @@ export function closeMapSearchDropdown() {
         document.removeEventListener('click', docClickHandler);
         docClickHandler = null;
     }
+    if (dismissOnLayoutHandler) {
+        window.removeEventListener('resize', dismissOnLayoutHandler);
+        window.removeEventListener('orientationchange', dismissOnLayoutHandler);
+        document.removeEventListener('scroll', dismissOnLayoutHandler, true);
+        dismissOnLayoutHandler = null;
+    }
 }
 
 function renderDropdown(inputEl, results, total, query) {
@@ -328,6 +335,17 @@ function renderDropdown(inputEl, results, total, query) {
         // rAF so the same click that focused the input doesn't
         // immediately fire this handler.
         requestAnimationFrame(() => document.addEventListener('click', docClickHandler));
+
+        // Layout-changing events — close the dropdown rather than
+        // trying to reposition it, per round-3 review. iOS Safari's
+        // address-bar collapse fires `resize`, phone rotation fires
+        // `orientationchange`, page scroll (unlikely on /map but
+        // possible during a rotation) is caught via a capture-phase
+        // scroll listener that also catches sub-tree scrolls.
+        dismissOnLayoutHandler = () => closeMapSearchDropdown();
+        window.addEventListener('resize', dismissOnLayoutHandler);
+        window.addEventListener('orientationchange', dismissOnLayoutHandler);
+        document.addEventListener('scroll', dismissOnLayoutHandler, true);
     }
 
     // Position under the input every render (in case the input moved
@@ -367,12 +385,18 @@ function renderRow(r) {
     const category = r.kind === 'entry' ? t(`search.category.${r.category}`) : null;
     const meta = category ? `<span class="festival-map-search-cat"> · ${escapeHtml(category)}</span>` : '';
     const [lng, lat] = r.coord;
+    // The icon is a CSS-mask-driven <span> (not an <img>) so it can
+    // inherit currentColor. External SVGs in <img> ignore ancestor
+    // CSS `color`, which round-3 review caught as "black-on-navy,
+    // invisible in the dark dropdown". Same pattern used by
+    // .fav-star-icon in css/components.css.
     return `
         <button type="button" class="festival-map-search-row"
                 data-map-search-row
                 data-lng="${lng}" data-lat="${lat}"
                 role="option">
-            <img src="${r.icon}" alt="" class="festival-map-search-icon" width="24" height="24">
+            <span class="festival-map-search-icon"
+                  style="--icon-url: url('${r.icon}')" aria-hidden="true"></span>
             <span class="festival-map-search-label">${escapeHtml(label)}${meta}</span>
         </button>
     `;

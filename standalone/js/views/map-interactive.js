@@ -564,6 +564,11 @@ function addOverlayLayers(map) {
     // colour halo (they read on the navy water without one). Only one
     // entry today ("Helene" on the lake); the same layer scales to
     // future landmarks (forest, path names, etc.) without new code.
+    //
+    // Deliberately NOT in FELT_LAYERS — that's the tier system used by
+    // tent.js#FADE_LAYERS to dim overlays during tent-drag. Landmarks
+    // are ambient and stay put during drag (see FADE_LAYERS comment
+    // in tent.js).
     map.addSource('landmarks', {
         type: 'geojson',
         data: 'data/landmarks.geojson',

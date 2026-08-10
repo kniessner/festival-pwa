@@ -2232,11 +2232,26 @@ span.tt-event-stage {
 }
 
 .festival-map-search-icon {
+    /* CSS-mask pattern: the SVG at --icon-url acts as an alpha mask,
+       and background-color: currentColor paints the visible pixels.
+       This is the only way to make an external SVG inherit ancestor
+       text color — an <img src=svg> renders in isolation and ignores
+       CSS `color`. Consumers set --icon-url inline per row (see
+       js/views/map-search.js#renderRow). Same pattern as
+       .fav-star-icon in css/components.css. */
     display: block;
     width: 24px;
     height: 24px;
     flex-shrink: 0;
-    color: var(--text-muted); /* SVGs use currentColor */
+    background-color: currentColor;
+    -webkit-mask-image: var(--icon-url);
+    mask-image: var(--icon-url);
+    -webkit-mask-size: contain;
+    mask-size: contain;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    mask-position: center;
 }
 
 .festival-map-search-label {
