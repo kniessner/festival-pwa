@@ -29,8 +29,8 @@
     ],
     "stages": [
       {
-        "value": "community-corner dezentral",
-        "label": "community-corner dezentral"
+        "value": "community-corner",
+        "label": "Community Corner"
       },
       {
         "value": "cuddle-poodle",
@@ -39,10 +39,6 @@
       {
         "value": "dezentral",
         "label": "dezentral"
-      },
-      {
-        "value": "mirage",
-        "label": "Mirage"
       },
       {
         "value": "neuro-divers",
@@ -63,10 +59,6 @@
       {
         "value": "walking-act",
         "label": "Walking Act"
-      },
-      {
-        "value": "zirkus-mond",
-        "label": "Zirkus Mond"
       }
     ],
     "categories": [
@@ -919,8 +911,8 @@
       "time": "FR 13:00",
       "start_time": "13:00",
       "end_time": "19:00",
-      "stage": "community-corner dezentral",
-      "stage_label": "community-corner dezentral",
+      "stage": "community-corner",
+      "stage_label": "Community Corner",
       "type": "performance",
       "type_label": "Performance",
       "category": "Performance",
@@ -2003,8 +1995,8 @@
       "time": "SA 13:00",
       "start_time": "13:00",
       "end_time": "19:00",
-      "stage": "community-corner dezentral",
-      "stage_label": "community-corner dezentral",
+      "stage": "community-corner",
+      "stage_label": "Community Corner",
       "type": "performance",
       "type_label": "Performance",
       "category": "Performance",

@@ -1,0 +1,11 @@
+<!--
+    Medical cross — universal first-aid pictogram. Filled current-
+    color plus so it reads as a solid mark rather than an outline
+    (different pattern from tent/info/toilet which are outline-based)
+    to give it the visual weight befitting "emergency care".
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+     stroke="currentColor" stroke-width="2" stroke-linejoin="round">
+    <rect x="3" y="3" width="18" height="18" rx="3"/>
+    <path d="M12 8 v8 M8 12 h8" stroke-linecap="round"/>
+</svg>

@@ -1838,3 +1838,710 @@ span.tt-event-stage {
 .gtt-detail-done:active {
     transform: scale(0.98);
 }
+/* ── Festival Map view (interactive MapLibre) ─────────────────────────── */
+
+.page-map main {
+    /* The whole app is a phone-shaped column (max-width: 650px) for
+       readable text pages — the map view wants every horizontal pixel.
+       Break out of the column just on /map: full width, no side border,
+       no gradient (the bg.jpg carries the aesthetic edge-to-edge). */
+    max-width: none;
+    width: 100%;
+    border: none;
+    box-shadow: none;
+    background: transparent;
+    /* Remove default content padding so the MapLibre canvas can also
+       stretch the full width. */
+    padding: 0;
+    /* base.css's main sets overflow-y: scroll (always-on scrollbar),
+       which reserves ~4px on the right edge and shows as a stripe of
+       page background beside the map. The map view fills the viewport
+       and has no scrollable text — turn the reserved gutter off. */
+    overflow-y: hidden;
+}
+
+.page-map .content {
+    padding: 0;
+    margin: 0;
+}
+
+.festival-map {
+    /* Height is set at mount by views/map.js to fill the remaining
+       viewport under the page header — the header stack differs on phone
+       vs desktop, so a JS-measured height is more robust than calc(). */
+    position: relative;
+    width: 100%;
+    background: transparent;
+    overflow: hidden;
+    /* Let MapLibre own every gesture inside the container. Without this
+       the browser's default pan/pinch can intercept single-finger drags
+       on iOS before MapLibre sees them. */
+    touch-action: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+/* Soft-fade the map's canvas out to transparent on TOP and BOTTOM
+   only, so the page background (bg.jpg's dreamy navy) bleeds into
+   the map above and below. Left and right stay hard — the map
+   already goes edge-to-edge and cropping there felt right.
+
+   Applied to .maplibregl-canvas (not .maplibregl-canvas-container:
+   MapLibre gives the container `position: static; height: 0` and puts
+   an absolutely-positioned canvas inside, so a mask on the container
+   hides the whole map because the container has zero measurable size).
+   Attribution + any future controls live in .maplibregl-control-container
+   (sibling of the canvas element) and stay crisp.
+
+   Single vertical linear-gradient — no mask-composite needed since
+   we're not intersecting two gradients any more. */
+.festival-map .maplibregl-canvas {
+    --festival-map-fade-top: 50px;
+    --festival-map-fade-bottom: 100px;
+    -webkit-mask-image: linear-gradient(to bottom,
+        transparent 0,
+        #000 var(--festival-map-fade-top),
+        #000 calc(100% - var(--festival-map-fade-bottom)),
+        transparent 100%);
+    mask-image: linear-gradient(to bottom,
+        transparent 0,
+        #000 var(--festival-map-fade-top),
+        #000 calc(100% - var(--festival-map-fade-bottom)),
+        transparent 100%);
+    mask-mode: alpha;
+    mask-repeat: no-repeat;
+    mask-size: 100% 100%;
+}
+
+/* Static (illustrated PNG) variant — the <img> lives inside .festival-map and gets
+   translated/scaled by the pinch-zoom controller in map-static.js. */
+.festival-map-img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    transform-origin: center center;
+    will-change: transform;
+    -webkit-user-drag: none;
+    user-select: none;
+    pointer-events: none;
+}
+
+.festival-map-hint {
+    position: absolute;
+    bottom: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 8px 14px;
+    background: rgba(0, 0, 0, 0.55);
+    color: var(--text, #f2e9dc);
+    font-size: 0.85rem;
+    border-radius: 999px;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    z-index: 1;
+}
+
+.festival-map-hint.hidden {
+    opacity: 0;
+}
+
+/* ── Map controls (bottom-left button group) ─────────────────────────
+   Mirrors the app-wide .menu-trigger at bottom-right. Positioned
+   INSIDE the .festival-map stage (not fixed to the viewport) so it
+   auto-disappears when the user leaves the map, and so it lives
+   above the mask/fade zone at the bottom (~100px) via a bottom
+   offset that clears both the fade and the safe-area inset. */
+.festival-map-controls {
+    position: absolute;
+    left: 20px;
+    /* +6 px above the .maplibregl-canvas' bottom so the 44 px control
+       button's vertical centre lines up with the 56 px .menu-trigger
+       FAB in the opposite corner. Math:
+         menu FAB centre-y = (20 + safe-area) + 56/2 = 48 + safe-area
+         locate btn  needs bottom + 44/2 = 48 + safe-area
+                          -> bottom     = 26 + safe-area
+       If a future control here is a different height it should follow
+       the same rule: bottom-inset = 48 - (its height / 2). */
+    bottom: calc(26px + env(safe-area-inset-bottom));
+    z-index: 4; /* above the maplibre canvas + fade mask, below the
+                   menu FAB (z 250) if their footprints ever overlap. */
+    display: flex;
+    gap: 12px;
+    pointer-events: none; /* buttons re-enable it; keeps the wrapper
+                             from swallowing map gestures in the gaps. */
+}
+
+.festival-map-control-btn {
+    pointer-events: auto;
+    /* 44 px matches the .menu-modal-refresh / .menu-modal-close FAB
+       size used inside the drop-up menu — a hair smaller than the
+       .menu-trigger (56 px) which is fine: the main menu FAB is the
+       primary CTA of the app, the map controls are secondary. */
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    /* Beach-sand fill — pairs the button with the tent marker's pin
+       and the user-dot, unifying every "about me" surface on the map
+       under one warm tone that reads against the magenta land. Value
+       taken from js/views/map-palette.js -> PALETTE.beachSand.
+       Not (yet) promoted to a CSS token because this is the first CSS
+       consumer. */
+    background: #e8c98a;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* --text is the dark inky navy from tokens.css, contrasts well
+       with beach-sand for the crosshair icon. */
+    color: var(--text);
+    cursor: pointer;
+    padding: 0;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+    transition: transform 0.12s ease, background-color 0.15s ease;
+}
+
+.festival-map-control-btn:active {
+    transform: scale(0.94);
+}
+
+.festival-map-control-btn:focus-visible {
+    outline: 2px solid var(--accent-pink);
+    outline-offset: 3px;
+}
+
+.festival-map-control-icon {
+    display: block;
+    /* Scaled down from 24 px so the icon-to-button ratio matches the
+       app's other 44 px round buttons (menu-modal close/refresh, which
+       use a 1.4 rem glyph inside a 44 px shell). */
+    width: 20px;
+    height: 20px;
+}
+
+/* ── Map toast ───────────────────────────────────────────────────────
+   Anchored just below the top-fade zone (~50px) so the message reads
+   crisply while the map stays soft-edged. One toast at a time; the
+   .visible class is toggled by js/views/map-toast.js. */
+.festival-map-toast {
+    position: absolute;
+    top: 60px;
+    left: 50%;
+    transform: translate(-50%, -8px);
+    max-width: calc(100% - 40px);
+    padding: 10px 16px;
+    background: rgba(8, 9, 67, 0.9); /* --bg with slight transparency */
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    line-height: 1.3;
+    text-align: center;
+    border-radius: 999px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+    z-index: 5; /* above controls so a toast triggered by a click on
+                   a control sits over that control's visual footprint. */
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.festival-map-toast.visible {
+    opacity: 1;
+    transform: translate(-50%, 0);
+}
+
+/* ── Fly-to popover (opens above the fly-to button) ────────────────────
+   Small contextual menu mounted inside .festival-map. The overlay
+   itself fills the map so a backdrop-click closes the menu, but the
+   card is bottom-left anchored and cream so it feels like a native
+   contextual menu attached to the button below it.
+
+   Interaction contract:
+     .festival-map-flyto             overlay wrapper (backdrop hit target)
+     .festival-map-flyto-card        the cream popover itself
+     .festival-map-flyto-entry       one tap row per POI
+
+   Map underneath stays interactive: the overlay is transparent to
+   pointer events on everything except the card and the card's own
+   rows. This matches fusion's legend-modal behaviour (map still pans
+   with an open legend). */
+.festival-map-flyto {
+    position: absolute;
+    inset: 0;
+    z-index: 6; /* above the toast (z 5) so a stale toast can't cover
+                   the newly-opened menu. */
+    /* Transparent to pointer events — the map beneath the popover
+       stays fully interactive (pinch, pan, tap on features). The
+       card below re-enables pointer-events on itself so its buttons
+       still work. Close-on-outside-click is handled by a document-
+       level `click` listener in js/views/map-flyto.js. */
+    pointer-events: none;
+    background: transparent;
+}
+
+.festival-map-flyto-card {
+    position: absolute;
+    /* Card is the only click-target inside the overlay. */
+    pointer-events: auto;
+    /* Anchored to sit ABOVE the button group, aligned to its left
+       edge. Vertical: 90 px lines up with the top of the 44 px
+       control buttons (26 px bottom-inset + 44 px height + 20 px
+       gap = 90 px), same math as the attribution stripe. */
+    left: 20px;
+    bottom: calc(90px + env(safe-area-inset-bottom));
+    /* Bounded so it never crosses the right edge on narrow phones
+       (320 px viewport minus 20 px left inset minus 20 px right
+       safety = 280 px cap). */
+    min-width: 240px;
+    max-width: min(280px, calc(100% - 40px));
+    background: var(--bg-card);
+    color: var(--text);
+    border-radius: var(--card-radius, 20px);
+    padding: 12px 8px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    /* Prevent MapLibre's touch-action: none on .festival-map from
+       swallowing scroll on tall popovers (won't happen with 4 rows
+       but future-proofs). */
+    touch-action: manipulation;
+    /* Subtle open animation — fade + rise 6 px so the popover
+       feels attached to the button it emerges from. */
+    animation: festival-map-flyto-in 0.18s ease-out;
+}
+
+@keyframes festival-map-flyto-in {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.festival-map-flyto-header {
+    font-family: var(--wp--preset--font-family--megan-display, 'Megan Display'), serif;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-on-card, rgba(27, 25, 42, 0.65));
+    padding: 4px 12px 6px;
+}
+
+.festival-map-flyto-entry {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    background: transparent;
+    border: none;
+    border-radius: 12px;
+    color: var(--text);
+    text-align: left;
+    font-size: 1rem;
+    line-height: 1.2;
+    cursor: pointer;
+    min-height: 44px;
+    transition: background-color 0.12s ease;
+}
+
+.festival-map-flyto-entry:hover,
+.festival-map-flyto-entry:focus-visible {
+    background: rgba(15, 18, 130, 0.08);
+    outline: none;
+}
+
+.festival-map-flyto-entry:focus-visible {
+    box-shadow: 0 0 0 2px var(--accent-pink);
+}
+
+.festival-map-flyto-entry:active {
+    background: rgba(15, 18, 130, 0.14);
+}
+
+.festival-map-flyto-icon {
+    display: block;
+    width: 28px;
+    height: 28px;
+    flex-shrink: 0;
+}
+
+.festival-map-flyto-label {
+    flex: 1;
+    font-family: var(--font-body, 'Instrument Sans'), sans-serif;
+}
+
+/* ── Map-search dropdown (autocomplete under #searchInput) ────────────────
+   Design decision: match the search input pill's dark-navy background
+   so the two read as a single search unit (like YouTube / Instagram
+   inline autocomplete). If we ever decide it should look like the
+   fly-to popover (cream card, style (a) in the round-3 grill), swap
+   `background` + `color` + `.festival-map-search-cat` opacity to
+   dark-on-cream and the rest of the layout stays as-is. */
+.festival-map-search-dropdown {
+    /* position: fixed is set in JS so the dropdown tracks the input's
+       screen position regardless of the input's containing block. */
+    z-index: 250; /* above the map (has canvas + fade mask around
+                     z-index auto) and above the toast (z 5), below
+                     the menu-modal (z 1000002). */
+    background: rgba(13, 10, 74, 1); /* matches .search-input-wrap */
+    color: var(--text-muted);
+    border-radius: 20px;
+    padding: 8px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    max-height: 60vh;
+    overflow-y: auto;
+    /* Subtle open animation to signal "result appeared". */
+    animation: festival-map-search-in 0.15s ease-out;
+}
+
+@keyframes festival-map-search-in {
+    from { opacity: 0; transform: translateY(-4px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.festival-map-search-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    background: transparent;
+    border: none;
+    border-radius: 12px;
+    color: var(--text-muted);
+    text-align: left;
+    font-size: 0.95rem;
+    line-height: 1.2;
+    cursor: pointer;
+    min-height: 44px;
+    transition: background-color 0.12s ease;
+    /* Icons on a dark bg render as cream via currentColor. */
+}
+
+.festival-map-search-row:hover,
+.festival-map-search-row:focus-visible {
+    background: rgba(242, 233, 220, 0.10);
+    outline: none;
+}
+
+.festival-map-search-row:focus-visible {
+    box-shadow: 0 0 0 2px var(--accent-pink);
+}
+
+.festival-map-search-row:active {
+    background: rgba(242, 233, 220, 0.16);
+}
+
+.festival-map-search-icon {
+    /* CSS-mask pattern: the SVG at --icon-url acts as an alpha mask,
+       and background-color: currentColor paints the visible pixels.
+       This is the only way to make an external SVG inherit ancestor
+       text color — an <img src=svg> renders in isolation and ignores
+       CSS `color`. Consumers set --icon-url inline per row (see
+       js/views/map-search.js#renderRow). Same pattern as
+       .fav-star-icon in css/components.css. */
+    display: block;
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
+    background-color: currentColor;
+    -webkit-mask-image: var(--icon-url);
+    mask-image: var(--icon-url);
+    -webkit-mask-size: contain;
+    mask-size: contain;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    mask-position: center;
+}
+
+.festival-map-search-label {
+    flex: 1;
+    font-family: var(--font-body, 'Instrument Sans'), sans-serif;
+}
+
+.festival-map-search-cat {
+    /* '· Category' suffix inside the row label. Cream at 55 % opacity
+       so it reads as secondary metadata. */
+    color: rgba(242, 233, 220, 0.55);
+    font-size: 0.85em;
+    margin-left: 2px;
+}
+
+.festival-map-search-empty {
+    padding: 14px;
+    text-align: center;
+    color: rgba(242, 233, 220, 0.55);
+    font-style: italic;
+    font-size: 0.9rem;
+}
+
+.festival-map-search-overflow {
+    padding: 8px 14px 4px;
+    text-align: center;
+    color: rgba(242, 233, 220, 0.45);
+    font-size: 0.8rem;
+}
+
+/* ── POI quick-jump ripple (fires after a fly-to settles) ────────────────
+   Ported from pwa_test/src/index.css. A single ring inside a
+   MapLibre Marker at the target coord, so the ring stays glued to
+   the world position while the camera is still moving. CSS handles
+   the whole animation — JS just mounts / unmounts the marker.
+
+   Colour: beach-sand (#e8c98a) — the app's "about me" accent shared
+   with the tent marker, user-dot, and locate-me FAB. Reads warmly
+   against the magenta land + navy water without competing with the
+   pink menu FAB. */
+@keyframes poi-pulse {
+    0%   { transform: scale(0.3); opacity: 1; }
+    70%  {                        opacity: 0.45; }
+    100% { transform: scale(3.2); opacity: 0; }
+}
+
+.poi-pulse {
+    position: relative;
+    width: 32px;
+    height: 32px;
+    pointer-events: none;
+}
+
+.poi-pulse-ring {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    border: 3px solid #e8c98a;
+    background-color: rgba(232, 201, 138, 0.35);
+    animation: poi-pulse 1.8s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+    will-change: transform, opacity;
+}
+
+
+/* Tab strip that lets the user switch between the interactive MapLibre
+   view and the static illustrated PNG. Reuses the timetable's
+   .tt-type-tabs markup verbatim so the two look identical — that markup
+   uses `margin: 0 -16px 4px` to bleed to its parent's edges, so we give
+   it a 16px-padded wrapper of the same shape as the timetable's row. */
+.map-tabs-wrap {
+    padding: 0 16px;
+}
+
+/* ── User location marker + heading cone ─────────────────────────────── */
+
+/* Palette hooks for js/views/user-location.js. Kept local to this
+   file (not tokens.css) because the map view is the only consumer,
+   and the tones are picked to read against the illustrated magenta
+   land — not against app-wide surfaces. */
+:root {
+    /* beachSand `#e8c98a` from PALETTE — the one palette tone that
+       isn't used by any overlay layer, contrasts well against magenta
+       land, navy water, and its own home (the sandy shore strip).
+       Cream is left to the text/label role so the pin reads as
+       "you are here" instead of "just another label". */
+    --map-user-location-dot: #e8c98a;
+    --map-user-location-accuracy: rgba(232, 201, 138, 0.22);
+    /* Halos stay two-tone: warm cream sparkle + thin dark edge, so
+       the cone survives on the beach and on the deep water. */
+    --map-user-cone-halo-light: rgba(242, 233, 220, 0.85);
+    --map-user-cone-halo-dark: rgba(28, 7, 22, 0.4);
+}
+
+/* MapLibre paints .maplibregl-user-location-dot into the marker's DOM
+   itself. We repaint it (and its pulse pseudo-element) with our cream
+   accent so it reads against the illustrated magenta land. */
+.maplibregl-user-location-dot {
+    background-color: var(--map-user-location-dot) !important;
+}
+.maplibregl-user-location-dot::before {
+    background-color: var(--map-user-location-dot) !important;
+}
+.maplibregl-user-location-accuracy-circle {
+    background-color: var(--map-user-location-accuracy) !important;
+}
+
+/* Wrapper for the custom marker. Dot-sized so its center coincides
+   with the dot center — the cone is positioned relative to that
+   center, so Marker.setRotation pivots the cone tip on the dot. */
+.user-location-marker {
+    position: relative;
+    width: 18px;
+    height: 18px;
+}
+
+/* Heading cone. Sits above the dot (pre-rotation), pointing up.
+   Marker.setRotation(h) rotates the whole wrapper, so the cone tip
+   traces the compass heading around the dot. Hidden by default;
+   fades in when the has-heading modifier is set, which only happens
+   after the first orientation event with usable values. */
+.user-heading-cone {
+    position: absolute;
+    /* Push the tip just outside the dot edge instead of the wrapper
+       center. The wrapper is 18px, MapLibre's dot is 15×15, so a 10px
+       offset clears the dot in every rotation with a 1px gap. */
+    bottom: calc(50% + 10px);
+    left: 50%;
+    /* iOS-Maps-like proportions: wide angle (~80°), short reach. The
+       SVG viewBox (60x36) drives the angle; this box just sets pixel
+       scale. Centered on the dot via margin-left = -width/2. */
+    width: 60px;
+    height: 36px;
+    margin-left: -30px;
+    pointer-events: none;
+    /* SVG gradient stops resolve `stop-color: currentColor`, so this
+       is the single knob for the cone color. */
+    color: var(--map-user-location-dot);
+    opacity: 0;
+    transition: opacity 0.25s ease-out;
+}
+
+.user-location-marker.has-heading .user-heading-cone {
+    opacity: 1;
+}
+
+.user-heading-cone svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    /* Two stacked shadows so the cone reads against any basemap tone.
+       Soft cream glow for contrast on the dark magenta land; thin
+       dark edge for contrast on the sandy beach strip. */
+    filter:
+        drop-shadow(0 0 1.5px var(--map-user-cone-halo-light))
+        drop-shadow(0 0 1px var(--map-user-cone-halo-dark));
+}
+
+/* ── Attribution ─ vertical stripe up the left edge ──────────────────
+   MapLibre puts the attribution in .maplibregl-ctrl-attrib inside a
+   .maplibregl-ctrl-bottom-left wrapper. We rotate it −90° pivoted on
+   the wrapper's bottom-left corner so the whole line reads upward
+   from the corner instead of stretching horizontally across the map's
+   bottom edge.
+
+   Legal note: the OSM + Protomaps attribution is a copyright
+   requirement, so we preserve every character — rotation only, no
+   truncation. */
+.festival-map .maplibregl-ctrl-bottom-left {
+    /* Zero out the default 10 px inset so the rotation pivot sits
+       exactly at the map's bottom-left corner. */
+    margin: 0 !important;
+    padding: 0 !important;
+}
+.festival-map .maplibregl-ctrl-bottom-left .maplibregl-ctrl-attrib {
+    /* Rotate around the element's bottom-left corner so the pivot
+       and the map corner coincide. After rotation the element
+       extends upward along the left edge.
+
+       Gotcha: rotate(-90deg) around "0 100%" leaves the element
+       extending `originalHeight` px to the LEFT of the pivot (its
+       pre-rotation height becomes its post-rotation width, drawn on
+       the left side of the pivot). The map has `overflow: hidden`,
+       so without a compensating shift the whole line gets clipped
+       off-screen. margin-left before the transform pushes the pivot
+       right by the same amount so the visible text lands flush
+       against the map's left edge. */
+    transform-origin: 0 100%;
+    transform: rotate(-90deg);
+    white-space: nowrap;
+    /* Kill MapLibre's default pill background + shadow — we want a
+       thin cream line on the map, not a chip. */
+    background: transparent !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    padding: 4px 8px;
+    /* margin-left compensates for the rotated element extending
+       `originalHeight` px LEFT of the pivot (see gotcha above).
+       margin-bottom lifts the stripe so it starts ABOVE the
+       bottom-left locate button (see .festival-map-controls):
+         button bottom inset  = 26 px + safe-area
+         button height        = 44 px
+         gap to attribution   = 20 px
+                             ───────────────────────────────────────
+                               90 px + safe-area
+       so the vertical text starts flush with a 20 px breathing gap
+       above the button. Safe-area is still respected so on notched /
+       beveled devices the whole stack shifts up together. */
+    margin: 0 0 calc(90px + env(safe-area-inset-bottom)) 22px;
+    font-size: 10px;
+    line-height: 1.1;
+    color: rgba(242, 233, 220, 0.75);
+    /* The rotated element has an invisibly large hit box — disable
+       pointer events on the container itself so touches near the
+       left edge of the map don't get eaten. Individual links get
+       pointer events back below. */
+    pointer-events: none;
+}
+.festival-map .maplibregl-ctrl-bottom-left .maplibregl-ctrl-attrib a {
+    color: rgba(242, 233, 220, 0.9);
+    text-decoration: none;
+    pointer-events: auto;
+}
+.festival-map .maplibregl-ctrl-bottom-left .maplibregl-ctrl-attrib a:hover {
+    text-decoration: underline;
+}
+
+/* ── "Where is my tent?" draggable marker ────────────────────────────
+   Vanilla-JS port of the React tent feature. The DOM is created in
+   js/views/tent.js:startTent() with .style.width / height set in
+   pixels by the zoom-scale handler; this rule just handles the visual
+   affordance (the Noto tent SVG background + drag cursor + a soft
+   drop-shadow so the tent reads against magenta land and navy water
+   equally well). */
+.tent-marker {
+    background-image: url('../images/tent.svg');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    /* MapLibre applies its own cursor style while draggable; adding
+       grab here makes the affordance obvious on desktop and matches
+       what a touch user expects. */
+    cursor: grab;
+    /* Soft dark halo so the illustrated tent doesn't disappear against
+       darker overlay fills. Two-stack: a tight dark shadow reads the
+       silhouette, a wider soft one lifts it off the land. */
+    filter:
+        drop-shadow(0 1px 1px rgba(28, 7, 22, 0.55))
+        drop-shadow(0 0 4px rgba(28, 7, 22, 0.25));
+    /* Prevent iOS long-press from selecting the SVG background. */
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
+}
+.tent-marker:active { cursor: grabbing; }
+
+.map-body {
+    /* Wrapper that holds either variant's own container. Kept as a plain
+       block; each variant sets its own inner element height via JS. */
+    position: relative;
+    width: 100%;
+}
+
+.festival-map-error {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    padding: 24px;
+    text-align: center;
+}
+
+/* ── Popup styling (matches the cream + magenta palette of the map) ── */
+
+.maplibregl-popup .maplibregl-popup-content {
+    background: #f2e9dc !important;
+    color: #201020;
+    border-radius: 6px;
+    padding: 10px 12px !important;
+    box-shadow: 0 4px 14px rgba(30, 10, 30, 0.35) !important;
+    font-family: Lato, -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.maplibregl-popup-tip {
+    border-top-color: #f2e9dc !important;
+    border-bottom-color: #f2e9dc !important;
+}
+
+/* .festival-map-popup-* classes were removed together with the click
+   popup on 2026-08-08 — the -label symbol layers do the naming job
+   now. The two .maplibregl-popup rules above still theme the tent's
+   "Drag me to your tent!" popup (see js/views/tent.js). */

@@ -1,0 +1,9 @@
+<!--
+    Boxicons `bx-navigation` (MIT). Paper-plane arrow — reads as
+    "navigate to a destination" for the fly-to menu trigger. Same
+    24×24 grid and stroke language as the sibling `locate.svg` so
+    the two buttons feel like a set.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+    <path d="M20.567 3.433a2.007 2.007 0 0 0-2.05-.485L4.192 8.104a1.984 1.984 0 0 0-1.318 1.606c-.107.716.242 1.397.881 1.769l4.253 2.484 2.484 4.253c.363.622.999.984 1.688.984.028 0 .056-.001.084-.002a1.98 1.98 0 0 0 1.694-1.313l5.155-14.323a2 2 0 0 0-.546-2.129z"/>
+</svg>

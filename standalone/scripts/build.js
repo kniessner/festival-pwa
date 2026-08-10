@@ -152,7 +152,16 @@ function buildServiceWorker(jsFiles) {
         return;
     }
 
-    const assets = [...match[1].matchAll(/'([^']+)'/g)].map(m => m[1]);
+    // Strip block + line comments from the array body BEFORE extracting
+    // quoted strings. Comments in the source may contain apostrophes
+    // (e.g. "the map's label typography") that would otherwise fool
+    // the `'([^']+)'` regex into capturing everything from the
+    // apostrophe until the next single quote as a fake asset path,
+    // corrupting the whole precache list from that point on.
+    const stripped = match[1]
+        .replace(/\/\*[\s\S]*?\*\//g, '')
+        .replace(/\/\/[^\n]*/g, '');
+    const assets = [...stripped.matchAll(/'([^']+)'/g)].map(m => m[1]);
 
     // Every real js/*.js file must be precached (see sw.js's own MAINTENANCE
     // comment) or an installed-then-offline user hits a broken app the first
@@ -163,6 +172,25 @@ function buildServiceWorker(jsFiles) {
         .filter(rel => !assets.includes(rel));
     if (missingJs.length) {
         throw new Error(`sw.js SHELL_ASSETS is missing: ${missingJs.join(', ')}`);
+    }
+
+    // Same guard, extended to image references baked into the bundled
+    // JS. Round-3 review caught poi-generic.svg silently missing from
+    // SHELL_ASSETS — the file was copied into dist/images/ so online
+    // users saw the icon, but installed-then-offline PWAs showed a
+    // broken image. The class of bug repeats for any new static asset
+    // referenced from client code, so we scan the bundled app.js and
+    // fail the build on anything not in SHELL_ASSETS.
+    const bundledJs = fs.readFileSync(path.join(DIST_DIR, 'js', 'app.js'), 'utf8');
+    const IMAGE_REF_RX = /['"`](?:\.\/)?(images\/[a-zA-Z0-9._-]+\.(?:svg|png|jpg|jpeg|webp|gif))['"`]/g;
+    const referencedImages = new Set();
+    for (const m of bundledJs.matchAll(IMAGE_REF_RX)) referencedImages.add('./' + m[1]);
+    const missingImgs = [...referencedImages].filter(rel => !assets.includes(rel));
+    if (missingImgs.length) {
+        throw new Error(
+            `sw.js SHELL_ASSETS is missing image references from bundled JS: `
+            + missingImgs.join(', ')
+        );
     }
 
     // JS files are bundled into one, so every individual ./js/... entry
@@ -184,6 +212,30 @@ async function build() {
     const newVersion = execFileSync(path.join(ROOT_DIR, 'scripts', 'bump-cache-version.sh'), { encoding: 'utf8' }).trim();
     console.log(`   🔁 Cache version bumped to ${newVersion}`);
 
+    // Run the geojson sanitiser BEFORE the search-index generator so
+    // any rule-based rename/removal is applied to source before we
+    // index it. The sanitiser is idempotent — a stable working tree
+    // gives a no-op diff. Round-3 review flagged the missing chain:
+    // without it, a fresh Felt re-import followed by `npm run build`
+    // would ship a correct index against unsanitized labels.
+    execFileSync(process.execPath, [path.join(ROOT_DIR, 'scripts', 'sanitize-geojson.mjs')], { stdio: 'inherit' });
+
+    // Then the coordinate/property optimizer. Runs AFTER sanitise
+    // (so renames/removals happen against the raw Felt export first)
+    // and BEFORE the search-index generator (so the index reads from
+    // the normalized files). Also idempotent — the whitelist stays
+    // in KEEP_PROPS in the script; adding `slug` to that whitelist
+    // was the round-final P1 fix. Chaining it here means a stray
+    // `npm run optimize:geojson` can never diverge from what the
+    // build produces.
+    execFileSync(process.execPath, [path.join(ROOT_DIR, 'scripts', 'optimize-geojson.mjs')], { stdio: 'inherit' });
+
+    // Rebuild the map search index from the (now-sanitised) geojsons.
+    // Kept in-tree (data/map-search-index.json) so dev servers work
+    // without an explicit build, and re-generated here so we can never
+    // ship a stale index. Cheap (< 100 ms for 100-ish features).
+    execFileSync(process.execPath, [path.join(ROOT_DIR, 'scripts', 'build-search-index.mjs')], { stdio: 'inherit' });
+
     fs.rmSync(DIST_DIR, { recursive: true, force: true });
     fs.mkdirSync(DIST_DIR, { recursive: true });
 
@@ -197,6 +249,16 @@ async function build() {
 
     const fontCount = copyDir(path.join(ROOT_DIR, 'fonts'), path.join(DIST_DIR, 'fonts'));
     console.log(`   ✅ fonts/* (${fontCount} files, copied as-is)`);
+
+    if (fs.existsSync(path.join(ROOT_DIR, 'vendor'))) {
+        const vendorCount = copyDir(path.join(ROOT_DIR, 'vendor'), path.join(DIST_DIR, 'vendor'));
+        console.log(`   ✅ vendor/* (${vendorCount} files, copied as-is)`);
+    }
+
+    if (fs.existsSync(path.join(ROOT_DIR, 'glyphs'))) {
+        const glyphCount = copyDir(path.join(ROOT_DIR, 'glyphs'), path.join(DIST_DIR, 'glyphs'));
+        console.log(`   ✅ glyphs/* (${glyphCount} files, copied as-is)`);
+    }
 
     copyJsonDir(path.join(ROOT_DIR, 'data'), path.join(DIST_DIR, 'data'));
     console.log('   ✅ data/**/*.json (minified)');

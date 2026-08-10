@@ -7,6 +7,10 @@
     "start": "node server.js",
     "serve": "node server.js",
     "build": "node scripts/build.js",
+    "build:basemap": "node scripts/generate-basemap-layers.mjs",
+    "build:search-index": "node scripts/build-search-index.mjs",
+    "sanitize:geojson": "node scripts/sanitize-geojson.mjs",
+    "optimize:geojson": "node scripts/optimize-geojson.mjs",
     "test": "node --test tests/*.mjs"
   },
   "engines": {
@@ -14,9 +18,15 @@
   },
   "devDependencies": {
     "esbuild": "^0.28.1",
+    "fontnik": "^0.7.7",
+    "protomaps-themes-base": "^4.5.0",
     "sharp": "^0.35.3"
   },
   "allowScripts": {
     "esbuild@0.28.1": true
+  },
+  "dependencies": {
+    "maplibre-gl": "^4.7.1",
+    "pmtiles": "^4.4.1"
   }
 }

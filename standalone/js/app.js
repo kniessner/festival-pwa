@@ -1,10 +1,12 @@
 import { loadData, loadManifest, refreshAllData, refreshTimetableData } from './store.js';
 import { loadPage, renderNav } from './router.js';
 import { setupSearch, scrollToItem, closeSearchModal } from './search.js';
+import { closeMapSearchDropdown } from './views/map-search.js';
 import { setDay, toggleFilterPanel, resetFilters, toggleEventDetail, setFilterValue, setEventType, prepareJumpToEvent } from './views/timetable.js';
 import { setGridDay, openGridEventDetail, closeGridEventDetail, toggleGridScrollMode, setEventType as setGridEventType } from './views/timetable-grid.js';
 import { store } from './store.js';
 import { switchInfoTab } from './views/info.js';
+import { switchMapView } from './views/map.js';
 import { toggleFavFromCard, setFavTab } from './views/favorites.js';
 import { setupInstallTracking, setupOfflineIndicator, dismissInstallCard, triggerInstall } from './install.js';
 import { showToast } from './ui.js';
@@ -36,11 +38,17 @@ async function init() {
     // Parallel-load timetable/info data and stage polygons — they're
     // independent files, no reason to serialise the round-trips.
     await Promise.all([loadData(), loadStages()]);
-    // Boot-time sanity check: warn about drift between timetable.json's
-    // stage slugs and stages.geojson polygon names before the nav is
-    // interactive, so a fast user who navigates straight to the grid
-    // still hits the warning in their console. See helpers/get-stage.js.
-    warnStageNameMismatches(store.pageData.timetable?.filters);
+    // Boot-time sanity check: warn about drift between the timetable's
+    // slug universe (filter rows + music events) and the polygons in
+    // stages.geojson + sterne.geojson. See helpers/get-stage.js.
+    const usedSlugs = new Set();
+    for (const s of store.pageData.timetable?.filters?.stages || []) {
+        if (s?.value) usedSlugs.add(s.value);
+    }
+    for (const e of store.pageData.music?.events || []) {
+        if (e?.stage) usedSlugs.add(e.stage);
+    }
+    warnStageNameMismatches(usedSlugs);
     mergeMusicIntoTimetable();
     renderNav();
     // manifest.json's start_url passes ?page=favorites so launching the
@@ -116,6 +124,9 @@ function closeSearchBar() {
     document.getElementById('searchBar').classList.remove('open');
     document.getElementById('searchInput').value = '';
     closeSearchModal();
+    // Close the map-search dropdown too — same input, two possible
+    // result surfaces depending on the current route.
+    closeMapSearchDropdown();
 }
 
 function updateLangSwitcherLabel() {
@@ -282,6 +293,7 @@ const actions = {
     'toggle-faq': el => toggleFaqItem(el),
     'toggle-lang': () => setLangAndRefresh(store.lang === 'de' ? 'en' : 'de'),
     'switch-info-tab': el => switchInfoTab(el.dataset.tab),
+    'switch-map-view': el => switchMapView(el.dataset.view),
     'toggle-search-bar': () => toggleSearchBar(),
     'close-search-bar': () => closeSearchBar(),
     'dismiss-install-card': () => { dismissInstallCard(); refreshInstallCardIfVisible(); },

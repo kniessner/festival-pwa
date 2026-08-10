@@ -1,0 +1,25 @@
+<!--
+    Universal "locate me" icon — the classic target-with-crosshair-and-
+    center-dot that Google Maps, Apple Maps, Mapbox, Waze etc all use as
+    the "center on my position" affordance. Rendered as an inline SVG so
+    it inherits `currentColor` from the button and stays crisp at any
+    DPR without needing a raster fallback.
+
+    Grid: 24×24. Stroke width 2 keeps parity with Boxicons `bx-tent`
+    (used on the tent marker) so the two feel like siblings.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+     stroke="currentColor" stroke-width="2" stroke-linecap="round">
+    <!-- Target ring. -->
+    <circle cx="12" cy="12" r="5"/>
+    <!-- Center dot (filled, no stroke override needed because the
+         outer <svg>'s fill="none" is overridden per-shape). -->
+    <circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/>
+    <!-- Crosshair spikes: N, S, W, E. Small gap between the ring and
+         the spikes keeps the icon feeling like a distinct silhouette
+         rather than a plus-sign smothering a circle. -->
+    <line x1="12" y1="2"  x2="12" y2="5"/>
+    <line x1="12" y1="19" x2="12" y2="22"/>
+    <line x1="2"  y1="12" x2="5"  y2="12"/>
+    <line x1="19" y1="12" x2="22" y2="12"/>
+</svg>

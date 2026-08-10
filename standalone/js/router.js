@@ -5,6 +5,7 @@ import { renderHome } from './views/home.js';
 import { renderTimetable } from './views/timetable.js';
 import { renderGridTimetable } from './views/timetable-grid.js';
 import { renderInfo } from './views/info.js';
+import { renderMap, teardownMap } from './views/map.js';
 import { renderFavorites } from './views/favorites.js';
 import { countValidFavorites } from './favorites.js';
 import { isPushSupported, isPushSubscribed } from './push.js';
@@ -37,11 +38,6 @@ export function renderNav() {
         <span class="menu-item-external" aria-hidden="true">↗</span>
     </a>`;
 
-    const festivalmapRow = `<span class="menu-item-disabled" aria-disabled="true">
-        <span class="menu-item-label">${t('nav.festivalmap')}</span>
-        <span class="menu-item-sublabel">${t('common.comingSoon')}</span>
-    </span>`;
-
     // Not every browser/platform supports Web Push (notably Safari on iOS
     // below 16.4, or without the app added to the Home Screen) — hiding
     // the row entirely there beats showing a toggle that can never turn on.
@@ -50,7 +46,7 @@ export function renderNav() {
         <span class="menu-item-toggle-switch ${isPushSubscribed() ? 'on' : ''}" aria-hidden="true"></span>
     </button>` : '';
 
-    list.innerHTML = pageRows + festivalmapRow + cashlessRow + pushRow;
+    list.innerHTML = pageRows + cashlessRow + pushRow;
 }
 
 export function loadPage(index) {
@@ -66,6 +62,12 @@ export function loadPage(index) {
 
     title.textContent = t(page.labelKey);
 
+    // Tear down the previous /map mount (if any) before wiping the DOM,
+    // so MapLibre's WebGL context / workers and the static variant's
+    // window listeners don't leak across routes. Idempotent — no-op
+    // when the previous route wasn't /map.
+    teardownMap();
+
     container.innerHTML = '';
     // document.getElementById('searchResults').innerHTML = '';
     if (page.slug === 'home') renderHome(container);
@@ -73,6 +75,7 @@ export function loadPage(index) {
     else if (page.slug === 'timetable') renderTimetable(container);
     else if (page.slug === 'grid') renderGridTimetable(container);
     else if (page.slug === 'info') renderInfo(container);
+    else if (page.slug === 'map') renderMap(container);
     else container.innerHTML = `<div class="empty">${t('common.noContent')}</div>`;
     renderNav();
 }
