@@ -15,6 +15,13 @@
  * preserved for what's kept so the on-disk diff stays minimal.
  *
  * Pipeline (order matters):
+ *   0. Whitespace-trim `text`         — strips leading/trailing spaces
+ *                                        from every feature's text
+ *                                        BEFORE any exact-match rule
+ *                                        looks at it. Trailing spaces
+ *                                        are a common Felt-export
+ *                                        artefact that would otherwise
+ *                                        silently defeat rules 1–5.
  *   1. Exact-text renames             — apply first so downstream
  *                                        pattern-removals can match
  *                                        the renamed value if needed.
@@ -24,6 +31,14 @@
  *   4. Empty-text Point removals      — drop unlabeled dots.
  *   5. Toilet-file label normalisation— fold WC / DIXI / Urinal
  *                                        variants into a small vocab.
+ *
+ * Unlabeled *Polygon* features (no `text` property, or `properties:
+ * {}`) are DELIBERATELY KEPT: the map layer's filter `['has', 'text']`
+ * excludes them from the label layer, but the fill layer still paints
+ * them as background. Used for staff plots / infra rectangles that
+ * we want on the map without a name. If a future data pass should
+ * drop these too, extend Rule 4 or add a Rule 4b for the Polygon
+ * shape.
  *
  * NOT here (kept elsewhere on purpose):
  *   - Search-index blocklist. See BLOCKLIST in
@@ -166,7 +181,26 @@ function sanitiseFile(fileName) {
     let renamedFromRules = 0;
     const kept = [];
 
+    let trimmed = 0;
+
     for (const feat of d.features) {
+        // Rule 0: normalise whitespace on text property before any
+        // rule evaluates it. Trailing spaces are a common Felt-export
+        // artefact ('Secu point ', 'Tent ', 'SupportA ', 'Momentarium '),
+        // and they render on the map with a stray character-width of
+        // padding on the right AND make every downstream exact-match
+        // rule fail against the un-trimmed source. One-line kills the
+        // whole class of glitch without needing per-value BLOCKLIST /
+        // RENAMES entries that only differ by a space.
+        if (typeof feat.properties?.text === 'string') {
+            const original = feat.properties.text;
+            const trimmedText = original.trim();
+            if (trimmedText !== original) {
+                feat.properties.text = trimmedText;
+                trimmed++;
+            }
+        }
+
         // Rule 1: exact-text rename first.
         const originalText = textOf(feat);
         if (originalText && RENAMES[originalText]) {
@@ -230,6 +264,7 @@ function sanitiseFile(fileName) {
         removed,
         renamedFromRules,
         toiletRenamed,
+        trimmed,
     };
 }
 
@@ -242,7 +277,7 @@ const files = readdirSync(DATA_DIR)
 
 console.log('🧹 Sanitising geojsons in data/...\n');
 
-let totalBefore = 0, totalAfter = 0, totalRemoved = 0, totalRenamed = 0, totalToiletRenamed = 0;
+let totalBefore = 0, totalAfter = 0, totalRemoved = 0, totalRenamed = 0, totalToiletRenamed = 0, totalTrimmed = 0;
 for (const fileName of files) {
     const r = sanitiseFile(fileName);
     totalBefore  += r.before;
@@ -250,8 +285,10 @@ for (const fileName of files) {
     totalRemoved += r.removed.length;
     totalRenamed += r.renamedFromRules;
     totalToiletRenamed += r.toiletRenamed;
+    totalTrimmed += r.trimmed;
 
     const summary = [`${r.before} → ${r.after}`];
+    if (r.trimmed)           summary.push(`${r.trimmed} trimmed`);
     if (r.renamedFromRules)  summary.push(`${r.renamedFromRules} renamed`);
     if (r.toiletRenamed)     summary.push(`${r.toiletRenamed} toilet-labels normalised`);
     if (r.removed.length)    summary.push(`${r.removed.length} removed`);
@@ -259,5 +296,5 @@ for (const fileName of files) {
     for (const [why, txt] of r.removed) console.log(`    - [${why}] ${txt}`);
 }
 
-console.log(`\n✅ Done. ${totalBefore} → ${totalAfter} across ${files.length} files (${totalRemoved} removed, ${totalRenamed} renamed, ${totalToiletRenamed} toilet-labels normalised).`);
+console.log(`\n✅ Done. ${totalBefore} → ${totalAfter} across ${files.length} files (${totalRemoved} removed, ${totalRenamed} renamed, ${totalTrimmed} trimmed, ${totalToiletRenamed} toilet-labels normalised).`);
 console.log('   Next step: `npm run build:search-index` to refresh the index.');

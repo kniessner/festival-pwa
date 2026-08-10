@@ -41,10 +41,6 @@
         "label": "dezentral"
       },
       {
-        "value": "mirage",
-        "label": "Mirage"
-      },
-      {
         "value": "neuro-divers",
         "label": "Neuro Divers"
       },
@@ -63,10 +59,6 @@
       {
         "value": "walking-act",
         "label": "Walking Act"
-      },
-      {
-        "value": "zirkus-mond",
-        "label": "Zirkus Mond"
       }
     ],
     "categories": [
