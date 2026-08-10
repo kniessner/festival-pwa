@@ -388,12 +388,13 @@ function addOverlayLayers(map) {
             data: 'data/' + file,
         });
 
-        // camping-areas gets a whisper-quiet default so the big camp
-        // polygons don't visually shout over the category overlays.
-        // They're pushed back to prominent during tent drag by
-        // tent.js#applyDragPaint.
-        const isCamping = id === 'camping-areas';
-        const fillOpacity = isCamping ? 0.22 : 0.5;
+        // Stylistic experiment (Jacob, 2026-08-10): every polygon
+        // renders at full opacity so the palette hues read cleanly
+        // and the map feels closer to the illustrated tab. If this
+        // ends up too dominant we can dial camping back with a
+        // dedicated tier here (see the previous 0.22/0.5 split in
+        // git blame for the transparent-baseline version).
+        const fillOpacity = 1;
 
         // Polygon / MultiPolygon fill. Outline layer removed (Jacob's
          // 2026-08-08 experiment): borderless overlays let the polygon
