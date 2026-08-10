@@ -1,5 +1,6 @@
 import { store, fetchLocalized } from './store.js';
 import { DATA_FILES } from './config.js';
+import { toDayTabValue } from './festival.js';
 
 // Music events are authored via the WP plugin's "Music" post type and
 // synced into music.json — separate from timetable.json (which comes from
@@ -15,29 +16,18 @@ import { DATA_FILES } from './config.js';
 // _build_timetable.py, which runs locally during scripts/update.sh), so it
 // has to happen client-side, every time music.json is fetched.
 
-// The festival's overrun Monday has two different date tokens in the wild:
-// _build_timetable.py's scraper writes it as '2026-06-15' (a wrong-year
-// placeholder baked into timetable.json's filters.days and festival.js's
-// DAY_ABBREV table), while music.json (authored separately, straight from
-// the WP "Music" post type) correctly dates it '2026-08-17'. Since the day
-// tabs and all day-filtering only know about the scraper's placeholder, any
-// music event dated the real '2026-08-17' had no matching tab and could
-// never be selected into view — e.g. Bayawaka's second (Monday) set existed
-// in the data but was permanently unreachable. Remapped here, at the merge
-// boundary, instead of touching the scraper output or hardcoding a second
-// "Monday" token throughout the UI.
-const MONDAY_DATE_ALIASES = { '2026-08-17': '2026-06-15' };
-
 export function mergeMusicIntoTimetable() {
     const music = store.pageData.music;
     const timetable = store.pageData.timetable;
     if (!music || !timetable) return;
 
     // Re-merge cleanly each time instead of accumulating duplicates across
-    // repeated calls (e.g. the foreground-refresh re-fetch below).
+    // repeated calls (e.g. the foreground-refresh re-fetch below). See
+    // festival.js's toDayTabValue for why music.json's real Monday date
+    // needs translating to match the day tabs.
     const nonMusicEvents = (timetable.events || []).filter(ev => ev.category !== 'Music');
     const musicEvents = (music.events || []).map(ev => {
-        const day = MONDAY_DATE_ALIASES[ev.day] || ev.day;
+        const day = toDayTabValue(ev.day);
         return day === ev.day ? ev : { ...ev, day };
     });
     timetable.events = [...nonMusicEvents, ...musicEvents];

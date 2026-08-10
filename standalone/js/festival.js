@@ -16,6 +16,31 @@ export function dayAbbrev(dayValue, fallbackLabel) {
     return DAY_ABBREV[getLang()]?.[dayValue] || (fallbackLabel || '').slice(0, 3).toUpperCase();
 }
 
+// The festival's overrun Monday has two different date tokens in the wild:
+// _build_timetable.py's scraper writes it as '2026-06-15' (a wrong-year
+// placeholder baked into timetable.json's filters.days and DAY_ABBREV
+// above), while music.json (authored separately, straight from the WP
+// "Music" post type) correctly dates it '2026-08-17'. Since the day tabs
+// and all day-filtering only recognize the scraper's placeholder, any event
+// genuinely dated '2026-08-17' needs translating to match — done once here
+// (music.js's mergeMusicIntoTimetable() calls toDayTabValue when merging)
+// rather than touching the scraper output or hardcoding a second "Monday"
+// token throughout the UI.
+//
+// toRealDate is the inverse — needed by the grid Timetable's day-rollover
+// math (timetable-grid.js), which does real calendar arithmetic (subtract
+// a day) and can't operate on a placeholder: it de-aliases first, does the
+// arithmetic, then re-aliases the result via toDayTabValue.
+const MONDAY_ALIAS = { real: '2026-08-17', placeholder: '2026-06-15' };
+
+export function toDayTabValue(realDay) {
+    return realDay === MONDAY_ALIAS.real ? MONDAY_ALIAS.placeholder : realDay;
+}
+
+export function toRealDate(dayTabValue) {
+    return dayTabValue === MONDAY_ALIAS.placeholder ? MONDAY_ALIAS.real : dayTabValue;
+}
+
 // Which festival date "today" maps to: the real date during the festival,
 // the first day before it starts, the last day after it ends.
 export function getEffectiveFestivalDay() {
