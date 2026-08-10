@@ -1657,6 +1657,29 @@ span.tt-event-stage {
     background-color: rgba(255, 59, 59, 0.06);
 }
 
+/* Horizontal mode (the default gridScrollMode) parallel to the
+   .gtt-stagehead pop treatment used by vertical mode. The label of
+   the current stage row is the ONE element that stays on-screen as
+   the user scrolls the events axis horizontally, so it needs the
+   same prominent "you are here" treatment as the vertical
+   stagehead. The subtle rgba wash above alone was hidden behind
+   .gtt-stagelabel's opaque `background: var(--bg)`. */
+.gtt-stagerow-wrap.gtt-current-stage .gtt-stagelabel {
+    color: var(--color-now-indicator);
+    /* .gtt-stagelabel is already position:sticky; sticky forms its own
+       positioning context so the absolute ::before below is scoped to
+       it just like the header pseudo. */
+}
+.gtt-stagerow-wrap.gtt-current-stage .gtt-stagelabel::before {
+    content: '';
+    position: absolute;
+    inset: 0 -1px -1px -1px;
+    border: 2px solid var(--color-now-indicator);
+    box-sizing: border-box;
+    pointer-events: none;
+    z-index: 1;
+}
+
 .gtt-day-divider {
     position: absolute;
     top: 0;
