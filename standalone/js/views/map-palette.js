@@ -72,8 +72,23 @@ export const PALETTE = {
 
 // ─── Stage/camping fills (used by overlay geojson layers) ─────────────
 
-// These slugs are referenced by name in map-interactive.js and match
-// the polygons in data/stages.geojson.
+// ─── Historical — legacy overlay palette exports (unused) ───────────
+//
+// The seven constants below (STAGE_FILL_WEST / _EAST, CAMPING_FILL /
+// _LINE, BEACH_FILL / _LINE, SHORE_LINE) used to drive per-slug
+// overlay-layer paint properties back when data/stages.geojson
+// carried its own slug schema and map-interactive.js reached in by
+// name. That data model was replaced by the Felt-derived geojsons
+// (b9dc2c8) which paint via `FELT_LAYERS` / `LABEL_LAYER_IDS` in
+// map-layers.js instead. No caller anywhere in js/ imports these
+// today.
+//
+// Kept exported (rather than deleted outright) as a small
+// forward-compat surface: if a future overlay refactor wants a
+// two-tone stage fill or an explicit beach-shore-line token, these
+// names are the natural ones to reach for. Anyone about to touch
+// them should first grep and confirm they're still dead — if you
+// wire a consumer, delete this comment.
 export const STAGE_FILL_WEST  = '#7d1b2b';
 export const STAGE_FILL_EAST  = PALETTE.stageRedDeep;
 export const CAMPING_FILL     = PALETTE.landRoseAlt;

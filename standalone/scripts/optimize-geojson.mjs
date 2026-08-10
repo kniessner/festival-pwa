@@ -8,9 +8,16 @@
  *
  * Idempotent. Safe to re-run any time the Felt export refreshes.
  *
- * Whitelist rationale (2026-08-08):
- *   text        — label rendered by the -label symbol layer + used by
- *                 the tent's initial-drop logic for future features
+ * Whitelist rationale:
+ *   text  —  label rendered by the -label symbol layer + used by
+ *            the tent's initial-drop logic for future features.
+ *   slug  —  (b9dc2c8) canonical id joining the map to the timetable.
+ *            `get-stage.js` returns it on GPS-inside-polygon;
+ *            `build-search-index.mjs` prefers it over slugify(text).
+ *            Stripping it silently breaks GPS auto-scroll AND makes
+ *            search-index ids drift on any label edit — both silent
+ *            regressions, so this key is load-bearing even though
+ *            it's not rendered by any map layer.
  *
  * `description` and `symbol` were kept while the click-popup existed;
  * that popup was removed in f3f8a5e so those two fields no longer
@@ -34,7 +41,7 @@ import { fileURLToPath } from 'node:url';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const DATA_DIR = join(__dirname, '..', 'data');
 
-const KEEP_PROPS = new Set(['text']);
+const KEEP_PROPS = new Set(['text', 'slug']);
 const COORD_PRECISION = 6;
 
 const round = (n) => Number(n.toFixed(COORD_PRECISION));
