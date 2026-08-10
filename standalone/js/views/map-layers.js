@@ -36,8 +36,8 @@ export const FELT_LAYERS = [
     // paint on top of the food-court zone rather than being covered
     // by it. Same color as sterne so it visually reads as "a sterne
     // area we happen to render out-of-band for z-order reasons".
-    { id: 'food-court',      file: 'food-court.geojson',      color: '#ffd166' },
-    { id: 'sterne',          file: 'sterne.geojson',          color: '#ffd166' },
+    { id: 'food-court',      file: 'food-court.geojson',      color: '#c17d81' },
+    { id: 'sterne',          file: 'sterne.geojson',          color: '#c17d81' },
     { id: 'gastro',          file: 'gastro.geojson',          color: '#ff9540' },
     { id: 'produktion',      file: 'produktion.geojson',      color: '#8b7fa8' },
     { id: 'toilets-showers', file: 'toilets-showers.geojson', color: '#4ecdc4' },

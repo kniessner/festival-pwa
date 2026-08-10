@@ -325,74 +325,6 @@
     {
       "type": "Feature",
       "properties": {
-        "text": "Artist büros",
-        "_dropped_reason": "staff-only"
-      },
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [
-          [
-            [
-              14.491102,
-              52.276599
-            ],
-            [
-              14.491174,
-              52.276598
-            ],
-            [
-              14.491172,
-              52.276543
-            ],
-            [
-              14.4911,
-              52.276544
-            ],
-            [
-              14.491102,
-              52.276599
-            ]
-          ]
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "text": "Rezi tresen",
-        "_dropped_reason": "reception counter (staff)"
-      },
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [
-          [
-            [
-              14.49192,
-              52.276518
-            ],
-            [
-              14.491879,
-              52.276518
-            ],
-            [
-              14.491879,
-              52.276452
-            ],
-            [
-              14.49192,
-              52.276452
-            ],
-            [
-              14.49192,
-              52.276518
-            ]
-          ]
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
         "text": "Logisticszentrale",
         "_dropped_reason": "staff logistics"
       },
@@ -671,6 +603,40 @@
                 14.483857,
                 52.274406
               ]
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "text": "Secu point",
+        "_dropped_reason": "Horst: security post, not shown on static"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.494361,
+              52.278324
+            ],
+            [
+              14.494403,
+              52.278329
+            ],
+            [
+              14.494413,
+              52.278302
+            ],
+            [
+              14.494371,
+              52.278297
+            ],
+            [
+              14.494361,
+              52.278324
             ]
           ]
         ]
