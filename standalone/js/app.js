@@ -38,11 +38,17 @@ async function init() {
     // Parallel-load timetable/info data and stage polygons — they're
     // independent files, no reason to serialise the round-trips.
     await Promise.all([loadData(), loadStages()]);
-    // Boot-time sanity check: warn about drift between timetable.json's
-    // stage slugs and stages.geojson polygon names before the nav is
-    // interactive, so a fast user who navigates straight to the grid
-    // still hits the warning in their console. See helpers/get-stage.js.
-    warnStageNameMismatches(store.pageData.timetable?.filters);
+    // Boot-time sanity check: warn about drift between the timetable's
+    // slug universe (filter rows + music events) and the polygons in
+    // stages.geojson + sterne.geojson. See helpers/get-stage.js.
+    const usedSlugs = new Set();
+    for (const s of store.pageData.timetable?.filters?.stages || []) {
+        if (s?.value) usedSlugs.add(s.value);
+    }
+    for (const e of store.pageData.music?.events || []) {
+        if (e?.stage) usedSlugs.add(e.stage);
+    }
+    warnStageNameMismatches(usedSlugs);
     mergeMusicIntoTimetable();
     renderNav();
     // manifest.json's start_url passes ?page=favorites so launching the

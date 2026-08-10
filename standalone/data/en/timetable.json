@@ -29,8 +29,8 @@
     ],
     "stages": [
       {
-        "value": "community-corner dezentral",
-        "label": "community-corner dezentral"
+        "value": "community-corner",
+        "label": "Community Corner"
       },
       {
         "value": "cuddle-poodle",
@@ -919,8 +919,8 @@
       "time": "FRI 13:00",
       "start_time": "13:00",
       "end_time": "19:00",
-      "stage": "community-corner dezentral",
-      "stage_label": "community-corner dezentral",
+      "stage": "community-corner",
+      "stage_label": "Community Corner",
       "type": "performance",
       "type_label": "Performance",
       "category": "Performance",
@@ -2003,8 +2003,8 @@
       "time": "SAT 13:00",
       "start_time": "13:00",
       "end_time": "19:00",
-      "stage": "community-corner dezentral",
-      "stage_label": "community-corner dezentral",
+      "stage": "community-corner",
+      "stage_label": "Community Corner",
       "type": "performance",
       "type_label": "Performance",
       "category": "Performance",

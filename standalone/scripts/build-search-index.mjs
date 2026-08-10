@@ -170,8 +170,17 @@ function tagify(fileName, text) {
 }
 
 function slugify(text) {
+    // German umlauts / ss-ligature must expand to Latin digraphs BEFORE
+    // the NFD-strip pass, or they collapse to bare vowels: ü → u, ß →
+    // (nothing) → an empty slug segment. music.json already uses this
+    // convention (e.g. `zirkus-mond-turmbuehnchen`), so the search
+    // index must match to join cleanly with timetable events.
     return text
         .toLowerCase()
+        .replace(/ß/g, 'ss')
+        .replace(/ä/g, 'ae')
+        .replace(/ö/g, 'oe')
+        .replace(/ü/g, 'ue')
         .normalize('NFD')
         .replace(/\p{Diacritic}/gu, '')
         .replace(/[^a-z0-9]+/g, '-')
@@ -201,7 +210,17 @@ function buildIndex() {
             if (!c) continue;
 
             const { category, tags } = tagify(fileName, text);
-            const id = `${category}-${slugify(text)}`;
+            // Prefer an explicit `slug` property when the source geojson
+            // has one — stages.geojson / sterne.geojson carry canonical
+            // slugs authored to match music.json / programm-2026 event
+            // stages, and those must survive verbatim so the search
+            // index joins cleanly with the timetable. Fall back to
+            // slugify(text) for features without one (produktion,
+            // gastro, camping-areas, toilets-showers, landmarks).
+            const slug = (typeof feat.properties?.slug === 'string' && feat.properties.slug)
+                ? feat.properties.slug
+                : slugify(text);
+            const id = `${category}-${slug}`;
 
             const entry = {
                 id,

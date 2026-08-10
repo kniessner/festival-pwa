@@ -102,7 +102,7 @@ const STAGE_COLORS = {
     // color rather than the generic fallback, so they still read as related.
     'zirkus-mond-zelt': '#f28aa0',
     'zirkus-mond-turmbuehnchen': '#b23a52',
-    'mirage-acro': '#ff9552',
+    'mirage-arco': '#ff9552',
     'mirage-glimmer': '#ffcf5c'
 };
 function stageColor(stage) { return STAGE_COLORS[stage] || '#b0327a'; }
