@@ -1,4 +1,4 @@
-import { LOCATION_PROMPT_KEY, PUSH_PROMPT_KEY } from '../config.js';
+import { LOCATION_PROMPT_KEY, PUSH_PROMPT_KEY, TENT_INTRO_PROMPT_KEY } from '../config.js';
 import { safeGet, safeSet } from './safe-storage.js';
 
 /**
@@ -32,4 +32,14 @@ export function getPushPromptCompleted() {
 /** Set on either button tap of the Push prompt screen. Sticky. */
 export function setPushPromptCompleted() {
     safeSet(PUSH_PROMPT_KEY, '1');
+}
+
+/** True iff the user has dismissed the tent-intro dialog. */
+export function getTentIntroCompleted() {
+    return safeGet(TENT_INTRO_PROMPT_KEY) === '1';
+}
+
+/** Set when the user taps the tent-intro OK button. Sticky. */
+export function setTentIntroCompleted() {
+    safeSet(TENT_INTRO_PROMPT_KEY, '1');
 }

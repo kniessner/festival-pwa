@@ -61,6 +61,7 @@ const FIRST_AID_COORDS = [
 ];
 
 const INFO_POINT_COORD = [14.494663, 52.276211]; // Info-point / Lost & Found / Kiosk / DIY station
+const ECLIPSE_COORD    = [14.489207, 52.276594]; // Awareness & Eclipse polygon centroid (produktion.geojson)
 
 // ─── Entry catalogue ────────────────────────────────────────────────
 
@@ -106,5 +107,15 @@ export const POI_LIST = [
         labelKey: 'map.flyto.info',
         icon: 'images/poi-info.svg',
         resolve: () => INFO_POINT_COORD,
+    },
+    {
+        // Eclipse is one of two chill-out / de-escalation spots at the
+        // festival (paired with PsyCare). Same fixed-location resolver
+        // as info-point — there's only one Eclipse and it doesn't have
+        // a "nearest" flavour.
+        id: 'eclipse',
+        labelKey: 'map.flyto.eclipse',
+        icon: 'images/poi-generic.svg',
+        resolve: () => ECLIPSE_COORD,
     },
 ];

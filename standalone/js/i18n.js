@@ -32,6 +32,14 @@ const STRINGS = {
         'map.flyto.toilet': 'Nächste Toilette',
         'map.flyto.firstAid': 'Erste Hilfe',
         'map.flyto.info': 'Info-Point',
+        'map.flyto.eclipse': 'Eclipse',
+        // Tent-intro dialog — shown once on first map load, before the user
+        // has placed their tent. Copy adapted from fusion's TENT_TITLE /
+        // TENT_MESSAGE minus the lock-button sentence (this app has no
+        // lock feature).
+        'tentIntro.headline': 'Wo ist mein Zelt?',
+        'tentIntro.body': 'Schiebe das Zelt-Symbol an deinen Campingplatz auf der Karte. Es bleibt dort, bis du es wieder verschiebst — dein persönlicher Ausgangspunkt.',
+        'tentIntro.buttonOk': 'Alles klar',
         // Map search: synonym result labels.
         'search.nearestToilet': 'Nächste Toilette',
         'search.nearestShower': 'Nächste Dusche',
@@ -180,6 +188,10 @@ const STRINGS = {
         'map.flyto.toilet': 'Nearest toilet',
         'map.flyto.firstAid': 'First aid',
         'map.flyto.info': 'Info point',
+        'map.flyto.eclipse': 'Eclipse',
+        'tentIntro.headline': 'Where is my tent?',
+        'tentIntro.body': 'Drag the tent icon to your camping spot on the map. It stays there until you move it — your personal starting point.',
+        'tentIntro.buttonOk': 'Got it',
         // Map search: synonym result labels.
         'search.nearestToilet': 'Nearest toilet',
         'search.nearestShower': 'Nearest shower',
