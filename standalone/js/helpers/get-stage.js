@@ -13,10 +13,15 @@ import { isPointInPolygon } from './point-in-polygon.js';
 export const MAX_STAGE_DETECTION_ACCURACY_METRES = 40;
 
 /**
- * Files fed into `loadStages()`. Order matters: features are scanned
- * in sequence during point-in-polygon lookup, and the first hit wins.
- * `stages.geojson` first so a music-stage polygon always takes
- * precedence if it ever overlaps with a sterne footprint.
+ * Files fed into `loadStages()`. Order matters at two levels:
+ *
+ *   1. Cross-file precedence: `stages.geojson` first so a music-stage
+ *      polygon always beats a sterne footprint if the two ever overlap.
+ *   2. Within-file order: features are scanned top-down; two overlapping
+ *      polygons within the same file resolve by whichever appears first.
+ *      Author with that in mind (put smaller / more-specific polygons
+ *      before their containers, or switch to a smallest-area-wins scan
+ *      here if the data starts nesting).
  */
 const POLYGON_FILES = ['data/stages.geojson', 'data/sterne.geojson'];
 
@@ -120,11 +125,49 @@ export function warnStageNameMismatches(usedSlugs) {
     const orphanPolygons  = [...polygonSlugs].filter(p => !usedSlugs.has(p)).sort();
 
     if (missingPolygons.length) {
+        // Real bug: a slug the timetable renders as a row / references
+        // in events has no polygon to receive GPS fixes. Auto-scroll
+        // silently no-ops for that stage. Loud so it can't be missed.
         console.warn('[stages] timetable slugs without polygons:', missingPolygons);
     }
     if (orphanPolygons.length) {
-        console.warn('[stages] polygons without matching timetable slugs:', orphanPolygons);
+        // Informational: polygon has no timetable programming yet
+        // (art installations, back-of-house, services). Not an error —
+        // downgraded to info so it doesn't train devs to ignore the
+        // whole warning family.
+        console.info('[stages] polygons without matching timetable slugs:', orphanPolygons);
     }
+}
+
+/**
+ * Return the outer ring(s) of a GeoJSON polygon geometry, one per
+ * physical polygon. Handles both `Polygon` (single ring array) and
+ * `MultiPolygon` (list of polygon-arrays); collapses each polygon to
+ * its outer ring only — holes are not modelled for stage / sterne
+ * footprints in this dataset.
+ *
+ * Any other geometry type returns []. Point is a legitimate feature
+ * shape in the source (art installations like Skull, Momentarium etc.
+ * are Points because they don't have a footprint you can stand
+ * "inside of") — those are silently skipped. Truly unexpected types
+ * (LineString, GeometryCollection, …) log a dev-mode warning the
+ * FIRST time each appears, so a stray non-polygon in the source
+ * doesn't corrupt point-in-polygon output without leaving a trace.
+ */
+const KNOWN_NON_POLYGON_TYPES = new Set(['Point']);
+const _warnedGeomTypes = new Set();
+function outerRingsOf(geom, featureLabel) {
+    if (!geom || typeof geom !== 'object') return [];
+    if (geom.type === 'Polygon')      return [geom.coordinates[0]];
+    if (geom.type === 'MultiPolygon') return geom.coordinates.map(poly => poly[0]);
+    if (!KNOWN_NON_POLYGON_TYPES.has(geom.type) && !_warnedGeomTypes.has(geom.type)) {
+        _warnedGeomTypes.add(geom.type);
+        console.warn(
+            `[stages] unsupported geometry type in polygon set: ${geom.type}`
+            + (featureLabel ? ` (feature: ${featureLabel})` : ''),
+        );
+    }
+    return [];
 }
 
 /**
@@ -151,12 +194,15 @@ export function getStage(location) {
     }
     const point = [location.longitude, location.latitude];
     for (const feature of getLoadedStages()) {
-        // GeoJSON Polygon: coordinates is an array of linear rings; the
-        // first is the outer ring. Holes (subsequent rings) are not
-        // modelled for stage polygons, so we only check the outer ring.
-        const outerRing = feature.geometry.coordinates[0];
-        if (isPointInPolygon(point, outerRing)) {
-            return feature.properties?.slug;
+        // Handle both Polygon (single outer ring) and MultiPolygon
+        // (several polygons, each with its own outer ring). Iterating
+        // the ring list here lets a single feature that spans a
+        // discontiguous area (e.g. two disjoint tents sharing one
+        // slug) still resolve correctly.
+        for (const outerRing of outerRingsOf(feature.geometry, feature.properties?.slug)) {
+            if (isPointInPolygon(point, outerRing)) {
+                return feature.properties?.slug;
+            }
         }
     }
     return false;
