@@ -57,7 +57,7 @@ beforeEach(() => {
     installGlobals({ localStorageState: { 'bucht-lang': 'de' } });
 });
 
-test('renderNav lists the 4 real pages (excluding hidden home) plus a disabled Festivalmap row', async () => {
+test('renderNav lists the 4 real pages (excluding hidden home) plus the enabled Festivalmap row', async () => {
     const { doc } = installGlobals({ localStorageState: { 'bucht-lang': 'de' } });
     const { store } = await import('../js/store.js');
     store.currentPage = 2; // 'timetable'
@@ -66,11 +66,13 @@ test('renderNav lists the 4 real pages (excluding hidden home) plus a disabled F
     renderNav();
 
     const html = doc._elements.get('menuNavList').innerHTML;
-    for (const slug of ['favorites', 'timetable', 'grid', 'info']) {
+    for (const slug of ['favorites', 'timetable', 'grid', 'info', 'map']) {
         assert.match(html, new RegExp(`data-slug="${slug}"`), `${slug} row present`);
     }
     assert.doesNotMatch(html, /data-slug="home"/, 'home row excluded');
-    assert.match(html, /menu-item-disabled/, 'Festivalmap placeholder present');
+    // Festivalmap was a disabled placeholder pre-`interactive-map-basemap`;
+    // that page is now live so the disabled class must be gone.
+    assert.doesNotMatch(html, /menu-item-disabled/, 'Festivalmap no longer a placeholder');
 });
 
 test('renderNav includes a Cashless link that opens the Weezevent widget in a new tab', async () => {
