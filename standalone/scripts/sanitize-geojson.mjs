@@ -59,6 +59,8 @@
  *   2026-08-08  Casing fixes:
  *                 bar               → Bar
  *                 Bar - Porto LOco  → Bar - Porto Loco
+ *   2026-08-08  Rename: Re:set Raversnacks → Raversnacks (strip the
+ *               brand prefix, keep the descriptive tail).
  *   2026-08-08  Remove: any text matching /geländegestaltung/i
  *               ("Geländegestaltung Plaform" today; future
  *               "Platform" spelling caught too).
@@ -101,6 +103,8 @@ const RENAMES = {
     // Casing fixes
     'bar':                        'Bar',
     'Bar - Porto LOco':           'Bar - Porto Loco',
+    // Trim redundant prefix
+    'Re:set Raversnacks':         'Raversnacks',
 };
 
 // ─── Rule 2: exact-text removals ──────────────────────────────────────
