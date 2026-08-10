@@ -1,0 +1,87 @@
+<!--
+  Classical 16-point marine compass rose. Modelled on the Wikimedia
+  "Compass Rose English North" convention (see
+  commons.wikimedia.org/wiki/File:Compass_Rose_English_North.svg):
+    - 4 long cardinal points (N, E, S, W)
+    - 4 medium intercardinal points (NE, SE, SW, NW) rotated 45°
+    - 8 short half-wind points at 22.5° increments filling the rest
+    - Distinguished N tip in rose so north stays unambiguous when
+      the compass has spun off default bearing
+
+  viewBox 0 0 100 100, north at top when transform is identity.
+  Palette: cream #f2e9dc, navy #080943, rose #c17d81 (matches app
+  tokens in js/views/map-palette.js).
+
+  Every point is a two-tone rhombus (light half / dark half) so the
+  star reads as 3D relief at the ~56 px map size — this is what makes
+  the difference between a flat 8-pointed graphic and a proper
+  classical wind rose.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-label="compass rose">
+
+  <!-- Circular badge behind the star: subtle navy wash + cream ring. -->
+  <circle cx="50" cy="50" r="48" fill="#080943" fill-opacity="0.6" stroke="#f2e9dc" stroke-opacity="0.9" stroke-width="0.8"/>
+  <circle cx="50" cy="50" r="44" fill="none" stroke="#f2e9dc" stroke-opacity="0.35" stroke-width="0.5"/>
+
+  <!-- 8 half-wind (shortest) points, plotted at 22.5° / 67.5° / 112.5° /
+       etc. Rendered first so the bigger points overpaint them. -->
+  <g stroke="#080943" stroke-width="0.4" stroke-linejoin="round">
+    <g transform="rotate(22.5 50 50)">
+      <polygon points="50,20 52,50 50,80 48,50" fill="#f2e9dc" fill-opacity="0.85"/>
+      <polygon points="50,20 52,50 50,50" fill="#080943" fill-opacity="0.55"/>
+    </g>
+    <g transform="rotate(67.5 50 50)">
+      <polygon points="50,20 52,50 50,80 48,50" fill="#f2e9dc" fill-opacity="0.85"/>
+      <polygon points="50,20 52,50 50,50" fill="#080943" fill-opacity="0.55"/>
+    </g>
+    <g transform="rotate(112.5 50 50)">
+      <polygon points="50,20 52,50 50,80 48,50" fill="#f2e9dc" fill-opacity="0.85"/>
+      <polygon points="50,20 52,50 50,50" fill="#080943" fill-opacity="0.55"/>
+    </g>
+    <g transform="rotate(157.5 50 50)">
+      <polygon points="50,20 52,50 50,80 48,50" fill="#f2e9dc" fill-opacity="0.85"/>
+      <polygon points="50,20 52,50 50,50" fill="#080943" fill-opacity="0.55"/>
+    </g>
+  </g>
+
+  <!-- 4 intercardinal (medium) points: NE, SE, SW, NW. -->
+  <g stroke="#080943" stroke-width="0.5" stroke-linejoin="round">
+    <g transform="rotate(45 50 50)">
+      <polygon points="50,14 53,50 50,86 47,50" fill="#f2e9dc"/>
+      <polygon points="50,14 53,50 50,50" fill="#080943" fill-opacity="0.7"/>
+    </g>
+    <g transform="rotate(135 50 50)">
+      <polygon points="50,14 53,50 50,86 47,50" fill="#f2e9dc"/>
+      <polygon points="50,14 53,50 50,50" fill="#080943" fill-opacity="0.7"/>
+    </g>
+  </g>
+
+  <!-- 4 cardinal (longest) points: E, S, W, N. Drawn in that order
+       so the N point paints last and its rose accent stays on top. -->
+  <g stroke="#080943" stroke-width="0.6" stroke-linejoin="round">
+    <g transform="rotate(90 50 50)">
+      <polygon points="50,6 54,50 50,94 46,50" fill="#f2e9dc"/>
+      <polygon points="50,6 54,50 50,50" fill="#080943" fill-opacity="0.7"/>
+    </g>
+    <g transform="rotate(180 50 50)">
+      <polygon points="50,6 54,50 50,94 46,50" fill="#f2e9dc"/>
+      <polygon points="50,6 54,50 50,50" fill="#080943" fill-opacity="0.7"/>
+    </g>
+    <g transform="rotate(270 50 50)">
+      <polygon points="50,6 54,50 50,94 46,50" fill="#f2e9dc"/>
+      <polygon points="50,6 54,50 50,50" fill="#080943" fill-opacity="0.7"/>
+    </g>
+    <!-- North: distinguished rose tip. Two-tone with the darker half
+         on the east side (matches marine convention where the shaded
+         half is right-of-centre-line viewed from north). -->
+    <polygon points="50,6 54,50 50,94 46,50" fill="#c17d81"/>
+    <polygon points="50,6 54,50 50,50" fill="#080943" fill-opacity="0.75"/>
+  </g>
+
+  <!-- Central pivot with a small halo. -->
+  <circle cx="50" cy="50" r="3.2" fill="#f2e9dc"/>
+  <circle cx="50" cy="50" r="1.6" fill="#080943"/>
+
+  <!-- N label, sitting on the badge frame above the north tip. -->
+  <text x="50" y="4.6" fill="#f2e9dc" font-family="Georgia, 'Times New Roman', serif" font-size="7.5" text-anchor="middle" font-weight="700" letter-spacing="0.4">N</text>
+</svg>

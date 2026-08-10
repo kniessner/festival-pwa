@@ -121,7 +121,23 @@ const RENAMES = {
     'Shower Container':           'Dusche',
     // Casing fixes
     'bar':                        'Bar',
-    'Bar - Porto LOco':           'Bar - Porto Loco',
+    // Bar - Porto Loco: shorten label to just "Bar". Two entries so
+    // the pre-existing casing-typo variant ("LOco") also normalises
+    // straight to the short form in one sanitize pass.
+    'Bar - Porto LOco':           'Bar',
+    'Bar - Porto Loco':           'Bar',
+    // Same treatment for the beach bar next to the Strandflitzer
+    // stage — users know it as "Bar", the disambiguation prefix is
+    // Felt-only. Applied consistently to every "Bar" that is really
+    // just the bar of a nearby stage (Waldtraut, Schlupfloch, Zirkus
+    // Mond, Strandflitzer) so the map reads as multiple identical
+    // "Bar" labels rather than a soup of stage-tagged variants.
+    // Standalone bar brands with their own identity are left alone:
+    // Bimsbar, Haus of Flausch Teabar, PinkPuk Bar.
+    'Strandflitzer Bar':          'Bar',
+    'Waldtraut Bar':              'Bar',
+    'Bar Schlupfloch':            'Bar',
+    'Zirkus Mond Bar':            'Bar',
     // Trim redundant prefix
     'Re:set Raversnacks':         'Raversnacks',
     // Correct the previous round's typo. Current source files still
@@ -144,6 +160,8 @@ const REMOVE_EXACT = new Set([
     // Staff-only bar / eatery, not part of the guest map.
     'Backstage Bar',
     'BdT Foodie',
+    // Not participating this year (Jacob 2026-08-10).
+    "l'Amore Pizza",
 ]);
 
 // ─── Rule 3: pattern removals ─────────────────────────────────────────

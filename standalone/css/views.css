@@ -1969,7 +1969,32 @@ span.tt-event-stage {
 }
 
 /* Static (illustrated PNG) variant — the <img> lives inside .festival-map and gets
-   translated/scaled by the pinch-zoom controller in map-static.js. */
+   translated/scaled by the pinch-zoom controller in map-static.js.
+
+   Fade recipe: applied to the CONTAINER (.festival-map, gated by
+   :has(.festival-map-img) so interactive-mode attribution + controls
+   stay crisp), NOT to the <img> directly. Masks on transformed
+   elements scale with the transform — a 50 px fade on the <img> would
+   grow to 250 px at max pinch-zoom (5×). Masking the container instead
+   keeps the fade band anchored to the viewport at every zoom level. */
+.festival-map:has(.festival-map-img) {
+    --festival-map-fade-top: 50px;
+    --festival-map-fade-bottom: 100px;
+    -webkit-mask-image: linear-gradient(to bottom,
+        transparent 0,
+        #000 var(--festival-map-fade-top),
+        #000 calc(100% - var(--festival-map-fade-bottom)),
+        transparent 100%);
+    mask-image: linear-gradient(to bottom,
+        transparent 0,
+        #000 var(--festival-map-fade-top),
+        #000 calc(100% - var(--festival-map-fade-bottom)),
+        transparent 100%);
+    mask-mode: alpha;
+    mask-repeat: no-repeat;
+    mask-size: 100% 100%;
+}
+
 .festival-map-img {
     display: block;
     width: 100%;
@@ -1984,7 +2009,12 @@ span.tt-event-stage {
 
 .festival-map-hint {
     position: absolute;
-    bottom: 16px;
+    /* Lift above the container's bottom fade band (100 px) so the
+       first-visit pinch affordance stays fully opaque — the hint sits
+       inside the same masked container as the illustration, and the
+       bottom of that mask is transparent. Value = fade band + a small
+       breathing gap. */
+    bottom: calc(100px + 16px);
     left: 50%;
     transform: translateX(-50%);
     padding: 8px 14px;
@@ -2007,6 +2037,66 @@ span.tt-event-stage {
    auto-disappears when the user leaves the map, and so it lives
    above the mask/fade zone at the bottom (~100px) via a bottom
    offset that clears both the fade and the safe-area inset. */
+/* Compass rose — lives in the top-left of the map view (Jacob's
+   2026-08-10 call to move it off the bottom-left where the two
+   round buttons already live). Tracks the map's live bearing +
+   pitch via a 3D `transform` set by map-controls.js. Tap resets the
+   camera to DEFAULT_CAMERA (bearing -73.1°, pitch 30.7°).
+
+   Sized 56 px to match the .menu-trigger FAB in the opposite corner
+   — reads as a first-class map decoration, not a secondary button
+   like the 44 px controls in the bottom-left.
+
+   Vertical placement: `.festival-map` covers only the map canvas
+   area (the app header and the INTERACTIVE/ILLUSTRATION tabs above
+   it are the parent .page-content's children, siblings of the stage).
+   That means `top: 20 px` lands the compass 20 px below the tab bar,
+   inside the map's own coordinate space. No safe-area math needed on
+   the top edge because the tabs already cover the notch. */
+.festival-map-compass {
+    position: absolute;
+    left: 20px;
+    top: 70px;
+    z-index: 4;
+    width: 56px;
+    height: 56px;
+    border: none;
+    background: transparent;
+    padding: 0;
+    cursor: pointer;
+    /* The SVG has its own circular frame + pivot dot, so no button
+       shell around it — just the raw graphic. Drop a soft shadow so
+       it lifts off the map fills. */
+    filter: drop-shadow(0 3px 10px rgba(0, 0, 0, 0.5));
+    transition: filter 0.15s ease;
+    /* Live-updated by map-controls.js#applyCompassTransform on every
+       rotate/pitch frame. Initial value = default camera pose so the
+       compass renders at the right tilt on first paint (no flash of
+       axis-aligned graphic). */
+    transform: perspective(220px) rotateX(30.7deg) rotate(73.1deg);
+    /* Rotate around the SVG's own centre. */
+    transform-origin: 50% 50%;
+    /* Keep the same tap-target expansion iOS gives round buttons. */
+    -webkit-tap-highlight-color: transparent;
+}
+
+.festival-map-compass:active {
+    filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.6));
+}
+
+.festival-map-compass:focus-visible {
+    outline: 2px solid var(--accent-pink);
+    outline-offset: 3px;
+    border-radius: 50%;
+}
+
+.festival-map-compass-svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
 .festival-map-controls {
     position: absolute;
     left: 20px;
@@ -2148,7 +2238,13 @@ span.tt-event-stage {
        safety = 280 px cap). */
     min-width: 240px;
     max-width: min(280px, calc(100% - 40px));
-    background: var(--bg-card);
+    /* Beach-sand fill (#e8c98a) — same tone the .festival-map-control-btn
+       buttons use in the corner below, so the fly-to card visually reads
+       as an extension of the button it emerges from rather than a
+       floating cream card. Kept as a hex literal (not a token) because
+       .festival-map-control-btn also inlines it — promote to a shared
+       token if a third consumer shows up. */
+    background: #e8c98a;
     color: var(--text);
     border-radius: var(--card-radius, 20px);
     padding: 12px 8px;

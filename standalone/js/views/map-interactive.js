@@ -228,13 +228,22 @@ function createMap(stage, gestureState) {
 
     // Complete the gesture lockdown that the constructor options above
     // couldn't reach:
-    map.touchZoomRotate.disableRotation();
+    // Gestures are now permitted (2026-08-10) after the earlier
+    // "only pan diagonally" bug was traced to the desktop max-bounds
+    // clipping the pan direction, NOT to a stray touch-pitch. The
+    // compass rose added by map-controls.js gives users a visible
+    // rotation-state indicator plus a tap-to-reset affordance, so the
+    // original failure mode (silent rotation → confused user) is
+    // defused. dragRotate stays off in the constructor because a
+    // desktop right-click drag has no compass-rose parallel and would
+    // still surprise mouse users.
+    map.touchZoomRotate.enable();
+    map.touchPitch.enable();
     // Dev/debug hook (safe in prod): exposes the live MapLibre
     // instance so verification harnesses can drive zoom/pan from
     // the console. Kept behind a `__` prefix so a grep for it is
     // unambiguous. Zero payload cost in the bundle.
     if (typeof window !== 'undefined') window.__festivalMap = map;
-    map.touchPitch.disable();
 
     // Attribution at bottom-left. Legal requirement (OSM + Protomaps)
     // so it stays visible; moved off bottom-right because MapLibre's
@@ -501,14 +510,17 @@ function addOverlayLayers(map) {
             17.0, ['case', ['==', ['get', 'text'], 'Eclipse'], 1, 0],
             17.5, 1,
         ];
-        // Anchor tier text-opacity: fades IN at zoom 14.0 → 14.5.
-        // Below 14.0 the two big region labels (Umbria / Lumina, added
+        // Anchor tier text-opacity: fades IN at zoom 14.5 → 15.0.
+        // Below 14.5 the two big region labels (Umbria / Lumina, added
         // after the FELT_LAYERS block) own the map, and stages/camps
         // stay hidden so the overview reads as "here's the two halves
-        // of the festival". Once the user pinches past 14.0 the region
-        // labels fade out (see regions layer below) and the anchor
-        // tier fades in — opposite-direction interpolate values so the
-        // handoff is a clean crossfade with no dark gap in between.
+        // of the festival". DEFAULT_CAMERA.zoom = 14.11 lands ABOVE
+        // the fade-in start so opening the map shows the regions view
+        // only — a small pinch (14.5+) reveals the floors. Once the
+        // user pinches past 14.5 the region labels fade out (see
+        // regions layer below) and the anchor tier fades in —
+        // opposite-direction interpolate values so the handoff is a
+        // clean crossfade with no dark gap in between.
         //
         // Camping override for Camp Taucher continues to apply on top:
         // Taucher stays hidden until zoom 15.5 regardless of tier fade,
@@ -516,11 +528,11 @@ function addOverlayLayers(map) {
         // Combined expression: outer interpolate on zoom drives the
         // tier fade; per-feature case sits at the ANCHOR-tier value
         // for camping-areas only.
-        const anchorFadeIn      = ['interpolate', ['linear'], ['zoom'], 14.0, 0, 14.5, 1];
+        const anchorFadeIn      = ['interpolate', ['linear'], ['zoom'], 14.5, 0, 15.0, 1];
         const campingTextOpacity = [
             'interpolate', ['linear'], ['zoom'],
-            14.0, 0,
-            14.5, ['case', ['==', ['get', 'text'], 'Camp Taucher'], 0, 1],
+            14.5, 0,
+            15.0, ['case', ['==', ['get', 'text'], 'Camp Taucher'], 0, 1],
             15.5, 1,
         ];
         let textOpacity;
@@ -766,7 +778,7 @@ function addOverlayLayers(map) {
     // Regions (Umbria / Lumina): two ambient text labels that name
     // the west and east halves of the festival, matching how the
     // static illustrated map labels them. Shown ONLY at min-zoom
-    // (≤ 14.0), fading out as the user pinches in and the anchor
+    // (≤ 14.5), fading out as the user pinches in and the anchor
     // tier (stages + camps) fades in — crossfade handoff, calibrated
     // to match the anchorFadeIn expression in addOverlayLayers.
     //
@@ -795,9 +807,7 @@ function addOverlayLayers(map) {
             // Zoom-scaled so the labels stay proportional as the user
             // pinches: 40 px at max zoom-out, tapering to 32 px at
             // the crossfade point (they vanish just after).
-            'text-size': ['interpolate', ['linear'], ['zoom'], 12, 40, 14.5, 32],
-            // Wide tracking matches the static map look.
-            'text-letter-spacing': 0.18,
+            'text-size': ['interpolate', ['linear'], ['zoom'], 12, 40, 15.0, 32],
             // Regions never drop — they own the min-zoom frame.
             'text-allow-overlap': true,
             'text-ignore-placement': true,
@@ -810,9 +820,9 @@ function addOverlayLayers(map) {
             'text-halo-color': PNG_MAGENTA_HALO,
             'text-halo-width': 1.2,
             // Crossfade with the anchor tier: opacity 1 up to zoom
-            // 14.0, then linearly to 0 at 14.5. Beyond 14.5 the tier
+            // 14.5, then linearly to 0 at 15.0. Beyond 15.0 the tier
             // is fully in and the regions are gone.
-            'text-opacity': ['interpolate', ['linear'], ['zoom'], 14.0, 1, 14.5, 0],
+            'text-opacity': ['interpolate', ['linear'], ['zoom'], 14.5, 1, 15.0, 0],
         },
     });
 
