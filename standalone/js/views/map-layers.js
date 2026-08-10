@@ -12,11 +12,24 @@
 //          label halo. Distinct per group so features stay separable
 //          by eye during the analysis pass.
 //
-// Order = z-order (first = bottom). camping-areas sits at the bottom
-// so every category-specific layer paints on top of the camp canvas.
+// Order = z-order (first = bottom). Explicit "bigger underneath,
+// smaller on top" policy so a small feature that sits inside a
+// larger one is never occluded by it. Concrete calls this fixes:
+//   - produktion Info-point / Crew-Bar Kiosk (a=1.8 / 0.3) sit inside
+//     sterne Community Corner (a=8.7). produktion moved above sterne.
+//   - gastro Communitea / De Loite / FanMan / Moving Cafe / Bitte
+//     Drehen Sie durch (all a<1) sit inside sterne Marktplatz (a=26.8)
+//     and Cuddle Poodle (a=6.9). gastro moved above sterne.
+//
+// General rule for anyone editing this list: if you add a new
+// overlay whose polygons visually contain another overlay's polygons,
+// put the containing one LOWER. Within a single geojson we don't
+// currently need feature-level fill-sort-key since no within-file
+// containment is known; if that changes, precompute a `z` property
+// in scripts/optimize-geojson.mjs and set `fill-sort-key: ['get','z']`
+// on the fill layer.
 export const FELT_LAYERS = [
     { id: 'camping-areas',   file: 'camping-areas.geojson',   color: '#a48bc4' },
-    { id: 'produktion',      file: 'produktion.geojson',      color: '#8b7fa8' },
     { id: 'stages',          file: 'stages.geojson',          color: '#c22a4c' },
     // food-court sits ABOVE stages but BELOW gastro so the individual
     // food-stall polygons (Langos, Leuchtstoff, Zirkus Mond Bar, …)
@@ -24,7 +37,8 @@ export const FELT_LAYERS = [
     // by it. Same color as sterne so it visually reads as "a sterne
     // area we happen to render out-of-band for z-order reasons".
     { id: 'food-court',      file: 'food-court.geojson',      color: '#ffd166' },
-    { id: 'gastro',          file: 'gastro.geojson',          color: '#ff9540' },
     { id: 'sterne',          file: 'sterne.geojson',          color: '#ffd166' },
+    { id: 'gastro',          file: 'gastro.geojson',          color: '#ff9540' },
+    { id: 'produktion',      file: 'produktion.geojson',      color: '#8b7fa8' },
     { id: 'toilets-showers', file: 'toilets-showers.geojson', color: '#4ecdc4' },
 ];
