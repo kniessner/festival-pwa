@@ -4,7 +4,7 @@
 // tab dispatcher (map.js) can mount either variant.
 
 import { t } from '../i18n.js';
-import { attachStageSizing, MAP_MAX_BOUNDS, pickMaxBounds } from './map-common.js';
+import { attachStageSizing, pickMaxBounds } from './map-common.js';
 import basemapLayers from './basemap-layers.js';
 import { PALETTE } from './map-palette.js';
 import { startUserLocation } from './user-location.js';
@@ -61,13 +61,6 @@ const PNG_CREAM = PALETTE.cream;
 // per-stage slugs; the new Felt-derived stages.geojson uses a
 // different property schema. Restore this if/when we switch back to
 // slug-based coloring.)
-
-// Dead — kept commented for git-blame discoverability if we ever want
-// to add a "fit to stages" control. Superseded by DEFAULT_CAMERA above.
-// const STAGES_BBOX = [
-//     [14.4820, 52.2708], // SW
-//     [14.5038, 52.2770], // NE
-// ];
 
 // Default camera state on every fresh /map mount — hand-picked by
 // Jacob (2026-08-08) as the "maximum information on load" framing.

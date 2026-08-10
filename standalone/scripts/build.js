@@ -220,6 +220,16 @@ async function build() {
     // would ship a correct index against unsanitized labels.
     execFileSync(process.execPath, [path.join(ROOT_DIR, 'scripts', 'sanitize-geojson.mjs')], { stdio: 'inherit' });
 
+    // Then the coordinate/property optimizer. Runs AFTER sanitise
+    // (so renames/removals happen against the raw Felt export first)
+    // and BEFORE the search-index generator (so the index reads from
+    // the normalized files). Also idempotent — the whitelist stays
+    // in KEEP_PROPS in the script; adding `slug` to that whitelist
+    // was the round-final P1 fix. Chaining it here means a stray
+    // `npm run optimize:geojson` can never diverge from what the
+    // build produces.
+    execFileSync(process.execPath, [path.join(ROOT_DIR, 'scripts', 'optimize-geojson.mjs')], { stdio: 'inherit' });
+
     // Rebuild the map search index from the (now-sanitised) geojsons.
     // Kept in-tree (data/map-search-index.json) so dev servers work
     // without an explicit build, and re-generated here so we can never

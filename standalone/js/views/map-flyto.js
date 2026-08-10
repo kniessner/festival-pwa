@@ -112,10 +112,6 @@ export function closeFlyToMenu(stage) {
     }
 }
 
-export function isFlyToMenuOpen(stage) {
-    return state.has(stage);
-}
-
 // ─── Internals ──────────────────────────────────────────────────────
 
 function buildOverlay(map, stage) {
