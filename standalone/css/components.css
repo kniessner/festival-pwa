@@ -577,6 +577,7 @@
     align-items: center;
     justify-content: center;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+    z-index: 999;
 }
 
 .menu-modal-refresh {
@@ -596,6 +597,7 @@
     align-items: center;
     justify-content: center;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+    z-index: 999;
 }
 
 .menu-modal-refresh:disabled {
@@ -609,6 +611,7 @@
     overflow-y: auto;
     padding: 0 20px;
     margin-top: 20px;
+        padding-bottom: 100px;
 }
 
 .menu-nav-list button,
