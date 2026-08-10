@@ -7,7 +7,7 @@
  *   - Cross-origin assets        → Cache-First only for CORS/basic responses
  */
 
-const CACHE_VERSION = '1786434777';
+const CACHE_VERSION = '1786360944';
 const APP_NAME = 'bucht-standalone';
 const CACHE_NAME = `${APP_NAME}-v${CACHE_VERSION}`;
 

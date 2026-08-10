@@ -1586,6 +1586,16 @@ span.tt-event-stage {
     color: #fff;
 }
 
+/* Alternates a full 24h at a time — every hour label belonging to the same
+   real calendar day gets this same tone (or not), with the boundary
+   exactly at each real midnight, not at this grid's own 6am-to-6am block
+   span (see the realDayIndex calculation in renderHorizontalLayout). Lets
+   the continuous hour strip read at a glance where one calendar day ends
+   and the next begins, without repeating a day name at every label. */
+.gtt-hour-label-h.gtt-hour-label-alt-day {
+    background: rgba(255, 255, 255, 0.06);
+}
+
 /* Red 2px outline marks the hour the user is currently in — pairs
    with the .gtt-current-stage row outline for a "you are here" cross-
    reference across the timetable. Applied by renderVerticalLayout /
