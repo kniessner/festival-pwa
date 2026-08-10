@@ -62,6 +62,8 @@ class Festival_PWA_Notifications {
         add_action('untrashed_post', [$this, 'on_status_change']);
         add_action('before_delete_post', [$this, 'on_status_change']);
         add_action('rest_api_init', [$this, 'register_routes']);
+        add_filter('manage_' . self::POST_TYPE . '_posts_columns', [$this, 'add_columns']);
+        add_action('manage_' . self::POST_TYPE . '_posts_custom_column', [$this, 'render_column'], 10, 2);
         add_action('admin_menu', [$this, 'admin_menu']);
         add_action('admin_init', [$this, 'register_settings']);
         add_action('admin_head', [$this, 'admin_menu_icon_color']);
@@ -143,7 +145,84 @@ class Festival_PWA_Notifications {
             re-checking it lets you resend (e.g. after fixing a typo before
             anyone saw it), but a normal edit afterward won't re-notify anyone.
         </p>
+        <?php $this->render_push_send_log($post->ID); ?>
         <?php
+    }
+
+    // "Accepted" only means the push service (FCM/Mozilla) confirmed it took
+    // the message for delivery — it isn't proof the device actually showed
+    // it. Logged as one entry per real send (see log_push_send()), not
+    // overwritten, since unchecking/re-checking "send as push" or a
+    // scheduled re-publish can send the same post more than once.
+    private function render_push_send_log($post_id) {
+        $log = get_post_meta($post_id, '_pwa_push_send_log', true);
+        if (!is_array($log) || !$log) return;
+        ?>
+        <hr>
+        <p><strong>Push delivery</strong></p>
+        <table class="widefat" style="font-size:12px;">
+            <thead>
+                <tr><th>Sent</th><th>Accepted</th><th>Expired</th><th>Failed</th></tr>
+            </thead>
+            <tbody>
+                <?php foreach (array_reverse($log) as $entry): ?>
+                <tr>
+                    <td><?php echo esc_html(wp_date('M j, H:i', $entry['time'] ?? 0)); ?></td>
+                    <td><?php echo (int) ($entry['accepted'] ?? 0); ?>/<?php echo (int) ($entry['total'] ?? 0); ?></td>
+                    <td><?php echo (int) ($entry['expired'] ?? 0); ?></td>
+                    <td><?php echo (int) ($entry['failed'] ?? 0); ?></td>
+                </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+        <?php
+    }
+
+    // Appends one entry per actual send instead of overwriting — a post can
+    // legitimately send more than once (uncheck/re-check "send as push", or
+    // a scheduled re-publish). $report is null when send_to_all() didn't
+    // actually attempt anything (no VAPID keys, zero subscribers), which
+    // must NOT be logged as a zero-delivery send.
+    private function log_push_send($post_id, $report) {
+        if ($report === null) return;
+        $log = get_post_meta($post_id, '_pwa_push_send_log', true);
+        if (!is_array($log)) $log = [];
+        $log[] = array_merge(['time' => time()], $report);
+        update_post_meta($post_id, '_pwa_push_send_log', $log);
+    }
+
+    /* ── List column: cumulative push delivery ───────────────────────── */
+
+    public function add_columns($columns) {
+        $new = [];
+        foreach ($columns as $key => $label) {
+            $new[$key] = $label;
+            if ($key === 'title') $new['pwa_push_delivery'] = 'Push Delivery';
+        }
+        return $new;
+    }
+
+    public function render_column($column, $post_id) {
+        if ($column !== 'pwa_push_delivery') return;
+        $log = get_post_meta($post_id, '_pwa_push_send_log', true);
+        if (!is_array($log) || !$log) {
+            echo '—';
+            return;
+        }
+        $total = 0;
+        $accepted = 0;
+        foreach ($log as $entry) {
+            $total += (int) ($entry['total'] ?? 0);
+            $accepted += (int) ($entry['accepted'] ?? 0);
+        }
+        $count = count($log);
+        printf(
+            '%d/%d &middot; %d send%s',
+            $accepted,
+            $total,
+            $count,
+            $count === 1 ? '' : 's'
+        );
     }
 
     public function save($post_id) {
@@ -186,10 +265,11 @@ class Festival_PWA_Notifications {
             $body_de  = apply_filters('the_content', get_post($post_id)->post_content);
             $title_en = sanitize_text_field($_POST['pwa_title_en'] ?? '');
             $body_en  = wp_kses_post($_POST['pwa_content_en'] ?? '');
-            Festival_PWA_Push::send_to_all([
+            $report = Festival_PWA_Push::send_to_all([
                 'de' => ['title' => $title_de, 'body' => $body_de],
                 'en' => ['title' => $title_en, 'body' => $body_en],
             ], FESTIVAL_PWA_WEBAPP_URL . '?notif=' . $post_id);
+            $this->log_push_send($post_id, $report);
             update_post_meta($post_id, '_pwa_push_sent', '1');
         } elseif (!$send_push) {
             // Allows a genuine retry: uncheck, save, check again.
@@ -218,10 +298,11 @@ class Festival_PWA_Notifications {
         $body_de  = apply_filters('the_content', $post->post_content);
         $title_en = get_post_meta($post->ID, '_pwa_title_en', true);
         $body_en  = get_post_meta($post->ID, '_pwa_content_en', true);
-        Festival_PWA_Push::send_to_all([
+        $report = Festival_PWA_Push::send_to_all([
             'de' => ['title' => $title_de, 'body' => $body_de],
             'en' => ['title' => $title_en, 'body' => $body_en],
         ], FESTIVAL_PWA_WEBAPP_URL . '?notif=' . $post->ID);
+        $this->log_push_send($post->ID, $report);
         update_post_meta($post->ID, '_pwa_push_sent', '1');
 
         // notifications.json is otherwise only rebuilt from save() (a real

@@ -218,15 +218,21 @@ class Festival_PWA_Push {
     // $content is ['de' => ['title'=>,'body'=>], 'en' => [...]] — body
     // values are raw HTML (the_content-filtered post content / wp_kses_post
     // English field), plain-texted and combined below.
+    //
+    // Returns a send report (see docs/superpowers/specs/2026-08-08-push-
+    // delivery-tracking-design.md) so the caller can log it against the
+    // post, or null if nothing was actually attempted (no VAPID keys
+    // configured, or zero subscribers) — a null return must NOT be logged
+    // as a zero-delivery send.
     public static function send_to_all(array $content, $url = '') {
         $public  = get_option('festival_pwa_vapid_public_key');
         $private = get_option('festival_pwa_vapid_private_key');
-        if (!$public || !$private) return;
+        if (!$public || !$private) return null;
 
         global $wpdb;
         $table = self::table_name();
         $rows  = $wpdb->get_results("SELECT id, endpoint, p256dh, auth FROM {$table}", ARRAY_A);
-        if (!$rows) return;
+        if (!$rows) return null;
 
         $webPush = new WebPush([
             'VAPID' => [
@@ -260,16 +266,30 @@ class Festival_PWA_Push {
         // flush() sends everything queued above and yields one report per
         // subscription — prune any the push service says are gone (the
         // user uninstalled, revoked permission, etc.) so we stop wasting
-        // requests on them.
+        // requests on them, and tally outcomes for the admin-facing send
+        // report (accepted/expired/failed) alongside that existing pass.
         $expiredHashes = [];
+        $accepted = 0;
+        $expired  = 0;
         foreach ($webPush->flush() as $report) {
             if ($report->isSubscriptionExpired()) {
+                $expired++;
                 $expiredHashes[] = $wpdb->prepare('%s', hash('sha256', $report->getEndpoint()));
+            } elseif ($report->isSuccess()) {
+                $accepted++;
             }
         }
         if ($expiredHashes) {
             $wpdb->query("DELETE FROM {$table} WHERE endpoint_hash IN (" . implode(',', $expiredHashes) . ")");
         }
+
+        $total = count($rows);
+        return [
+            'total'    => $total,
+            'accepted' => $accepted,
+            'expired'  => $expired,
+            'failed'   => $total - $accepted - $expired,
+        ];
     }
 }
 
