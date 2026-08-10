@@ -12,6 +12,7 @@ import { startTent } from './tent.js';
 import { createMapControls } from './map-controls.js';
 import { flyToCoordWithPulse } from './map-flyto.js';
 import { closeMapSearchDropdown } from './map-search.js';
+import { buildLabelTextFieldExpression } from '../helpers/map-label-translations.js';
 import { removeMapToast } from './map-toast.js';
 import { FELT_LAYERS } from './map-layers.js';
 
@@ -505,13 +506,22 @@ function addOverlayLayers(map) {
                 ? ['Megan Display']
                 : ['Lato Regular'];
 
+        // Precompute the label text-field expression ONCE per
+        // addOverlayLayers call. The expression captures the current
+        // UI language; when the user toggles DE↔EN, app.js calls
+        // goToPage() which routes through teardownMap()+renderMap(),
+        // remounting this whole layer stack — so we naturally pick
+        // up the new language on the next mount, no live setLayout-
+        // Property required.
+        const textField = buildLabelTextFieldExpression();
+
         map.addLayer({
             id: id + '-label',
             source: id,
             type: 'symbol',
             filter: ['has', 'text'],
             layout: {
-                'text-field': ['get', 'text'],
+                'text-field': textField,
                 'text-font': textFont,
                 // Anchor labels get bigger sizes so they read at
                 // glance-zoom without a pinch: stages are the primary
@@ -564,7 +574,7 @@ function addOverlayLayers(map) {
         type: 'symbol',
         filter: ['has', 'text'],
         layout: {
-            'text-field': ['get', 'text'],
+            'text-field': buildLabelTextFieldExpression(),
             // Instrument Sans Italic (SDF glyphs already bundled at
             // standalone/glyphs/) gives the water label a distinct
             // handwritten-map feel next to the sans-serif POI labels.
