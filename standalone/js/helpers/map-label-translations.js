@@ -24,7 +24,7 @@ export const LABEL_TRANSLATIONS = {
         'Psycare / DRK zelt':   'Psycare / First aid tent',
         'Dusche':               'Shower',
         'Dusche & WC':          'Shower & WC',
-        'Urinate':              'Urinals',
+        'Urinale':              'Urinals',
         'Check-in Autos':       'Car check-in',
     },
 };

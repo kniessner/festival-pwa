@@ -3,9 +3,13 @@
  * Geojson data-sanitation rules for the Bucht der Träumer map.
  *
  * Applies every "Jacob-said-so" cleanup rule to
- * standalone/data/*.geojson in one idempotent pass. Rerun this
- * whenever Berit re-exports the Felt layers, before regenerating
- * the search index.
+ * standalone/data/*.geojson in one idempotent pass.
+ *
+ * Chained into scripts/build.js before the search-index generator,
+ * so `npm run build` never ships an index against unsanitised data.
+ * Also runnable standalone via `npm run sanitize:geojson` after a
+ * fresh Felt re-import when you want to see the diff without a full
+ * build.
  *
  * All rules mutate the geojson files in place; feature order is
  * preserved for what's kept so the on-disk diff stays minimal.
@@ -33,7 +37,7 @@
  *   2026-08-08  Remove `(?)` features (uncertain-position Felt marks)
  *   2026-08-08  Remove `Kühlung` features (internal cooling units)
  *   2026-08-08  Toilet-file label normalisation:
- *                 Urinal (exact)                 → Urinate
+ *                 Urinal (exact)                 → Urinale
  *                 contains "missoir" / "pissoir" → KEEP as-is
  *                 WC / DIXI / ECO / Toilet / etc → WC
  *                 Dusche / Shower                → untouched
@@ -105,6 +109,13 @@ const RENAMES = {
     'Bar - Porto LOco':           'Bar - Porto Loco',
     // Trim redundant prefix
     'Re:set Raversnacks':         'Raversnacks',
+    // Correct the previous round's typo. Current source files still
+    // have some features with text "Urinate" from that rule run;
+    // this line renames them to the proper German plural "Urinale".
+    // Rule 5 (toilet norm) below also emits "Urinale" now, so future
+    // Felt re-imports never need this entry — but it survives here
+    // to keep the sanitiser idempotent against the current data.
+    'Urinate':                    'Urinale',
 };
 
 // ─── Rule 2: exact-text removals ──────────────────────────────────────
@@ -135,7 +146,8 @@ const REMOVE_PATTERNS = [
 // ─── Rule 5: toilet-file label normalisation ──────────────────────────
 const TOILET_FILE     = 'toilets-showers.geojson';
 const SHOWER_RX       = /dusche|shower/i;
-const URINAL_ONLY_RX  = /^urinal$/i;
+const URINAL_ONLY_RX  = /^urinale?$/i;   // matches "Urinal" AND
+                                         // already-normalised "Urinale"
 const MISSOIR_RX      = /missoir|pissoir/i;
 const TOILET_ANY_RX   = /wc|dixi|urinal|toilet|eco/i;
 
@@ -199,7 +211,7 @@ function sanitiseFile(fileName) {
             if (SHOWER_RX.test(t))     continue;     // showers untouched
             if (MISSOIR_RX.test(t))    continue;     // missoir kept as-is
             let next = null;
-            if (URINAL_ONLY_RX.test(t))     next = 'Urinate';
+            if (URINAL_ONLY_RX.test(t))     next = 'Urinale';
             else if (TOILET_ANY_RX.test(t)) next = 'WC';
             if (next && next !== t) {
                 feat.properties.text = next;

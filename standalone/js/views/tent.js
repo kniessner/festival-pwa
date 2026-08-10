@@ -78,6 +78,12 @@ const TENT_SHRINK_END_ZOOM   = 22;   // interp target. maxZoom is 19,
 // FADE_LAYERS is derived from map-interactive.js#FELT_LAYERS so adding
 // a new overlay group there automatically extends the fade set here —
 // map-interactive.js is now the single source of truth.
+//
+// NOTE: The `landmarks-label` layer (Helenesee etc.) is intentionally
+// NOT in this list. Landmarks are ambient / atmospheric labels; the
+// tent-drop UX is scoped to the camps (see HIGHLIGHT_LAYER_ID below).
+// If a future landmark should participate in the fade, register it
+// in FELT_LAYERS instead of adding a special case here.
 
 // The one overlay group we highlight instead of fade. If we ever want
 // to promote another layer to the same "drop target" role, add it

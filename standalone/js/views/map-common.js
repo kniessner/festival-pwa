@@ -49,14 +49,20 @@ export const MAP_MAX_BOUNDS_WIDE = [
  * scenario). If we ever need it, call `map.setMaxBounds(...)` from
  * a resize listener.
  *
- * The threshold (1.1) is deliberately just above the bounds' own
- * aspect ratio (2.91 / 3.22 = 0.90): anything materially wider than
- * the venue-shape needs the wide bounds; anything portrait-shaped
- * stays on the tight ones.
+ * See PORTRAIT_ASPECT_THRESHOLD below for the numeric threshold + why
+ * it lives just above the bounds' own aspect ratio.
  */
+// Aspect-ratio threshold that flips between the tight and wide
+// bounds. The bounds' own aspect ratio is 2.91 km / 3.22 km ≈ 0.90;
+// anything materially wider than that (typical landscape viewport,
+// desktop, iPad landscape) needs the wide bounds. Everything below,
+// including phone portrait (aspect ~ 0.5), fits happily inside the
+// tight venue-shape.
+const PORTRAIT_ASPECT_THRESHOLD = 1.1;
+
 export function pickMaxBounds(viewportWidth, viewportHeight) {
     const aspect = viewportWidth / viewportHeight;
-    return aspect > 1.1 ? MAP_MAX_BOUNDS_WIDE : MAP_MAX_BOUNDS;
+    return aspect > PORTRAIT_ASPECT_THRESHOLD ? MAP_MAX_BOUNDS_WIDE : MAP_MAX_BOUNDS;
 }
 
 // Buffer around MAP_MAX_BOUNDS for the "is the user actually at the

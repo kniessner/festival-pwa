@@ -174,6 +174,25 @@ function buildServiceWorker(jsFiles) {
         throw new Error(`sw.js SHELL_ASSETS is missing: ${missingJs.join(', ')}`);
     }
 
+    // Same guard, extended to image references baked into the bundled
+    // JS. Round-3 review caught poi-generic.svg silently missing from
+    // SHELL_ASSETS — the file was copied into dist/images/ so online
+    // users saw the icon, but installed-then-offline PWAs showed a
+    // broken image. The class of bug repeats for any new static asset
+    // referenced from client code, so we scan the bundled app.js and
+    // fail the build on anything not in SHELL_ASSETS.
+    const bundledJs = fs.readFileSync(path.join(DIST_DIR, 'js', 'app.js'), 'utf8');
+    const IMAGE_REF_RX = /['"`](?:\.\/)?(images\/[a-zA-Z0-9._-]+\.(?:svg|png|jpg|jpeg|webp|gif))['"`]/g;
+    const referencedImages = new Set();
+    for (const m of bundledJs.matchAll(IMAGE_REF_RX)) referencedImages.add('./' + m[1]);
+    const missingImgs = [...referencedImages].filter(rel => !assets.includes(rel));
+    if (missingImgs.length) {
+        throw new Error(
+            `sw.js SHELL_ASSETS is missing image references from bundled JS: `
+            + missingImgs.join(', ')
+        );
+    }
+
     // JS files are bundled into one, so every individual ./js/... entry
     // collapses down to just the bundle itself.
     const rewritten = assets.filter(a => !a.startsWith('./js/') || a === './js/app.js');
@@ -193,10 +212,18 @@ async function build() {
     const newVersion = execFileSync(path.join(ROOT_DIR, 'scripts', 'bump-cache-version.sh'), { encoding: 'utf8' }).trim();
     console.log(`   🔁 Cache version bumped to ${newVersion}`);
 
-    // Rebuild the map search index from the current geojsons. Kept
-    // in-tree (data/map-search-index.json) so dev servers work without
-    // an explicit build, and re-generated here so we can never ship a
-    // stale index. Cheap (< 100 ms for 100-ish features).
+    // Run the geojson sanitiser BEFORE the search-index generator so
+    // any rule-based rename/removal is applied to source before we
+    // index it. The sanitiser is idempotent — a stable working tree
+    // gives a no-op diff. Round-3 review flagged the missing chain:
+    // without it, a fresh Felt re-import followed by `npm run build`
+    // would ship a correct index against unsanitized labels.
+    execFileSync(process.execPath, [path.join(ROOT_DIR, 'scripts', 'sanitize-geojson.mjs')], { stdio: 'inherit' });
+
+    // Rebuild the map search index from the (now-sanitised) geojsons.
+    // Kept in-tree (data/map-search-index.json) so dev servers work
+    // without an explicit build, and re-generated here so we can never
+    // ship a stale index. Cheap (< 100 ms for 100-ish features).
     execFileSync(process.execPath, [path.join(ROOT_DIR, 'scripts', 'build-search-index.mjs')], { stdio: 'inherit' });
 
     fs.rmSync(DIST_DIR, { recursive: true, force: true });
