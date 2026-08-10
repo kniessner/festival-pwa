@@ -18,6 +18,12 @@ export const FELT_LAYERS = [
     { id: 'camping-areas',   file: 'camping-areas.geojson',   color: '#a48bc4' },
     { id: 'produktion',      file: 'produktion.geojson',      color: '#8b7fa8' },
     { id: 'stages',          file: 'stages.geojson',          color: '#c22a4c' },
+    // food-court sits ABOVE stages but BELOW gastro so the individual
+    // food-stall polygons (Langos, Leuchtstoff, Zirkus Mond Bar, …)
+    // paint on top of the food-court zone rather than being covered
+    // by it. Same color as sterne so it visually reads as "a sterne
+    // area we happen to render out-of-band for z-order reasons".
+    { id: 'food-court',      file: 'food-court.geojson',      color: '#ffd166' },
     { id: 'gastro',          file: 'gastro.geojson',          color: '#ff9540' },
     { id: 'sterne',          file: 'sterne.geojson',          color: '#ffd166' },
     { id: 'toilets-showers', file: 'toilets-showers.geojson', color: '#4ecdc4' },

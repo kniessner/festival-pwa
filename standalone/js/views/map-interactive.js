@@ -462,7 +462,7 @@ function addOverlayLayers(map) {
         let textOpacity;
         if (id === 'stages' || id === 'camping-areas') {
             textOpacity = 1;
-        } else if (id === 'gastro' || id === 'sterne') {
+        } else if (id === 'gastro' || id === 'sterne' || id === 'food-court') {
             textOpacity = fadeClose;
         } else if (id === 'produktion') {
             textOpacity = fadeVeryCloseWithEclipsePriority;
