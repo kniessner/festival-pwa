@@ -54,6 +54,11 @@
  *               "Foodcourt tent" + "Foodcourt tent 2"; both were
  *               already blocklisted from search, this drops the
  *               polygons + labels from the map itself too).
+ *   2026-08-08  Rename: Shower Container → Dusche (x3 in toilets-
+ *               showers). Keeps the polygons, cleans the label.
+ *   2026-08-08  Remove: any text matching /geländegestaltung/i
+ *               ("Geländegestaltung Plaform" today; future
+ *               "Platform" spelling caught too).
  *   2026-08-08  Seeblick consolidation:
  *                 Seeblick indoor → Seeblick
  *                 Seeblick Stage  → Seeblick
@@ -86,6 +91,8 @@ const RENAMES = {
     // only Skalahara feature in the geojson entirely (Jacob's call
     // 2026-08-08 after checking with Horst).
     'Skalahara FOH':              'Skalahara',
+    // Shower-family relabels
+    'Shower Container':           'Dusche',
 };
 
 // ─── Rule 2: exact-text removals ──────────────────────────────────────
@@ -100,13 +107,14 @@ const REMOVE_EXACT = new Set([
 
 // ─── Rule 3: pattern removals ─────────────────────────────────────────
 const REMOVE_PATTERNS = [
-    { rx: /booth/i,      label: 'booth'      },
-    { rx: /\?/,          label: '(?)'        },
-    { rx: /^kühlung$/i,  label: 'kuehlung'   },
-    // Foodcourt tents — staff/logistics infrastructure, not a
-    // guest-facing eatery. Catches "Foodcourt tent" and "Foodcourt
-    // tent 2" today; future "Foodcourt tent 3" etc. still hit.
-    { rx: /foodcourt/i,  label: 'foodcourt'  },
+    { rx: /booth/i,               label: 'booth'                },
+    { rx: /\?/,                   label: '(?)'                  },
+    { rx: /^kühlung$/i,           label: 'kuehlung'             },
+    { rx: /foodcourt/i,           label: 'foodcourt'            },
+    // Staff platform / landscape build-out. Pattern also catches
+    // the source typo ("Plaform") and any future correctly-spelled
+    // "Platform" variant without a config change.
+    { rx: /geländegestaltung/i,   label: 'gelaendegestaltung'   },
 ];
 
 // ─── Rule 5: toilet-file label normalisation ──────────────────────────
