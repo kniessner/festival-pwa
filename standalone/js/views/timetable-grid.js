@@ -1,6 +1,6 @@
 import { store } from '../store.js';
 import { favButton } from '../ui.js';
-import { getEffectiveFestivalDay, dayAbbrev } from '../festival.js';
+import { getEffectiveFestivalDay, dayAbbrev, toDayTabValue, toRealDate } from '../festival.js';
 import { t } from '../i18n.js';
 import { isFavorite } from '../favorites.js';
 import { getStage } from '../helpers/get-stage.js';
@@ -123,6 +123,38 @@ function toContinuousMinutes(time) {
     let [h, m] = time.split(':').map(Number);
     if (h < DAY_ROLLOVER_HOUR) h += 24;
     return h * 60 + m;
+}
+
+// ev.day is always the literal calendar date an event starts on — both the
+// Music CPT (includes/class-music.php's derive_day()) and the scraper's
+// timetable.json agree on that, and the Program list / event details rely
+// on it being unadjusted. The grid's 6am-to-6am day blocks need the
+// OPPOSITE framing though — an event starting before DAY_ROLLOVER_HOUR is
+// still that night's programming and visually belongs in the PREVIOUS
+// day's block — so that adjustment is computed locally here, purely for
+// bucketing into blocks, and must never leak back into ev.day itself.
+function blockDayFor(ev) {
+    const [h] = ev.start_time.split(':').map(Number);
+    if (h >= DAY_ROLLOVER_HOUR) return ev.day;
+    // ev.day may already be the Monday alias (see festival.js's
+    // toDayTabValue) rather than a real calendar date — de-alias first
+    // since a placeholder can't have a day subtracted from it, then
+    // re-alias the result in case rolling back still lands back on the
+    // real Monday date (e.g. an early-morning Monday event with no
+    // preceding day to roll back onto within the festival window).
+    //
+    // Local-time arithmetic all the way through — toISOString() converts to
+    // UTC, which on any timezone ahead of UTC (e.g. Europe/Berlin) shifts
+    // the date an extra day back and silently drops the event from every
+    // block (nothing matches the resulting value).
+    const d = new Date(toRealDate(ev.day) + 'T00:00:00');
+    d.setDate(d.getDate() - 1);
+    const rolledBack = [
+        d.getFullYear(),
+        String(d.getMonth() + 1).padStart(2, '0'),
+        String(d.getDate()).padStart(2, '0')
+    ].join('-');
+    return toDayTabValue(rolledBack);
 }
 
 /**
@@ -264,7 +296,7 @@ function buildDayBlock(data, dayValue) {
     // "Space" installations that run for a set window, e.g. De Loite 10:00-21:00.
     // matchesEventType() partitions Music vs. everything else per the active tab.
     const events = data.events.filter(ev =>
-        matchesEventType(ev) && ev.day === dayValue && ev.start_time && ev.end_time && ev.stage
+        matchesEventType(ev) && ev.start_time && ev.end_time && ev.stage && blockDayFor(ev) === dayValue
     );
     if (events.length === 0) return null;
 
