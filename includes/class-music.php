@@ -44,12 +44,6 @@ class Festival_PWA_Music {
         'Mirage Glimmer',
     ];
 
-    // Stage acts run around the clock — same rollover convention the
-    // standalone app already uses (DAY_ROLLOVER_HOUR in timetable-grid.js):
-    // hours before this belong to the previous festival night, not a new
-    // calendar day.
-    const DAY_ROLLOVER_HOUR = 6;
-
     public function __construct() {
         add_action('init', [$this, 'register_post_type']);
         add_action('add_meta_boxes', [$this, 'add_meta_box']);
@@ -238,15 +232,17 @@ class Festival_PWA_Music {
         return $value;
     }
 
+    // Every early-morning event in this CPT (checked across ~70 posts
+    // starting 00:00-05:59) is entered with the literal calendar date it
+    // falls on — e.g. a 2am set after Thursday night is dated Friday, not
+    // Thursday — never the "previous festival night" a rollover would
+    // assume. No adjustment needed: the stored date already is the day.
     public static function derive_day($datetime_local) {
         if (!$datetime_local) return '';
         try {
             $dt = new DateTime($datetime_local);
         } catch (Exception $e) {
             return '';
-        }
-        if ((int) $dt->format('H') < self::DAY_ROLLOVER_HOUR) {
-            $dt->modify('-1 day');
         }
         return $dt->format('Y-m-d');
     }
