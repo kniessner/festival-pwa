@@ -58,9 +58,20 @@ const TOILET_COORDS = [
 // First-aid was previously resolved to the nearer of two coords
 // (DRK / Secu Base + Psycare / DRK zelt). The Horst review consolidated
 // awareness + first-aid provisioning at the Awareness & Eclipse polygon,
-// so first-aid now points to the same coord as the Eclipse fly-to entry
-// below. FIRST_AID_COORDS deliberately removed rather than left dead
-// so a future contributor doesn't wire it back in without knowing why.
+// so first-aid used to point to the same coord as the Eclipse fly-to
+// entry — but Jacob 2026-08-11 reverted that: DRK is the real medical
+// service (Deutsches Rotes Kreuz), staffed on-site, and the fly-to
+// should send a hurting guest to the nearest actual DRK station, not
+// to the awareness tent.
+
+const DRK_COORDS = [
+    // First entry doubles as the off-site fallback (see nearestOr
+    // below). Picked the main DRK / Security base because it's the
+    // larger of the two and the one with 24/7 staffing per the
+    // festival's medical brief.
+    [14.499670, 52.275745],   // DRK / Secu Base
+    [14.489318, 52.276619],   // Psycare / DRK zelt
+];
 
 const INFO_POINT_COORD = [14.494663, 52.276211]; // Info-point / Lost & Found / Kiosk / DIY station
 const ECLIPSE_COORD    = [14.489207, 52.276594]; // Awareness & Eclipse polygon centroid (produktion.geojson)
@@ -94,10 +105,11 @@ export const POI_LIST = [
         id: 'first-aid',
         labelKey: 'map.flyto.firstAid',
         icon: 'images/poi-firstaid.svg',
-        // Points at the Awareness & Eclipse polygon — same coord as the
-        // Eclipse entry below, since that's where first-aid + emotional
-        // support are co-located per Horst's produktion review.
-        resolve: () => ECLIPSE_COORD,
+        // Points at the nearest DRK station — there are two, ~700 m
+        // apart, so the nearest-picker matters a lot for a guest who
+        // may already be in distress. Off-site / null-GPS falls back
+        // to the main DRK / Secu Base (DRK_COORDS[0]).
+        resolve: nearestOr(DRK_COORDS),
     },
     {
         id: 'info',
