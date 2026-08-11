@@ -818,14 +818,19 @@ function addOverlayLayers(map) {
                     // proximity table in Jacob's map-follow-up-2
                     // notes), so at any readable zoom their default-
                     // centred labels physically overlap. Shift each
-                    // one 1.2 em away from the other along the
-                    // north-south axis — Cuddle Poodle (the northern
-                    // polygon) moves further north, Neuro Divers
-                    // (southern) moves further south. Net extra
-                    // separation ≈ 40 px, plenty for the two labels
-                    // to render on distinct baselines. All other
-                    // sterne-major members sit ≥ 44 m apart so they
-                    // stay centred (no offset).
+                    // one away from the other along the north-south
+                    // axis — Cuddle Poodle (the northern polygon)
+                    // moves further north (-1.2 em), Neuro Divers
+                    // (southern) moves further south (+0.5 em).
+                    // The split is deliberately asymmetric: on-map
+                    // check showed Cuddle Poodle needed the bigger
+                    // nudge (nothing above it), while Neuro Divers
+                    // only needed a small shift to clear both
+                    // Cuddle Poodle above and the food-court labels
+                    // below. Net extra separation ≈ 27 px, enough
+                    // for distinct baselines with no wasted breathing
+                    // room. All other sterne-major members sit ≥ 44 m
+                    // apart so they stay centred (no offset).
                     //
                     // MapLibre's y axis points DOWN in text-offset
                     // (screen coords, not lat/lon), so negative y =

@@ -25,8 +25,14 @@ unlike geographic offsets which would grow/shrink with zoom.
 3. Add a `match ['get', 'text']` expression on the layer's `text-offset`
    layout property. Every non-colliding feature falls through to the
    default `[0, 0]`.
-4. Keep the offset magnitude to ~1.2 em per side (total 2.4 em ≈ 38 px
-   extra separation). Bigger looks disconnected from the polygon.
+4. Keep the offset magnitude to ~1.2 em per side as a starting point
+   (total 2.4 em ≈ 38 px extra separation). Then eyeball on-map and
+   TIGHTEN if either side has more breathing room than it needs —
+   e.g. one polygon has no neighbours in that direction, so the label
+   can shift much less. Asymmetric splits are fine when the visual
+   context isn't symmetric (see Cuddle Poodle / Neuro Divers below).
+   Bigger than ~1.2 em on either side looks disconnected from the
+   polygon.
 5. MapLibre `text-offset` uses **screen coords** — negative y is UP on
    screen, i.e. geographic NORTH. Positive y is DOWN (south). This is
    the opposite of lat/lng intuition, so double-check.
@@ -46,12 +52,15 @@ that zoom is ~50 px. Result: `NeurCuddlePoodle` mash-up. Fix:
 'text-offset': [
     'match', ['get', 'text'],
     'Cuddle Poodle', ['literal', [0, -1.2]],  // push up
-    'Neuro Divers',  ['literal', [0,  1.2]],  // push down
+    'Neuro Divers',  ['literal', [0,  0.5]],  // push down
     ['literal', [0, 0]],
 ],
 ```
 
-Total 2.4 em (~38 px) extra vertical separation. Labels now sit on
+Asymmetric on purpose: Cuddle Poodle has nothing above it and
+needed the full 1.2 em; Neuro Divers only needed 0.5 em to clear
+both Cuddle Poodle above and the food-court labels below. Total
+1.7 em (≈ 27 px) extra vertical separation. Labels now sit on
 distinct baselines and read cleanly.
 
 ## When this pattern is NOT the right fix
