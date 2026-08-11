@@ -2,6 +2,7 @@ import { store } from './store.js';
 import { PAGES, pageIdx } from './config.js';
 import { escapeHtml } from './ui.js';
 import { t } from './i18n.js';
+import { dayAbbrev } from './festival.js';
 import { onMapSearchInput, closeMapSearchDropdown } from './views/map-search.js';
 
 // The single #searchInput at the top of the app doubles as:
@@ -102,10 +103,16 @@ function renderSearchResults(results, query) {
     container.innerHTML = results.map(r => {
         const title = r.item.title || r.item.question || 'Item';
         const desc = r.item.desc || r.item.answer || r.item.excerpt || '';
-        // r.item.time is the scraper's pre-formatted "DO 10:00" string —
-        // music events (no such field) fall back to start/end_time, shown
-        // as a range since that's the more useful signal for a DJ set.
-        const timeLabel = r.item.time || (r.item.start_time ? `${r.item.start_time}${r.item.end_time ? ' – ' + r.item.end_time : ''}` : '');
+        // r.item.time is the scraper's pre-formatted "DO 10:00" (day + time)
+        // string — music events carry no such field (see music.js's merge),
+        // so without building the same day tag here, a music result would
+        // show a time range with no day at all. Matches renderEventCard's
+        // dayTag pattern in views/timetable.js.
+        const dayTag = !r.item.time && r.item.day
+            ? dayAbbrev(r.item.day, store.pageData.timetable?.filters?.days?.find(d => d.value === r.item.day)?.label)
+            : '';
+        const timeLabel = r.item.time
+            || (r.item.start_time ? `${dayTag ? dayTag + ' ' : ''}${r.item.start_time}${r.item.end_time ? ' – ' + r.item.end_time : ''}` : '');
         // Program results already show time + stage, which is enough to tell
         // them apart — the "Programm" source label is only actually useful
         // for FAQ/News results, which have no such context of their own.

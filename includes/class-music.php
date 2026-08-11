@@ -40,7 +40,7 @@ class Festival_PWA_Music {
         'Sektamt',
         'Zirkus Mond Zelt',
         'Zirkus Mond Turmbühnchen',
-        'Mirage Acro',
+        'Mirage Arco',
         'Mirage Glimmer',
     ];
 

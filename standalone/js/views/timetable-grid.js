@@ -512,7 +512,16 @@ function renderHorizontalLayout({ data, header, track, blocks }) {
             const rulerLeft = b._offset + (m - b.gridMin) * PX_PER_MIN;
             const hourText = `${String(Math.floor(m / 60) % 24).padStart(2, '0')}:00`;
             const cur = m === currentHourBucketH ? ' gtt-current-hour' : '';
-            hourLabels.push(`<div class="gtt-hour-label-h${cur}" style="left:${rulerLeft}px">${hourText}</div>`);
+            // Alternates a full 24h at a time, boundary exactly at each real
+            // midnight — NOT at this block's own 6am-to-6am span. m runs 360
+            // (6am) through 1800 (6am the next calendar day) within a single
+            // festival day-block; m >= 1440 has wrapped past midnight, so
+            // those labels belong to the NEXT real calendar day (block index
+            // i + 1's "day"), not this block's. Same real day -> same tone,
+            // regardless of which block it's rendered inside.
+            const realDayIndex = i + (m >= 24 * 60 ? 1 : 0);
+            const altDay = realDayIndex % 2 === 1 ? ' gtt-hour-label-alt-day' : '';
+            hourLabels.push(`<div class="gtt-hour-label-h${cur}${altDay}" style="left:${rulerLeft}px">${hourText}</div>`);
             // Ticks live inside .gtt-track, not the ruler, so they need the stage-label
             // column's width added to line up with the ruler/row content above/below them.
             if (!first) hourTicks.push(`<div class="gtt-hour-tick" style="left:${STAGE_LABEL_WIDTH + rulerLeft}px"></div>`);
