@@ -73,7 +73,8 @@ const TENT_SHRINK_END_ZOOM   = 22;   // interp target. maxZoom is 19,
 //   camping-areas subset  — HIGHLIGHTED (opacity bump + thicker
 //                          outline) so the tent drag reads as "drop
 //                          me on one of these"
-//   everything else       — FADED to 0.2 so the highlighted camps pop
+//   everything else       — HIDDEN completely so the highlighted
+//                            camps are the only thing visible
 //
 // FADE_LAYERS is derived from map-interactive.js#FELT_LAYERS so adding
 // a new overlay group there automatically extends the fade set here —
@@ -84,16 +85,36 @@ const TENT_SHRINK_END_ZOOM   = 22;   // interp target. maxZoom is 19,
 // tent-drop UX is scoped to the camps (see HIGHLIGHT_LAYER_ID below).
 // If a future landmark should participate in the fade, register it
 // in FELT_LAYERS instead of adding a special case here.
+//
+// EXTRA_FADE_LAYERS: labels that live OUTSIDE FELT_LAYERS but should
+// still disappear during a tent drag. Today: the two region labels
+// (Umbria / Lumina) rendered by map-interactive.js#addOverlayLayers.
+// They’re not overlay-tier features (own source, own zoom-fade),
+// but visually they behave like every other non-camping label and
+// should vanish alongside them so the camps read as the only
+// possible drop targets. Add here rather than in FELT_LAYERS to
+// avoid dragging the whole tier machinery (fill/point/outline/
+// zoom-fade) along for what is really just one symbol layer.
+const EXTRA_FADE_LAYERS = ['regions-label'];
 
 // The one overlay group we highlight instead of fade. If we ever want
 // to promote another layer to the same "drop target" role, add it
 // here and give it HIGHLIGHT_OVERRIDES entries.
 const HIGHLIGHT_LAYER_ID = 'camping-areas';
 
-const FADE_LAYERS = FELT_LAYERS
-    .filter(({ id }) => id !== HIGHLIGHT_LAYER_ID)
-    .flatMap(({ id }) => [id + '-fill', id + '-outline', id + '-point', id + '-label']);
-const FADE_OPACITY = 0.2;
+const FADE_LAYERS = [
+    ...FELT_LAYERS
+        .filter(({ id }) => id !== HIGHLIGHT_LAYER_ID)
+        .flatMap(({ id }) => [id + '-fill', id + '-outline', id + '-point', id + '-label']),
+    ...EXTRA_FADE_LAYERS,
+];
+// Non-camping overlays are hidden completely during a tent drag
+// (Jacob 2026-08-10: "labels still faintly visible — they should be
+// really not visible apart from the camping ones"). Was 0.2 before;
+// dropped to 0 so the drag interaction becomes an unambiguous
+// "which camp are you in" question with no distracting fills or
+// labels bleeding through.
+const FADE_OPACITY = 0;
 
 // Paint-property overrides applied to the camping-areas layers during
 // drag. Each entry: [layerId, paintKey, dragValue]. On drop they're

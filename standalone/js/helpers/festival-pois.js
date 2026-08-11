@@ -87,13 +87,13 @@ export const POI_LIST = [
     {
         id: 'tent',
         labelKey: 'map.flyto.tent',
-        // Reuses the bespoke drop-pin from the draggable tent marker
-        // (images/tent.svg) instead of the outline poi-tent icon, so
-        // the fly-to entry visually reads as the same thing the user
-        // sees on the map. Self-styled (hardcoded beach-sand fill +
-        // red glyph) so it doesn't need the mask-image treatment the
-        // other poi icons use.
-        icon: 'images/tent.svg',
+        // Uses the outline poi-tent icon (part of the fly-to icon
+        // family delivered by Berit) so the row reads as one of the
+        // set with the other four entries. The bespoke red drop-pin
+        // (images/tent.svg) is still what the user sees on the map
+        // itself for the draggable "my tent" marker — visually
+        // distinct on purpose so it stands out against the terrain.
+        icon: 'images/poi-tent.svg',
         // Read fresh on every click so a drag+drop from the drag-me
         // marker is reflected immediately without a store subscription.
         resolve: () => getTentPosition(),

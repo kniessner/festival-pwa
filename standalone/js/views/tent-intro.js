@@ -26,6 +26,11 @@ function setText(id, key) {
     if (el) el.textContent = t(key);
 }
 
+function setHTML(id, key) {
+    const el = document.getElementById(id);
+    if (el) el.innerHTML = t(key);
+}
+
 /**
  * Show the tent-intro modal iff BOTH gates allow it. No-op otherwise.
  * Idempotent — safe to call on every interactive-map mount; the
@@ -35,7 +40,7 @@ export function maybeShowTentIntro() {
     if (getTentIntroCompleted()) return;
     if (hasStoredTentPosition()) return;
     setText('tentIntroHeadline', 'tentIntro.headline');
-    setText('tentIntroBody',     'tentIntro.body');
+    setHTML('tentIntroBody',     'tentIntro.body');
     setText('tentIntroBtnOk',    'tentIntro.buttonOk');
     document.getElementById('tentIntroModal')?.classList.add('open');
 }

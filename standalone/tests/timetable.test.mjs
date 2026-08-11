@@ -89,8 +89,15 @@ test('refreshTimetable marks the header filter button active only when stage or 
 // these need only the localStorage stub (for isFavorite) plus a
 // store.pageData.timetable.events array containing the event under test
 // (renderEventCard looks up its own index via .indexOf(ev)).
+//
+// Subline contract (intentional, matches Figma):
+//   - stage_label → <span class="tt-event-stage">...</span>
+//   - hosts → CSV of ev.hosts
+//   - joined with ", " between the parts that exist; empties omitted so
+//     we never emit a leading / trailing comma.
+//   - Title is NEVER duplicated here — it's already the <h3> above.
 
-test('renderEventCard subline: no stage — just the title, no leading comma', async () => {
+test('renderEventCard subline: no stage, no hosts — subline is empty', async () => {
     installGlobals({ localStorageState: { 'bucht-lang': 'de' } });
     const { store } = await import('../js/store.js');
     const { renderEventCard } = await import('../js/views/timetable.js');
@@ -100,10 +107,11 @@ test('renderEventCard subline: no stage — just the title, no leading comma', a
     store.ttFilters = { day: '2026-08-13' };
 
     const html = renderEventCard(ev);
-    assert.match(html, /<div class="tt-event-subline">Momentarium<\/div>/);
+    // Empty subline div — not the title, not a stray comma.
+    assert.match(html, /<div class="tt-event-subline"><\/div>/);
 });
 
-test('renderEventCard subline: stage present — joined with the title via a comma', async () => {
+test('renderEventCard subline: stage present — wrapped in tt-event-stage span, no hosts', async () => {
     installGlobals({ localStorageState: { 'bucht-lang': 'de' } });
     const { store } = await import('../js/store.js');
     const { renderEventCard } = await import('../js/views/timetable.js');
@@ -113,7 +121,29 @@ test('renderEventCard subline: stage present — joined with the title via a com
     store.ttFilters = { day: '2026-08-13' };
 
     const html = renderEventCard(ev);
-    assert.match(html, /<div class="tt-event-subline"><strong>dezentral<\/strong>, De Loite<\/div>/);
+    assert.match(html, /<div class="tt-event-subline"><span class="tt-event-stage">dezentral<\/span><\/div>/);
+});
+
+test('renderEventCard subline: stage AND hosts — joined with a comma, in stage-then-hosts order', async () => {
+    installGlobals({ localStorageState: { 'bucht-lang': 'de' } });
+    const { store } = await import('../js/store.js');
+    const { renderEventCard } = await import('../js/views/timetable.js');
+
+    const ev = {
+        title: 'De Loite',
+        stage_label: 'dezentral',
+        hosts: ['Alice', 'Bob'],
+        day: '2026-08-13',
+        category: 'Space',
+    };
+    store.pageData.timetable = { events: [ev] };
+    store.ttFilters = { day: '2026-08-13' };
+
+    const html = renderEventCard(ev);
+    assert.match(
+        html,
+        /<div class="tt-event-subline"><span class="tt-event-stage">dezentral<\/span>, Alice, Bob<\/div>/,
+    );
 });
 
 test('renderEventCard meta: no time — just the category, no comma', async () => {

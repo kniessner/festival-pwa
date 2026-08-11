@@ -7,18 +7,25 @@ import { getStage } from '../helpers/get-stage.js';
 import { createStageHysteresis } from '../helpers/stage-hysteresis.js';
 import { matchesEventType, resetTypeSpecificFilters, renderEventTypeTabs } from '../event-type-filter.js';
 
+// Commits `stage` (a slug or null) to store.userStage and dispatches a
+// 'stagechange' CustomEvent with { previous, current }. Single point of
+// entry for stage transitions so the store field and the DOM-facing
+// event can never drift out of sync. Kept exported so tests can drive
+// stage state directly without threading a fake geolocation fix.
+export function commitUserStage(stage) {
+    const previous = store.userStage;
+    if (previous === stage) return;
+    store.userStage = stage;
+    document.dispatchEvent(new CustomEvent('stagechange', {
+        detail: { previous, current: stage },
+    }));
+}
+
 // Module-scoped hysteresis: one instance survives every renderGridTimetable
-// call (view remounts don't reset it). On commit, mirrors the new stage to
-// store.userStage and dispatches 'stagechange' — the grid mount handler
-// and the pulse toggle both listen to that event.
+// call (view remounts don't reset it). Delegates the actual commit to
+// commitUserStage so the store + event contract lives in one place.
 const stageHysteresis = createStageHysteresis({
-    onCommit: (stage) => {
-        const previous = store.userStage;
-        store.userStage = stage;
-        document.dispatchEvent(new CustomEvent('stagechange', {
-            detail: { previous, current: stage },
-        }));
-    },
+    onCommit: commitUserStage,
 });
 
 function handleLocationChange(e) {
@@ -74,7 +81,31 @@ const DAY_GAP = 28;         // horizontal mode: gap between consecutive day bloc
 
 // Haptic feedback pattern for a real stage-to-stage transition. Three
 // short pulses give a distinct-from-notification feel; adjust here.
-const STAGE_TRANSITION_VIBRATE_MS = [50, 30, 50];
+export const STAGE_TRANSITION_VIBRATE_MS = [50, 30, 50];
+
+// Two-step scroll tuning. Both scroll targets subtract a small offset
+// from the anchor's edge so the row / time-line lands just inside the
+// viewport rather than flush against the sticky header — which would
+// otherwise clip it. Kept separate from the sticky-header widths above
+// (STAGE_LABEL_WIDTH / AXIS_WIDTH) because those are structural; these
+// are purely visual breathing room.
+const SCROLL_TIME_INSET_PX = 40;   // step 1: now-line offset from edge
+const SCROLL_STAGE_INSET_PX = 40;  // step 2 (vertical mode): stage-column offset
+const SCROLL_ROW_INSET_PX = 20;    // step 2 (horizontal mode): stage-row offset from top-of-header
+const SCROLL_HEADER_PAD_PX = 80;   // step 1 (vertical mode): now-line offset below top-of-header
+
+// Fallback delay chaining step-2 stage-scroll after step-1 time-scroll,
+// for browsers where scrollend never fires (reduced-motion, no actual
+// scroll needed, older Safari). Loosely aligned with the browser's
+// built-in smooth-scroll duration (400–600 ms) plus a safety margin.
+const SCROLL_FALLBACK_MS = 1000;
+
+// If the user scrolled the grid within the last N ms, suppress the
+// GPS-driven auto-scroll on the next stagechange. Prevents yanking the
+// user out of a deliberate scroll (e.g. checking tonight's late set)
+// just because someone walked between two tents nearby. The pulse
+// class still moves in real-time — only the scroll is suppressed.
+const MANUAL_SCROLL_GRACE_MS = 8000;
 
 // Stage acts run around the clock, so hours before this cutoff belong to the
 // previous festival night rather than a new calendar day.
@@ -564,6 +595,11 @@ function renderHorizontalLayout({ data, header, track, blocks }) {
 // As the user free-scrolls across the continuous strip, keep the sticky corner
 // label and the day-tabs' active state in sync with whichever day is in view.
 function onGridScroll() {
+    // Feed the manual-scroll guard first: any scroll event we didn't
+    // originate ourselves counts as user activity and suppresses the
+    // next stagechange auto-scroll for MANUAL_SCROLL_GRACE_MS.
+    noteGridScrollForAutoScrollGuard();
+
     const scroll = document.getElementById('gttScroll');
     const corner = document.getElementById('gttCornerDay');
     if (!scroll || !corner || !gridDayOffsets.length) return;
@@ -713,123 +749,222 @@ function scrollGridToNowTime() {
         if (orientation === 'horizontal') {
             const line = document.querySelector('.gtt-now-line-v');
             if (!line) return;
-            const target = Math.max(0, line.offsetLeft - STAGE_LABEL_WIDTH - 40);
+            const target = Math.max(0, line.offsetLeft - STAGE_LABEL_WIDTH - SCROLL_TIME_INSET_PX);
             // Smooth-scroll rather than direct assignment — the initial jump
-            // felt brutal on a first-open grid. scrollend (or the 1s fallback
+            // felt brutal on a first-open grid. scrollend (or the fallback
             // in scrollGridToNowAndUserStage) then chains into step 2.
-            scroll.scrollTo({ left: target, behavior: 'smooth' });
+            programmaticScrollTo(scroll, { left: target, behavior: 'smooth' });
         } else {
             const line = document.querySelector('.gtt-now-line');
             if (!line) return;
             const headerHeight = document.getElementById('gttHeader')?.offsetHeight || 0;
-            const target = Math.max(0, line.offsetTop - headerHeight - 80);
-            scroll.scrollTo({ top: target, behavior: 'smooth' });
+            const target = Math.max(0, line.offsetTop - headerHeight - SCROLL_HEADER_PAD_PX);
+            programmaticScrollTo(scroll, { top: target, behavior: 'smooth' });
         }
     }, 150);
 }
 
-// Step 2: scroll the cross-axis to bring the user's current stage into
-// view. No-op if hysteresis hasn't resolved a stage yet (permission
-// denied, off-site, in the gap between polygons). Defensively queries
-// the DOM — handler is bound at module scope so it can fire when the
-// grid isn't rendered; every getElementById can legitimately be null.
-function scrollGridToUserStage() {
-    const stage = store.userStage;
+// Step 2: scroll the cross-axis to bring the given stage into view.
+// Takes the stage slug as a parameter (rather than reading store.userStage)
+// so the scroll target is captured at the moment stagechange fired —
+// prevents a later commit racing us into scrolling to the wrong stage.
+// No-op if `stage` is falsy (hysteresis cleared / never committed).
+function scrollGridToUserStage(stage) {
     if (!stage) return;
     const scroll = document.getElementById('gttScroll');
     if (!scroll) return;
     if (store.gridScrollMode === 'vertical') {
         const head = document.querySelector(`.gtt-stagehead[data-stage="${stage}"]`);
         if (!head) return;
-        const target = Math.max(0, head.offsetLeft - AXIS_WIDTH - 40);
-        scroll.scrollTo({ left: target, behavior: 'smooth' });
+        const target = Math.max(0, head.offsetLeft - AXIS_WIDTH - SCROLL_STAGE_INSET_PX);
+        programmaticScrollTo(scroll, { left: target, behavior: 'smooth' });
     } else {
         const row = document.querySelector(`.gtt-stagerow-wrap[data-stage="${stage}"]`);
         if (!row) return;
         const headerHeight = document.getElementById('gttHeader')?.offsetHeight || 0;
-        const target = Math.max(0, row.offsetTop - headerHeight - 20);
-        scroll.scrollTo({ top: target, behavior: 'smooth' });
+        const target = Math.max(0, row.offsetTop - headerHeight - SCROLL_ROW_INSET_PX);
+        programmaticScrollTo(scroll, { top: target, behavior: 'smooth' });
     }
+}
+
+// Module-scoped state for the two-step chain. Hoisted so a second
+// stagechange arriving inside the fallback window cancels the previous
+// invocation's pending step-2 instead of stacking a second smooth-scroll
+// on top of the first (which showed as a visible jitter). See F1 in
+// docs/e2e-tests.md → "Overlapping fallback timers".
+let pendingStageScrollTimerId = null;
+let pendingStageScrollFinish = null;
+
+// Timestamp of the last user-driven scroll on #gttScroll. Updated by the
+// scroll listener in renderGridTimetable, filtered against ignore-window
+// flags that programmaticScrollTo sets while we're the ones scrolling.
+// Read by handleStageChangeForScroll to skip auto-scroll while the user
+// is actively browsing.
+let lastUserScrollAt = 0;
+
+// True while a programmatic scrollTo is in-flight — lets the scroll
+// listener distinguish our own smooth-scrolls (which fire dozens of
+// scroll events as they animate) from a real finger drag. Cleared on
+// the first scrollend after the animation OR after SCROLL_FALLBACK_MS,
+// whichever comes first.
+let programmaticScrollInFlight = false;
+let programmaticScrollReleaseTimer = null;
+function programmaticScrollTo(scroll, opts) {
+    programmaticScrollInFlight = true;
+    if (programmaticScrollReleaseTimer != null) clearTimeout(programmaticScrollReleaseTimer);
+    programmaticScrollReleaseTimer = setTimeout(() => {
+        programmaticScrollInFlight = false;
+        programmaticScrollReleaseTimer = null;
+    }, SCROLL_FALLBACK_MS);
+    // scrollend clears the flag earlier when the browser supports it;
+    // once:true so we don't accumulate listeners across chained scrolls.
+    scroll.addEventListener('scrollend', () => {
+        programmaticScrollInFlight = false;
+        if (programmaticScrollReleaseTimer != null) {
+            clearTimeout(programmaticScrollReleaseTimer);
+            programmaticScrollReleaseTimer = null;
+        }
+    }, { once: true });
+    scroll.scrollTo(opts);
+}
+
+/** Test-only: reset module-scoped state between e2e recipe runs. */
+export function __resetAutoScrollStateForTests() {
+    if (pendingStageScrollTimerId != null) {
+        clearTimeout(pendingStageScrollTimerId);
+        pendingStageScrollTimerId = null;
+    }
+    pendingStageScrollFinish = null;
+    if (programmaticScrollReleaseTimer != null) {
+        clearTimeout(programmaticScrollReleaseTimer);
+        programmaticScrollReleaseTimer = null;
+    }
+    programmaticScrollInFlight = false;
+    lastUserScrollAt = 0;
+    stageHysteresis.reset();
+    // Fire an explicit null commit so store.userStage and any pulse
+    // classes on-screen also clear — without this the next feed(same)
+    // would be a no-op and the pulse would appear stuck.
+    commitUserStage(null);
 }
 
 // Two-step sequence: run time-scroll first, wait for its animation to
 // settle, then stage-scroll. Ported from fusion's TimetableFlat.tsx
 // pattern (scrollend + fallback in case reduced-motion / no smooth scroll
 // / no actual scroll needed keeps scrollend from firing).
-function scrollGridToNowAndUserStage() {
+function scrollGridToNowAndUserStage(stage) {
     scrollGridToNowTime();
     const scroll = document.getElementById('gttScroll');
     if (!scroll) return;
+
+    // Cancel any in-flight step-2 from a previous stagechange — its
+    // pending finish() would otherwise race ours and produce a double
+    // smooth-scroll animation. Overwriting `pendingStageScrollFinish`
+    // also neutralises the previous listener because it checks
+    // identity before running.
+    if (pendingStageScrollTimerId != null) {
+        clearTimeout(pendingStageScrollTimerId);
+        pendingStageScrollTimerId = null;
+    }
+
     let done = false;
     const finish = () => {
         if (done) return;
+        // Identity check: if another stagechange superseded us, this
+        // finish() is stale — drop it silently.
+        if (pendingStageScrollFinish !== finish) return;
         done = true;
-        scrollGridToUserStage();
+        pendingStageScrollFinish = null;
+        if (pendingStageScrollTimerId != null) {
+            clearTimeout(pendingStageScrollTimerId);
+            pendingStageScrollTimerId = null;
+        }
+        scrollGridToUserStage(stage);
     };
-    // `once: true` auto-removes the listener after first fire; the 1s
+    pendingStageScrollFinish = finish;
+
+    // `once: true` auto-removes the listener after first fire; the
     // fallback below covers the case where scrollend never comes
-    // (reduced-motion, no scroll needed, unsupported browser). `done`
-    // guards against a delayed scrollend firing after the fallback ran.
+    // (reduced-motion, no scroll needed, unsupported browser). Both
+    // paths funnel through the identity-checked `finish`.
     scroll.addEventListener('scrollend', finish, { once: true });
-    setTimeout(finish, 1000);
+    pendingStageScrollTimerId = setTimeout(finish, SCROLL_FALLBACK_MS);
 }
 
-// Rebinds scroll refresh on every stage commit. Bound once at module
-// load; safe when the grid view isn't rendered because
-// scrollGridToUserStage/scrollGridToNowTime bail out on null DOM.
-//
 // UX guard: only auto-scroll when the user is viewing today's grid.
 // If they're intentionally browsing another day's lineup and walk
 // between stages, yanking them back to today is intrusive. The pulse
-// still moves on the day-independent header (see
-// handleStageChangeForPulse) so they still see the visual signal.
-// Two module-scoped listeners share the 'stagechange' event and are
-// bound at module load (below). Registration order matters and is
-// deliberate: handleStageChangeForScroll runs first (starts the smooth-
-// scroll animation, up to ~1s), then handleStageChangeForPulse (adds
-// .gtt-current-stage class + fires vibrate on real transitions). Both
-// are cheap and idempotent; splitting them keeps each responsibility
-// isolated.
-function handleStageChangeForScroll() {
+// still moves on the day-independent header (see handlePulse below)
+// so they still see the visual signal.
+//
+// A single 'stagechange' listener now dispatches to both concerns
+// (scroll first, then pulse) so the ordering the pulse relies on —
+// pulse class landed AFTER the scroll animation started — is a
+// property of the code, not of registration order. Previously two
+// separate document.addEventListener calls encoded this ordering by
+// coincidence of source order, which is a bug magnet.
+function handleStageChangeForScroll(current) {
     if (store.gridDay !== getEffectiveFestivalDay()) return;
-    scrollGridToNowAndUserStage();
+    // Don't fight a user who's actively scrolling. `pulse` still fires
+    // in the umbrella handler below, so they see the stage change —
+    // just without their scroll position getting hijacked.
+    if (Date.now() - lastUserScrollAt < MANUAL_SCROLL_GRACE_MS) return;
+    scrollGridToNowAndUserStage(current);
 }
-document.addEventListener('stagechange', handleStageChangeForScroll);
 
 // Visual pulse on the stage header the user is currently standing at.
 // Adds .gtt-current-stage to the header cell whose data-stage matches
-// store.userStage, removes it from any others. Defensive: no-op when
-// the grid view isn't rendered.
-//
-// Vibration: only fires when the user *transitions* from one real
-// stage to a different real stage (both `previous` and `current` are
-// truthy strings and they differ). First fix (null → stage) and
-// stage → null transitions are silent — buzzing on app open would be
-// startling.
+// `current`, removes it from any others. Defensive: no-op when the grid
+// view isn't rendered.
 function applyStagePulseClasses(current) {
-    // Clear pulse markers from both header and event-container elements.
-    // Vertical mode: .gtt-stagehead (label) + .gtt-stagecol (event container).
-    // Horizontal mode: .gtt-stagerow-wrap (both label AND event container in one).
-    document.querySelectorAll('.gtt-current-stage')
+    // Scoped to #gttScroll so a future component reusing the class name
+    // outside the grid can't have its state wiped on every stagechange.
+    // Falls back gracefully when the grid isn't mounted (querySelectorAll
+    // on null throws; guard first).
+    const root = document.getElementById('gttScroll');
+    if (!root) return;
+    root.querySelectorAll('.gtt-current-stage')
         .forEach(el => el.classList.remove('gtt-current-stage'));
     if (!current) return;
     // Vertical: label header + column (events live inside .gtt-stagecol).
-    const head = document.querySelector(`.gtt-stagehead[data-stage="${current}"]`);
+    const head = root.querySelector(`.gtt-stagehead[data-stage="${current}"]`);
     if (head) head.classList.add('gtt-current-stage');
-    const col = document.querySelector(`.gtt-stagecol[data-stage="${current}"]`);
+    const col = root.querySelector(`.gtt-stagecol[data-stage="${current}"]`);
     if (col) col.classList.add('gtt-current-stage');
     // Horizontal: single wrapper contains both label and events.
-    const row = document.querySelector(`.gtt-stagerow-wrap[data-stage="${current}"]`);
+    const row = root.querySelector(`.gtt-stagerow-wrap[data-stage="${current}"]`);
     if (row) row.classList.add('gtt-current-stage');
 }
 
-function handleStageChangeForPulse(e) {
-    const detail = e.detail || {};
-    applyStagePulseClasses(detail.current);
+function handleStageChangeForPulse(previous, current) {
+    applyStagePulseClasses(current);
     // Vibrate only on real stage-to-stage transitions. navigator.vibrate
     // returns false silently on unsupported platforms (iOS Safari, etc.).
-    if (detail.previous && detail.current && detail.previous !== detail.current && navigator.vibrate) {
+    if (previous && current && previous !== current && navigator.vibrate) {
         navigator.vibrate(STAGE_TRANSITION_VIBRATE_MS);
     }
 }
-document.addEventListener('stagechange', handleStageChangeForPulse);
+
+// Single dispatcher. Order is explicit in code (scroll starts its
+// animation first, then pulse lands the class + vibrate) rather than
+// dependent on registration order in the source file. Bound once at
+// module load; safe when the grid view isn't rendered because both
+// downstream helpers bail on null DOM.
+function handleStageChange(e) {
+    const { previous = null, current = null } = e.detail || {};
+    handleStageChangeForScroll(current);
+    handleStageChangeForPulse(previous, current);
+}
+document.addEventListener('stagechange', handleStageChange);
+
+/**
+ * Called by the grid's scroll listener (see renderGridTimetable
+ * bind-once block). Records the timestamp of a user-driven scroll so
+ * handleStageChangeForScroll can suppress the auto-scroll for
+ * MANUAL_SCROLL_GRACE_MS afterwards. Programmatic scrolls set the
+ * in-flight flag so their scroll events don't count.
+ */
+export function noteGridScrollForAutoScrollGuard() {
+    if (programmaticScrollInFlight) return;
+    lastUserScrollAt = Date.now();
+}
