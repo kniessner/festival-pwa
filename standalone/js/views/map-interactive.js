@@ -833,7 +833,7 @@ function addOverlayLayers(map) {
                     'text-offset': [
                         'match', ['get', 'text'],
                         'Cuddle Poodle', ['literal', [0, -1.2]],
-                        'Neuro Divers',  ['literal', [0, 1.2]],
+                        'Neuro Divers',  ['literal', [0, 0.5]],
                         ['literal', [0, 0]],
                     ],
                     'text-allow-overlap': true,
