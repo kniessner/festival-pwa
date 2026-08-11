@@ -779,11 +779,18 @@ function addOverlayLayers(map) {
                     'text-color': PNG_CREAM,
                     'text-halo-color': PNG_MAGENTA_HALO,
                     'text-halo-width': 1.4,
-                    // Fade IN on the anchor-tier curve (15.0 → 15.5),
-                    // same as stages + camps — the whole point of the
-                    // promotion is to make these four appear when the
-                    // user pinches past the region-labels view.
-                    'text-opacity': anchorFadeIn,
+                    // Fade IN on the sterne-tier curve (16.0 → 16.5),
+                    // NOT on the anchor curve like stages + camps.
+                    // Jacob 2026-08-10 (round 2): the promotion gives
+                    // these four sterne their own bigger typographic
+                    // voice (Megan Display, allow-overlap) but they
+                    // should still stay out of the overview view —
+                    // only stages + camps deserve to be readable at
+                    // default zoom. The four sterne-major names
+                    // (Community Corner, Schweißperle, Cuddle Poodle,
+                    // Neuro Divers) now appear together with the
+                    // rest of sterne on a deliberate pinch-in.
+                    'text-opacity': fadeClose,
                 },
             });
         }
