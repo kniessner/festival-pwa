@@ -1,40 +1,7 @@
 {
   "pages": [
-    {
-      "slug": "home",
-      "label": "Home",
-      "icon": "🏠"
-    },
-    {
-      "slug": "favorites",
-      "label": "Mein Plan",
-      "icon": "⭐"
-    },
-    {
-      "slug": "timetable",
-      "label": "Kulturprogramm",
-      "icon": "📅"
-    },
-    {
-      "slug": "cashless",
-      "label": "Cashless & TOP-UP",
-      "icon": "📄"
-    },
-    {
-      "slug": "faqs",
-      "label": "FAQs",
-      "icon": "📄"
-    },
-    {
-      "slug": "info",
-      "label": "Info",
-      "icon": "📄"
-    },
-    {
-      "slug": "news",
-      "label": "News",
-      "icon": "📄"
-    }
+    { "slug": "timetable", "label": "Kulturprogramm", "icon": "📅" },
+    { "slug": "info", "label": "Info", "icon": "📄" }
   ],
   "app_name": "Bucht der Träumer",
   "synced_at": 1785333148

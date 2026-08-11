@@ -7,7 +7,7 @@
  *   - Cross-origin assets        → Cache-First only for CORS/basic responses
  */
 
-const CACHE_VERSION = '1786438764';
+const CACHE_VERSION = '1786441374';
 const APP_NAME = 'bucht-standalone';
 const CACHE_NAME = `${APP_NAME}-v${CACHE_VERSION}`;
 
@@ -32,8 +32,6 @@ const SHELL_ASSETS = [
     './fonts/Lato-Regular.ttf',
     './fonts/Lato-Bold.ttf',
     './fonts/Megan-Display.otf',
-    './fonts/Sunday-Regular.ttf',
-    './fonts/JosefinSans-SemiBold.woff2',
     './js/app.js',
     './manifest.json',
     './vendor/maplibre-gl.js',
@@ -44,12 +42,8 @@ const SHELL_ASSETS = [
     './glyphs/Megan Display/256-511.pbf',
     './glyphs/Lato Regular/0-255.pbf',
     './glyphs/Lato Regular/256-511.pbf',
-    './glyphs/Lato Bold/0-255.pbf',
-    './glyphs/Lato Bold/256-511.pbf',
     './glyphs/Instrument Sans Italic/0-255.pbf',
     './glyphs/Instrument Sans Italic/256-511.pbf',
-    './glyphs/Instrument Sans/0-255.pbf',
-    './glyphs/Instrument Sans/256-511.pbf',
     './icons/icon-192.png',
     './icons/icon-512.png',
     './icons/icon-180.png',

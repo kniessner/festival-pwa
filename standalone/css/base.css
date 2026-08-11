@@ -42,34 +42,6 @@
     src: url('../fonts/InstrumentSans-Italic-Variable.ttf') format('truetype-variations');
 }
 
-@font-face {
-    font-family: Sunday;
-    font-style: normal;
-    font-weight: 400;
-    font-display: fallback;
-    src: url('../fonts/Sunday-Regular.ttf') format('truetype');
-}
-
-@font-face {
-    font-family: "Josefin Sans";
-    font-style: normal;
-    font-weight: 600;
-    font-display: fallback;
-    src: url('../fonts/JosefinSans-SemiBold.woff2') format('woff2');
-}
-
-@font-face {
-    font-family: 'eplus-icon';
-    src: url('https://bucht-der-traeumer.de/wp-content/plugins/editorplus/extensions/icon-inserter/fonts/eplus-icon.eot?xs1351');
-    src: url('https://bucht-der-traeumer.de/wp-content/plugins/editorplus/extensions/icon-inserter/fonts/eplus-icon.eot?xs1351#iefix') format('embedded-opentype'),
-        url('https://bucht-der-traeumer.de/wp-content/plugins/editorplus/extensions/icon-inserter/fonts/eplus-icon.ttf?xs1351') format('truetype'),
-        url('https://bucht-der-traeumer.de/wp-content/plugins/editorplus/extensions/icon-inserter/fonts/eplus-icon.woff?xs1351') format('woff'),
-        url('https://bucht-der-traeumer.de/wp-content/plugins/editorplus/extensions/icon-inserter/fonts/eplus-icon.svg?xs1351#eplus-icon') format('svg');
-    font-weight: normal;
-    font-style: normal;
-    font-display: block;
-}
-
 /*# sourceURL=editor_plus-plugin-frontend-style-inline-css */
 
 * {

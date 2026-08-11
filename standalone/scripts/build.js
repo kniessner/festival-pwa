@@ -94,8 +94,25 @@ function copyDir(srcDir, destDir) {
 
 function minifyJsonFile(src, dest) {
     const data = JSON.parse(fs.readFileSync(src, 'utf8'));
+    if (src.endsWith('.geojson')) stripRuntimeDeadGeojsonProps(data);
     fs.mkdirSync(path.dirname(dest), { recursive: true });
     fs.writeFileSync(dest, JSON.stringify(data));
+}
+
+// Drop properties the runtime never reads. Source geojsons keep
+// build-time metadata (e.g. `_smoothed`) so scripts/optimize-geojson.mjs
+// can still detect an already-processed file — but shipping that
+// metadata to the client is pure overhead.
+//
+// Runtime property audit (verified 2026-08-11 by grep across js/):
+//   - `_smoothed`  top-level, read only by scripts/optimize-geojson.mjs
+//
+// (`slug` on features is deliberately KEPT: get-stage.js reads it via
+// `feature.properties?.slug` to resolve GPS → stage. Easy to miss with
+// a plain `properties\.slug` grep because of the `?.` optional chain.)
+function stripRuntimeDeadGeojsonProps(fc) {
+    if (!fc || typeof fc !== 'object') return;
+    delete fc._smoothed;
 }
 
 function copyJsonDir(srcDir, destDir) {
@@ -104,7 +121,7 @@ function copyJsonDir(srcDir, destDir) {
         const srcPath = path.join(srcDir, entry.name);
         const destPath = path.join(destDir, entry.name);
         if (entry.isDirectory()) copyJsonDir(srcPath, destPath);
-        else if (entry.name.endsWith('.json')) minifyJsonFile(srcPath, destPath);
+        else if (entry.name.endsWith('.json') || entry.name.endsWith('.geojson')) minifyJsonFile(srcPath, destPath);
         else fs.copyFileSync(srcPath, destPath);
     }
 }
