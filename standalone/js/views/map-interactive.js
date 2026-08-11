@@ -316,6 +316,22 @@ function createMap(stage, gestureState) {
     //     }
     // });
 
+    // Click-to-copy lat/lng helper (same shape as the moveend one above)
+    // is preserved commented-out for the next round of authoring e2e
+    // fixtures for the GPS -> auto-scroll timetable feature. Uncomment,
+    // click on a polygon on /map, paste the clipboard line into
+    // docs/e2e-tests.md's fixtures table. See recipe A/B there.
+    //
+    // map.on('click', (e) => {
+    //     const { lng, lat } = e.lngLat;
+    //     const line = `longitude: ${lng.toFixed(7)}, latitude: ${lat.toFixed(7)}`;
+    //     // eslint-disable-next-line no-console
+    //     console.log('[map click]', line);
+    //     if (navigator.clipboard && navigator.clipboard.writeText) {
+    //         navigator.clipboard.writeText(line).catch(() => { /* ignore */ });
+    //     }
+    // });
+
     // Track whether we've already surfaced a hard failure so we don't
     // paint the error overlay on top of a working map when a
     // late-arriving warning fires after load.
@@ -510,30 +526,31 @@ function addOverlayLayers(map) {
             17.0, ['case', ['==', ['get', 'text'], 'Eclipse'], 1, 0],
             17.5, 1,
         ];
-        // Anchor tier text-opacity: fades IN at zoom 14.5 → 15.0.
-        // Below 14.5 the two big region labels (Umbria / Lumina, added
+        // Anchor tier text-opacity: fades IN at zoom 15.0 → 15.5.
+        // Below 15.0 the two big region labels (Umbria / Lumina, added
         // after the FELT_LAYERS block) own the map, and stages/camps
         // stay hidden so the overview reads as "here's the two halves
-        // of the festival". DEFAULT_CAMERA.zoom = 14.11 lands ABOVE
-        // the fade-in start so opening the map shows the regions view
-        // only — a small pinch (14.5+) reveals the floors. Once the
-        // user pinches past 14.5 the region labels fade out (see
-        // regions layer below) and the anchor tier fades in —
-        // opposite-direction interpolate values so the handoff is a
-        // clean crossfade with no dark gap in between.
+        // of the festival". Bumped from 14.5→15.0 to 15.0→15.5 on
+        // 2026-08-10 after Jacob spot-checked mobile portrait — the
+        // narrower viewport's bounds-fitted initial zoom lands in the
+        // 14.5-14.8 range, which was inside the previous crossfade
+        // band and left floors faintly visible at open. Pushing the
+        // start to 15.0 guarantees ONLY regions at open on every
+        // aspect ratio; the user still only needs a small pinch to
+        // reveal floors.
         //
         // Camping override for Camp Taucher continues to apply on top:
-        // Taucher stays hidden until zoom 15.5 regardless of tier fade,
+        // Taucher stays hidden until zoom 16.0 regardless of tier fade,
         // because its centroid overlaps Strandflitzer at mid zoom.
         // Combined expression: outer interpolate on zoom drives the
         // tier fade; per-feature case sits at the ANCHOR-tier value
         // for camping-areas only.
-        const anchorFadeIn      = ['interpolate', ['linear'], ['zoom'], 14.5, 0, 15.0, 1];
+        const anchorFadeIn      = ['interpolate', ['linear'], ['zoom'], 15.0, 0, 15.5, 1];
         const campingTextOpacity = [
             'interpolate', ['linear'], ['zoom'],
-            14.5, 0,
-            15.0, ['case', ['==', ['get', 'text'], 'Camp Taucher'], 0, 1],
-            15.5, 1,
+            15.0, 0,
+            15.5, ['case', ['==', ['get', 'text'], 'Camp Taucher'], 0, 1],
+            16.0, 1,
         ];
         let textOpacity;
         if (id === 'stages') {
@@ -664,11 +681,31 @@ function addOverlayLayers(map) {
             ]
             : textFieldBase;
 
+        // Sterne "anchor" promotion (Jacob 2026-08-10): four large
+        // sterne polygons — Schweißperle, Neuro Divers, Cuddle Poodle,
+        // Community Corner — need to read as first-class wayfinding
+        // targets, on par with the stages + camps that appear at
+        // zoom ≥ 15.0. Rather than fold this into the fadeClose curve
+        // (which would either promote every sterne or require a match
+        // expression that hides the rest), we split the sterne label
+        // set into two independent symbol layers: the regular sterne
+        // layer (which now filters OUT these four) plus a companion
+        // "sterne-major" layer added just below, which filters IN the
+        // four and uses anchor-tier styling (Megan Display, larger,
+        // never dropped for collision, appears at zoom ≥ 15.0).
+        // Both layers read from the same source — no data duplication.
+        // Names below are post-sanitize (see scripts/sanitize-geojson.mjs:
+        // "Neuro|divers" renames to "Neuro Divers").
+        const STERNE_MAJOR_NAMES = ['Schweißperle', 'Neuro Divers', 'Cuddle Poodle', 'Community Corner'];
+        const sterneNormalFilter = id === 'sterne'
+            ? ['all', ['has', 'text'], ['!', ['in', ['get', 'text'], ['literal', STERNE_MAJOR_NAMES]]]]
+            : ['has', 'text'];
+
         labelConfigs.push({
             id: id + '-label',
             source: id,
             type: 'symbol',
-            filter: ['has', 'text'],
+            filter: sterneNormalFilter,
             layout: {
                 'text-field': textField,
                 'text-font': textFont,
@@ -708,6 +745,48 @@ function addOverlayLayers(map) {
                 'text-opacity': textOpacity,
             },
         });
+
+        // Companion "sterne-major" label layer for the four promoted
+        // sterne (see STERNE_MAJOR_NAMES + sterneNormalFilter above).
+        // Anchor-tier styling: Megan Display, zoom-scaled size like
+        // camps, allow-overlap so they never drop, symbol-sort-key
+        // between camps (1) and generic sterne (10) so they slot in
+        // AFTER stages + camps have won their placements but BEFORE
+        // the rest of sterne / gastro / etc. Added inside the same
+        // FELT_LAYERS iteration so it lands in labelConfigs right
+        // after its parent — the two-pass loop then adds both to the
+        // map at the right z-order (above every fill).
+        if (id === 'sterne') {
+            labelConfigs.push({
+                id: 'sterne-major-label',
+                source: 'sterne',
+                type: 'symbol',
+                filter: ['all', ['has', 'text'], ['in', ['get', 'text'], ['literal', STERNE_MAJOR_NAMES]]],
+                layout: {
+                    'text-field': textFieldBase,
+                    'text-font': ['Megan Display'],
+                    'text-size': campsTextSize,
+                    'text-anchor': 'center',
+                    'text-max-width': 20,
+                    'text-allow-overlap': true,
+                    'text-optional': false,
+                    'text-padding': 3,
+                    'text-rotation-alignment': 'viewport',
+                    'text-pitch-alignment': 'viewport',
+                    'symbol-sort-key': 2,
+                },
+                paint: {
+                    'text-color': PNG_CREAM,
+                    'text-halo-color': PNG_MAGENTA_HALO,
+                    'text-halo-width': 1.4,
+                    // Fade IN on the anchor-tier curve (15.0 → 15.5),
+                    // same as stages + camps — the whole point of the
+                    // promotion is to make these four appear when the
+                    // user pinches past the region-labels view.
+                    'text-opacity': anchorFadeIn,
+                },
+            });
+        }
     }
 
     // ---- Second pass: add all labels ABOVE all fills/points ----
@@ -750,6 +829,12 @@ function addOverlayLayers(map) {
             'text-font': ['Instrument Sans Italic'],
             'text-size': 22,
             'text-letter-spacing': 0.14,
+            // Rotate the label to run vertically along the lake
+            // (bottom-to-top, standard lake/river label convention).
+            // Works with text-rotation-alignment: viewport below —
+            // the label stays vertical on screen regardless of any
+            // future map bearing changes.
+            'text-rotate': -90,
             // Landmarks aren't wayfinding-critical — they're mood.
             // Skip collision and drop out at low zoom too aggressively
             // by letting them overlap. They rarely conflict anyway
@@ -778,7 +863,7 @@ function addOverlayLayers(map) {
     // Regions (Umbria / Lumina): two ambient text labels that name
     // the west and east halves of the festival, matching how the
     // static illustrated map labels them. Shown ONLY at min-zoom
-    // (≤ 14.5), fading out as the user pinches in and the anchor
+    // (≤ 15.0), fading out as the user pinches in and the anchor
     // tier (stages + camps) fades in — crossfade handoff, calibrated
     // to match the anchorFadeIn expression in addOverlayLayers.
     //
@@ -807,7 +892,7 @@ function addOverlayLayers(map) {
             // Zoom-scaled so the labels stay proportional as the user
             // pinches: 40 px at max zoom-out, tapering to 32 px at
             // the crossfade point (they vanish just after).
-            'text-size': ['interpolate', ['linear'], ['zoom'], 12, 40, 15.0, 32],
+            'text-size': ['interpolate', ['linear'], ['zoom'], 12, 40, 15.5, 32],
             // Regions never drop — they own the min-zoom frame.
             'text-allow-overlap': true,
             'text-ignore-placement': true,
@@ -820,9 +905,9 @@ function addOverlayLayers(map) {
             'text-halo-color': PNG_MAGENTA_HALO,
             'text-halo-width': 1.2,
             // Crossfade with the anchor tier: opacity 1 up to zoom
-            // 14.5, then linearly to 0 at 15.0. Beyond 15.0 the tier
+            // 15.0, then linearly to 0 at 15.5. Beyond 15.5 the tier
             // is fully in and the regions are gone.
-            'text-opacity': ['interpolate', ['linear'], ['zoom'], 14.5, 1, 15.0, 0],
+            'text-opacity': ['interpolate', ['linear'], ['zoom'], 15.0, 1, 15.5, 0],
         },
     });
 

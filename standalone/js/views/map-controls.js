@@ -119,7 +119,7 @@ function buildLocateButton() {
     btn.setAttribute('aria-label', t('map.locateMe'));
     btn.innerHTML = `
         <img src="images/locate.svg" alt="" class="festival-map-control-icon"
-             width="20" height="20">
+             width="25" height="25">
     `;
     return btn;
 }
@@ -132,7 +132,7 @@ function buildFlyToButton() {
     btn.setAttribute('aria-haspopup', 'menu');
     btn.innerHTML = `
         <img src="images/fly-navigation.svg" alt="" class="festival-map-control-icon"
-             width="20" height="20">
+             width="25" height="25">
     `;
     return btn;
 }

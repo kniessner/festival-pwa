@@ -119,6 +119,17 @@ export function createStageHysteresis({
     return {
         feed,
         cancel: cancelPending,
+        /**
+         * Test-only: hard-reset the state machine to "nothing committed,
+         * nothing pending". Skips the onCommit callback — callers who
+         * need the committed value cleared visibly should invoke it
+         * themselves. Named `reset` (not `clear`) to signal the intent
+         * is diagnostic, not part of the runtime state model.
+         */
+        reset() {
+            cancelPending();
+            current = null;
+        },
         get current() { return current; },
     };
 }

@@ -181,7 +181,14 @@ export function renderEventCard(ev) {
     const dayTag = !ev.time && ev.day
         ? dayAbbrev(ev.day, store.pageData.timetable?.filters?.days?.find(d => d.value === ev.day)?.label)
         : '';
-    const displayTime = ev.time || (dayTag ? `${dayTag} ${ev.start_time}` : ev.start_time) || '';
+    // Only build a day-prefixed time string when there's actually a
+    // start_time to prefix. Without this guard, an event with a day but
+    // no start_time (e.g. a Space entry that's "open all day") would
+    // render as "DO undefined" in the meta line — real bug caught by
+    // the "no time — just the category" test.
+    let displayTime = '';
+    if (ev.time) displayTime = ev.time;
+    else if (ev.start_time) displayTime = dayTag ? `${dayTag} ${ev.start_time}` : ev.start_time;
     const favClass = isFavorite('timetable', idx) ? 'tt-event-fav' : '';
 
     // Join only the parts that actually have a value — a missing stage
