@@ -5,7 +5,7 @@
     font-style: normal;
     font-weight: 400;
     font-display: fallback;
-    src: url('../fonts/Lato-Regular.ttf') format('truetype');
+    src: url('../fonts/Lato-Regular.woff2') format('woff2');
 }
 
 @font-face {
@@ -13,7 +13,7 @@
     font-style: normal;
     font-weight: 700;
     font-display: fallback;
-    src: url('../fonts/Lato-Bold.ttf') format('truetype');
+    src: url('../fonts/Lato-Bold.woff2') format('woff2');
 }
 
 @font-face {
@@ -21,7 +21,7 @@
     font-style: normal;
     font-weight: 400;
     font-display: fallback;
-    src: url('../fonts/Megan-Display.otf') format('opentype');
+    src: url('../fonts/Megan-Display.woff2') format('woff2');
 }
 
 @font-face {
@@ -30,7 +30,7 @@
     font-weight: 400 700;
     font-stretch: 75% 100%;
     font-display: fallback;
-    src: url('../fonts/InstrumentSans-Variable.ttf') format('truetype-variations');
+    src: url('../fonts/InstrumentSans-Variable.woff2') format('woff2');
 }
 
 @font-face {
@@ -39,7 +39,7 @@
     font-weight: 400 700;
     font-stretch: 75% 100%;
     font-display: fallback;
-    src: url('../fonts/InstrumentSans-Italic-Variable.ttf') format('truetype-variations');
+    src: url('../fonts/InstrumentSans-Italic-Variable.woff2') format('woff2');
 }
 
 /*# sourceURL=editor_plus-plugin-frontend-style-inline-css */
