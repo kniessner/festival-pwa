@@ -642,25 +642,30 @@ function addOverlayLayers(map) {
         // Property required.
         const textFieldBase = buildLabelTextFieldExpression();
 
-        // For the stages layer only, wrap textFieldBase with a
-        // zoom-step that collapses tight stage clusters to a single
-        // brand label at zoom < 15.5, then splits them back into
-        // their real names at higher zoom. Empty-string text is
-        // MapLibre's convention for "skip this feature entirely", so
-        // the redundant stage disappears at overview zoom and only
-        // the anchor stage's slot (relabelled) is rendered — giving
-        // us exactly one Megan label per cluster.
+        // Two cluster-collapses currently in play. Both use MapLibre's
+        // empty-string-hides convention so the anchor keeps its slot
+        // (relabelled to the brand) and the siblings disappear
+        // entirely at overview zoom — giving us exactly one Megan
+        // label per cluster below the split threshold.
         //
-        // Two clusters currently collapsed:
-        //   Mirage      : Mirage Arco (kept as anchor, relabelled
-        //                              "Mirage") + Mirage Glimmer (hidden)
+        //   Mirage      : Mirage Arco (anchor, relabelled "Mirage")
+        //                 + Mirage Glimmer (hidden)
         //   Zirkus Mond : Zirkus Mond Turmbühnchen (anchor, relabelled
         //                              "Zirkus Mond")
         //                 + Zirkus Mond Zelt (hidden)
+        //   Community   : Community Corner (anchor, relabelled
+        //                              "Community") + Schrottpurri,
+        //                 Skalahara, Neuro Divers, Cuddle Poodle,
+        //                 Schweissperle (all hidden). Note this
+        //                 cluster spans ~80 m end-to-end (Cuddle
+        //                 Poodle is the north-east outlier); the
+        //                 anchor sits over the biggest polygon in
+        //                 the middle so at split zoom the individual
+        //                 names pop in around it.
         //
-        // Anchor pick rule: the physically bigger stage in each pair
-        // keeps its slot (fewer visual jumps when the label finally
-        // splits, and it lands over the more prominent structure).
+        // Anchor pick rule: physically biggest polygon in each cluster
+        // keeps its slot (fewer visual jumps at split zoom, and it
+        // lands over the most prominent structure).
         //
         // Structured as [step, [zoom], low-branch, 15.5, high-branch]
         // so the required "zoom only inside a top-level step or
@@ -674,6 +679,21 @@ function addOverlayLayers(map) {
                     ['==', ['get', 'text'], 'Mirage Glimmer'],           '',
                     ['==', ['get', 'text'], 'Zirkus Mond Turmbühnchen'], 'Zirkus Mond',
                     ['==', ['get', 'text'], 'Zirkus Mond Zelt'],         '',
+                    textFieldBase,
+                ],
+                15.5,
+                textFieldBase,
+            ]
+            : id === 'sterne'
+            ? [
+                'step', ['zoom'],
+                ['case',
+                    ['==', ['get', 'text'], 'Community Corner'], 'Community',
+                    ['==', ['get', 'text'], 'Schrottpurri'],     '',
+                    ['==', ['get', 'text'], 'Skalahara'],        '',
+                    ['==', ['get', 'text'], 'Neuro Divers'],     '',
+                    ['==', ['get', 'text'], 'Cuddle Poodle'],    '',
+                    ['==', ['get', 'text'], 'Schweißperle'],     '',
                     textFieldBase,
                 ],
                 15.5,
@@ -726,6 +746,24 @@ function addOverlayLayers(map) {
                 // at the tighter 8 em so their collision boxes stay
                 // compact.
                 'text-max-width': isAnchor ? 20 : 8,
+                // label-collision-problem overrides. See docs/
+                // label-collision-problem.md for the pattern. Each
+                // slug listed here nudges that single feature's label
+                // in em-space so it stops sitting on top of a
+                // neighbouring anchor label. Falls through to [0, 0]
+                // for every feature without a matching slug (gastro
+                // features carry a `slug` only when tagged; every
+                // other layer's features either carry an unrelated
+                // slug or none, both of which fall through).
+                //
+                //   bar-neustockland: gastro Bar polygon 5.8 m north
+                //     of the Neustockland stage. Shift the Bar label
+                //     up so it clears the Neustockland stage label.
+                'text-offset': [
+                    'match', ['get', 'slug'],
+                    'bar-neustockland', ['literal', [0, -1.2]],
+                    ['literal', [0, 0]],
+                ],
                 // Anchor tier (stages + camps) always renders; every
                 // other tier drops on collision (see isAnchor comment
                 // above). symbol-sort-key still gives the anchor tier
@@ -763,11 +801,41 @@ function addOverlayLayers(map) {
                 type: 'symbol',
                 filter: ['all', ['has', 'text'], ['in', ['get', 'text'], ['literal', STERNE_MAJOR_NAMES]]],
                 layout: {
-                    'text-field': textFieldBase,
+                    // Use the same collapse-at-overview textField as the
+                    // regular sterne-label layer. Without it Community
+                    // Corner would keep its real name at overview zoom
+                    // while the sibling collapses (Schrottpurri,
+                    // Skalahara, etc.) still land on the map — you'd
+                    // read "Community Corner" plus three empty gaps
+                    // instead of one clean "Community" anchor.
+                    'text-field': textField,
                     'text-font': ['Megan Display'],
                     'text-size': campsTextSize,
                     'text-anchor': 'center',
                     'text-max-width': 20,
+                    // Break the Neuro Divers / Cuddle Poodle collision.
+                    // Their polygon centres are only 22 m apart (see
+                    // proximity table in Jacob's map-follow-up-2
+                    // notes), so at any readable zoom their default-
+                    // centred labels physically overlap. Shift each
+                    // one 1.2 em away from the other along the
+                    // north-south axis — Cuddle Poodle (the northern
+                    // polygon) moves further north, Neuro Divers
+                    // (southern) moves further south. Net extra
+                    // separation ≈ 40 px, plenty for the two labels
+                    // to render on distinct baselines. All other
+                    // sterne-major members sit ≥ 44 m apart so they
+                    // stay centred (no offset).
+                    //
+                    // MapLibre's y axis points DOWN in text-offset
+                    // (screen coords, not lat/lon), so negative y =
+                    // up on screen = geographic north.
+                    'text-offset': [
+                        'match', ['get', 'text'],
+                        'Cuddle Poodle', ['literal', [0, -1.2]],
+                        'Neuro Divers',  ['literal', [0, 1.2]],
+                        ['literal', [0, 0]],
+                    ],
                     'text-allow-overlap': true,
                     'text-optional': false,
                     'text-padding': 3,
