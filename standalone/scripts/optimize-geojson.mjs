@@ -32,6 +32,16 @@
  * Coordinate precision: 6 decimals ≈ 11 cm at the equator, ≈ 7 cm at
  * lat 52°. Way finer than any Felt digitizing precision — the extra
  * decimals in the source are float noise, not signal.
+ *
+ * Feature draw order (within a single geojson):
+ * MapLibre paints fill features in the source array order — later
+ * ones overwrite earlier ones on overlap. To satisfy the "bigger
+ * underneath, smaller on top" rule uniformly (fusion-parity for the
+ * z-order pass documented in js/views/map-layers.js's FELT_LAYERS
+ * comment), features are sorted by DESCENDING polygon area before
+ * writing back. Non-fill geometries (Point / LineString) get area 0
+ * and fall to the end — their draw ordering is irrelevant to the
+ * fill layer that consumes this file.
  */
 
 import { readFileSync, writeFileSync, readdirSync, statSync } from 'node:fs';
@@ -44,6 +54,170 @@ const DATA_DIR = join(__dirname, '..', 'data');
 const KEEP_PROPS = new Set(['text', 'slug']);
 const COORD_PRECISION = 6;
 
+// CSS-`border-radius`-style polygon rounding.
+//
+// Unlike Chaikin (which curves EVERY vertex — turns rectangles into
+// blobs), this pass rounds only ACTUAL sharp corners and leaves gentle
+// bends alone. Same feel as a CSS border-radius: 4 px on a rectangle
+// where the four right-angle corners get a small arc and everything
+// else stays untouched.
+//
+// Algorithm per ring:
+//   1. For each vertex V(i), compute the turn angle between the
+//      incoming edge V(i-1) → V(i) and the outgoing edge V(i) → V(i+1).
+//      A near-zero turn means the vertex sits on an almost-straight
+//      run → keep it untouched.
+//   2. Otherwise, replace V(i) with a small quadratic-bezier arc:
+//        P1 = V(i) + (V(i-1) - V(i)) * s     // back along in-edge
+//        P2 = V(i) + (V(i+1) - V(i)) * s     // forward along out-edge
+//        sampled at t = [0, 0.25, 0.5, 0.75, 1] with V(i) as the
+//        bezier control point, giving 5 output vertices instead of 1.
+//      `s` is capped at half the shorter adjacent edge so the arc
+//      never over-runs the polygon at very short edges.
+//
+// Radius is expressed in metres and converted to lat/lon degrees
+// using an isotropic approximation at lat 52° ("cos(52°) ≈ 0.62").
+// A radius of ~2 m matches Jacob's target of "very very slight, like
+// CSS 4 px" — at typical map zoom the arc reads as a soft corner
+// without changing the polygon silhouette.
+//
+// Trade-off accepted (grill Branch A1): the rounded polygon shrinks
+// by ~0.5 % at each rounded corner — well below mobile GPS accuracy
+// (5-15 m) that feeds get-stage.js, and the stage-hysteresis 3 s
+// window absorbs any brief edge flicker. If get-stage regresses on
+// the ground, splitting into stages.geojson (rounded, render) +
+// stages.raw.geojson (original, hit-test) is a straightforward next
+// step.
+//
+// Idempotency guard: rounding ADDS vertices, so re-running the script
+// would over-round. Sentinel `_smoothed: true` on the FeatureCollection
+// short-circuits the pass on subsequent runs (sanitize-geojson only
+// touches feature props, not FC-level fields, so the sentinel survives
+// a full pipeline rerun).
+const BORDER_RADIUS_METRES = 2;
+const TURN_ANGLE_THRESHOLD_DEG = 8;   // straighter than this = leave alone
+const BEZIER_STEPS = [0.25, 0.5, 0.75];
+
+// Minimum footprint (m²) a polygon needs before its corners get
+// rounded. Everything ABOVE this threshold and NOT in
+// SKIP_SMOOTH_FILES gets the CSS-border-radius treatment. Set low
+// (100 m²) because file-level exclusion below already keeps the
+// small-and-numerous tiers (toilets, food-and-drink stalls) out of
+// the pass; this floor is just a last-line guard against tiny
+// anonymous shapes in the remaining files (e.g. Bänderkontrolle at
+// ~9 m² in produktion.geojson).
+const MIN_SMOOTH_AREA_M2 = 100;
+
+// Files whose contents are ENTIRELY small utility features — toilets,
+// showers, urinals, bars, food stalls. Skipped from smoothing wholesale
+// (regardless of individual polygon size) because on a 15 m×15 m stall
+// footprint a 2 m radius eats a meaningful chunk of the silhouette,
+// and there's no visual gain: users see these as icons at their
+// respective zoom bands, not as prominent painted zones.
+const SKIP_SMOOTH_FILES = new Set([
+    'toilets-showers.geojson',   // WCs, urinals, showers, Dusche WC
+    'gastro.geojson',            // bars + food stalls
+]);
+
+// 1 metre ≈ how many degrees at latitude 52°. Rough enough for a
+// cosmetic radius on the order of metres.
+const METRES_TO_DEG = 1 / (111000 * 0.78);   // 0.78 ≈ avg of 1 and cos(52°)
+
+// Convert MIN_SMOOTH_AREA_M2 into the raw shoelace (deg²) space that
+// geometryArea() below returns, so the size gate can compare directly
+// without a per-feature conversion. At lat 52.27°, 1 (deg)² ≈
+// 111 km × cos(52.27°) × 111 km ≈ 6.85e9 m².
+const M2_PER_DEG2 = 111000 * (111000 * Math.cos(52.27 * Math.PI / 180));
+const MIN_SMOOTH_AREA_DEG2 = MIN_SMOOTH_AREA_M2 / M2_PER_DEG2;
+
+// Point / LineString features (basemap POIs, walking-act paths,
+// tent icon marker, etc.) don't get rounded — no corners to soften.
+const SMOOTHABLE_TYPES = new Set(['Polygon', 'MultiPolygon']);
+
+function sub(a, b) { return [a[0] - b[0], a[1] - b[1]]; }
+function add(a, b) { return [a[0] + b[0], a[1] + b[1]]; }
+function scale(a, k) { return [a[0] * k, a[1] * k]; }
+function len(a) { return Math.hypot(a[0], a[1]); }
+
+// Angle between two 2D vectors, in degrees, [0, 180].
+function angleBetweenDeg(v1, v2) {
+    const dot = v1[0] * v2[0] + v1[1] * v2[1];
+    const cos = dot / (len(v1) * len(v2));
+    return Math.acos(Math.max(-1, Math.min(1, cos))) * 180 / Math.PI;
+}
+
+// Quadratic bezier point at parameter t ∈ [0, 1] with control point p1.
+function bezier(p0, p1, p2, t) {
+    const u = 1 - t;
+    return [
+        u * u * p0[0] + 2 * u * t * p1[0] + t * t * p2[0],
+        u * u * p0[1] + 2 * u * t * p1[1] + t * t * p2[1],
+    ];
+}
+
+// Round every sharp corner in a single ring (closed, first === last).
+function roundRing(ring, radiusDeg) {
+    // Strip the duplicate closing vertex; we'll re-add it at the end.
+    const pts = ring.slice(0, -1);
+    const n = pts.length;
+    if (n < 3) return ring;
+
+    const out = [];
+    for (let i = 0; i < n; i++) {
+        const prev = pts[(i - 1 + n) % n];
+        const curr = pts[i];
+        const next = pts[(i + 1) % n];
+
+        // Turn angle = 180° minus interior angle. Small = almost
+        // straight, keep vertex as-is.
+        const inVec  = sub(curr, prev);
+        const outVec = sub(next, curr);
+        const turn = 180 - angleBetweenDeg(scale(inVec, -1), outVec);
+
+        if (turn < TURN_ANGLE_THRESHOLD_DEG) {
+            out.push(curr);
+            continue;
+        }
+
+        // Cap the arc so it never exceeds half either adjacent edge.
+        const inLen  = len(inVec);
+        const outLen = len(outVec);
+        const r = Math.min(radiusDeg, inLen / 2, outLen / 2);
+
+        const backDir = scale(sub(prev, curr), 1 / inLen);
+        const fwdDir  = scale(sub(next, curr), 1 / outLen);
+        const p1 = add(curr, scale(backDir, r));
+        const p2 = add(curr, scale(fwdDir,  r));
+
+        out.push(p1);
+        for (const t of BEZIER_STEPS) out.push(bezier(p1, curr, p2, t));
+        out.push(p2);
+    }
+
+    // Re-close the ring.
+    out.push(out[0]);
+    return out;
+}
+
+function roundGeometry(geom, radiusMetres) {
+    const radiusDeg = radiusMetres * METRES_TO_DEG;
+    if (geom.type === 'Polygon') {
+        return {
+            ...geom,
+            coordinates: geom.coordinates.map((ring) => roundRing(ring, radiusDeg)),
+        };
+    }
+    if (geom.type === 'MultiPolygon') {
+        return {
+            ...geom,
+            coordinates: geom.coordinates.map((poly) =>
+                poly.map((ring) => roundRing(ring, radiusDeg))
+            ),
+        };
+    }
+    return geom;
+}
+
 const round = (n) => Number(n.toFixed(COORD_PRECISION));
 
 // Recursively round every number found inside a geometry's coordinates
@@ -53,6 +227,26 @@ function roundCoords(node) {
     if (typeof node === 'number') return round(node);
     if (Array.isArray(node)) return node.map(roundCoords);
     return node;
+}
+
+// Planar polygon area via the shoelace formula. Good enough at this
+// latitude for RELATIVE ordering (we only care which of two features
+// is bigger, not the true m²). Points / LineStrings / GeometryCollections
+// return 0 so they sort to the end.
+function ringArea(ring) {
+    let a = 0;
+    for (let i = 0; i < ring.length - 1; i++) {
+        const [x1, y1] = ring[i];
+        const [x2, y2] = ring[i + 1];
+        a += x1 * y2 - x2 * y1;
+    }
+    return Math.abs(a) / 2;
+}
+function geometryArea(geom) {
+    if (!geom) return 0;
+    if (geom.type === 'Polygon')      return ringArea(geom.coordinates[0]);
+    if (geom.type === 'MultiPolygon') return geom.coordinates.reduce((s, poly) => s + ringArea(poly[0]), 0);
+    return 0;
 }
 
 function pickProps(props) {
@@ -68,17 +262,52 @@ function pickProps(props) {
     return out;
 }
 
-function optimize(fc) {
-    return {
-        type: 'FeatureCollection',
-        features: fc.features.map((f) => ({
+function optimize(fc, fileName) {
+    // Guard against re-running polygon smoothing on already-smoothed
+    // output. See the SMOOTH_ITERATIONS comment above; skipping this
+    // block on the second run leaves the coord-round + sort passes
+    // still idempotent while preventing vertex-count runaway.
+    const alreadySmoothed = fc._smoothed === true;
+
+    // File-level smoothing skip: whole-file utility categories
+    // (toilets, bars, food stalls) never get rounded corners. See
+    // SKIP_SMOOTH_FILES above.
+    const fileSkipsSmoothing = SKIP_SMOOTH_FILES.has(fileName);
+
+    const features = fc.features.map((f) => {
+        let geometry = f.geometry;
+
+        if (
+            !alreadySmoothed &&
+            !fileSkipsSmoothing &&
+            geometry &&
+            SMOOTHABLE_TYPES.has(geometry.type) &&
+            // Size gate for the remaining files: skip tiny anonymous
+            // shapes (< 100 m²) so a 2 m radius doesn't distort them.
+            geometryArea(geometry) >= MIN_SMOOTH_AREA_DEG2
+        ) {
+            geometry = roundGeometry(geometry, BORDER_RADIUS_METRES);
+        }
+
+        return {
             type: 'Feature',
             properties: pickProps(f.properties),
             geometry: {
-                ...f.geometry,
-                coordinates: roundCoords(f.geometry.coordinates),
+                ...geometry,
+                coordinates: roundCoords(geometry.coordinates),
             },
-        })),
+        };
+    });
+    // Sort by descending polygon area so bigger polygons paint first
+    // (draw at low index) and smaller ones paint on top (draw at high
+    // index). Non-fill features (area 0) fall to the end but their
+    // ordering is irrelevant — they go to the -point / -label layers,
+    // not the -fill layer.
+    features.sort((a, b) => geometryArea(b.geometry) - geometryArea(a.geometry));
+    return {
+        type: 'FeatureCollection',
+        _smoothed: true,
+        features,
     };
 }
 
@@ -105,7 +334,7 @@ for (const file of files) {
         console.warn(`skip (not a FeatureCollection): ${basename(file)}`);
         continue;
     }
-    const optimized = optimize(fc);
+    const optimized = optimize(fc, basename(file));
     // Compact JSON output — no pretty printing. The build pipeline
     // already re-minifies but writing compact keeps the source diff
     // meaningful and cuts working-tree size too.

@@ -23,7 +23,7 @@ export const MAX_STAGE_DETECTION_ACCURACY_METRES = 40;
  *      before their containers, or switch to a smallest-area-wins scan
  *      here if the data starts nesting).
  */
-const POLYGON_FILES = ['data/stages.geojson', 'data/sterne.geojson'];
+const POLYGON_FILES = ['data/stages.geojson', 'data/sterne.geojson', 'data/food-court.geojson'];
 
 /**
  * Generic timetable slugs that intentionally have NO polygon on the

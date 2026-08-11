@@ -101,6 +101,8 @@ const DATA_DIR  = join(__dirname, '..', 'data');
 
 // ─── Rule 1: exact-text renames (applied FIRST) ───────────────────────
 const RENAMES = {
+    // Felt-export typographic glitch (pipe instead of space).
+    'Neuro|divers':               'Neuro Divers',
     // Typos
     'ZIrkus Mond':                'Zirkus Mond',
     // Toilet-family relabels
@@ -121,7 +123,23 @@ const RENAMES = {
     'Shower Container':           'Dusche',
     // Casing fixes
     'bar':                        'Bar',
-    'Bar - Porto LOco':           'Bar - Porto Loco',
+    // Bar - Porto Loco: shorten label to just "Bar". Two entries so
+    // the pre-existing casing-typo variant ("LOco") also normalises
+    // straight to the short form in one sanitize pass.
+    'Bar - Porto LOco':           'Bar',
+    'Bar - Porto Loco':           'Bar',
+    // Same treatment for the beach bar next to the Strandflitzer
+    // stage — users know it as "Bar", the disambiguation prefix is
+    // Felt-only. Applied consistently to every "Bar" that is really
+    // just the bar of a nearby stage (Waldtraut, Schlupfloch, Zirkus
+    // Mond, Strandflitzer) so the map reads as multiple identical
+    // "Bar" labels rather than a soup of stage-tagged variants.
+    // Standalone bar brands with their own identity are left alone:
+    // Bimsbar, Haus of Flausch Teabar, PinkPuk Bar.
+    'Strandflitzer Bar':          'Bar',
+    'Waldtraut Bar':              'Bar',
+    'Bar Schlupfloch':            'Bar',
+    'Zirkus Mond Bar':            'Bar',
     // Trim redundant prefix
     'Re:set Raversnacks':         'Raversnacks',
     // Correct the previous round's typo. Current source files still
@@ -144,6 +162,29 @@ const REMOVE_EXACT = new Set([
     // Staff-only bar / eatery, not part of the guest map.
     'Backstage Bar',
     'BdT Foodie',
+    // Not participating this year (Jacob 2026-08-10).
+    "l'Amore Pizza",
+    // Staff logistics container, not a guest gastro (Jacob 2026-08-10).
+    'Gastroplan Raumcont.',
+    // Weird composite label — the location is already covered by
+    // the neighbouring "Dusche" and "WC" features (Jacob 2026-08-10).
+    'Dusche WC',
+    // The generic "Produktion" polygon sitting under "Rezi Tresen" —
+    // staff production office, no guest use (Jacob 2026-08-10).
+    // The whole area is already implied by the surrounding produktion
+    // features (Supporta / SupportA / Info-point / etc.).
+    'Produktion',
+    // Communitea polygon sits INSIDE the (much larger) Cuddle Poodle
+    // polygon. At the zoom levels where either label is visible the
+    // two collide 8 m apart, and Jacob wants only the Cuddle Poodle
+    // label to represent that whole area (2026-08-10). Removing the
+    // Communitea feature entirely leaves the underlying Cuddle Poodle
+    // fill visible in that space — which is what he means by "leave
+    // only cuddle poodle".
+    'Communitea',
+    // Staff-only backstage area for the sterne installations — not
+    // a guest destination (Jacob 2026-08-10).
+    'Sterne Backstage',
 ]);
 
 // ─── Rule 3: pattern removals ─────────────────────────────────────────
@@ -198,6 +239,28 @@ function sanitiseFile(fileName) {
             if (trimmedText !== original) {
                 feat.properties.text = trimmedText;
                 trimmed++;
+            }
+        }
+
+        // Rule 0b: strip any digits-containing tokens from the label
+        // (Jacob's 2026-08-10 policy: "remove any number from the
+        // labels"). Handles trailing counters like "Dusche 10" as
+        // well as embedded ones like "3x3" would produce. Whitespace-
+        // token boundary means an unlikely name like "H2O" would be
+        // stripped entirely too — no such labels exist today; if one
+        // appears the fix is to add a RENAMES entry above so the
+        // rule sees the corrected text and this pass leaves it alone.
+        // Fail-safe: never let the stripped label become empty
+        // (would render as an unlabeled polygon and drop out of
+        // search); if the entire label was numeric, keep the original.
+        if (typeof feat.properties?.text === 'string') {
+            const original = feat.properties.text;
+            const stripped = original
+                .replace(/\S*\d+\S*/g, '')
+                .replace(/\s+/g, ' ')
+                .trim();
+            if (stripped && stripped !== original) {
+                feat.properties.text = stripped;
             }
         }
 

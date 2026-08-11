@@ -16,6 +16,7 @@ import { maybeShowNotifications, closeNotifications, setupNotificationsRefresh, 
 import { openMenu, closeMenu } from './menu.js';
 import { mergeMusicIntoTimetable, refreshMusic } from './music.js';
 import { showLocationPromptIfNeeded, onboardingAllow, onboardingNotNow, showPushPromptIfNeeded, pushOnboardingAllow, pushOnboardingNotNow } from './onboarding.js';
+import { dismissTentIntro } from './views/tent-intro.js';
 import { loadStages, warnStageNameMismatches } from './helpers/get-stage.js';
 import { passwordGateOK, showPasswordGate } from './password-gate.js';
 import { togglePush } from './push.js';
@@ -332,6 +333,7 @@ const actions = {
     'onboarding-not-now': () => onboardingNotNow(),
     'push-onboarding-allow': () => pushOnboardingAllow(),
     'push-onboarding-not-now': () => pushOnboardingNotNow(),
+    'tent-intro-ok': () => dismissTentIntro(),
     'goto-event': el => {
         const itemIndex = parseInt(el.dataset.index, 10);
         prepareJumpToEvent(itemIndex);

@@ -1,9 +1,10 @@
 <!--
-    Boxicons `bx-navigation` (MIT). Paper-plane arrow — reads as
-    "navigate to a destination" for the fly-to menu trigger. Same
-    24×24 grid and stroke language as the sibling `locate.svg` so
-    the two buttons feel like a set.
+    Three-dot "menu" glyph inside a circle — the fly-to (jump-to) menu
+    trigger. Sibling to the locate-me button. Replaces the earlier
+    paper-plane arrow so the button reads as "open a menu" instead of
+    "navigate to a destination". Loaded via <img>, fill baked in
+    (#1B192A = tokens.css var(text)). 24×24 grid.
 -->
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-    <path d="M20.567 3.433a2.007 2.007 0 0 0-2.05-.485L4.192 8.104a1.984 1.984 0 0 0-1.318 1.606c-.107.716.242 1.397.881 1.769l4.253 2.484 2.484 4.253c.363.622.999.984 1.688.984.028 0 .056-.001.084-.002a1.98 1.98 0 0 0 1.694-1.313l5.155-14.323a2 2 0 0 0-.546-2.129z"/>
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3ZM12.7393 10.7139C12.4153 10.5073 11.8024 10.4385 11.4434 10.5693C11.1055 10.6864 10.7817 10.955 10.6338 11.251C9.91558 12.6215 11.282 14.0061 12.6621 13.3174C12.9999 13.1521 13.1263 13 13.3164 12.5869C13.6049 11.9464 13.3447 11.1064 12.7393 10.7139ZM8.24023 10.748C7.84592 10.5139 7.45116 10.459 7.0498 10.5898C6.38088 10.7965 5.90903 11.5476 6.01465 12.2432C6.1133 12.8836 6.69107 13.4135 7.37402 13.4893C7.83167 13.5374 8.39474 13.2618 8.69043 12.8418C9.16197 12.1875 8.93716 11.1613 8.24023 10.748ZM17.4355 10.8447C17.0343 10.5005 16.5414 10.4108 16.0205 10.5898C15.3445 10.824 14.8661 11.7061 15.0703 12.3604C15.2816 13.0695 15.8097 13.4824 16.5137 13.4824C17.9358 13.4822 18.5269 11.7813 17.4355 10.8447Z" fill="#1B192A"/>
 </svg>

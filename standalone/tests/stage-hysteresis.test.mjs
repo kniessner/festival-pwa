@@ -202,3 +202,24 @@ test('null → stage is the first-fix path (immediate commit)', () => {
     h.feed('schweissperle');
     assert.deepEqual(commits, ['schweissperle']); // first REAL fix commits
 });
+
+test('reset() clears current + pending without invoking onCommit', () => {
+    // Test-only helper used by e2e recipes to return the state machine
+    // to "cold" between runs so the first feed after a reset takes the
+    // instant-commit path (matches a fresh page load).
+    const clock = makeFakeClock();
+    const { h, commits } = makeHysteresis(clock);
+    h.feed('schweissperle');
+    h.feed('atlantis');               // pending, not yet committed
+    h.reset();
+    // No extra commit fired — reset is silent by design (callers who
+    // need visible teardown do it themselves).
+    assert.deepEqual(commits, ['schweissperle']);
+    assert.equal(h.current, null);
+    // Advance past what would have been atlantis' commit — must NOT fire.
+    clock.advance(5000);
+    assert.deepEqual(commits, ['schweissperle']);
+    // After reset the next real feed takes the first-fix path again.
+    h.feed('mirage');
+    assert.deepEqual(commits, ['schweissperle', 'mirage']);
+});

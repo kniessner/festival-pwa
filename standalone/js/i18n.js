@@ -27,11 +27,21 @@ const STRINGS = {
         'map.locateMe': 'Zu meiner Position',
         'map.gpsNeeded': 'GPS wird benötigt. Bitte Standortzugriff erlauben.',
         'map.notAtFestival': 'Du bist noch nicht am Festival.',
-        'map.flyto.title': 'Springe zu …',
+        'map.flyto.title': 'Springe zum nächsten …',
+        'map.resetCamera': 'Karte auf Standardansicht zurücksetzen',
         'map.flyto.tent': 'Mein Zelt',
-        'map.flyto.toilet': 'Nächste Toilette',
+        'map.flyto.toilet': 'Toilette',
         'map.flyto.firstAid': 'Erste Hilfe',
         'map.flyto.info': 'Info-Point',
+        'map.flyto.eclipse': 'Awareness & Eclipse',
+        // Map-intro dialog — shown once on first map load, before the user
+        // has placed their tent. Same dual gate as the fusion prompt: the
+        // dialog disappears for good once the tent is dropped OR the user
+        // dismisses it. Body is HTML (rendered via innerHTML) so the list
+        // and mailto link work.
+        'tentIntro.headline': 'Willkommen auf deiner interaktiven Karte!',
+        'tentIntro.body': '<p>Hier kannst du:</p><p>\uD83D\uDCCD dich selbst orten<br>\u26FA dein Zelt als Marker setzen und später wieder dorthin zurückfinden<br>\uD83D\uDEBB die nächste Toilette, Erste Hilfe, Awareness und den Info Point anzeigen lassen — immer von dort aus, wo du gerade stehst<br>\uD83D\uDD0E nach Orten suchen, von Atlantis bis Food Court</p><p>Die Karte gibt es dieses Jahr zum ersten Mal. Es kann also sein, dass mal etwas fehlt oder nicht ganz dort sitzt, wo es steht. Schreib uns, wenn dir so etwas auffällt: <a href="mailto:info@bucht-der-traeumer.de">info@bucht-der-traeumer.de</a>. Und wenn du dich lieber klassisch orientierst: die illustrierte Geländekarte findest du im Tab nebenan.</p>',
+        'tentIntro.buttonOk': 'Los geht\'s',
         // Map search: synonym result labels.
         'search.nearestToilet': 'Nächste Toilette',
         'search.nearestShower': 'Nächste Dusche',
@@ -175,11 +185,16 @@ const STRINGS = {
         'map.locateMe': 'Show my location',
         'map.gpsNeeded': 'GPS is needed. Please grant location permission.',
         'map.notAtFestival': "You're not at the festival yet.",
-        'map.flyto.title': 'Jump to …',
+        'map.flyto.title': 'Jump to nearest …',
+        'map.resetCamera': 'Reset map to default view',
         'map.flyto.tent': 'My tent',
-        'map.flyto.toilet': 'Nearest toilet',
+        'map.flyto.toilet': 'Toilet',
         'map.flyto.firstAid': 'First aid',
         'map.flyto.info': 'Info point',
+        'map.flyto.eclipse': 'Awareness & Eclipse',
+        'tentIntro.headline': 'Welcome to your interactive map!',
+        'tentIntro.body': '<p>Here you can:</p><p>\uD83D\uDCCD locate yourself<br>\u26FA drop a marker on your tent and find your way back to it later<br>\uD83D\uDEBB see the nearest toilet, first aid, awareness point and info point — always from wherever you\'re standing<br>\uD83D\uDD0E search for places, from Atlantis to the Food Court</p><p>This is the first year we\'ve done this map, so something might be missing or sitting a few metres off. Drop us a line if you spot anything: <a href="mailto:info@bucht-der-traeumer.de">info@bucht-der-traeumer.de</a>. And if you\'d rather find your way the classic way, the illustrated site map is in the tab right next to this one.</p>',
+        'tentIntro.buttonOk': 'Let\'s go',
         // Map search: synonym result labels.
         'search.nearestToilet': 'Nearest toilet',
         'search.nearestShower': 'Nearest shower',

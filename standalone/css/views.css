@@ -1425,7 +1425,7 @@ span.tt-event-stage {
     font-family: var(--font-head);
     font-weight: 700;
     font-size: 0.75rem;
-    color: var(--stage-color, var(--text));
+    color: var(--text);
     text-align: center;
     border-right: 1px solid var(--border);
     text-transform: uppercase;
@@ -1482,7 +1482,7 @@ span.tt-event-stage {
        this, .gtt-event stayed at z-index: auto and sticky descendants
        could paint over the label on iOS Safari. */
     z-index: 1;
-    background: var(--event-color, var(--stage-color, var(--accent-pink)));
+    background: var(--event-color, var(--accent-pink));
     border-radius: 14px;
     border: 2px solid rgba(255, 255, 255, 0.3);
     padding: 6px 8px;
@@ -1629,6 +1629,61 @@ span.tt-event-stage {
     /* cover next label's border-left */
     bottom: -1px;
     /* cover header's border-bottom */
+    border: 2px solid var(--color-now-indicator);
+    box-sizing: border-box;
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* "You are here" for stages — sibling of .gtt-current-hour above,
+   but for the SPACE axis. Applied by applyStagePulseClasses() to
+   whichever .gtt-stagehead / .gtt-stagecol / .gtt-stagerow-wrap
+   matches store.userStage.
+
+   One colour only (matches --color-now-indicator so a user standing
+   at the right stage during the right hour sees the two red
+   indicators cross-reference at their event). The prominent visual
+   is the header outline; the row/column also get a faint red wash
+   so the eye can track down / across from the header to the events
+   without losing the column. */
+.gtt-stagehead.gtt-current-stage {
+    position: relative;
+    color: var(--color-now-indicator);
+}
+.gtt-stagehead.gtt-current-stage::before {
+    content: '';
+    position: absolute;
+    inset: 0 -1px -1px -1px;
+    /* -1px on sides covers the neighbouring stagehead's border-left
+       and the header row's border-bottom, same trick as
+       .gtt-current-hour::before above. */
+    border: 2px solid var(--color-now-indicator);
+    box-sizing: border-box;
+    pointer-events: none;
+    z-index: 1;
+}
+.gtt-stagecol.gtt-current-stage,
+.gtt-stagerow-wrap.gtt-current-stage {
+    background-color: rgba(255, 59, 59, 0.06);
+}
+
+/* Horizontal mode (the default gridScrollMode) parallel to the
+   .gtt-stagehead pop treatment used by vertical mode. The label of
+   the current stage row is the ONE element that stays on-screen as
+   the user scrolls the events axis horizontally, so it needs the
+   same prominent "you are here" treatment as the vertical
+   stagehead. The subtle rgba wash above alone was hidden behind
+   .gtt-stagelabel's opaque `background: var(--bg)`. */
+.gtt-stagerow-wrap.gtt-current-stage .gtt-stagelabel {
+    color: var(--color-now-indicator);
+    /* .gtt-stagelabel is already position:sticky; sticky forms its own
+       positioning context so the absolute ::before below is scoped to
+       it just like the header pseudo. */
+}
+.gtt-stagerow-wrap.gtt-current-stage .gtt-stagelabel::before {
+    content: '';
+    position: absolute;
+    inset: 0 -1px -1px -1px;
     border: 2px solid var(--color-now-indicator);
     box-sizing: border-box;
     pointer-events: none;
@@ -1924,7 +1979,32 @@ span.tt-event-stage {
 }
 
 /* Static (illustrated PNG) variant — the <img> lives inside .festival-map and gets
-   translated/scaled by the pinch-zoom controller in map-static.js. */
+   translated/scaled by the pinch-zoom controller in map-static.js.
+
+   Fade recipe: applied to the CONTAINER (.festival-map, gated by
+   :has(.festival-map-img) so interactive-mode attribution + controls
+   stay crisp), NOT to the <img> directly. Masks on transformed
+   elements scale with the transform — a 50 px fade on the <img> would
+   grow to 250 px at max pinch-zoom (5×). Masking the container instead
+   keeps the fade band anchored to the viewport at every zoom level. */
+.festival-map:has(.festival-map-img) {
+    --festival-map-fade-top: 50px;
+    --festival-map-fade-bottom: 100px;
+    -webkit-mask-image: linear-gradient(to bottom,
+        transparent 0,
+        #000 var(--festival-map-fade-top),
+        #000 calc(100% - var(--festival-map-fade-bottom)),
+        transparent 100%);
+    mask-image: linear-gradient(to bottom,
+        transparent 0,
+        #000 var(--festival-map-fade-top),
+        #000 calc(100% - var(--festival-map-fade-bottom)),
+        transparent 100%);
+    mask-mode: alpha;
+    mask-repeat: no-repeat;
+    mask-size: 100% 100%;
+}
+
 .festival-map-img {
     display: block;
     width: 100%;
@@ -1939,7 +2019,12 @@ span.tt-event-stage {
 
 .festival-map-hint {
     position: absolute;
-    bottom: 16px;
+    /* Lift above the container's bottom fade band (100 px) so the
+       first-visit pinch affordance stays fully opaque — the hint sits
+       inside the same masked container as the illustration, and the
+       bottom of that mask is transparent. Value = fade band + a small
+       breathing gap. */
+    bottom: calc(100px + 16px);
     left: 50%;
     transform: translateX(-50%);
     padding: 8px 14px;
@@ -1962,18 +2047,78 @@ span.tt-event-stage {
    auto-disappears when the user leaves the map, and so it lives
    above the mask/fade zone at the bottom (~100px) via a bottom
    offset that clears both the fade and the safe-area inset. */
+/* Compass rose — lives in the top-left of the map view (Jacob's
+   2026-08-10 call to move it off the bottom-left where the two
+   round buttons already live). Tracks the map's live bearing +
+   pitch via a 3D `transform` set by map-controls.js. Tap resets the
+   camera to DEFAULT_CAMERA (bearing -73.1°, pitch 30.7°).
+
+   Sized 56 px to match the .menu-trigger FAB in the opposite corner
+   — reads as a first-class map decoration, not a secondary button
+   like the 44 px controls in the bottom-left.
+
+   Vertical placement: `.festival-map` covers only the map canvas
+   area (the app header and the INTERACTIVE/ILLUSTRATION tabs above
+   it are the parent .page-content's children, siblings of the stage).
+   That means `top: 20 px` lands the compass 20 px below the tab bar,
+   inside the map's own coordinate space. No safe-area math needed on
+   the top edge because the tabs already cover the notch. */
+.festival-map-compass {
+    position: absolute;
+    left: 20px;
+    top: 100px;
+    z-index: 4;
+    width: 56px;
+    height: 56px;
+    border: none;
+    background: transparent;
+    padding: 0;
+    cursor: pointer;
+    /* The SVG has its own circular frame + pivot dot, so no button
+       shell around it — just the raw graphic. Drop a soft shadow so
+       it lifts off the map fills. */
+    filter: drop-shadow(0 3px 10px rgba(0, 0, 0, 0.5));
+    transition: filter 0.15s ease;
+    /* Live-updated by map-controls.js#applyCompassTransform on every
+       rotate/pitch frame. Initial value = default camera pose so the
+       compass renders at the right tilt on first paint (no flash of
+       axis-aligned graphic). */
+    transform: perspective(220px) rotateX(30.7deg) rotate(73.1deg);
+    /* Rotate around the SVG's own centre. */
+    transform-origin: 50% 50%;
+    /* Keep the same tap-target expansion iOS gives round buttons. */
+    -webkit-tap-highlight-color: transparent;
+}
+
+.festival-map-compass:active {
+    filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.6));
+}
+
+.festival-map-compass:focus-visible {
+    outline: 2px solid var(--accent-pink);
+    outline-offset: 3px;
+    border-radius: 50%;
+}
+
+.festival-map-compass-svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
 .festival-map-controls {
     position: absolute;
     left: 20px;
-    /* +6 px above the .maplibregl-canvas' bottom so the 44 px control
+    /* +0 px above the .maplibregl-canvas' bottom so the 56 px control
        button's vertical centre lines up with the 56 px .menu-trigger
        FAB in the opposite corner. Math:
          menu FAB centre-y = (20 + safe-area) + 56/2 = 48 + safe-area
-         locate btn  needs bottom + 44/2 = 48 + safe-area
-                          -> bottom     = 26 + safe-area
+         locate btn  needs bottom + 56/2 = 48 + safe-area
+                          -> bottom     = 20 + safe-area
        If a future control here is a different height it should follow
        the same rule: bottom-inset = 48 - (its height / 2). */
-    bottom: calc(26px + env(safe-area-inset-bottom));
+    bottom: calc(20px + env(safe-area-inset-bottom));
     z-index: 4; /* above the maplibre canvas + fade mask, below the
                    menu FAB (z 250) if their footprints ever overlap. */
     display: flex;
@@ -1984,12 +2129,16 @@ span.tt-event-stage {
 
 .festival-map-control-btn {
     pointer-events: auto;
-    /* 44 px matches the .menu-modal-refresh / .menu-modal-close FAB
-       size used inside the drop-up menu — a hair smaller than the
-       .menu-trigger (56 px) which is fine: the main menu FAB is the
-       primary CTA of the app, the map controls are secondary. */
-    width: 44px;
-    height: 44px;
+    /* 56 px matches the .menu-trigger FAB in the opposite corner —
+       Jacob's 2026-08-10 call to make the two map controls read as
+       first-class actions on par with the main menu, not secondary
+       affordances. Icon inside stays proportional (was 20/44 = 0.45;
+       now 25/56 ≈ 0.45 — see .festival-map-control-icon below).
+       The bottom-inset math in .festival-map-controls above needs
+       to change in lockstep with this height (44 -> 56 shifts the
+       vertical centre by 6 px). */
+    width: 56px;
+    height: 56px;
     border-radius: 50%;
     /* Beach-sand fill — pairs the button with the tent marker's pin
        and the user-dot, unifying every "about me" surface on the map
@@ -2022,11 +2171,11 @@ span.tt-event-stage {
 
 .festival-map-control-icon {
     display: block;
-    /* Scaled down from 24 px so the icon-to-button ratio matches the
-       app's other 44 px round buttons (menu-modal close/refresh, which
-       use a 1.4 rem glyph inside a 44 px shell). */
-    width: 20px;
-    height: 20px;
+    /* Scaled to keep the same icon/button ratio as when the buttons
+       were 44 px with a 20 px icon (~0.45). 25 px on a 56 px button
+       preserves that visual weight. */
+    width: 25px;
+    height: 25px;
 }
 
 /* ── Map toast ───────────────────────────────────────────────────────
@@ -2103,7 +2252,13 @@ span.tt-event-stage {
        safety = 280 px cap). */
     min-width: 240px;
     max-width: min(280px, calc(100% - 40px));
-    background: var(--bg-card);
+    /* Cream fill — the popover reads as a floating card, not an
+       extension of the sand-yellow buttons below. Slightly translucent
+       (0.92) so a hint of the map is visible behind it, which softens
+       the pop-in and hints that the popover is temporary. */
+    background: rgba(242, 233, 220, 0.92);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
     color: var(--text);
     border-radius: var(--card-radius, 20px);
     padding: 12px 8px;

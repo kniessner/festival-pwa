@@ -9,6 +9,7 @@ import basemapLayers from './basemap-layers.js';
 import { PALETTE } from './map-palette.js';
 import { startUserLocation } from './user-location.js';
 import { startTent } from './tent.js';
+import { maybeShowTentIntro } from './tent-intro.js';
 import { createMapControls } from './map-controls.js';
 import { flyToCoordWithPulse } from './map-flyto.js';
 import { closeMapSearchDropdown } from './map-search.js';
@@ -227,8 +228,22 @@ function createMap(stage, gestureState) {
 
     // Complete the gesture lockdown that the constructor options above
     // couldn't reach:
-    map.touchZoomRotate.disableRotation();
-    map.touchPitch.disable();
+    // Gestures are now permitted (2026-08-10) after the earlier
+    // "only pan diagonally" bug was traced to the desktop max-bounds
+    // clipping the pan direction, NOT to a stray touch-pitch. The
+    // compass rose added by map-controls.js gives users a visible
+    // rotation-state indicator plus a tap-to-reset affordance, so the
+    // original failure mode (silent rotation → confused user) is
+    // defused. dragRotate stays off in the constructor because a
+    // desktop right-click drag has no compass-rose parallel and would
+    // still surprise mouse users.
+    map.touchZoomRotate.enable();
+    map.touchPitch.enable();
+    // Dev/debug hook (safe in prod): exposes the live MapLibre
+    // instance so verification harnesses can drive zoom/pan from
+    // the console. Kept behind a `__` prefix so a grep for it is
+    // unambiguous. Zero payload cost in the bundle.
+    if (typeof window !== 'undefined') window.__festivalMap = map;
 
     // Attribution at bottom-left. Legal requirement (OSM + Protomaps)
     // so it stays visible; moved off bottom-right because MapLibre's
@@ -264,6 +279,15 @@ function createMap(stage, gestureState) {
         map.__mapControlsStop = createMapControls(map, stage);
     });
 
+    // One-shot "where is my tent?" onboarding dialog, gated on the
+    // twin flags in tent-intro.js (has-stored-tent + intro-completed).
+    // Fired synchronously here — the DOM shell (#tentIntroModal) lives
+    // in index.html and doesn't need the map to be ready. Rendering
+    // the modal over an already-drawn map matches fusion's UX where
+    // the tent icon peeks out from behind the overlay, hinting at
+    // what the user is about to interact with.
+    maybeShowTentIntro();
+
     // Search route: js/views/map-search.js dispatches a `map:flyTo`
     // CustomEvent when the user picks a result. Kept as an event
     // (rather than a direct call) because map-search doesn't own the
@@ -287,6 +311,22 @@ function createMap(stage, gestureState) {
     //     const line = `center: [${c.lng.toFixed(6)}, ${c.lat.toFixed(6)}], zoom: ${map.getZoom().toFixed(2)}, bearing: ${map.getBearing().toFixed(1)}, pitch: ${map.getPitch().toFixed(1)}`;
     //     // eslint-disable-next-line no-console
     //     console.log('[map camera]', line);
+    //     if (navigator.clipboard && navigator.clipboard.writeText) {
+    //         navigator.clipboard.writeText(line).catch(() => { /* ignore */ });
+    //     }
+    // });
+
+    // Click-to-copy lat/lng helper (same shape as the moveend one above)
+    // is preserved commented-out for the next round of authoring e2e
+    // fixtures for the GPS -> auto-scroll timetable feature. Uncomment,
+    // click on a polygon on /map, paste the clipboard line into
+    // docs/e2e-tests.md's fixtures table. See recipe A/B there.
+    //
+    // map.on('click', (e) => {
+    //     const { lng, lat } = e.lngLat;
+    //     const line = `longitude: ${lng.toFixed(7)}, latitude: ${lat.toFixed(7)}`;
+    //     // eslint-disable-next-line no-console
+    //     console.log('[map click]', line);
     //     if (navigator.clipboard && navigator.clipboard.writeText) {
     //         navigator.clipboard.writeText(line).catch(() => { /* ignore */ });
     //     }
@@ -372,18 +412,28 @@ function buildStyle() {
 
 
 function addOverlayLayers(map) {
+    // Label configs are staged in this array during the first pass
+    // and added in a SECOND pass after all fills/points across every
+    // FELT_LAYERS entry are in place. This guarantees every -label
+    // symbol layer sits above every -fill polygon layer in the
+    // MapLibre paint order — without this split, `stages-fill` (added
+    // later in the loop) would paint over `camping-areas-label` and
+    // hide the anchor labels of the previous tier.
+    const labelConfigs = [];
+
     for (const { id, file, color } of FELT_LAYERS) {
         map.addSource(id, {
             type: 'geojson',
             data: 'data/' + file,
         });
 
-        // camping-areas gets a whisper-quiet default so the big camp
-        // polygons don't visually shout over the category overlays.
-        // They're pushed back to prominent during tent drag by
-        // tent.js#applyDragPaint.
-        const isCamping = id === 'camping-areas';
-        const fillOpacity = isCamping ? 0.22 : 0.5;
+        // Stylistic experiment (Jacob, 2026-08-10): every polygon
+        // renders at full opacity so the palette hues read cleanly
+        // and the map feels closer to the illustrated tab. If this
+        // ends up too dominant we can dial camping back with a
+        // dedicated tier here (see the previous 0.22/0.5 split in
+        // git blame for the transparent-baseline version).
+        const fillOpacity = 1;
 
         // Polygon / MultiPolygon fill. Outline layer removed (Jacob's
          // 2026-08-08 experiment): borderless overlays let the polygon
@@ -412,27 +462,44 @@ function addOverlayLayers(map) {
             },
         });
 
-        // Labels — the Felt `text` property is the human-readable name
-        // for the feature. Rendered at every zoom for now; Jacob will
-        // finetune zoom stops once we've decided which layers stay.
-        // Labels — tier-based zoom-fade so the map isn't a soup of
-        // names at overview zoom. Each layer's tier maps to a fade band
-        // below which the label is fully transparent and above which
-        // it's fully opaque:
+        // ---- Label configuration (added in the second pass) ----
+
+        // Labels — tier-based zoom-fade so at overview / default cam
+        // zoom only the two anchor tiers (stages + camps) are on
+        // screen, and everything else appears once the user pinches
+        // in noticeably. Jacob's target experience:
+        //   "floors and camping areas are ALWAYS shown (also at low
+        //    zoom levels), and when you zoom in the rest is shown —
+        //    at MUCH higher zoom so they don't overlap the floors"
         //
-        //   always            stages, camping-areas  (opacity 1 always)
-        //   close     (13.5+) gastro, sterne          (fade 13.0 → 13.5)
-        //   veryClose (16.0+) produktion, toilets     (fade 15.5 → 16.0)
+        // Each layer's tier maps to a fade band below which the label
+        // is fully transparent and above which it's fully opaque:
+        //
+        //   always              stages, camping-areas   (opacity 1 always)
+        //   close     (16.0+)   gastro, sterne, food-court
+        //                        fade 16.0 → 16.5
+        //   veryClose (17.0+)   produktion, toilets
+        //                        fade 17.0 → 17.5
         //
         // Thresholds are calibrated for the map's zoom range 12–19
         // and DEFAULT_CAMERA.zoom = 14.11:
-        //   - at default zoom, stages / camps / gastro / sterne are
-        //     fully visible; produktion (except Eclipse) and toilets
-        //     stay hidden until the user pinches noticeably deeper
-        //     (~ zoom 16), giving gastro/sterne some breathing room
-        //     at zoom 14–15.
-        //   - at max zoom-out (12), only stages + camps remain — clean
-        //     overview mode.
+        //   - at default zoom, ONLY anchor labels are visible.
+        //   - gastro / sterne / food-court require zoom ≥ 16 (a
+        //     deliberate pinch, not accidental).
+        //   - produktion / toilets require zoom ≥ 17 (deeper pinch).
+        //   - anchor labels use text-allow-overlap: true (see the
+        //     isAnchor block below) so they never drop for collision;
+        //     the tradeoff of visible overlap on the tightest stages
+        //     is countered by two per-feature overrides in this file:
+        //       (a) Mirage Arco + Mirage Glimmer collapse to a single
+        //           "Mirage" label at zoom < 15.5, then split into
+        //           their real names once the user has pinched deep
+        //           enough that they no longer visually clash.
+        //       (b) Camp Taucher is hidden at zoom < 15.5 because its
+        //           polygon centroid lands right next to Strandflitzer,
+        //           and the two Megan labels can't coexist at overview
+        //           scale. Users who want Camp Taucher at overview zoom
+        //           can still find it via search.
         //
         // Produktion has ONE always-visible exception: the "Eclipse"
         // feature is a headline POI and stays visible at every zoom.
@@ -445,8 +512,8 @@ function addOverlayLayers(map) {
         // the drag. Snapshot captures the original expression object
         // via map.getPaintProperty() so restore returns the tier fade
         // exactly as it was.
-        const fadeClose     = ['interpolate', ['linear'], ['zoom'], 13.0, 0, 13.5, 1];
-        const fadeVeryClose = ['interpolate', ['linear'], ['zoom'], 15.5, 0, 16.0, 1];
+        const fadeClose     = ['interpolate', ['linear'], ['zoom'], 16.0, 0, 16.5, 1];
+        const fadeVeryClose = ['interpolate', ['linear'], ['zoom'], 17.0, 0, 17.5, 1];
         // Produktion's per-feature override: Eclipse gets a case-based
         // "low-zoom" value that keeps it at opacity 1 even below the
         // fade-in band. Structured with `interpolate` on top (so the
@@ -456,13 +523,41 @@ function addOverlayLayers(map) {
         // step or interpolate"). At high zoom both branches reach 1.
         const fadeVeryCloseWithEclipsePriority = [
             'interpolate', ['linear'], ['zoom'],
-            15.5, ['case', ['==', ['get', 'text'], 'Eclipse'], 1, 0],
+            17.0, ['case', ['==', ['get', 'text'], 'Eclipse'], 1, 0],
+            17.5, 1,
+        ];
+        // Anchor tier text-opacity: fades IN at zoom 15.0 → 15.5.
+        // Below 15.0 the two big region labels (Umbria / Lumina, added
+        // after the FELT_LAYERS block) own the map, and stages/camps
+        // stay hidden so the overview reads as "here's the two halves
+        // of the festival". Bumped from 14.5→15.0 to 15.0→15.5 on
+        // 2026-08-10 after Jacob spot-checked mobile portrait — the
+        // narrower viewport's bounds-fitted initial zoom lands in the
+        // 14.5-14.8 range, which was inside the previous crossfade
+        // band and left floors faintly visible at open. Pushing the
+        // start to 15.0 guarantees ONLY regions at open on every
+        // aspect ratio; the user still only needs a small pinch to
+        // reveal floors.
+        //
+        // Camping override for Camp Taucher continues to apply on top:
+        // Taucher stays hidden until zoom 16.0 regardless of tier fade,
+        // because its centroid overlaps Strandflitzer at mid zoom.
+        // Combined expression: outer interpolate on zoom drives the
+        // tier fade; per-feature case sits at the ANCHOR-tier value
+        // for camping-areas only.
+        const anchorFadeIn      = ['interpolate', ['linear'], ['zoom'], 15.0, 0, 15.5, 1];
+        const campingTextOpacity = [
+            'interpolate', ['linear'], ['zoom'],
+            15.0, 0,
+            15.5, ['case', ['==', ['get', 'text'], 'Camp Taucher'], 0, 1],
             16.0, 1,
         ];
         let textOpacity;
-        if (id === 'stages' || id === 'camping-areas') {
-            textOpacity = 1;
-        } else if (id === 'gastro' || id === 'sterne') {
+        if (id === 'stages') {
+            textOpacity = anchorFadeIn;
+        } else if (id === 'camping-areas') {
+            textOpacity = campingTextOpacity;
+        } else if (id === 'gastro' || id === 'sterne' || id === 'food-court') {
             textOpacity = fadeClose;
         } else if (id === 'produktion') {
             textOpacity = fadeVeryCloseWithEclipsePriority;
@@ -484,20 +579,59 @@ function addOverlayLayers(map) {
             id === 'camping-areas'  ?  1 :
             10;
 
+        // Anchor tier (stages + camping-areas) gets
+        // text-allow-overlap: true so those labels are NEVER
+        // dropped for collision, even at overview zoom (~12) where
+        // their bounding boxes would otherwise crowd each other or
+        // adjacent infrastructure labels. The tradeoff is visible
+        // overlap in the tightest overview frames; countered by
+        // shrinking the anchor size at low zoom via the interpolate
+        // in `text-size` below (12 -> 13 px, growing to 22 px at
+        // pinched-in zoom 18) so the labels stay readable without
+        // shouting at max zoom-in.
+        //
+        // Everything else stays on collision-drop so infrastructure
+        // clusters (DIXIs, produktion polygons, sterne installations)
+        // don't turn into a soup of names when they can't all fit.
+        const isAnchor = id === 'stages' || id === 'camping-areas';
+
         // Font stack per tier. Megan Display is the festival's brand
-        // display face and works at the anchor sizes (17 / 15 px);
-        // for the tighter infrastructure labels we switch to Lato
-        // Regular — a text face designed to stay legible at small
-        // sizes, with narrower glyph metrics (so collision boxes are
-        // smaller and fewer labels get dropped).
+        // display face and works at the anchor sizes; for the tighter
+        // infrastructure labels we switch to Lato Regular — a text
+        // face designed to stay legible at small sizes, with narrower
+        // glyph metrics (so collision boxes are smaller and fewer
+        // labels get dropped).
         //
         // Both fontstacks have SDF PBFs bundled under
         // standalone/glyphs/; the stack must be single-element (see
         // the header comment near the top of this file for why).
-        const textFont =
-            (id === 'stages' || id === 'camping-areas')
-                ? ['Megan Display']
-                : ['Lato Regular'];
+        const textFont = isAnchor
+            ? ['Megan Display']
+            : ['Lato Regular'];
+
+        // Anchor labels are the only ones that scale with zoom.
+        // Infrastructure labels stay at a fixed 13 px — the collision
+        // math is easier and they only exist at zoom ≥ 16 anyway.
+        //
+        // Anchor zoom curve targets:
+        //   z=12 (overview)    stages 13, camps 12  — fits every label
+        //   z=14 (default cam) stages 18, camps 16  — brand size
+        //   z=18 (max pinch)   stages 22, camps 20  — headline
+        //
+        // Camps stay one step below stages so the hierarchy reads
+        // (stages first, camps second) without extra sort keys.
+        const stagesTextSize = [
+            'interpolate', ['linear'], ['zoom'],
+            12, 13,
+            14, 18,
+            18, 22,
+        ];
+        const campsTextSize = [
+            'interpolate', ['linear'], ['zoom'],
+            12, 12,
+            14, 16,
+            18, 20,
+        ];
 
         // Precompute the label text-field expression ONCE per
         // addOverlayLayers call. The expression captures the current
@@ -506,37 +640,100 @@ function addOverlayLayers(map) {
         // remounting this whole layer stack — so we naturally pick
         // up the new language on the next mount, no live setLayout-
         // Property required.
-        const textField = buildLabelTextFieldExpression();
+        const textFieldBase = buildLabelTextFieldExpression();
 
-        map.addLayer({
+        // For the stages layer only, wrap textFieldBase with a
+        // zoom-step that collapses tight stage clusters to a single
+        // brand label at zoom < 15.5, then splits them back into
+        // their real names at higher zoom. Empty-string text is
+        // MapLibre's convention for "skip this feature entirely", so
+        // the redundant stage disappears at overview zoom and only
+        // the anchor stage's slot (relabelled) is rendered — giving
+        // us exactly one Megan label per cluster.
+        //
+        // Two clusters currently collapsed:
+        //   Mirage      : Mirage Arco (kept as anchor, relabelled
+        //                              "Mirage") + Mirage Glimmer (hidden)
+        //   Zirkus Mond : Zirkus Mond Turmbühnchen (anchor, relabelled
+        //                              "Zirkus Mond")
+        //                 + Zirkus Mond Zelt (hidden)
+        //
+        // Anchor pick rule: the physically bigger stage in each pair
+        // keeps its slot (fewer visual jumps when the label finally
+        // splits, and it lands over the more prominent structure).
+        //
+        // Structured as [step, [zoom], low-branch, 15.5, high-branch]
+        // so the required "zoom only inside a top-level step or
+        // interpolate" rule holds. The per-feature case sits inside
+        // the low-branch and doesn't reference zoom itself.
+        const textField = id === 'stages'
+            ? [
+                'step', ['zoom'],
+                ['case',
+                    ['==', ['get', 'text'], 'Mirage Arco'],              'Mirage',
+                    ['==', ['get', 'text'], 'Mirage Glimmer'],           '',
+                    ['==', ['get', 'text'], 'Zirkus Mond Turmbühnchen'], 'Zirkus Mond',
+                    ['==', ['get', 'text'], 'Zirkus Mond Zelt'],         '',
+                    textFieldBase,
+                ],
+                15.5,
+                textFieldBase,
+            ]
+            : textFieldBase;
+
+        // Sterne "anchor" promotion (Jacob 2026-08-10): four large
+        // sterne polygons — Schweißperle, Neuro Divers, Cuddle Poodle,
+        // Community Corner — need to read as first-class wayfinding
+        // targets, on par with the stages + camps that appear at
+        // zoom ≥ 15.0. Rather than fold this into the fadeClose curve
+        // (which would either promote every sterne or require a match
+        // expression that hides the rest), we split the sterne label
+        // set into two independent symbol layers: the regular sterne
+        // layer (which now filters OUT these four) plus a companion
+        // "sterne-major" layer added just below, which filters IN the
+        // four and uses anchor-tier styling (Megan Display, larger,
+        // never dropped for collision, appears at zoom ≥ 15.0).
+        // Both layers read from the same source — no data duplication.
+        // Names below are post-sanitize (see scripts/sanitize-geojson.mjs:
+        // "Neuro|divers" renames to "Neuro Divers").
+        const STERNE_MAJOR_NAMES = ['Schweißperle', 'Neuro Divers', 'Cuddle Poodle', 'Community Corner'];
+        const sterneNormalFilter = id === 'sterne'
+            ? ['all', ['has', 'text'], ['!', ['in', ['get', 'text'], ['literal', STERNE_MAJOR_NAMES]]]]
+            : ['has', 'text'];
+
+        labelConfigs.push({
             id: id + '-label',
             source: id,
             type: 'symbol',
-            filter: ['has', 'text'],
+            filter: sterneNormalFilter,
             layout: {
                 'text-field': textField,
                 'text-font': textFont,
                 // Anchor labels get bigger sizes so they read at
                 // glance-zoom without a pinch: stages are the primary
                 // wayfinding target, camp names the second. Everything
-                // else stays at the compact 11 px so infrastructure
+                // else stays at the compact 13 px so infrastructure
                 // clusters (DIXIs, shower containers, etc) don't shout.
                 'text-size':
-                    id === 'stages'         ? 16 :
-                    id === 'camping-areas'  ? 15 :
+                    id === 'stages'         ? stagesTextSize :
+                    id === 'camping-areas'  ? campsTextSize :
                     13,
                 'text-anchor': 'center',
-                'text-max-width': 8,
-                // Collision on for every layer. Symbol-sort-key below
-                // still gives the anchor tier priority so the labels
-                // MapLibre keeps favour stages > camps > infrastructure,
-                // but nothing is force-shown any more — if a label
-                // won't fit, it drops. Cleaner map at every zoom;
-                // accept that some labels are missing at low zoom
-                // until we work out a per-feature priority scheme.
-                'text-allow-overlap': false,
-                'text-optional': true,
-                'text-padding': 2,
+                // Anchor labels get a wider max-width so brand names
+                // stay on ONE line (e.g. "Zirkus Mond Turmbühnchen"
+                // was wrapping to two lines at max-width 8 and reading
+                // as two separate labels). Infrastructure labels stay
+                // at the tighter 8 em so their collision boxes stay
+                // compact.
+                'text-max-width': isAnchor ? 20 : 8,
+                // Anchor tier (stages + camps) always renders; every
+                // other tier drops on collision (see isAnchor comment
+                // above). symbol-sort-key still gives the anchor tier
+                // priority so if a Lato label would collide with a
+                // Megan one, the Megan one wins the reserved slot.
+                'text-allow-overlap': isAnchor,
+                'text-optional': !isAnchor,
+                'text-padding': isAnchor ? 3 : 2,
                 'text-rotation-alignment': 'viewport',
                 'text-pitch-alignment': 'viewport',
                 'symbol-sort-key': symbolSortKey,
@@ -548,6 +745,66 @@ function addOverlayLayers(map) {
                 'text-opacity': textOpacity,
             },
         });
+
+        // Companion "sterne-major" label layer for the four promoted
+        // sterne (see STERNE_MAJOR_NAMES + sterneNormalFilter above).
+        // Anchor-tier styling: Megan Display, zoom-scaled size like
+        // camps, allow-overlap so they never drop, symbol-sort-key
+        // between camps (1) and generic sterne (10) so they slot in
+        // AFTER stages + camps have won their placements but BEFORE
+        // the rest of sterne / gastro / etc. Added inside the same
+        // FELT_LAYERS iteration so it lands in labelConfigs right
+        // after its parent — the two-pass loop then adds both to the
+        // map at the right z-order (above every fill).
+        if (id === 'sterne') {
+            labelConfigs.push({
+                id: 'sterne-major-label',
+                source: 'sterne',
+                type: 'symbol',
+                filter: ['all', ['has', 'text'], ['in', ['get', 'text'], ['literal', STERNE_MAJOR_NAMES]]],
+                layout: {
+                    'text-field': textFieldBase,
+                    'text-font': ['Megan Display'],
+                    'text-size': campsTextSize,
+                    'text-anchor': 'center',
+                    'text-max-width': 20,
+                    'text-allow-overlap': true,
+                    'text-optional': false,
+                    'text-padding': 3,
+                    'text-rotation-alignment': 'viewport',
+                    'text-pitch-alignment': 'viewport',
+                    'symbol-sort-key': 2,
+                },
+                paint: {
+                    'text-color': PNG_CREAM,
+                    'text-halo-color': PNG_MAGENTA_HALO,
+                    'text-halo-width': 1.4,
+                    // Fade IN on the sterne-tier curve (16.0 → 16.5),
+                    // NOT on the anchor curve like stages + camps.
+                    // Jacob 2026-08-10 (round 2): the promotion gives
+                    // these four sterne their own bigger typographic
+                    // voice (Megan Display, allow-overlap) but they
+                    // should still stay out of the overview view —
+                    // only stages + camps deserve to be readable at
+                    // default zoom. The four sterne-major names
+                    // (Community Corner, Schweißperle, Cuddle Poodle,
+                    // Neuro Divers) now appear together with the
+                    // rest of sterne on a deliberate pinch-in.
+                    'text-opacity': fadeClose,
+                },
+            });
+        }
+    }
+
+    // ---- Second pass: add all labels ABOVE all fills/points ----
+    //
+    // Draw-order guarantee: every label added below is registered with
+    // MapLibre after every fill/point in FELT_LAYERS above, so no fill
+    // can paint over a label. This fixed a class of bugs where the
+    // camping-areas label (added early in the loop) was covered by
+    // stages / gastro fills that were added later.
+    for (const cfg of labelConfigs) {
+        map.addLayer(cfg);
     }
 
     // Landmarks: geographic feature labels (lake, forest, prominent
@@ -579,6 +836,12 @@ function addOverlayLayers(map) {
             'text-font': ['Instrument Sans Italic'],
             'text-size': 22,
             'text-letter-spacing': 0.14,
+            // Rotate the label to run vertically along the lake
+            // (bottom-to-top, standard lake/river label convention).
+            // Works with text-rotation-alignment: viewport below —
+            // the label stays vertical on screen regardless of any
+            // future map bearing changes.
+            'text-rotate': -90,
             // Landmarks aren't wayfinding-critical — they're mood.
             // Skip collision and drop out at low zoom too aggressively
             // by letting them overlap. They rarely conflict anyway
@@ -601,6 +864,57 @@ function addOverlayLayers(map) {
             // Slightly transparent so it reads as ambient / atmospheric
             // rather than a POI you can tap.
             'text-opacity': 0.7,
+        },
+    });
+
+    // Regions (Umbria / Lumina): two ambient text labels that name
+    // the west and east halves of the festival, matching how the
+    // static illustrated map labels them. Shown ONLY at min-zoom
+    // (≤ 15.0), fading out as the user pinches in and the anchor
+    // tier (stages + camps) fades in — crossfade handoff, calibrated
+    // to match the anchorFadeIn expression in addOverlayLayers.
+    //
+    // Same typographic treatment as landmarks (Instrument Sans Italic,
+    // ambient) but sized much bigger and with wider letter-spacing so
+    // they read as "regions", not points-of-interest. No halo mask,
+    // no click affordance — they're pure orientation.
+    //
+    // Kept in a separate source (not FELT_LAYERS, not landmarks) so
+    // the fade curve is easy to reason about here without complicating
+    // the tier system or the tent-drag FADE_LAYERS in tent.js.
+    map.addSource('regions', {
+        type: 'geojson',
+        data: 'data/regions.geojson',
+    });
+    map.addLayer({
+        id: 'regions-label',
+        source: 'regions',
+        type: 'symbol',
+        filter: ['has', 'text'],
+        layout: {
+            'text-field': ['get', 'text'],
+            // Megan Display matches the static map's slab-serif brand
+            // face used for the same region labels there.
+            'text-font': ['Megan Display'],
+            // Zoom-scaled so the labels stay proportional as the user
+            // pinches: 40 px at max zoom-out, tapering to 32 px at
+            // the crossfade point (they vanish just after).
+            'text-size': ['interpolate', ['linear'], ['zoom'], 12, 40, 15.5, 32],
+            // Regions never drop — they own the min-zoom frame.
+            'text-allow-overlap': true,
+            'text-ignore-placement': true,
+            'text-rotation-alignment': 'viewport',
+            'text-pitch-alignment': 'viewport',
+            'symbol-sort-key': 90,
+        },
+        paint: {
+            'text-color': PNG_CREAM,
+            'text-halo-color': PNG_MAGENTA_HALO,
+            'text-halo-width': 1.2,
+            // Crossfade with the anchor tier: opacity 1 up to zoom
+            // 15.0, then linearly to 0 at 15.5. Beyond 15.5 the tier
+            // is fully in and the regions are gone.
+            'text-opacity': ['interpolate', ['linear'], ['zoom'], 15.0, 1, 15.5, 0],
         },
     });
 

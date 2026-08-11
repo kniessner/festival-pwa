@@ -55,12 +55,15 @@ const TOILET_COORDS = [
     [14.499453, 52.278570], // DIXI x8
 ];
 
-const FIRST_AID_COORDS = [
-    [14.500000, 52.276028], // DRK / Secu Base   (fallback = main medical)
-    [14.489471, 52.276544], // Psycare / DRK zelt
-];
+// First-aid was previously resolved to the nearer of two coords
+// (DRK / Secu Base + Psycare / DRK zelt). The Horst review consolidated
+// awareness + first-aid provisioning at the Awareness & Eclipse polygon,
+// so first-aid now points to the same coord as the Eclipse fly-to entry
+// below. FIRST_AID_COORDS deliberately removed rather than left dead
+// so a future contributor doesn't wire it back in without knowing why.
 
 const INFO_POINT_COORD = [14.494663, 52.276211]; // Info-point / Lost & Found / Kiosk / DIY station
+const ECLIPSE_COORD    = [14.489207, 52.276594]; // Awareness & Eclipse polygon centroid (produktion.geojson)
 
 // ─── Entry catalogue ────────────────────────────────────────────────
 
@@ -84,6 +87,12 @@ export const POI_LIST = [
     {
         id: 'tent',
         labelKey: 'map.flyto.tent',
+        // Uses the outline poi-tent icon (part of the fly-to icon
+        // family delivered by Berit) so the row reads as one of the
+        // set with the other four entries. The bespoke red drop-pin
+        // (images/tent.svg) is still what the user sees on the map
+        // itself for the draggable "my tent" marker — visually
+        // distinct on purpose so it stands out against the terrain.
         icon: 'images/poi-tent.svg',
         // Read fresh on every click so a drag+drop from the drag-me
         // marker is reflected immediately without a store subscription.
@@ -99,12 +108,25 @@ export const POI_LIST = [
         id: 'first-aid',
         labelKey: 'map.flyto.firstAid',
         icon: 'images/poi-firstaid.svg',
-        resolve: nearestOr(FIRST_AID_COORDS),
+        // Points at the Awareness & Eclipse polygon — same coord as the
+        // Eclipse entry below, since that's where first-aid + emotional
+        // support are co-located per Horst's produktion review.
+        resolve: () => ECLIPSE_COORD,
     },
     {
         id: 'info',
         labelKey: 'map.flyto.info',
         icon: 'images/poi-info.svg',
         resolve: () => INFO_POINT_COORD,
+    },
+    {
+        // Eclipse is one of two chill-out / de-escalation spots at the
+        // festival (paired with PsyCare). Same fixed-location resolver
+        // as info-point — there's only one Eclipse and it doesn't have
+        // a "nearest" flavour.
+        id: 'eclipse',
+        labelKey: 'map.flyto.eclipse',
+        icon: 'images/poi-generic.svg',
+        resolve: () => ECLIPSE_COORD,
     },
 ];

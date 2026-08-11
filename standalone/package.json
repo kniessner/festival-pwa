@@ -17,6 +17,7 @@
     "node": ">=14"
   },
   "devDependencies": {
+    "@turf/polygon-smooth": "^7.4.0",
     "esbuild": "^0.28.1",
     "fontnik": "^0.7.7",
     "protomaps-themes-base": "^4.5.0",
