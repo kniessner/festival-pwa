@@ -33,7 +33,9 @@ import { FELT_LAYERS } from './map-layers.js';
 // (2026-08-08) to sit inside the main camping area — nudged east of
 // the Check-in/Zeltverleih strip so it lands somewhere clearly
 // campable and reads as "grab me, drop me on my real spot".
-export const TENT_INITIAL_POSITION = [14.502449976129924, 52.27739273160731];
+// 2026-08-11: moved ~80m south to sit further into the camping
+// interior, off the check-in / entrance row.
+export const TENT_INITIAL_POSITION = [14.502449976129924, 52.276672010886585];
 
 // localStorage key. No year suffix (per Jacob) — camping location is
 // personal and re-used across festival editions if the user keeps the
