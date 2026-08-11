@@ -195,7 +195,7 @@ span#headerFilterLabel {
     align-items: center;
     justify-content: center;
     background-color: var(--wp--preset--color--base, #f3efdf);
-    background-image: url('../images/card_bg.png');
+    background-image: url('../images/card_bg.webp');
     background-size: 120% 120%;
     background-repeat: no-repeat;
     background-position: center;
@@ -455,7 +455,7 @@ span#headerFilterLabel {
     justify-content: center;
     text-align: center;
     background-color: var(--wp--preset--color--base, #f3efdf);
-    background-image: url('../images/card_bg.png');
+    background-image: url('../images/card_bg.webp');
     background-size: 100% 100%;
     background-repeat: no-repeat;
     background-position: center;

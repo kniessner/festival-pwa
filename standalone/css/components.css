@@ -528,7 +528,7 @@
     inset: 0;
     background: #1a5ea2;
     backdrop-filter: blur(2px);
-    background-image: url(../images/frame.png);
+    background-image: url(../images/frame.webp);
     background-position: center;
     background-origin: border-box;
     background-size: cover;

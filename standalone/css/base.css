@@ -81,7 +81,7 @@ body::before {
     position: fixed;
     inset: 0;
     z-index: -1;
-    background: url(../images/frame.png) center center / cover no-repeat;
+    background: url(../images/frame.webp) center center / cover no-repeat;
     opacity: 0.5;
     pointer-events: none;
 }
