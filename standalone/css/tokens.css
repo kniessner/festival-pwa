@@ -26,7 +26,6 @@
 }
 
 :root {
-    --cmplz_text_font_size: 12px;
     --wp--preset--color--base: #f3efdf;
     --wp--preset--color--contrast: #111111;
     --wp--preset--font-size--medium: clamp(15px, 0.938rem + ((1vw - 3.2px) * 0.49), 20px);
