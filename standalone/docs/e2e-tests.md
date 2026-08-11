@@ -332,3 +332,430 @@ Expected: both booleans `true`.
 
 Expected: `firstFixSilent: true`, `transitionVibrated: true`,
 `transitionPattern: [50, 30, 50]`, `clearSilent: true`.
+
+---
+
+## Interactive map
+
+Browser-driven checks for the interactive-map surface: fly-to menu,
+locate-me button, tent marker, user-location marker, compass rose.
+
+### Setup
+
+```bash
+cd standalone && npm start   # http://localhost:8767/
+```
+
+Open the app, tap **Festival Map** in the sidebar, wait for the map to
+mount. Every recipe assumes `window.__festivalMap` exists (assigned
+inside `renderInteractiveMap` when the map instance is ready) and the
+control layer is up (`.festival-map-flyto-btn`,
+`.festival-map-locate-btn`, `.festival-map-compass` in the DOM).
+
+### Known caveats
+
+- **Popover state is DOM-and-WeakMap.** If a test tears down the
+  popover via `.remove()` instead of `closeFlyToMenu()`, the WeakMap
+  keyed on the stage element still thinks it's open — the next button
+  click will read as "toggle-close". Prefer `closeFlyToMenu` from
+  `js/views/map-flyto.js`, or click the same button twice, or remount
+  the map view between recipes.
+- **User-location marker persists across errors** (line 216 of
+  `js/views/user-location.js`). A `denied` / `timeout` locationchange
+  is a no-op — the marker keeps the last-known position. Recipe M-O
+  documents this as an intentional-for-now behaviour.
+
+### M-A. POI catalogue resolves to valid coords for every entry
+
+```js
+(async () => {
+  const { POI_LIST } = await import('/js/helpers/festival-pois.js');
+  const { store } = await import('/js/store.js');
+  store.userLocation = { longitude: 14.494663, latitude: 52.276211, accuracy: 8, error: null };
+  const userPos = [store.userLocation.longitude, store.userLocation.latitude];
+  const results = POI_LIST.map(poi => {
+    let target = null, err = null;
+    try { target = poi.resolve(userPos); } catch (e) { err = e.message; }
+    const ok = Array.isArray(target) && target.length === 2
+            && Number.isFinite(target[0]) && Number.isFinite(target[1])
+            && Math.abs(target[0]) < 180 && Math.abs(target[1]) < 90;
+    return { id: poi.id, target, ok, err };
+  });
+  console.table(results);
+  return { allValid: results.every(r => r.ok) };
+})();
+```
+
+Expected: `allValid: true`. Every row has a valid `target`.
+
+### M-B. Nearest-picker falls back correctly when user is off-site
+
+```js
+(async () => {
+  const { POI_LIST } = await import('/js/helpers/festival-pois.js');
+  const toilet = POI_LIST.find(p => p.id === 'toilet');
+  return {
+    nearNW:      toilet.resolve([14.494668, 52.278198]),
+    nearSW:      toilet.resolve([14.482172, 52.271978]),
+    offSite:     toilet.resolve([13.404954, 52.520008]),  // Berlin
+    nullUser:    toilet.resolve(null),                    // GPS denied
+  };
+})();
+```
+
+Expected: `offSite` and `nullUser` both equal the first entry in
+`TOILET_COORDS` (`[14.494186, 52.278280]`). `nearNW` / `nearSW` pick
+different, closer coords.
+
+### M-C. Fly-to menu opens with the expected entries
+
+```js
+(async () => {
+  const sleep = ms => new Promise(r => setTimeout(r, ms));
+  document.querySelector('.festival-map-flyto-btn').click();
+  await sleep(400);
+  const entries = [...document.querySelectorAll('.festival-map-flyto-entry')]
+    .map(e => e.dataset.poiId);
+  return {
+    popoverOpen: !!document.querySelector('.festival-map-flyto'),
+    entries,
+    tentIsLast: entries[entries.length - 1] === 'tent',
+  };
+})();
+```
+
+Expected: 5 entries in order `[toilet, first-aid, info, eclipse, tent]`,
+`tentIsLast: true`.
+
+### M-D. Picking a fly-to entry moves the camera + closes the popover
+
+Reload the map view first so the popover WeakMap is fresh.
+
+```js
+(async () => {
+  const sleep = ms => new Promise(r => setTimeout(r, ms));
+  const map = window.__festivalMap;
+  map.jumpTo({ center: [14.482, 52.272], zoom: 15 });
+  await sleep(300);
+  document.querySelector('.festival-map-flyto-btn').click();
+  await sleep(300);
+  document.querySelector('.festival-map-flyto-entry[data-poi-id="info"]').click();
+  const deadline = Date.now() + 3000;
+  while (Date.now() < deadline && map.isMoving()) await sleep(100);
+  await sleep(200);
+  const c = map.getCenter();
+  const distMeters = Math.round(Math.hypot(c.lng - 14.494663, c.lat - 52.276211) * 111000);
+  return {
+    popoverClosed: !document.querySelector('.festival-map-flyto'),
+    distMeters,           // should be 0 (or a few m)
+    finalZoom: map.getZoom(),
+  };
+})();
+```
+
+Expected: `popoverClosed: true`, `distMeters: 0`, `finalZoom: 18`.
+
+### M-E. Escape key closes the fly-to menu
+
+```js
+(async () => {
+  const sleep = ms => new Promise(r => setTimeout(r, ms));
+  document.querySelector('.festival-map-flyto-btn').click();
+  await sleep(300);
+  const opened = !!document.querySelector('.festival-map-flyto');
+  document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
+  await sleep(300);
+  return { opened, closedAfterEscape: !document.querySelector('.festival-map-flyto') };
+})();
+```
+
+Expected: both booleans `true`.
+
+### M-F. Outside click closes the fly-to menu
+
+```js
+(async () => {
+  const sleep = ms => new Promise(r => setTimeout(r, ms));
+  document.querySelector('.festival-map-flyto-btn').click();
+  await sleep(400);
+  const opened = !!document.querySelector('.festival-map-flyto');
+  document.querySelector('.festival-map').dispatchEvent(
+    new MouseEvent('click', { bubbles: true, clientX: 100, clientY: 300 })
+  );
+  await sleep(400);
+  return { opened, closedAfterOutside: !document.querySelector('.festival-map-flyto') };
+})();
+```
+
+Expected: both booleans `true`.
+
+### M-G. Tent-position persistence round-trip
+
+```js
+(async () => {
+  const KEY = 'bucht-tent-position';
+  const pre = localStorage.getItem(KEY);
+  const { getTentPosition, hasStoredTentPosition, TENT_INITIAL_POSITION } =
+    await import('/js/views/tent.js');
+
+  localStorage.removeItem(KEY);
+  const empty  = getTentPosition();
+  const emptyIsInitial = empty[0] === TENT_INITIAL_POSITION[0]
+                      && empty[1] === TENT_INITIAL_POSITION[1];
+
+  localStorage.setItem(KEY, JSON.stringify({ lng: 14.500, lat: 52.275 }));
+  const stored = getTentPosition();
+  const storedOk = stored[0] === 14.500 && stored[1] === 52.275
+                && hasStoredTentPosition();
+
+  localStorage.setItem(KEY, 'not json');
+  const corrupt = getTentPosition();
+  const corruptFellBack = corrupt[0] === TENT_INITIAL_POSITION[0]
+                       && corrupt[1] === TENT_INITIAL_POSITION[1];
+
+  if (pre) localStorage.setItem(KEY, pre); else localStorage.removeItem(KEY);
+  return { emptyIsInitial, storedOk, corruptFellBack };
+})();
+```
+
+Expected: all three booleans `true`.
+
+**Known bug (BUCHT-TENT-01):** `isValidPos()` only checks
+`Number.isFinite` — it accepts `{lng: 999, lat: 999}` and returns
+those as the tent position. Range-clamp missing (`|lng| ≤ 180`,
+`|lat| ≤ 90`). Not reachable from the normal `dragend → save` path
+(MapLibre always hands us valid coords), so it hasn't blown up in
+production. Fix candidate: extend `isValidPos` in `js/views/tent.js`.
+
+### M-H. Tent marker mounts and reflects the stored position
+
+```js
+(async () => {
+  const sleep = ms => new Promise(r => setTimeout(r, ms));
+  const KEY = 'bucht-tent-position';
+  const pre = localStorage.getItem(KEY);
+  const target = { lng: 14.4970, lat: 52.2770 };
+  localStorage.setItem(KEY, JSON.stringify(target));
+
+  // Re-mount /map so tent.js runs against the new storage
+  document.querySelector('[data-action="load-page"][data-page="2"]').click();
+  await sleep(500);
+  document.querySelector('[data-action="load-page"][data-page="5"]').click();
+  await sleep(2500);
+  document.querySelector('[data-action="close-tent-intro"], [data-action="tent-intro-not-now"], [data-action="tent-intro-skip"]')?.click();
+  await sleep(500);
+
+  const map  = window.__festivalMap;
+  const el   = document.querySelector('.tent-marker.maplibregl-marker');
+  const box  = el.getBoundingClientRect();
+  const cbox = map.getContainer().getBoundingClientRect();
+  const pt   = map.unproject([box.left + box.width/2 - cbox.left,
+                              box.top  + box.height     - cbox.top]);
+  const matches = Math.abs(pt.lng - target.lng) < 0.0002
+               && Math.abs(pt.lat - target.lat) < 0.0002;
+
+  if (pre) localStorage.setItem(KEY, pre); else localStorage.removeItem(KEY);
+  return { tentMounted: !!el, matches };
+})();
+```
+
+Expected: both `true`.
+
+### M-I. Locate-me — no fix triggers the GPS toast
+
+```js
+(async () => {
+  const sleep = ms => new Promise(r => setTimeout(r, ms));
+  const { store } = await import('/js/store.js');
+  const map = window.__festivalMap;
+  const pre = store.userLocation;
+  store.userLocation = null;
+  const before = { c: { ...map.getCenter() }, z: map.getZoom() };
+  document.querySelector('.festival-map-locate-btn').click();
+  await sleep(1200);
+  const after = { c: { ...map.getCenter() }, z: map.getZoom() };
+  const moved = Math.abs(before.c.lng - after.c.lng) > 0.00001;
+  const toast = document.querySelector('[class*="toast"]');
+  store.userLocation = pre;
+  return { cameraDidNotMove: !moved, toastFired: !!toast, toastText: toast?.textContent };
+})();
+```
+
+Expected: `cameraDidNotMove: true`, `toastFired: true`,
+`toastText`: "GPS is needed…".
+
+### M-J. Locate-me — off-site fix triggers the "not-at-festival" toast
+
+```js
+(async () => {
+  const sleep = ms => new Promise(r => setTimeout(r, ms));
+  const { store } = await import('/js/store.js');
+  const map = window.__festivalMap;
+  const pre = store.userLocation;
+  store.userLocation = { longitude: 13.404954, latitude: 52.520008, accuracy: 20, error: null };
+  const before = { c: { ...map.getCenter() } };
+  document.querySelector('.festival-map-locate-btn').click();
+  await sleep(1200);
+  const after = { c: { ...map.getCenter() } };
+  const moved = Math.abs(before.c.lng - after.c.lng) > 0.00001;
+  const toast = document.querySelector('[class*="toast"]');
+  store.userLocation = pre;
+  return { cameraDidNotMove: !moved, toastText: toast?.textContent };
+})();
+```
+
+Expected: `cameraDidNotMove: true`, `toastText`: "You're not at the festival yet."
+
+### M-K. Locate-me — on-site fix flies the camera to the user
+
+```js
+(async () => {
+  const sleep = ms => new Promise(r => setTimeout(r, ms));
+  const { store } = await import('/js/store.js');
+  const map = window.__festivalMap;
+  map.jumpTo({ center: [14.482, 52.272], zoom: 15 });
+  await sleep(300);
+  const pre = store.userLocation;
+  const target = { longitude: 14.4949, latitude: 52.2764, accuracy: 6, error: null };
+  store.userLocation = target;
+  document.querySelector('.festival-map-locate-btn').click();
+  const deadline = Date.now() + 3000;
+  while (Date.now() < deadline && map.isMoving()) await sleep(100);
+  await sleep(200);
+  const c = map.getCenter();
+  const distMeters = Math.round(Math.hypot(c.lng - target.longitude, c.lat - target.latitude) * 111000);
+  store.userLocation = pre;
+  return { distMeters, landedOnUser: distMeters === 0, finalZoom: map.getZoom() };
+})();
+```
+
+Expected: `distMeters: 0`, `landedOnUser: true`, `finalZoom: 18`.
+
+### M-L. Fly-to → tent lands on the STORED position, not the initial
+
+```js
+(async () => {
+  const sleep = ms => new Promise(r => setTimeout(r, ms));
+  const map = window.__festivalMap;
+  const KEY = 'bucht-tent-position';
+  const pre = localStorage.getItem(KEY);
+  const stored = { lng: 14.4990, lat: 52.2755 };
+  localStorage.setItem(KEY, JSON.stringify(stored));
+  map.jumpTo({ center: [14.482, 52.272], zoom: 15 });
+  await sleep(300);
+  document.querySelector('.festival-map-flyto-btn').click();
+  await sleep(300);
+  document.querySelector('.festival-map-flyto-entry[data-poi-id="tent"]').click();
+  const deadline = Date.now() + 3000;
+  while (Date.now() < deadline && map.isMoving()) await sleep(100);
+  await sleep(200);
+  const c = map.getCenter();
+  const distMeters = Math.round(Math.hypot(c.lng - stored.lng, c.lat - stored.lat) * 111000);
+  if (pre) localStorage.setItem(KEY, pre); else localStorage.removeItem(KEY);
+  return { landedOnTent: distMeters === 0, distMeters, finalZoom: map.getZoom() };
+})();
+```
+
+Expected: `landedOnTent: true`.
+
+### M-M. User-location marker appears on `locationchange` dispatch
+
+```js
+(async () => {
+  const sleep = ms => new Promise(r => setTimeout(r, ms));
+  document.dispatchEvent(new CustomEvent('locationchange', {
+    detail: { longitude: 14.4949, latitude: 52.2764, accuracy: 8 },
+  }));
+  await sleep(500);
+  const m = document.querySelector('.user-location-marker');
+  return {
+    markerMounted: !!m,
+    dotMounted:    !!m?.querySelector('.maplibregl-user-location-dot'),
+    coneMounted:   !!m?.querySelector('.user-heading-cone'),
+  };
+})();
+```
+
+Expected: all three `true`.
+
+### M-N. User-location marker updates on subsequent fixes
+
+```js
+(async () => {
+  const sleep = ms => new Promise(r => setTimeout(r, ms));
+  const map = window.__festivalMap;
+  const measure = () => {
+    const el = document.querySelector('.user-location-marker');
+    if (!el) return null;
+    const b = el.getBoundingClientRect();
+    const c = map.getContainer().getBoundingClientRect();
+    return map.unproject([b.left + b.width/2 - c.left, b.top + b.height/2 - c.top]);
+  };
+  document.dispatchEvent(new CustomEvent('locationchange', {
+    detail: { longitude: 14.4949, latitude: 52.2764, accuracy: 8 },
+  }));
+  await sleep(500);
+  const p1 = measure();
+  document.dispatchEvent(new CustomEvent('locationchange', {
+    detail: { longitude: 14.4820, latitude: 52.2720, accuracy: 8 },
+  }));
+  await sleep(500);
+  const p2 = measure();
+  return {
+    p1: { lng: p1.lng, lat: p1.lat },
+    p2: { lng: p2.lng, lat: p2.lat },
+    movedFrom1To2:
+      Math.abs(p1.lng - 14.4949) < 0.001 && Math.abs(p1.lat - 52.2764) < 0.001 &&
+      Math.abs(p2.lng - 14.4820) < 0.001 && Math.abs(p2.lat - 52.2720) < 0.001,
+  };
+})();
+```
+
+Expected: `movedFrom1To2: true`.
+
+### M-O. User-location marker on error (documents known behaviour)
+
+```js
+(async () => {
+  const sleep = ms => new Promise(r => setTimeout(r, ms));
+  document.dispatchEvent(new CustomEvent('locationchange', {
+    detail: { longitude: 14.4949, latitude: 52.2764, accuracy: 8 },
+  }));
+  await sleep(400);
+  const before = !!document.querySelector('.user-location-marker');
+  document.dispatchEvent(new CustomEvent('locationchange', { detail: { error: 'denied' } }));
+  await sleep(400);
+  const after = !!document.querySelector('.user-location-marker');
+  return { before, after };
+})();
+```
+
+Expected TODAY: `before: true`, `after: true`. The marker is kept
+frozen at the last-known position on error — see the "Known bugs"
+notes at the top. If we ever change that policy so the marker hides,
+this recipe flips to `after: false`.
+
+### M-P. Compass rose transform + click-to-reset
+
+```js
+(async () => {
+  const sleep = ms => new Promise(r => setTimeout(r, ms));
+  const map = window.__festivalMap;
+  const compass = document.querySelector('.festival-map-compass');
+  map.rotateTo(45, { duration: 0 });
+  map.setPitch(20);
+  await sleep(300);
+  const transformAfterRotate = compass.style.transform;
+  compass.click();
+  await sleep(1200);
+  return {
+    transformAfterRotate,                 // has rotateX(20deg) rotate(-45deg)
+    bearingAfterClick: map.getBearing(),  // should be near -73.1 (DEFAULT_BEARING)
+    pitchAfterClick:   map.getPitch(),    // should be near 30.7  (DEFAULT_PITCH)
+  };
+})();
+```
+
+Expected: `transformAfterRotate` contains `rotateX(20deg) rotate(-45deg)`;
+`bearingAfterClick` near `-73.1`; `pitchAfterClick` near `30.7`.
+
