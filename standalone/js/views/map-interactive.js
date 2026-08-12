@@ -549,20 +549,32 @@ function addOverlayLayers(map) {
                 ['!=', ['get', 'slug'], 'parking-p6-label'],
             ],
             paint: {
-                // Per-slug colour override: sterne's Skull Point sits in
-                // a busy corner (south of Porto Loco, next to the
-                // Burghain / Shenanigames / Sektamt cluster) and the
-                // default #c17d81 sterne pink was too close to the
-                // base-map hue to read as a POI marker even at the
-                // bumped 4 → 10 px radius. Warm orange (#ff9540, same
-                // shade as the gastro layer) reads clearly against the
-                // magenta backdrop. Deliberately NOT cashless orange
-                // (#F49300) so it doesn't get confused with a payment
-                // dot. All other Points fall through to the layer
-                // colour from FELT_LAYERS.
+                // Per-slug colour override: a handful of sterne Points near
+                // the Porto Loco / Atlantis corner (Skull, Wasserwand,
+                // Flausch and chill, Raversnacks, PinkPuk Bar,
+                // Grinskäffchen) are the only ones that need to shout
+                // as POIs. The default #c17d81 sterne pink sits too
+                // close to the base-map hue to read even at the bumped
+                // 4 → 10 px radius, so paint these six warm orange
+                // (#ff9540, same shade as the gastro layer). Deliberately
+                // NOT cashless orange (#F49300) so they don't get
+                // confused with payment dots. All other Points on every
+                // layer fall through to the FELT_LAYERS colour.
+                //
+                // Flausch and chill / Raversnacks / PinkPuk Bar /
+                // Grinskäffchen were originally gastro Polygons; they
+                // were migrated into sterne.geojson as Points because
+                // they're really community-run bars, not food stalls.
                 'circle-color': [
                     'case',
-                    ['==', ['get', 'slug'], 'skull'], '#ff9540',
+                    ['in', ['get', 'slug'], ['literal', [
+                        'skull',
+                        'wasserwand-projektion',
+                        'flausch-and-chill',
+                        'raversnacks',
+                        'pinkpuk-bar',
+                        'grinskaeffchen',
+                    ]]], '#ff9540',
                     color,
                 ],
                 'circle-radius': pointRadius ?? 4,
