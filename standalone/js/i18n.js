@@ -146,7 +146,7 @@ const STRINGS = {
         // menu (drop-up nav)
         'menu.title': 'Menü',
         // password gate (temporary, pre-launch)
-        'gate.title': 'Noch nicht ganz da',
+        'gate.title': 'The Gates Open Thursday 12 noon',
         'gate.placeholder': 'Passwort',
         'gate.submit': 'Weiter',
         'gate.error': 'Falsches Passwort',
@@ -298,7 +298,7 @@ const STRINGS = {
         // menu (drop-up nav)
         'menu.title': 'Menu',
         // password gate (temporary, pre-launch)
-        'gate.title': 'Not quite there yet',
+        'gate.title': 'The Gates Open Thursday 12 noon',
         'gate.placeholder': 'Password',
         'gate.submit': 'Continue',
         'gate.error': 'Wrong password',
