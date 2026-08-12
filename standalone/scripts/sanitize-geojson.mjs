@@ -239,9 +239,14 @@ const SPOT_RENAME_TOL = 0.00002;   // ~2 m at this latitude
 const SPOT_RENAMES = {
     'toilets-showers.geojson': [
         {
-            firstVertex: [14.484031, 52.275528],
+            firstVertex: [14.484071, 52.275508],
             to: 'Missoir',
             why: 'WC between Atlantis and Stroboklo is actually a Missoir',
+        },
+        {
+            firstVertex: [14.483272, 52.274016],
+            to: 'Missoir',
+            why: 'WC between Sektamt and Porto Loco is actually a Missoir',
         },
     ],
 };
@@ -260,13 +265,23 @@ function textOf(feat) {
     return (feat?.properties?.text || '').trim();
 }
 
-// First vertex of a Polygon / MultiPolygon feature, or null for any
-// other geometry (Point, LineString, GeometryCollection, malformed).
-// Used by Rule 1b to key spot-renames off the shape of the feature,
-// so we can retag one polygon out of many that share the same text.
+// First vertex of a Polygon / MultiPolygon feature, the coordinate
+// of a Point, or null for any other geometry (LineString,
+// GeometryCollection, malformed).  Used by Rule 1b to key
+// spot-renames off the shape of the feature, so we can retag one
+// specific feature out of many that share the same text.
+//
+// Point support is important now that toilets-showers.geojson was
+// migrated from tiny rectangles to Points (see optimize-geojson.mjs)
+// — without it, every SPOT_RENAMES entry for that file would
+// silently no-op on subsequent sanitize runs and only survive as
+// on-disk state.
 function firstVertex(geom) {
     if (!geom) return null;
     const c = geom.coordinates;
+    if (geom.type === 'Point' && Array.isArray(c) && typeof c[0] === 'number') {
+        return c;
+    }
     if (geom.type === 'Polygon' && Array.isArray(c?.[0]?.[0])) {
         return c[0][0];
     }
