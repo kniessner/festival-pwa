@@ -57,7 +57,7 @@ export const FELT_LAYERS = [
         id: 'toilets-showers',
         file: 'toilets-showers.geojson',
         color: '#4ecdc4',
-        pointRadius: ['interpolate', ['linear'], ['zoom'], 14, 5, 17, 8],
+        pointRadius: ['interpolate', ['linear'], ['zoom'], 14, 4, 17, 10],
     },
     // traffic — guest-facing car/parking layer (P4 & P5 lots, P6
     // overflow, E3 entrance). Colour matches Felt's own
