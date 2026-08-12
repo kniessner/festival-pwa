@@ -1,0 +1,43 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "text": "Produktion",
+        "slug": "produktion-base"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              14.4935651,
+              52.2761342
+            ],
+            [
+              14.4935703,
+              52.2763458
+            ],
+            [
+              14.4949821,
+              52.2764017
+            ],
+            [
+              14.494938,
+              52.2761085
+            ],
+            [
+              14.4948476,
+              52.276111
+            ],
+            [
+              14.4935651,
+              52.2761342
+            ]
+          ]
+        ]
+      }
+    }
+  ]
+}

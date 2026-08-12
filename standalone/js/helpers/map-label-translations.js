@@ -29,6 +29,7 @@ export const LABEL_TRANSLATIONS = {
         'Sammelstelle':         'Assembly point',
         'Wasser':               'Water',
         'Cashless Automat':     'Cashless top-up',
+        'Produktion':           'Production Base',
     },
 };
 

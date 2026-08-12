@@ -42,6 +42,18 @@
 // in scripts/optimize-geojson.mjs and set `fill-sort-key: ['get','z']`
 // on the fill layer.
 export const FELT_LAYERS = [
+    // produktion-base sits at index 0 so it renders UNDERNEATH every
+    // other overlay (camping-areas, stages, food-court, sterne,
+    // gastro, produktion, toilets-showers, traffic, security,
+    // cashless).  It's the back-of-house zone — dark grey #3d3d3d,
+    // same colour as the Bassliner bus-arrival slab in traffic —
+    // and letting a guest overlay paint over it is intentional:
+    // wherever a camping area or stage claims the same ground, the
+    // guest overlay wins.  Kept in its own file (not just a slug in
+    // produktion.geojson) because there is no per-feature z-order,
+    // only per-layer.  Label text "Produktion" is translated to
+    // "Production Base" via LABEL_TRANSLATIONS.
+    { id: 'produktion-base', file: 'produktion-base.geojson', color: '#3d3d3d' },
     { id: 'camping-areas',   file: 'camping-areas.geojson',   color: '#a48bc4' },
     { id: 'stages',          file: 'stages.geojson',          color: '#c22a4c' },
     // food-court sits ABOVE stages but BELOW gastro so the individual

@@ -447,6 +447,14 @@ function addOverlayLayers(map) {
         //     grey (#3d3d3d) so it reads as "transit infrastructure"
         //     rather than being confused with the guest parking. One
         //     slug, one case — no dedicated layer needed.
+        //
+        // Produktion Base intentionally does NOT live here: it sits
+        // in its own `produktion-base` layer at index 0 of
+        // FELT_LAYERS so it renders BELOW every guest overlay
+        // (camping-areas, stages, food-court, sterne, gastro,
+        // produktion, toilets, traffic, security, cashless).  A
+        // slug-override wouldn't work here because a per-feature
+        // colour can't move that one feature's z-order.
         const fillColorExpr = id === 'traffic'
             ? ['case', ['==', ['get', 'slug'], 'bassliner'], '#3d3d3d', color]
             : color;
@@ -639,7 +647,7 @@ function addOverlayLayers(map) {
             textOpacity = campingTextOpacity;
         } else if (id === 'gastro' || id === 'sterne' || id === 'food-court') {
             textOpacity = fadeClose;
-        } else if (id === 'produktion') {
+        } else if (id === 'produktion' || id === 'produktion-base') {
             textOpacity = fadeVeryCloseWithEclipsePriority;
         } else if (id === 'toilets-showers') {
             textOpacity = fadeVeryClose;
