@@ -73,7 +73,7 @@ const DRK_COORDS = [
     [14.489318, 52.276619],   // Psycare / DRK zelt
 ];
 
-const INFO_POINT_COORD = [14.494635, 52.276328]; // Info-point / Lost & Found / Kiosk / DIY station — now a Point inside Community Corner (east side)
+const INFO_POINT_COORD = [14.49468, 52.276328]; // Info-point / Lost & Found / Kiosk / DIY station — now a Point inside Community Corner (east side)
 const ECLIPSE_COORD    = [14.489207, 52.276594]; // Awareness & Eclipse polygon centroid (produktion.geojson)
 
 // ─── Entry catalogue ────────────────────────────────────────────────
