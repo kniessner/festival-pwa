@@ -449,11 +449,19 @@ function addOverlayLayers(map) {
         });
 
         // Point features (Felt Markers / Circles come through as Points).
+        // Exclude the Info-point / Lost & Found feature that was
+        // demoted to a Point inside Community Corner (see
+        // produktion.geojson): we want ONLY its label to render, not
+        // a visible circle marker — the polygon it lives inside
+        // (Community Corner) already provides the visual footprint.
         map.addLayer({
             id: id + '-point',
             source: id,
             type: 'circle',
-            filter: ['==', ['geometry-type'], 'Point'],
+            filter: ['all',
+                ['==', ['geometry-type'], 'Point'],
+                ['!=', ['get', 'slug'], 'info-point-community-corner'],
+            ],
             paint: {
                 'circle-color': color,
                 'circle-radius': 4,
