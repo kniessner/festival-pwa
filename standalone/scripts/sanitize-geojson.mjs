@@ -152,7 +152,10 @@ const RENAMES = {
     // Mond, Strandflitzer) so the map reads as multiple identical
     // "Bar" labels rather than a soup of stage-tagged variants.
     // Standalone bar brands with their own identity are left alone:
-    // Bimsbar, Haus of Flausch Teabar, PinkPuk Bar.
+    // Bimsbar. (Haus of Flausch Teabar and PinkPuk Bar used to live
+    // here too, but were migrated into sterne.geojson as Points
+    // — renamed 'Flausch and chill' and kept as 'PinkPuk Bar' —
+    // so they don't need a REMOVE / RENAMES entry either way.)
     'Strandflitzer Bar':          'Bar',
     'Waldtraut Bar':              'Bar',
     'Bar Schlupfloch':            'Bar',

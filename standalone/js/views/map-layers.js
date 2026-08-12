@@ -62,14 +62,17 @@ export const FELT_LAYERS = [
     // by it. Same color as sterne so it visually reads as "a sterne
     // area we happen to render out-of-band for z-order reasons".
     { id: 'food-court',      file: 'food-court.geojson',      color: '#c17d81' },
-    // sterne Point features (Skull, Wasserwand Projektion, Momentarium,
-    // KuschelMuschel, Kollektiv Sonnenallee, 2× Müllstation) were
-    // rendering at the default 4 px in the sterne fill colour #c17d81,
-    // which sits close to the base map's mauve/magenta hues — Skull
-    // in particular was invisible against the background near Porto
-    // Loco. Match the toilets / cashless recipe (interpolate 4 px at
-    // overview → 10 px pinched-in) so the dots read as utility markers
-    // without shouting at low zoom.
+    // sterne Point features (~11 of them: Skull, Wasserwand, Momentarium,
+    // KuschelMuschel, Kollektiv Sonnenallee, 2× Müllstation, Flausch
+    // and chill, Raversnacks, PinkPuk Bar, Grinskäffchen, The Peepshow,
+    // Human Wash) were rendering at the default 4 px in the sterne fill
+    // colour #c17d81, which sits close to the base map's mauve/magenta
+    // hues — Skull in particular was invisible against the background
+    // near Porto Loco. Match the toilets / cashless recipe (interpolate
+    // 4 px at overview → 10 px pinched-in) so the dots read as utility
+    // markers without shouting at low zoom. A subset of these Points
+    // additionally gets a warm-orange colour override in the shared
+    // -point layer (see map-interactive.js).
     { id: 'sterne',          file: 'sterne.geojson',          color: '#c17d81',
       pointRadius: ['interpolate', ['linear'], ['zoom'], 14, 4, 17, 10] },
     { id: 'gastro',          file: 'gastro.geojson',          color: '#ff9540' },

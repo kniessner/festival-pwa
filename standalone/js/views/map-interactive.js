@@ -301,20 +301,23 @@ function createMap(stage, gestureState) {
     document.addEventListener('map:flyTo', onMapFlyToRequest);
     map.__mapFlyToStop = () => document.removeEventListener('map:flyTo', onMapFlyToRequest);
 
-    // Camera-state debug helper — commented out but preserved for
-    // future rounds of default-tuning. Uncomment, deploy, and every
-    // gesture-settle will log the current camera and copy a
-    // paste-ready snippet to the clipboard.
-    //
-    // map.on('moveend', () => {
-    //     const c = map.getCenter();
-    //     const line = `center: [${c.lng.toFixed(6)}, ${c.lat.toFixed(6)}], zoom: ${map.getZoom().toFixed(2)}, bearing: ${map.getBearing().toFixed(1)}, pitch: ${map.getPitch().toFixed(1)}`;
-    //     // eslint-disable-next-line no-console
-    //     console.log('[map camera]', line);
-    //     if (navigator.clipboard && navigator.clipboard.writeText) {
-    //         navigator.clipboard.writeText(line).catch(() => { /* ignore */ });
-    //     }
-    // });
+    // Camera-state debug helper. Enabled during default-camera
+    // tuning: every gesture settle (moveend) logs the current camera
+    // and writes a paste-ready snippet to the clipboard so we can
+    // drop it straight into DEFAULT_CAMERA at the top of this file.
+    // Captures center + zoom + bearing (orientation) + pitch (tilt).
+    // Disable by re-commenting once the default is locked in —
+    // hijacking the clipboard on every user gesture is not something
+    // to ship long-term.
+    map.on('moveend', () => {
+        const c = map.getCenter();
+        const line = `center: [${c.lng.toFixed(6)}, ${c.lat.toFixed(6)}], zoom: ${map.getZoom().toFixed(2)}, bearing: ${map.getBearing().toFixed(1)}, pitch: ${map.getPitch().toFixed(1)}`;
+        // eslint-disable-next-line no-console
+        console.log('[map camera]', line);
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(line).catch(() => { /* ignore */ });
+        }
+    });
 
     // Click-to-copy lat/lng helper (same shape as the moveend one above)
     // is preserved commented-out for the next round of authoring e2e
