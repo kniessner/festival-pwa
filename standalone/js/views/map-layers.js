@@ -11,6 +11,9 @@
 // - `color` is the shared paint colour for fill / outline / point /
 //          label halo. Distinct per group so features stay separable
 //          by eye during the analysis pass.
+// - `pointRadius` / `pointStrokeWidth` (optional) override the
+//          default 4 / 1 for Point features. Used by the security
+//          layer to render prominent Assembly-point dots.
 //
 // Order = z-order (first = bottom). Explicit "bigger underneath,
 // smaller on top" policy so a small feature that sits inside a
@@ -41,4 +44,11 @@ export const FELT_LAYERS = [
     { id: 'gastro',          file: 'gastro.geojson',          color: '#ff9540' },
     { id: 'produktion',      file: 'produktion.geojson',      color: '#8b7fa8' },
     { id: 'toilets-showers', file: 'toilets-showers.geojson', color: '#4ecdc4' },
+    // security — Sammelstellen (emergency assembly points). Mustard
+    // yellow, safety-signage convention. Points are rendered
+    // enlarged (radius 12, stroke 2) so they read as "go here in
+    // an emergency" rather than dissolving into the map at a glance.
+    // Kept at the top of the paint stack (last entry) so nothing
+    // occludes them.
+    { id: 'security',        file: 'security.geojson',        color: '#c9a227', pointRadius: 12, pointStrokeWidth: 2 },
 ];

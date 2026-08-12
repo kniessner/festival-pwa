@@ -26,6 +26,7 @@ export const LABEL_TRANSLATIONS = {
         'Dusche & WC':          'Shower & WC',
         'Urinale':              'Urinals',
         'Check-in Autos':       'Car check-in',
+        'Sammelstelle':         'Assembly point',
     },
 };
 

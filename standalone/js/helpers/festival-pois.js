@@ -76,6 +76,19 @@ const DRK_COORDS = [
 const INFO_POINT_COORD = [14.49468, 52.276328]; // Info-point / Lost & Found / Kiosk / DIY station — now a Point inside Community Corner (east side)
 const ECLIPSE_COORD    = [14.489207, 52.276594]; // Awareness & Eclipse polygon centroid (produktion.geojson)
 
+// Four Sammelstellen (emergency assembly points), source of truth
+// data/security.geojson. Order matches the geojson: NW, N, NE, SW.
+// Off-site fallback is the northern-most point (index 1) — the
+// central-north Sammelstelle sits near the main entrance corridor
+// and is the one a guest who's not at the festival yet is most
+// likely to reach first.
+const ASSEMBLY_COORDS = [
+    [14.494086, 52.278566],   // N — central-north (main entrance corridor); doubles as off-site fallback
+    [14.488925, 52.277668],   // NW
+    [14.500259, 52.279394],   // NE
+    [14.479336, 52.270342],   // SW
+];
+
 // ─── Entry catalogue ────────────────────────────────────────────────
 
 /**
@@ -95,6 +108,17 @@ const nearestOr = (coords) => (userPos) => {
 };
 
 export const POI_LIST = [
+    {
+        // Sammelstellen — emergency assembly points. Listed FIRST
+        // deliberately: in a real incident (evacuation, medical
+        // extraction, missing-person coordination) this is the entry
+        // guests need to hit fastest, so it sits at the top of the
+        // menu even ahead of first-aid.
+        id: 'assembly',
+        labelKey: 'map.flyto.assembly',
+        icon: 'images/poi-assembly.svg',
+        resolve: nearestOr(ASSEMBLY_COORDS),
+    },
     {
         id: 'toilet',
         labelKey: 'map.flyto.toilet',

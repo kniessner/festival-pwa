@@ -187,6 +187,7 @@ const STRINGS = {
         'map.notAtFestival': "You're not at the festival yet.",
         'map.flyto.title': 'Jump to nearest …',
         'map.resetCamera': 'Reset map to default view',
+        'map.flyto.assembly': 'Assembly point',
         'map.flyto.tent': 'My tent',
         'map.flyto.toilet': 'Toilet',
         'map.flyto.firstAid': 'First aid',

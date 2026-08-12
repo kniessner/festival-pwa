@@ -421,7 +421,7 @@ function addOverlayLayers(map) {
     // hide the anchor labels of the previous tier.
     const labelConfigs = [];
 
-    for (const { id, file, color } of FELT_LAYERS) {
+    for (const { id, file, color, pointRadius, pointStrokeWidth } of FELT_LAYERS) {
         map.addSource(id, {
             type: 'geojson',
             data: 'data/' + file,
@@ -454,6 +454,11 @@ function addOverlayLayers(map) {
         // produktion.geojson): we want ONLY its label to render, not
         // a visible circle marker — the polygon it lives inside
         // (Community Corner) already provides the visual footprint.
+        //
+        // Radius / stroke default to 4 / 1 (small marker); layers can
+        // override via FELT_LAYERS to get a more prominent dot — the
+        // security layer sets 12 / 2 so Sammelstellen read as safety
+        // beacons at any zoom.
         map.addLayer({
             id: id + '-point',
             source: id,
@@ -464,9 +469,9 @@ function addOverlayLayers(map) {
             ],
             paint: {
                 'circle-color': color,
-                'circle-radius': 4,
+                'circle-radius': pointRadius ?? 4,
                 'circle-stroke-color': PNG_MAGENTA_HALO,
-                'circle-stroke-width': 1,
+                'circle-stroke-width': pointStrokeWidth ?? 1,
             },
         });
 
@@ -522,6 +527,13 @@ function addOverlayLayers(map) {
         // exactly as it was.
         const fadeClose     = ['interpolate', ['linear'], ['zoom'], 16.0, 0, 16.5, 1];
         const fadeVeryClose = ['interpolate', ['linear'], ['zoom'], 17.0, 0, 17.5, 1];
+        // Medium tier — fade in at moderate zoom. Sits between
+        // 'always' (anchor labels) and 'fadeClose' (sterne / gastro).
+        // Used by the security Sammelstelle labels: hidden at
+        // overview (14.11 default cam), fully readable once the user
+        // pinches in even slightly — safety features should surface
+        // BEFORE the fine-grained infrastructure labels do.
+        const fadeMid       = ['interpolate', ['linear'], ['zoom'], 14.5, 0, 15.0, 1];
         // Produktion's per-feature override: Eclipse gets a case-based
         // "low-zoom" value that keeps it at opacity 1 even below the
         // fade-in band. Structured with `interpolate` on top (so the
@@ -571,6 +583,15 @@ function addOverlayLayers(map) {
             textOpacity = fadeVeryCloseWithEclipsePriority;
         } else if (id === 'toilets-showers') {
             textOpacity = fadeVeryClose;
+        } else if (id === 'security') {
+            // Medium fade — hidden at overview, visible from zoom
+            // ≥ 15. The Sammelstelle DOTS themselves stay visible
+            // at all zooms (see -point layer above, no opacity
+            // expression on it); only the LABEL fades. Rationale:
+            // at overview the 4 mustard dots are readable as "go
+            // there in emergency" without needing text; the wordy
+            // 'Assembly point' label at that scale just clutters.
+            textOpacity = fadeMid;
         } else {
             textOpacity = 1;
         }
