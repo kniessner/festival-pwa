@@ -74,8 +74,14 @@ fi
 # data/*.geojson (sanitize), data/map-search-index.json.  Anything that
 # was already staged AND got re-touched needs re-adding so the commit
 # reflects reality.
-MODIFIED="$(git status --porcelain | awk '{print $2}')"
-if [[ -n "$MODIFIED" ]]; then
+#
+# `git status --porcelain` returns non-empty as long as anything in the
+# working tree diverges from the index — that's all we need for the
+# yes/no gate.  We deliberately don't parse individual lines: the
+# porcelain format for renames is `R  orig -> new` which trips a naive
+# `awk '{print $2}'`, and we don't need per-path granularity anyway
+# because the `git add` below re-stages by scoped path, not by name.
+if [[ -n "$(git status --porcelain)" ]]; then
     echo
     echo "${C_CYAN}▶ pre-commit: re-staging pipeline outputs so they land in this commit…${C_RESET}"
     # Restrict re-staging to the same pipeline scope, to avoid pulling
