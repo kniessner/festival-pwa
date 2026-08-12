@@ -51,6 +51,47 @@ export function renderTimetable(container) {
 
     syncFilterPills();
     refreshTimetable();
+    observeStickyOffsets();
+}
+
+// #searchBar (already sticky at top:0, see components.css), the header
+// bar, .tt-type-tabs and .tt-day-tabs stack one under the next, each
+// sticky at a different `top` (see the sticky rules in views.css). None
+// of their heights are fixed — i18n text length, font loading and narrow
+// screens can all change them — so the offsets are measured here instead
+// of hardcoded, and re-measured via ResizeObserver whenever any of the
+// four bars' size changes.
+let stickyObserver = null;
+
+function stickyOffsetTargets() {
+    return [
+        document.getElementById('searchBar'),
+        document.getElementById('app-header'),
+        document.querySelector('.tt-type-tabs'),
+        document.getElementById('ttDayTabs'),
+    ];
+}
+
+function syncStickyOffsets() {
+    const heights = stickyOffsetTargets().map(el => el?.getBoundingClientRect().height ?? 0);
+    const root = document.documentElement.style;
+    let cumulative = 0;
+    heights.forEach((h, i) => {
+        cumulative += h;
+        root.setProperty(`--tt-sticky-offset-${i + 1}`, `${cumulative}px`);
+    });
+}
+
+// #searchBar/#app-header are shell markup that outlive this view (never
+// removed), but .tt-type-tabs/#ttDayTabs are re-created by
+// renderTimetable() each time this page loads — re-observing all four
+// (instead of assuming persistent observer targets) keeps the
+// measurements live across visits.
+function observeStickyOffsets() {
+    syncStickyOffsets();
+    if (stickyObserver) stickyObserver.disconnect();
+    else stickyObserver = new ResizeObserver(syncStickyOffsets);
+    stickyOffsetTargets().forEach(el => { if (el) stickyObserver.observe(el); });
 }
 
 // Called before navigating to a specific timetable event from elsewhere

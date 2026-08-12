@@ -21,6 +21,31 @@ def normalize(s):
     return s
 
 
+def slugify(s):
+    """Lowercase, dashes-only version of normalize(), for building ids."""
+    import re
+    s = normalize(s).strip()
+    s = re.sub(r'\s+', '-', s)
+    return s
+
+
+def stable_event_id(ev, start_time):
+    # A previous version used the event's position in this array as its
+    # id — looked stable, but every re-scrape (update.sh) rebuilds this
+    # file from scratch and can reorder/insert/remove events, silently
+    # reassigning that position to a different event. js/favorites.js
+    # persists a favorited event by this id, so it needs to survive a
+    # re-scrape as long as the event itself is unchanged — deriving it
+    # from the event's own day/time/stage/title (which the source site
+    # isn't reshuffling) does that; array position doesn't.
+    return '_'.join([
+        ev.get('day') or 'no-day',
+        start_time or 'no-time',
+        ev.get('stage') or 'no-stage',
+        slugify(ev.get('title', '')) or 'untitled',
+    ])
+
+
 def build_timetable(data_dir, lang='de'):
     # Load source data
     with open(os.path.join(data_dir, 'programm-2026.json')) as f:
@@ -45,7 +70,8 @@ def build_timetable(data_dir, lang='de'):
 
     # Build events with descriptions
     events = []
-    for i, ev in enumerate(program.get('events', [])):
+    seen_ids = {}
+    for ev in program.get('events', []):
         # Try to find a description match
         desc = ev.get('description', '') or ev.get('excerpt', '')
 
@@ -96,8 +122,19 @@ def build_timetable(data_dir, lang='de'):
         elif type_val == 'interaktiver-workshop':
             source = 'workshops'
 
+        # Two events can share the same day/time/stage/title-derived id
+        # (a genuine double-booking, or two source items that just
+        # normalize the same way) — suffix the id rather than silently
+        # colliding two different events onto one favorite.
+        event_id = stable_event_id(ev, start_time)
+        if event_id in seen_ids:
+            seen_ids[event_id] += 1
+            event_id = f"{event_id}-{seen_ids[event_id]}"
+        else:
+            seen_ids[event_id] = 1
+
         events.append({
-            'id': i,
+            'id': event_id,
             'title': ev.get('title', ''),
             'day': ev.get('day', ''),
             'day_label': ev.get('day_label', ''),

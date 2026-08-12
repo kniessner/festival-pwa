@@ -91,6 +91,23 @@ span#headerFilterLabel {
     display: flex;
 }
 
+/* Keep the filter button reachable while the event list scrolls beneath
+   it — its own row (.app-header-row) is only as tall as the H1 next to
+   it, too short on its own to hold a sticky child pinned for more than a
+   few px, so the whole bar is stuck instead. .tt-type-tabs/.tt-day-tabs
+   stack directly under it (see below), and all three stack under
+   #searchBar (already sticky at top:0, see .search-bar in components.css)
+   — their exact top offsets are measured in JS (views/timetable.js
+   syncStickyOffsets) rather than hardcoded, since these heights aren't
+   fixed across languages/font-loading/narrow screens. The var's fallback
+   (65px, #searchBar's own height) only matters for the brief instant
+   before that JS runs. */
+.page-timetable .app-header {
+    position: sticky;
+    top: var(--tt-sticky-offset-1, 65px);
+    background: var(--bg);
+}
+
 /* Same active look as .tt-type-tab.active — shown whenever a stage or
    category filter is set (see refreshTimetable() in views/timetable.js). */
 .header-filter-btn.active {
@@ -722,6 +739,15 @@ span#headerFilterLabel {
     text-align: start;
 }
 
+/* Stacks under .page-timetable .app-header + .tt-type-tabs — see the
+   comment on .page-timetable .app-header above for why the offset is
+   JS-measured (--tt-sticky-offset-3) instead of a hardcoded px value. */
+.page-timetable .tt-day-tabs {
+    position: sticky;
+    top: var(--tt-sticky-offset-3, 0px);
+    background: var(--bg);
+}
+
 .tt-day-tabs::-webkit-scrollbar {
     display: none;
 }
@@ -763,6 +789,18 @@ span#headerFilterLabel {
     gap: 8px;
     margin: 0 -16px 4px;
     padding: 8px 16px 0;
+}
+
+/* Stacks directly under .page-timetable .app-header — see the comment
+   there for why the offset (--tt-sticky-offset-2) is JS-measured. Not
+   scoped bare .tt-type-tabs since the map page reuses this same markup
+   for its MapLibre/static tab strip (see .map-tabs-wrap) and shouldn't
+   stick. */
+.page-timetable .tt-type-tabs {
+    position: sticky;
+    top: var(--tt-sticky-offset-2, 0px);
+    z-index: 99;
+    background: var(--bg);
 }
 
 .tt-type-tab {
@@ -916,6 +954,15 @@ span#headerFilterLabel {
     display: flex;
     flex-direction: column;
     gap: 12px;
+}
+
+/* scrollToCurrentTime() in views/timetable.js calls scrollIntoView() on
+   this element with block:'start' — without this, the auto-scroll now
+   lands the target hour group's top right under the sticky header/tabs
+   stack, hiding it. scroll-margin-top makes scrollIntoView respect the
+   same JS-measured offset the sticky bars use. */
+.page-timetable .tt-hour-group {
+    scroll-margin-top: var(--tt-sticky-offset-4, 0px);
 }
 
 .tt-hour-label {

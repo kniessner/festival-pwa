@@ -27,11 +27,40 @@ export function getFavorites() {
     return safeGetJSON(FAV_KEY, []);
 }
 
+// Timetable events are keyed by their own `id` (see scripts/_build_timetable.py's
+// stable_event_id — derived from day/time/stage/title) rather than their
+// array position: update.sh re-scrapes and rebuilds timetable.json from
+// scratch on every content update, and js/music.js's mergeMusicIntoTimetable()
+// re-splices music.json's events into that same array on every load and
+// periodic refresh too — either can reorder/insert/remove events, which
+// would silently repoint an index-based favorite at a different event.
+// Notifications/info items don't come from a pipeline that reorders them
+// the same way, so those stay index-based.
+function timetableEventId(itemIndex) {
+    return store.pageData.timetable?.events?.[itemIndex]?.id;
+}
+
+function favMatches(f, pageSlug, itemIndex) {
+    if (f.page !== pageSlug) return false;
+    if (pageSlug === 'timetable') {
+        const id = timetableEventId(itemIndex);
+        return id !== undefined && f.id === id;
+    }
+    return f.index === itemIndex;
+}
+
 export function toggleFavorite(pageSlug, itemIndex) {
     const favs = getFavorites();
-    const idx = favs.findIndex(f => f.page === pageSlug && f.index === itemIndex);
-    if (idx >= 0) { favs.splice(idx, 1); }
-    else { favs.push({ page: pageSlug, index: itemIndex }); }
+    const idx = favs.findIndex(f => favMatches(f, pageSlug, itemIndex));
+    if (idx >= 0) {
+        favs.splice(idx, 1);
+    } else if (pageSlug === 'timetable') {
+        const id = timetableEventId(itemIndex);
+        if (id === undefined) return false; // nothing loaded at this index to favorite
+        favs.push({ page: pageSlug, id });
+    } else {
+        favs.push({ page: pageSlug, index: itemIndex });
+    }
     // safeSetJSON swallows write failures (Safari private mode / quota) —
     // matches the read side above and every other localStorage caller
     // in the app.
@@ -40,21 +69,22 @@ export function toggleFavorite(pageSlug, itemIndex) {
 }
 
 export function isFavorite(pageSlug, itemIndex) {
-    return getFavorites().some(f => f.page === pageSlug && f.index === itemIndex);
+    return getFavorites().some(f => favMatches(f, pageSlug, itemIndex));
 }
 
-// Stored favorites can outlive the item they pointed to — e.g. a re-scrape
-// reshuffles the timetable's event order, or a favorite was saved while
-// viewing the other language's (differently-indexed) data. getFavorites()
-// itself doesn't know about that; this filters to entries that still
-// resolve to a real event/item in the *currently loaded* data, which is
-// what the nav badge and the My Plan page should both be counting instead
-// of the raw, possibly-stale localStorage entry count.
+// Stored favorites can outlive the item they pointed to — e.g. a favorite
+// was saved while viewing the other language's (differently-indexed) info/
+// notifications data, or (for the timetable) an event was dropped from a
+// later scrape entirely. getFavorites() itself doesn't know about that;
+// this filters to entries that still resolve to a real event/item in the
+// *currently loaded* data, which is what the nav badge and the My Plan
+// page should both be counting instead of the raw, possibly-stale
+// localStorage entry count.
 export function countValidFavorites() {
     let count = 0;
     for (const f of getFavorites()) {
         if (f.page === 'timetable') {
-            if (store.pageData.timetable?.events?.[f.index]) count++;
+            if (store.pageData.timetable?.events?.some(e => e.id === f.id)) count++;
         } else if (f.page === 'notifications') {
             if (store.pageData.notifications?.items?.[f.index]) count++;
         } else if (f.page.startsWith('info-')) {
@@ -87,7 +117,11 @@ export function getNextUpcomingFavorite() {
     let best = null;
     for (const f of getFavorites()) {
         if (f.page !== 'timetable') continue;
-        const ev = events[f.index];
+        // ui.js's nextEventCardHtml needs the event's *current* array
+        // index (to jump to it in the live-rendered list) — separate
+        // concern from f.id, which is how the favorite is matched.
+        const index = events.findIndex(e => e.id === f.id);
+        const ev = events[index];
         if (!ev || !ev.day || !ev.start_time) continue;
         const evDayIndex = dayOrder.indexOf(ev.day);
         if (evDayIndex === -1) continue;
@@ -104,7 +138,7 @@ export function getNextUpcomingFavorite() {
         }
 
         if (endAbs < nowAbs) continue;
-        if (!best || startAbs < best.startAbs) best = { ev, index: f.index, startAbs, running: startAbs <= nowAbs };
+        if (!best || startAbs < best.startAbs) best = { ev, index, startAbs, running: startAbs <= nowAbs };
     }
     return best;
 }
