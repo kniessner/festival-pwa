@@ -54,7 +54,7 @@ export const FELT_LAYERS = [
     // only per-layer.  Label text "Produktion" is translated to
     // "Production Base" via LABEL_TRANSLATIONS.
     { id: 'produktion-base', file: 'produktion-base.geojson', color: '#3d3d3d' },
-    { id: 'camping-areas',   file: 'camping-areas.geojson',   color: '#a48bc4' },
+    { id: 'camping-areas',   file: 'camping-areas.geojson',   color: '#632B75' },
     { id: 'stages',          file: 'stages.geojson',          color: '#c22a4c' },
     // food-court sits ABOVE stages but BELOW gastro so the individual
     // food-stall polygons (Langos, Leuchtstoff, Zirkus Mond Bar, …)

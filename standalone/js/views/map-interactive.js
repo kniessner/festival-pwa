@@ -879,10 +879,29 @@ function addOverlayLayers(map) {
                 //     because we want all 10 water features treated
                 //     uniformly and their text is uniquely 'Wasser'
                 //     (no other feature carries that string).
+                //
+                //   missoir-porto-loco: the Missoir just south of
+                //     Porto Loco sits 3.4 m below a cashless top-up
+                //     Point and 5 m SW of wasser-01. Cashless owns
+                //     the [0,0] slot above, and wasser-01 has already
+                //     been pushed DOWN into the Missoir's slot by the
+                //     rule above. Both south (colliding with wasser)
+                //     and stay-put (colliding with cashless) drop the
+                //     Missoir label on collision. Push it NORTH over
+                //     the cashless label instead. Empirically -1.5 em
+                //     still overlapped the cashless collision box by
+                //     ~2 px (labels are 13 px tall + 2 px padding, so
+                //     each half is ~9 px; -1.5 em = 19.5 px above the
+                //     Missoir point puts the label centre only 16 px
+                //     from the cashless label centre which sits ~3.5 px
+                //     north of the Missoir point). -2.4 em gives ~28 px
+                //     centre-to-centre → ~10 px clear between boxes.
+                //     Slug-matched (there are two Missoirs in the geojson).
                 'text-offset': [
                     'case',
                     ['==', ['get', 'text'], 'Wasser'], ['literal', [0, 1.2]],
                     ['==', ['get', 'slug'], 'bar-neustockland'], ['literal', [0, -1.2]],
+                    ['==', ['get', 'slug'], 'missoir-porto-loco'], ['literal', [0, -2.4]],
                     ['literal', [0, 0]],
                 ],
                 // Anchor tier (stages + camps) always renders; every
