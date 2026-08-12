@@ -549,7 +549,22 @@ function addOverlayLayers(map) {
                 ['!=', ['get', 'slug'], 'parking-p6-label'],
             ],
             paint: {
-                'circle-color': color,
+                // Per-slug colour override: sterne's Skull Point sits in
+                // a busy corner (south of Porto Loco, next to the
+                // Burghain / Shenanigames / Sektamt cluster) and the
+                // default #c17d81 sterne pink was too close to the
+                // base-map hue to read as a POI marker even at the
+                // bumped 4 → 10 px radius. Warm orange (#ff9540, same
+                // shade as the gastro layer) reads clearly against the
+                // magenta backdrop. Deliberately NOT cashless orange
+                // (#F49300) so it doesn't get confused with a payment
+                // dot. All other Points fall through to the layer
+                // colour from FELT_LAYERS.
+                'circle-color': [
+                    'case',
+                    ['==', ['get', 'slug'], 'skull'], '#ff9540',
+                    color,
+                ],
                 'circle-radius': pointRadius ?? 4,
                 'circle-stroke-color': PNG_MAGENTA_HALO,
                 'circle-stroke-width': pointStrokeWidth ?? 1,
