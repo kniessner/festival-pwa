@@ -162,7 +162,18 @@ function bezier(p0, p1, p2, t) {
 // tests/optimize-geojson.test.mjs when we add coverage.
 export function roundRing(ring, radiusDeg) {
     // Strip the duplicate closing vertex; we'll re-add it at the end.
-    const pts = ring.slice(0, -1);
+    let pts = ring.slice(0, -1);
+    // Dedupe consecutive identical vertices.  Felt exports sometimes
+    // ship rings with a repeated corner (see the bassliner polygon,
+    // where vertex 3 appeared twice back-to-back).  Leaving them in
+    // produces zero-length edges further down — which the per-vertex
+    // guard would then skip, at the cost of also skipping the rounding
+    // of the ONE real corner that got duplicated.  Deduping up front
+    // lets that corner round normally.
+    pts = pts.filter((p, i) => {
+        const q = pts[(i - 1 + pts.length) % pts.length];
+        return !(p[0] === q[0] && p[1] === q[1]);
+    });
     const n = pts.length;
     if (n < 3) return ring;
 
@@ -176,6 +187,19 @@ export function roundRing(ring, radiusDeg) {
         // straight, keep vertex as-is.
         const inVec  = sub(curr, prev);
         const outVec = sub(next, curr);
+
+        const inLen  = len(inVec);
+        const outLen = len(outVec);
+        // Degenerate edge (duplicate consecutive vertex, or a Felt
+        // export that closes a ring with the same point twice).  A
+        // zero-length edge has no direction, so scale(edge, 1/0)
+        // produces NaN and blows the ring apart into [null, null]
+        // vertices — which MapLibre interprets as "wrap around the
+        // whole map", making the label float anywhere.  Skip the
+        // vertex; leaving it in place would just re-create the same
+        // degeneracy on the output.
+        if (inLen === 0 || outLen === 0) continue;
+
         const turn = 180 - angleBetweenDeg(scale(inVec, -1), outVec);
 
         if (turn < TURN_ANGLE_THRESHOLD_DEG) {
@@ -184,8 +208,6 @@ export function roundRing(ring, radiusDeg) {
         }
 
         // Cap the arc so it never exceeds half either adjacent edge.
-        const inLen  = len(inVec);
-        const outLen = len(outVec);
         const r = Math.min(radiusDeg, inLen / 2, outLen / 2);
 
         const backDir = scale(sub(prev, curr), 1 / inLen);
@@ -321,6 +343,22 @@ function human(n) {
     return n + ' B';
 }
 
+// ── CLI entrypoint ──────────────────────────────────────────────────
+// Only run the full-file pass when invoked as a script (
+//   `node scripts/optimize-geojson.mjs`
+// or via `npm run optimize:geojson`).  Importing this module purely
+// for its exports — roundGeometry / roundRing / BORDER_RADIUS_METRES,
+// used by one-off "smooth this ONE feature" scripts and by
+// tests/optimize-geojson.test.mjs — must NOT rewrite every geojson
+// on disk as a side effect.  Learned this the hard way when a
+// one-off Node script silently triggered a whole-directory re-
+// optimize before overwriting the target feature.
+if (import.meta.url === `file://${process.argv[1]}`) {
+    runCli();
+}
+
+function runCli() {
+
 const files = readdirSync(DATA_DIR)
     .filter((f) => f.endsWith('.geojson'))
     .map((f) => join(DATA_DIR, f));
@@ -358,3 +396,5 @@ const pct = (100 * (1 - totalAfter / totalBefore)).toFixed(1);
 console.log(
     `${'total'.padEnd(28)} ${human(totalBefore).padStart(9)} → ${human(totalAfter).padStart(9)}  (−${pct}%)`
 );
+
+}   // end runCli
