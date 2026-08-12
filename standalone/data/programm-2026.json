@@ -1001,26 +1001,6 @@
       "time": "FR 14:30",
       "start_time": "14:30",
       "end_time": "16:00",
-      "stage": "betonplatz",
-      "stage_label": "betonplatz",
-      "type": "performance",
-      "type_label": "Performance",
-      "langs": [
-        "de"
-      ],
-      "excerpt": "Spaß, Tiefgang und echte Verbindung! Der „Ohrenzirkus“ ist ein interaktives Mitmach-Format für alle Buchtis! Über Funkkopfhörer tauchen zwei Gruppen in immersive Geschichten voller Überraschungen&hellip;",
-      "description": "Spaß, Tiefgang und echte Verbindung! Der „Ohrenzirkus“ ist ein interaktives Mitmach-Format für alle Buchtis! Über Funkkopfhörer tauchen zwei Gruppen in immersive Geschichten voller Überraschungen ein. Wunderbare Gruppenmomente in kindlicher Leichtigkeit treffen auf Raver-Spaß. Die Geschichten machen gesellschaftskritische Themen wie Nachhaltigkeit, Gemeinschaft und Inklusion auf inspirierende, nachdenkliche Weise erlebbar.\n\nTreffpunkt: Betonplatz\n\nFreitag: 14:30 Uhr – 16:00 Uhr\n\nSamstag: 14:00 Uhr – 15:30 Uhr",
-      "hosts": [
-        "Ohrenzirkus"
-      ]
-    },
-    {
-      "title": "Ohrenzirkus, das interaktive Audio Erlebnis",
-      "day": "2026-08-14",
-      "day_label": "Freitag",
-      "time": "FR 14:30",
-      "start_time": "14:30",
-      "end_time": "16:00",
       "stage": "dezentral",
       "stage_label": "dezentral",
       "type": "performance",
