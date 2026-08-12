@@ -46,7 +46,19 @@ export const FELT_LAYERS = [
     { id: 'sterne',          file: 'sterne.geojson',          color: '#c17d81' },
     { id: 'gastro',          file: 'gastro.geojson',          color: '#ff9540' },
     { id: 'produktion',      file: 'produktion.geojson',      color: '#8b7fa8' },
-    { id: 'toilets-showers', file: 'toilets-showers.geojson', color: '#4ecdc4' },
+    // toilets-showers: converted from polygons to Points to save
+    // ~3.4 KB (46% of file) and 144 vertex slots. Every feature was
+    // a 5-vertex rectangle (4-30 m²) whose exact shape carried no
+    // signal beyond "toilet is here". Point radius interpolates on
+    // zoom (5 px overview → 8 px close), a subtler version of the
+    // security-layer curve — the dots need to stay visually
+    // secondary to the Sammelstellen (which peak at 14 px).
+    {
+        id: 'toilets-showers',
+        file: 'toilets-showers.geojson',
+        color: '#4ecdc4',
+        pointRadius: ['interpolate', ['linear'], ['zoom'], 14, 5, 17, 8],
+    },
     // traffic — guest-facing car/parking layer (P4 & P5 lots, P6
     // overflow, E3 entrance). Colour matches Felt's own
     // Auto&ParkKonzept blue so a guest cross-referencing the
