@@ -27,7 +27,7 @@ export function renderFavorites(container) {
     const newsItems = [];
     for (const f of favs) {
         if (f.page === 'timetable') {
-            const ev = store.pageData.timetable?.events?.[f.index];
+            const ev = store.pageData.timetable?.events?.find(e => e.id === f.id);
             if (ev) {
                 const day = ev.day || 'no-day';
                 if (!programByDay[day]) programByDay[day] = [];
