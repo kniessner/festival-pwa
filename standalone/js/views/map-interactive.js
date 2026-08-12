@@ -440,12 +440,23 @@ function addOverlayLayers(map) {
          // colour breathe against the base map, and the tent's
          // dim-during-drag pattern still works because tent.js probes
          // layers via map.getLayer(id) before touching them.
+        // Per-feature colour override:
+        //   - traffic layer default is #2674ba (Felt Auto&ParkKonzept
+        //     blue), used by parking-p*-fill + E3.
+        //   - The Bassliner bus-arrival polygon overrides to a dark
+        //     grey (#3d3d3d) so it reads as "transit infrastructure"
+        //     rather than being confused with the guest parking. One
+        //     slug, one case — no dedicated layer needed.
+        const fillColorExpr = id === 'traffic'
+            ? ['case', ['==', ['get', 'slug'], 'bassliner'], '#3d3d3d', color]
+            : color;
+
         map.addLayer({
             id: id + '-fill',
             source: id,
             type: 'fill',
             filter: ['==', ['geometry-type'], 'Polygon'],
-            paint: { 'fill-color': color, 'fill-opacity': fillOpacity },
+            paint: { 'fill-color': fillColorExpr, 'fill-opacity': fillOpacity },
         });
 
         // Point features (Felt Markers / Circles come through as Points).
@@ -602,13 +613,13 @@ function addOverlayLayers(map) {
             // 'Assembly point' label at that scale just clutters.
             textOpacity = fadeMid;
         } else if (id === 'traffic') {
-            // Parking labels are ALWAYS visible. The lots sit 1.5–2 km
-            // east of the festival core, well outside the main label
-            // cluster, so there's zero collision risk with festival
-            // infrastructure. Guests panning east to find their car
-            // (or looking up parking before arrival) need the labels
-            // readable at whatever zoom lands them on the lot.
-            textOpacity = 1;
+            // Same fadeMid tier as the security layer. Hidden at
+            // overview; visible from zoom ≥ 15. Rationale mirrors
+            // security: the traffic dots/polygons themselves stay
+            // visible at every zoom (colour signals 'car area'), so
+            // the wordy labels only need to appear once the user
+            // pinches in to look at the outer parts of the site.
+            textOpacity = fadeMid;
         } else {
             textOpacity = 1;
         }

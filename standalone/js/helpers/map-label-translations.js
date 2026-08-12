@@ -27,8 +27,6 @@ export const LABEL_TRANSLATIONS = {
         'Urinale':              'Urinals',
         'Check-in Autos':       'Car check-in',
         'Sammelstelle':         'Assembly point',
-        'Parkplatz P4/P5':      'Parking P4/P5',
-        'Parkplatz P6':         'Parking P6',
     },
 };
 
