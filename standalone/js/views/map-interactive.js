@@ -466,6 +466,15 @@ function addOverlayLayers(map) {
             filter: ['all',
                 ['==', ['geometry-type'], 'Point'],
                 ['!=', ['get', 'slug'], 'info-point-community-corner'],
+                // Two label-only points inside traffic.geojson: they
+                // exist purely to anchor the 'Parkplatz P4/P5' and
+                // 'Parkplatz P6' labels at the cluster centre. Without
+                // this filter they'd render as small blue circles on
+                // top of the parking-lot fill, which reads as "a
+                // marker here" — confusing next to the actual E3
+                // entrance marker.
+                ['!=', ['get', 'slug'], 'parking-p4-p5-label'],
+                ['!=', ['get', 'slug'], 'parking-p6-label'],
             ],
             paint: {
                 'circle-color': color,
@@ -592,6 +601,14 @@ function addOverlayLayers(map) {
             // there in emergency" without needing text; the wordy
             // 'Assembly point' label at that scale just clutters.
             textOpacity = fadeMid;
+        } else if (id === 'traffic') {
+            // Parking labels are ALWAYS visible. The lots sit 1.5–2 km
+            // east of the festival core, well outside the main label
+            // cluster, so there's zero collision risk with festival
+            // infrastructure. Guests panning east to find their car
+            // (or looking up parking before arrival) need the labels
+            // readable at whatever zoom lands them on the lot.
+            textOpacity = 1;
         } else {
             textOpacity = 1;
         }

@@ -47,6 +47,14 @@ export const FELT_LAYERS = [
     { id: 'gastro',          file: 'gastro.geojson',          color: '#ff9540' },
     { id: 'produktion',      file: 'produktion.geojson',      color: '#8b7fa8' },
     { id: 'toilets-showers', file: 'toilets-showers.geojson', color: '#4ecdc4' },
+    // traffic — guest-facing car/parking layer (P4 & P5 lots, P6
+    // overflow, E3 entrance). Colour matches Felt's own
+    // Auto&ParkKonzept blue so a guest cross-referencing the
+    // printed / operator maps sees the same paint. Kept LEAN per
+    // Jacob: staff-only polygons (P1, P3) + Notes were extracted
+    // from Felt but deliberately not shipped — they'd only mislead
+    // a driving guest into a wrong lot.
+    { id: 'traffic',         file: 'traffic.geojson',         color: '#2674ba' },
     // security — Sammelstellen (emergency assembly points). Mustard
     // yellow, safety-signage convention. Point radius interpolates on
     // zoom (8 px at overview, 12 px when pinched in) so the dots don't
