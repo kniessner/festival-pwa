@@ -115,9 +115,31 @@ function stripRuntimeDeadGeojsonProps(fc) {
     delete fc._smoothed;
 }
 
+// The `felt/` directory + these six JSON files are BUILD-TIME
+// INTERMEDIATES, not runtime data. `scripts/update.sh` scrapes them
+// from the WP site; `scripts/_build_info.py` and `_build_timetable.py`
+// then merge them into the shipping `info.json` and `timetable.json`.
+// Once merged, they are dead weight in dist/ (not in SHELL_ASSETS, not
+// in _manifest.json.pages, no code path fetches them). Mirrors the
+// `--exclude=` pattern deploy-prod.sh already uses for files that live
+// in git but shouldn't reach the live server.
+const BUILD_TIME_INTERMEDIATE_DATA_FILES = new Set([
+    'cashless.json',
+    'faqs.json',
+    'news.json',
+    'programm-2026.json',
+    'performances.json',
+    'workshops.json',
+]);
+const BUILD_TIME_INTERMEDIATE_DATA_DIRS = new Set([
+    'felt',
+]);
+
 function copyJsonDir(srcDir, destDir) {
     fs.mkdirSync(destDir, { recursive: true });
     for (const entry of fs.readdirSync(srcDir, { withFileTypes: true })) {
+        if (entry.isDirectory() && BUILD_TIME_INTERMEDIATE_DATA_DIRS.has(entry.name)) continue;
+        if (!entry.isDirectory() && BUILD_TIME_INTERMEDIATE_DATA_FILES.has(entry.name)) continue;
         const srcPath = path.join(srcDir, entry.name);
         const destPath = path.join(destDir, entry.name);
         if (entry.isDirectory()) copyJsonDir(srcPath, destPath);
