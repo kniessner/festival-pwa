@@ -467,57 +467,69 @@ function addOverlayLayers(map) {
             paint: { 'fill-color': fillColorExpr, 'fill-opacity': fillOpacity },
         });
 
-        // Experimental: subtle outline on the Porto-Loco sterne cluster
-        // (Burghain / Shenanigames / Sektamt). All three sit inside a
-        // ~15 m radius and their fill colours blend into one blob at
-        // overview zoom, so a thin border helps read them as distinct
-        // shapes without bringing back the global outline that was
-        // dropped in the 2026-08-08 borderless experiment. Slug-filtered
-        // so nothing else gains an outline. Line colour is a darker
-        // shade of the sterne fill (#c17d81 -> #4a2f32) at 0.55 opacity
-        // so the border reads as a soft edge, not a hard stroke.
+        // Experimental: subtle outline on small sterne clusters where
+        // several polygons sit inside / overlap a larger "container"
+        // polygon and the shared #c17d81 fill blends them into one blob.
+        // Border style: darker shade of the sterne fill (#c17d81 ->
+        // #4a2f32) at 0.55 opacity, line-width 1. Kept off every other
+        // sterne polygon so the borderless baseline stands elsewhere.
         //
-        // Z-order trick: MapLibre draws all fills in a layer first,
-        // then all outlines, so a single line layer over all 3 slugs
-        // would leave sektamt's outline painted on top of shenanigames
-        // and burghain fills where they overlap. Split into three
-        // layers, interleaved with a fill overpaint of the two smaller
-        // polygons so sektamt's outline is covered inside them:
-        //   1. sektamt outline
-        //   2. shen + burghain fill (repaint, covers step 1)
-        //   3. shen + burghain outline
-        // shen and burghain don't overlap each other, so their two
-        // outlines can share one layer.
+        // Z-order trick: MapLibre draws all fills in a layer first and
+        // all outlines afterwards, so a single outline layer over the
+        // whole cluster would leave the base polygon's outline painted
+        // on top of the smaller polygons where they overlap. Per cluster
+        // we add three layers in order:
+        //   1. base-outline    (line, the containing polygon only)
+        //   2. top-overpaint   (fill, the polygons sitting on top —
+        //                       repaints their interiors, covering
+        //                       step 1 inside them)
+        //   3. top-outline     (line, the polygons on top)
+        // The `top` list is drawn together in one line layer because
+        // its members don't overlap each other; if that changes for a
+        // future cluster, split them into ordered sub-clusters.
         if (id === 'sterne') {
             const OUTLINE_PAINT = {
                 'line-color': '#4a2f32',
                 'line-width': 1,
                 'line-opacity': 0.55,
             };
-            map.addLayer({
-                id: 'sterne-sektamt-outline',
-                source: 'sterne',
-                type: 'line',
-                filter: ['==', ['get', 'slug'], 'sektamt'],
-                paint: OUTLINE_PAINT,
-            });
-            map.addLayer({
-                id: 'sterne-cluster-overpaint',
-                source: 'sterne',
-                type: 'fill',
-                filter: ['all',
-                    ['==', ['geometry-type'], 'Polygon'],
-                    ['in', ['get', 'slug'], ['literal', ['burghain', 'shenanigames']]],
-                ],
-                paint: { 'fill-color': color, 'fill-opacity': fillOpacity },
-            });
-            map.addLayer({
-                id: 'sterne-cluster-outline',
-                source: 'sterne',
-                type: 'line',
-                filter: ['in', ['get', 'slug'], ['literal', ['burghain', 'shenanigames']]],
-                paint: OUTLINE_PAINT,
-            });
+            const OUTLINED_CLUSTERS = [
+                // Porto Loco: Sektamt is the big elongated polygon;
+                // Burghain + Shenanigames sit on top of it.
+                { id: 'porto-loco', base: 'sektamt',    top: ['burghain', 'shenanigames'] },
+                // Marktplatz: Marktplatz is the container; The Losers
+                // Arcade + A Quarter to Infinity sit on top of it.
+                // (Losers Arcade extends slightly beyond Marktplatz's
+                // east edge, which is fine — the overpaint only kicks
+                // in inside the overlap.)
+                { id: 'marktplatz', base: 'marktplatz', top: ['the-losers-arcade', 'a-quarter-to-infinity'] },
+            ];
+            for (const cluster of OUTLINED_CLUSTERS) {
+                map.addLayer({
+                    id: `sterne-${cluster.id}-base-outline`,
+                    source: 'sterne',
+                    type: 'line',
+                    filter: ['==', ['get', 'slug'], cluster.base],
+                    paint: OUTLINE_PAINT,
+                });
+                map.addLayer({
+                    id: `sterne-${cluster.id}-overpaint`,
+                    source: 'sterne',
+                    type: 'fill',
+                    filter: ['all',
+                        ['in', ['geometry-type'], ['literal', ['Polygon', 'MultiPolygon']]],
+                        ['in', ['get', 'slug'], ['literal', cluster.top]],
+                    ],
+                    paint: { 'fill-color': color, 'fill-opacity': fillOpacity },
+                });
+                map.addLayer({
+                    id: `sterne-${cluster.id}-top-outline`,
+                    source: 'sterne',
+                    type: 'line',
+                    filter: ['in', ['get', 'slug'], ['literal', cluster.top]],
+                    paint: OUTLINE_PAINT,
+                });
+            }
         }
 
         // Point features (Felt Markers / Circles come through as Points).
