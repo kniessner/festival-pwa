@@ -29,8 +29,20 @@
     ],
     "stages": [
       {
+        "value": "a-quarter-to-infinity",
+        "label": "a-quarter-to-infinity"
+      },
+      {
+        "value": "betonplatz",
+        "label": "betonplatz"
+      },
+      {
         "value": "community-corner",
         "label": "Community Corner"
+      },
+      {
+        "value": "community-corner dezentral",
+        "label": "community-corner dezentral"
       },
       {
         "value": "cuddle-poodle",
@@ -39,6 +51,10 @@
       {
         "value": "dezentral",
         "label": "dezentral"
+      },
+      {
+        "value": "mirage",
+        "label": "Mirage"
       },
       {
         "value": "neuro-divers",
@@ -57,8 +73,20 @@
         "label": "Strandflitzer"
       },
       {
+        "value": "the-losers-arcade",
+        "label": "the-losers-arcade"
+      },
+      {
+        "value": "the-peepshow",
+        "label": "the-peepshow"
+      },
+      {
         "value": "walking-act",
         "label": "Walking Act"
+      },
+      {
+        "value": "zirkus-mond",
+        "label": "Zirkus Mond"
       }
     ],
     "categories": [
@@ -263,6 +291,70 @@
     },
     {
       "id": 7,
+      "title": "The Peepshow Walking Act",
+      "day": "2026-08-13",
+      "day_label": "Donnerstag",
+      "time": "DO 16:00",
+      "start_time": "16:00",
+      "end_time": "17:00",
+      "stage": "",
+      "stage_label": "",
+      "type": "performance",
+      "type_label": "Performance",
+      "category": "Performance",
+      "genre": "Performance",
+      "langs": [],
+      "excerpt": "",
+      "description": "",
+      "hosts": [],
+      "source": "performances"
+    },
+    {
+      "id": 8,
+      "title": "Aquafitness",
+      "day": "2026-08-13",
+      "day_label": "Donnerstag",
+      "time": "DO 16:00",
+      "start_time": "16:00",
+      "end_time": "16:30",
+      "stage": "the-losers-arcade",
+      "stage_label": "the-losers-arcade",
+      "type": "interaktiver-workshop",
+      "type_label": "Workshop",
+      "category": "Workshop",
+      "genre": "Workshop",
+      "langs": [
+        "de"
+      ],
+      "excerpt": "Spaß am Scheitern – garantiert!",
+      "description": "Spaß am Scheitern – garantiert!",
+      "hosts": [],
+      "source": "workshops"
+    },
+    {
+      "id": 9,
+      "title": "Interactive Games",
+      "day": "2026-08-13",
+      "day_label": "Donnerstag",
+      "time": "DO 16:30",
+      "start_time": "16:30",
+      "end_time": "18:00",
+      "stage": "the-losers-arcade",
+      "stage_label": "the-losers-arcade",
+      "type": "interaktiver-workshop",
+      "type_label": "Workshop",
+      "category": "Workshop",
+      "genre": "Workshop",
+      "langs": [
+        "de"
+      ],
+      "excerpt": "",
+      "description": "",
+      "hosts": [],
+      "source": "workshops"
+    },
+    {
+      "id": 10,
       "title": "Straßenstaub abklopfen",
       "day": "2026-08-13",
       "day_label": "Donnerstag",
@@ -286,7 +378,31 @@
       "source": "workshops"
     },
     {
-      "id": 8,
+      "id": 11,
+      "title": "Bija Mantra Meditation",
+      "day": "2026-08-13",
+      "day_label": "Donnerstag",
+      "time": "DO 18:00",
+      "start_time": "18:00",
+      "end_time": "19:00",
+      "stage": "mirage",
+      "stage_label": "Mirage",
+      "type": "interaktiver-workshop",
+      "type_label": "Workshop",
+      "category": "Workshop",
+      "genre": "Workshop",
+      "langs": [
+        "en"
+      ],
+      "excerpt": "Bija mantras are simple, powerful sounds used in meditation. “Bija” means “seed” in Sanskrit—each sound is like a seed that creates vibration in the&hellip;",
+      "description": "Bija mantras are simple, powerful sounds used in meditation. “Bija” means “seed” in Sanskrit—each sound is like a seed that creates vibration in the body and mind. In this meditation, we repeat these sounds together, allowing the voice, breath and vibration to bring us into a calm, focused and connected state. No previous experience is needed.",
+      "hosts": [
+        "Boto"
+      ],
+      "source": "workshops"
+    },
+    {
+      "id": 12,
       "title": "Mandala Meditation",
       "day": "2026-08-13",
       "day_label": "Donnerstag",
@@ -310,31 +426,7 @@
       "source": "workshops"
     },
     {
-      "id": 9,
-      "title": "Please take off your Phone! Tausche deinen Bildschirm gegen den Moment",
-      "day": "2026-08-13",
-      "day_label": "Donnerstag",
-      "time": "DO 19:00",
-      "start_time": "19:00",
-      "end_time": "20:00",
-      "stage": "neuro-divers",
-      "stage_label": "Neuro Divers",
-      "type": "interaktiver-workshop",
-      "type_label": "Workshop",
-      "category": "Workshop",
-      "genre": "Workshop",
-      "langs": [
-        "de"
-      ],
-      "excerpt": "Was passiert, wenn wir ein Festival ohne Telefon, Bildschirm und ständige Erreichbarkeit erleben? Gemeinsam wagen wir ein analoges Experiment und entdecken, wie sich Wahrnehmung,&hellip;",
-      "description": "Was passiert, wenn wir ein Festival ohne Telefon, Bildschirm und ständige Erreichbarkeit erleben? Gemeinsam wagen wir ein analoges Experiment und entdecken, wie sich Wahrnehmung, Bewusstsein und Begegnung verändern, wenn wir wieder unseren Sinnen vertrauen. Für alle, die sich nach einem Abenteuer sehnen, das nicht dokumentiert werden muss, um echt zu sein.",
-      "hosts": [
-        "Svenja Reese"
-      ],
-      "source": "workshops"
-    },
-    {
-      "id": 10,
+      "id": 13,
       "title": "DRÄEMBOT™",
       "day": "2026-08-13",
       "day_label": "Donnerstag",
@@ -356,7 +448,7 @@
       "source": "performances"
     },
     {
-      "id": 11,
+      "id": 14,
       "title": "Kollektiv Sonnenallee",
       "day": "2026-08-13",
       "day_label": "Donnerstag",
@@ -381,7 +473,7 @@
       "source": "program"
     },
     {
-      "id": 12,
+      "id": 15,
       "title": "Zirkus Mond’s „Circ du Rave“",
       "day": "2026-08-13",
       "day_label": "Donnerstag",
@@ -395,15 +487,15 @@
       "category": "Performance",
       "genre": "Performance",
       "langs": [],
-      "excerpt": "Willkommen bei Zirkus Mond’s „SUMMER HITS“ – die überflüssigste und zugleich unverzichtbarste Zirkusshow des Jahres. Ein schillerndes Chaos aus Pailletten, Beinahe-Abstürzen und zu viel&hellip;",
-      "description": "Willkommen bei Zirkus Mond’s „SUMMER HITS“ – die überflüssigste und zugleich unverzichtbarste Zirkusshow des Jahres. Ein schillerndes Chaos aus Pailletten, Beinahe-Abstürzen und zu viel Sommerhit-Vibe. Von Cyr Wheel bis Karaoke – alles ist möglich, nichts ist sicher. Spontanes Chaos garantiert. Zirkus Mond mixt euch den Sommer zusammen. All-style, no-filter, maximaler Unsinn.",
+      "excerpt": "Zurück zu den absoluten Wurzeln. Der Zirkus Mond kehrt zu seinen Wurzeln zurück: der staubigen, chaotisch schönen Welt der freien Partyszene und Raves. Wir&hellip;",
+      "description": "Zurück zu den absoluten Wurzeln. Der Zirkus Mond kehrt zu seinen Wurzeln zurück: der staubigen, chaotisch schönen Welt der freien Partyszene und Raves. Wir verwandeln das Zirkuszelt in einen klanglichen Tempel, in dem der Beat unser Motor und das Soundsystem unser Glaubensbekenntnis ist. Eine wilde, chaotische Kollision aus absurdem Humor, roher Zirkuskunst und dem Spirit, bei der die Grenze zwischen Publikum und Bühne vollkommen verschwindet. Seid ihr bereit, den Verstand mit uns zu verlieren?",
       "hosts": [
         "Zirkus Mond"
       ],
       "source": "performances"
     },
     {
-      "id": 13,
+      "id": 16,
       "title": "A Quarter to Infinity",
       "day": "2026-08-13",
       "day_label": "Donnerstag",
@@ -425,32 +517,7 @@
       "source": "program"
     },
     {
-      "id": 14,
-      "title": "ArtEmiss Walking Act",
-      "day": "2026-08-13",
-      "day_label": "Donnerstag",
-      "time": "DO 21:00",
-      "start_time": "21:00",
-      "end_time": "22:00",
-      "stage": "walking-act",
-      "stage_label": "Walking Act",
-      "type": "performance",
-      "type_label": "Performance",
-      "category": "Performance",
-      "genre": "Performance",
-      "langs": [
-        "de",
-        "en"
-      ],
-      "excerpt": "Artemiss Collective ist ein im Sommer 2018 gegründetes Tanzkollektiv mit Sitz in Berlin. Wir sind sieben starke und einzigartige Frauen, die bei jeder Veranstaltung&hellip;",
-      "description": "Artemiss Collective ist ein im Sommer 2018 gegründetes Tanzkollektiv mit Sitz in Berlin. Wir sind sieben starke und einzigartige Frauen, die bei jeder Veranstaltung magische Momente zaubern. Unsere Leidenschaft für den Tanz und den selbstbestimmten Ausdruck hat uns zusammengeführt. Als sich unsere Wege kreuzten, verschmolzen unsere individuellen Energien und es entstand ein Wirbelwind aus Kreativität, Fantasie und Inspiration. Die darstellende Kunst ist unser Mittel, um das Geheimnis des Lebens zu entdecken und mit ihm in Verbindung zu treten.\n\nDonnerstag: 21:00 Uhr – 22:00 Uhr\n\nFreitag: 21:00 Uhr – 22:00 Uhr\n\nSamstag: 20:00 Uhr – 21:00 Uhr",
-      "hosts": [
-        "ArtEMiss"
-      ],
-      "source": "performances"
-    },
-    {
-      "id": 15,
+      "id": 17,
       "title": "Cuddle Poodle – Kuscheln, Komfort, Konsens",
       "day": "2026-08-13",
       "day_label": "Donnerstag",
@@ -475,7 +542,7 @@
       "source": "program"
     },
     {
-      "id": 16,
+      "id": 18,
       "title": "Raxa Drag Show",
       "day": "2026-08-13",
       "day_label": "Donnerstag",
@@ -499,7 +566,7 @@
       "source": "performances"
     },
     {
-      "id": 17,
+      "id": 19,
       "title": "Pyramid Party",
       "day": "2026-08-13",
       "day_label": "Donnerstag",
@@ -521,7 +588,29 @@
       "source": "performances"
     },
     {
-      "id": 18,
+      "id": 20,
+      "title": "Sci-Fi Puppet Play",
+      "day": "2026-08-13",
+      "day_label": "Donnerstag",
+      "time": "DO 22:30",
+      "start_time": "22:30",
+      "end_time": "23:00",
+      "stage": "a-quarter-to-infinity",
+      "stage_label": "a-quarter-to-infinity",
+      "type": "performance",
+      "type_label": "Performance",
+      "category": "Performance",
+      "genre": "Performance",
+      "langs": [
+        "de"
+      ],
+      "excerpt": "",
+      "description": "",
+      "hosts": [],
+      "source": "performances"
+    },
+    {
+      "id": 21,
       "title": "Sexy Improv",
       "day": "2026-08-13",
       "day_label": "Donnerstag",
@@ -546,7 +635,55 @@
       "source": "workshops"
     },
     {
-      "id": 19,
+      "id": 22,
+      "title": "Peepshow Experience",
+      "day": "2026-08-13",
+      "day_label": "Donnerstag",
+      "time": "DO 23:00",
+      "start_time": "23:00",
+      "end_time": "",
+      "stage": "the-peepshow",
+      "stage_label": "the-peepshow",
+      "type": "space",
+      "type_label": "Space",
+      "category": "Space",
+      "genre": "Space",
+      "langs": [
+        "de"
+      ],
+      "excerpt": "",
+      "description": "",
+      "hosts": [
+        "The Peepshow"
+      ],
+      "source": "program"
+    },
+    {
+      "id": 23,
+      "title": "Gutter Gucci",
+      "day": "2026-08-14",
+      "day_label": "Freitag",
+      "time": "",
+      "start_time": "",
+      "end_time": "",
+      "stage": "dezentral",
+      "stage_label": "dezentral",
+      "type": "performance",
+      "type_label": "Performance",
+      "category": "Performance",
+      "genre": "Performance",
+      "langs": [
+        "de"
+      ],
+      "excerpt": "Riley Davidson (they/them) is a Berlin based interdisciplinary artist working at the intersection of performance, ritual and social critique. Davidson works with participatory performance&hellip;",
+      "description": "Riley Davidson (they/them) is a Berlin based interdisciplinary artist working at the intersection of performance, ritual and social critique. Davidson works with participatory performance as a tool for embodied political education through myth adaptation and ritual. A self proclaimed „feral artist“, their work is both site and community specific; an affective response to their social topography, an invitation to disassemble and reconstruct the structures that govern us.",
+      "hosts": [
+        "Gutter Gucci"
+      ],
+      "source": "performances"
+    },
+    {
+      "id": 24,
       "title": "Schweissperle",
       "day": "2026-08-14",
       "day_label": "Freitag",
@@ -568,7 +705,7 @@
       "source": "program"
     },
     {
-      "id": 20,
+      "id": 25,
       "title": "Momentarium",
       "day": "2026-08-14",
       "day_label": "Freitag",
@@ -590,7 +727,7 @@
       "source": "program"
     },
     {
-      "id": 21,
+      "id": 26,
       "title": "Body of Pleasure",
       "day": "2026-08-14",
       "day_label": "Freitag",
@@ -614,7 +751,7 @@
       "source": "performances"
     },
     {
-      "id": 22,
+      "id": 27,
       "title": "Drawn.Together",
       "day": "2026-08-14",
       "day_label": "Freitag",
@@ -638,7 +775,7 @@
       "source": "workshops"
     },
     {
-      "id": 23,
+      "id": 28,
       "title": "Courage Yoga",
       "day": "2026-08-14",
       "day_label": "Freitag",
@@ -662,7 +799,7 @@
       "source": "workshops"
     },
     {
-      "id": 24,
+      "id": 29,
       "title": "Cuddle Poodle – Kuscheln, Komfort, Konsens",
       "day": "2026-08-14",
       "day_label": "Freitag",
@@ -687,7 +824,7 @@
       "source": "program"
     },
     {
-      "id": 25,
+      "id": 30,
       "title": "Wurzeln und Fliegen – Dein Weg vom Dancefloor zum Healing Space",
       "day": "2026-08-14",
       "day_label": "Freitag",
@@ -711,7 +848,7 @@
       "source": "workshops"
     },
     {
-      "id": 26,
+      "id": 31,
       "title": "De Loite",
       "day": "2026-08-14",
       "day_label": "Freitag",
@@ -736,7 +873,7 @@
       "source": "program"
     },
     {
-      "id": 27,
+      "id": 32,
       "title": "Vulvaa Power Day – Arriving",
       "day": "2026-08-14",
       "day_label": "Freitag",
@@ -760,7 +897,29 @@
       "source": "workshops"
     },
     {
-      "id": 28,
+      "id": 33,
+      "title": "Interactive Games",
+      "day": "2026-08-14",
+      "day_label": "Freitag",
+      "time": "FR 12:00",
+      "start_time": "12:00",
+      "end_time": "14:00",
+      "stage": "the-losers-arcade",
+      "stage_label": "the-losers-arcade",
+      "type": "interaktiver-workshop",
+      "type_label": "Workshop",
+      "category": "Workshop",
+      "genre": "Workshop",
+      "langs": [
+        "de"
+      ],
+      "excerpt": "",
+      "description": "",
+      "hosts": [],
+      "source": "workshops"
+    },
+    {
+      "id": 34,
       "title": "Roll and Flow",
       "day": "2026-08-14",
       "day_label": "Freitag",
@@ -784,7 +943,7 @@
       "source": "workshops"
     },
     {
-      "id": 29,
+      "id": 35,
       "title": "Slow the F*ck Down: A Restorative Yoga Experience",
       "day": "2026-08-14",
       "day_label": "Freitag",
@@ -808,7 +967,7 @@
       "source": "workshops"
     },
     {
-      "id": 30,
+      "id": 36,
       "title": "Purity Politics & Punishment",
       "day": "2026-08-14",
       "day_label": "Freitag",
@@ -832,7 +991,7 @@
       "source": "program"
     },
     {
-      "id": 31,
+      "id": 37,
       "title": "B…B…B…Blabla.fm! by Seifentheater",
       "day": "2026-08-14",
       "day_label": "Freitag",
@@ -856,7 +1015,7 @@
       "source": "performances"
     },
     {
-      "id": 32,
+      "id": 38,
       "title": "Whacking",
       "day": "2026-08-14",
       "day_label": "Freitag",
@@ -880,7 +1039,7 @@
       "source": "workshops"
     },
     {
-      "id": 33,
+      "id": 39,
       "title": "Vulvaa Power Day – Connecting",
       "day": "2026-08-14",
       "day_label": "Freitag",
@@ -904,15 +1063,15 @@
       "source": "workshops"
     },
     {
-      "id": 34,
+      "id": 40,
       "title": "Burghain Hüpfburg",
       "day": "2026-08-14",
       "day_label": "Freitag",
       "time": "FR 13:00",
       "start_time": "13:00",
       "end_time": "19:00",
-      "stage": "community-corner",
-      "stage_label": "Community Corner",
+      "stage": "community-corner dezentral",
+      "stage_label": "community-corner dezentral",
       "type": "performance",
       "type_label": "Performance",
       "category": "Performance",
@@ -929,55 +1088,31 @@
       "source": "performances"
     },
     {
-      "id": 35,
+      "id": 41,
       "title": "Shenanigames",
       "day": "2026-08-14",
       "day_label": "Freitag",
       "time": "FR 13:00",
       "start_time": "13:00",
       "end_time": "19:00",
-      "stage": "walking-act",
-      "stage_label": "Walking Act",
-      "type": "performance",
-      "type_label": "Performance",
-      "category": "Performance",
-      "genre": "Performance",
-      "langs": [],
+      "stage": "community-corner",
+      "stage_label": "Community Corner",
+      "type": "space",
+      "type_label": "Space",
+      "category": "Space",
+      "genre": "Space",
+      "langs": [
+        "de"
+      ],
       "excerpt": "Die Shenanigames sind da! Das brandneue Festival-Highlight. Das Prinzip? Ein gnadenloses Turnier in absurden Spielen aus Legenden umwobenden Landen. Die Teams? Zweier-Duos im Kampfmodus.&hellip;",
       "description": "Die Shenanigames sind da! Das brandneue Festival-Highlight. Das Prinzip? Ein gnadenloses Turnier in absurden Spielen aus Legenden umwobenden Landen. Die Teams? Zweier-Duos im Kampfmodus. Die Disziplinen? Absurd, wild und absolut rufschädigend! Wer hier mitmacht, lässt die Würde direkt am Einlass abgeben. Am Ende wird nur ein einziges Duo gekrönt. Seid ihr dabei?",
       "hosts": [
         "Shenanigames"
       ],
-      "source": "performances"
+      "source": "program"
     },
     {
-      "id": 36,
-      "title": "TANZEN3000 FIESTA",
-      "day": "2026-08-14",
-      "day_label": "Freitag",
-      "time": "FR 13:30",
-      "start_time": "13:30",
-      "end_time": "15:00",
-      "stage": "schweissperle",
-      "stage_label": "Schweissperle",
-      "type": "interaktiver-workshop",
-      "type_label": "Workshop",
-      "category": "Workshop",
-      "genre": "Workshop",
-      "langs": [
-        "en"
-      ],
-      "excerpt": "Diese Tanzfläche ist zum Tanzen da! Das ist das Credo von Tanzen3000 – eine geführte Aktivierung deiner körperlichen und sozialen Muskeln, gepaart mit einem&hellip;",
-      "description": "Diese Tanzfläche ist zum Tanzen da! Das ist das Credo von Tanzen3000 – eine geführte Aktivierung deiner körperlichen und sozialen Muskeln, gepaart mit einem frechen DJ-Mix. Tanzen3000 verwandelt steife Kartoffeln in scharfe Chilis und verspannte Hüften in lebendiges Dynamit. Bring dein fehlendes Rhythmusgefühl und deine Angst vor Social Dancing mit, vergiss dann alles und versuch nur, deine Klamotten anzubehalten – denn wir machen Fiesta.",
-      "hosts": [
-        "Zuzu",
-        "Thomas Scheele",
-        "Toomuch by Tanzen3000"
-      ],
-      "source": "workshops"
-    },
-    {
-      "id": 37,
+      "id": 42,
       "title": "Eat the Rich – Klassenkampf von unten",
       "day": "2026-08-14",
       "day_label": "Freitag",
@@ -1002,7 +1137,7 @@
       "source": "workshops"
     },
     {
-      "id": 38,
+      "id": 43,
       "title": "Israel & Palästina besprechbar machen",
       "day": "2026-08-14",
       "day_label": "Freitag",
@@ -1027,15 +1162,15 @@
       "source": "program"
     },
     {
-      "id": 39,
-      "title": "The Peepshow",
+      "id": 44,
+      "title": "Tarot Reader",
       "day": "2026-08-14",
       "day_label": "Freitag",
       "time": "FR 14:00",
       "start_time": "14:00",
       "end_time": "15:00",
-      "stage": "dezentral",
-      "stage_label": "dezentral",
+      "stage": "the-peepshow",
+      "stage_label": "the-peepshow",
       "type": "interaktiver-workshop",
       "type_label": "Workshop",
       "category": "Workshop",
@@ -1051,15 +1186,15 @@
       "source": "workshops"
     },
     {
-      "id": 40,
+      "id": 45,
       "title": "Ohrenzirkus, das interaktive Audio Erlebnis",
       "day": "2026-08-14",
       "day_label": "Freitag",
       "time": "FR 14:30",
       "start_time": "14:30",
       "end_time": "16:00",
-      "stage": "schweissperle",
-      "stage_label": "Schweissperle",
+      "stage": "betonplatz",
+      "stage_label": "betonplatz",
       "type": "performance",
       "type_label": "Performance",
       "category": "Performance",
@@ -1075,7 +1210,31 @@
       "source": "performances"
     },
     {
-      "id": 41,
+      "id": 46,
+      "title": "Ohrenzirkus, das interaktive Audio Erlebnis",
+      "day": "2026-08-14",
+      "day_label": "Freitag",
+      "time": "FR 14:30",
+      "start_time": "14:30",
+      "end_time": "16:00",
+      "stage": "dezentral",
+      "stage_label": "dezentral",
+      "type": "performance",
+      "type_label": "Performance",
+      "category": "Performance",
+      "genre": "Performance",
+      "langs": [
+        "de"
+      ],
+      "excerpt": "Spaß, Tiefgang und echte Verbindung! Der „Ohrenzirkus“ ist ein interaktives Mitmach-Format für alle Buchtis! Über Funkkopfhörer tauchen zwei Gruppen in immersive Geschichten voller Überraschungen&hellip;",
+      "description": "Spaß, Tiefgang und echte Verbindung! Der „Ohrenzirkus“ ist ein interaktives Mitmach-Format für alle Buchtis! Über Funkkopfhörer tauchen zwei Gruppen in immersive Geschichten voller Überraschungen ein. Wunderbare Gruppenmomente in kindlicher Leichtigkeit treffen auf Raver-Spaß. Die Geschichten machen gesellschaftskritische Themen wie Nachhaltigkeit, Gemeinschaft und Inklusion auf inspirierende, nachdenkliche Weise erlebbar.\n\nTreffpunkt: Betonplatz\n\nFreitag: 14:30 Uhr – 16:00 Uhr\n\nSamstag: 14:00 Uhr – 15:30 Uhr",
+      "hosts": [
+        "Ohrenzirkus"
+      ],
+      "source": "performances"
+    },
+    {
+      "id": 47,
       "title": "Feelings Oasis",
       "day": "2026-08-14",
       "day_label": "Freitag",
@@ -1100,7 +1259,7 @@
       "source": "program"
     },
     {
-      "id": 42,
+      "id": 48,
       "title": "DIY Fächer Upcycling",
       "day": "2026-08-14",
       "day_label": "Freitag",
@@ -1124,7 +1283,7 @@
       "source": "workshops"
     },
     {
-      "id": 43,
+      "id": 49,
       "title": "Vulvaa Power Day – Expressing",
       "day": "2026-08-14",
       "day_label": "Freitag",
@@ -1148,7 +1307,7 @@
       "source": "workshops"
     },
     {
-      "id": 44,
+      "id": 50,
       "title": "Panel: Hedonism vs. Community Activation – How to reconnect (or get active) despite Feelings of Powerlessness",
       "day": "2026-08-14",
       "day_label": "Freitag",
@@ -1175,7 +1334,7 @@
       "source": "program"
     },
     {
-      "id": 45,
+      "id": 51,
       "title": "Jugger Match – Kampf der Besten",
       "day": "2026-08-14",
       "day_label": "Freitag",
@@ -1200,15 +1359,59 @@
       "source": "performances"
     },
     {
-      "id": 46,
-      "title": "The Peepshow",
+      "id": 52,
+      "title": "The Naked Tea Party",
+      "day": "2026-08-14",
+      "day_label": "Freitag",
+      "time": "FR 15:00",
+      "start_time": "15:00",
+      "end_time": "19:00",
+      "stage": "schweissperle",
+      "stage_label": "Schweissperle",
+      "type": "performance",
+      "type_label": "Performance",
+      "category": "Performance",
+      "genre": "Performance",
+      "langs": [],
+      "excerpt": "The Naked Tea Party lädt ein, das Leben nackt, verspielt und frei zu feiern. In einem geschützten Raum voller Respekt, Consent und Offenheit entsteht&hellip;",
+      "description": "The Naked Tea Party lädt ein, das Leben nackt, verspielt und frei zu feiern. In einem geschützten Raum voller Respekt, Consent und Offenheit entsteht eine Gemeinschaft mutiger Körper und freier Seelen. Komm tanzen, bleib für die Magie. Eine Liebeserklärung an unser Sein – wild, ehrlich, entblößt. Du bist willkommen. Du bist frei.",
+      "hosts": [
+        "The Naked Tea Party"
+      ],
+      "source": "performances"
+    },
+    {
+      "id": 53,
+      "title": "Aquafitness",
+      "day": "2026-08-14",
+      "day_label": "Freitag",
+      "time": "FR 16:00",
+      "start_time": "16:00",
+      "end_time": "16:30",
+      "stage": "the-losers-arcade",
+      "stage_label": "the-losers-arcade",
+      "type": "interaktiver-workshop",
+      "type_label": "Workshop",
+      "category": "Workshop",
+      "genre": "Workshop",
+      "langs": [
+        "de"
+      ],
+      "excerpt": "Spaß am Scheitern – garantiert!",
+      "description": "Spaß am Scheitern – garantiert!",
+      "hosts": [],
+      "source": "workshops"
+    },
+    {
+      "id": 54,
+      "title": "Tarot Reader",
       "day": "2026-08-14",
       "day_label": "Freitag",
       "time": "FR 16:00",
       "start_time": "16:00",
       "end_time": "17:00",
-      "stage": "dezentral",
-      "stage_label": "dezentral",
+      "stage": "the-peepshow",
+      "stage_label": "the-peepshow",
       "type": "interaktiver-workshop",
       "type_label": "Workshop",
       "category": "Workshop",
@@ -1224,7 +1427,7 @@
       "source": "workshops"
     },
     {
-      "id": 47,
+      "id": 55,
       "title": "To grow or not to grow? Ideas for a fair and sustainable Future",
       "day": "2026-08-14",
       "day_label": "Freitag",
@@ -1248,7 +1451,29 @@
       "source": "workshops"
     },
     {
-      "id": 48,
+      "id": 56,
+      "title": "Interactive Games",
+      "day": "2026-08-14",
+      "day_label": "Freitag",
+      "time": "FR 16:30",
+      "start_time": "16:30",
+      "end_time": "18:00",
+      "stage": "the-losers-arcade",
+      "stage_label": "the-losers-arcade",
+      "type": "interaktiver-workshop",
+      "type_label": "Workshop",
+      "category": "Workshop",
+      "genre": "Workshop",
+      "langs": [
+        "de"
+      ],
+      "excerpt": "",
+      "description": "",
+      "hosts": [],
+      "source": "workshops"
+    },
+    {
+      "id": 57,
       "title": "Con-Cent Späti",
       "day": "2026-08-14",
       "day_label": "Freitag",
@@ -1273,29 +1498,7 @@
       "source": "performances"
     },
     {
-      "id": 49,
-      "title": "The Naked Tea Party",
-      "day": "2026-08-14",
-      "day_label": "Freitag",
-      "time": "FR 17:00",
-      "start_time": "17:00",
-      "end_time": "19:00",
-      "stage": "schweissperle",
-      "stage_label": "Schweissperle",
-      "type": "performance",
-      "type_label": "Performance",
-      "category": "Performance",
-      "genre": "Performance",
-      "langs": [],
-      "excerpt": "The Naked Tea Party lädt ein, das Leben nackt, verspielt und frei zu feiern. In einem geschützten Raum voller Respekt, Consent und Offenheit entsteht&hellip;",
-      "description": "The Naked Tea Party lädt ein, das Leben nackt, verspielt und frei zu feiern. In einem geschützten Raum voller Respekt, Consent und Offenheit entsteht eine Gemeinschaft mutiger Körper und freier Seelen. Komm tanzen, bleib für die Magie. Eine Liebeserklärung an unser Sein – wild, ehrlich, entblößt. Du bist willkommen. Du bist frei.",
-      "hosts": [
-        "The Naked Tea Party"
-      ],
-      "source": "performances"
-    },
-    {
-      "id": 50,
+      "id": 58,
       "title": "Spiel mit Nähe",
       "day": "2026-08-14",
       "day_label": "Freitag",
@@ -1319,7 +1522,7 @@
       "source": "workshops"
     },
     {
-      "id": 51,
+      "id": 59,
       "title": "Acro Play – Spielerische Akrobatik",
       "day": "2026-08-14",
       "day_label": "Freitag",
@@ -1343,7 +1546,7 @@
       "source": "workshops"
     },
     {
-      "id": 52,
+      "id": 60,
       "title": "Stell dir vor, die Zukunft wird gut",
       "day": "2026-08-14",
       "day_label": "Freitag",
@@ -1367,7 +1570,7 @@
       "source": "workshops"
     },
     {
-      "id": 53,
+      "id": 61,
       "title": "Planet Atelier",
       "day": "2026-08-14",
       "day_label": "Freitag",
@@ -1392,7 +1595,7 @@
       "source": "workshops"
     },
     {
-      "id": 54,
+      "id": 62,
       "title": "Electric Sparks – Flirten auf Festivalfrequenz",
       "day": "2026-08-14",
       "day_label": "Freitag",
@@ -1416,7 +1619,7 @@
       "source": "workshops"
     },
     {
-      "id": 55,
+      "id": 63,
       "title": "Weizmann’s Universal-Medikament by Down to Clown",
       "day": "2026-08-14",
       "day_label": "Freitag",
@@ -1440,7 +1643,7 @@
       "source": "performances"
     },
     {
-      "id": 56,
+      "id": 64,
       "title": "Trippin' with Cyberdelics — No Substances Required",
       "day": "2026-08-14",
       "day_label": "Freitag",
@@ -1464,7 +1667,7 @@
       "source": "workshops"
     },
     {
-      "id": 57,
+      "id": 65,
       "title": "Gegenmachten",
       "day": "2026-08-14",
       "day_label": "Freitag",
@@ -1488,7 +1691,7 @@
       "source": "program"
     },
     {
-      "id": 58,
+      "id": 66,
       "title": "Zirkus Mond’s „Circ du Rave“",
       "day": "2026-08-14",
       "day_label": "Freitag",
@@ -1502,15 +1705,37 @@
       "category": "Performance",
       "genre": "Performance",
       "langs": [],
-      "excerpt": "Willkommen bei Zirkus Mond’s „SUMMER HITS“ – die überflüssigste und zugleich unverzichtbarste Zirkusshow des Jahres. Ein schillerndes Chaos aus Pailletten, Beinahe-Abstürzen und zu viel&hellip;",
-      "description": "Willkommen bei Zirkus Mond’s „SUMMER HITS“ – die überflüssigste und zugleich unverzichtbarste Zirkusshow des Jahres. Ein schillerndes Chaos aus Pailletten, Beinahe-Abstürzen und zu viel Sommerhit-Vibe. Von Cyr Wheel bis Karaoke – alles ist möglich, nichts ist sicher. Spontanes Chaos garantiert. Zirkus Mond mixt euch den Sommer zusammen. All-style, no-filter, maximaler Unsinn.",
+      "excerpt": "Zurück zu den absoluten Wurzeln. Der Zirkus Mond kehrt zu seinen Wurzeln zurück: der staubigen, chaotisch schönen Welt der freien Partyszene und Raves. Wir&hellip;",
+      "description": "Zurück zu den absoluten Wurzeln. Der Zirkus Mond kehrt zu seinen Wurzeln zurück: der staubigen, chaotisch schönen Welt der freien Partyszene und Raves. Wir verwandeln das Zirkuszelt in einen klanglichen Tempel, in dem der Beat unser Motor und das Soundsystem unser Glaubensbekenntnis ist. Eine wilde, chaotische Kollision aus absurdem Humor, roher Zirkuskunst und dem Spirit, bei der die Grenze zwischen Publikum und Bühne vollkommen verschwindet. Seid ihr bereit, den Verstand mit uns zu verlieren?",
       "hosts": [
         "Zirkus Mond"
       ],
       "source": "performances"
     },
     {
-      "id": 59,
+      "id": 67,
+      "title": "Losers Cabaret",
+      "day": "2026-08-14",
+      "day_label": "Freitag",
+      "time": "FR 20:30",
+      "start_time": "20:30",
+      "end_time": "22:00",
+      "stage": "the-losers-arcade",
+      "stage_label": "the-losers-arcade",
+      "type": "performance",
+      "type_label": "Performance",
+      "category": "Performance",
+      "genre": "Performance",
+      "langs": [
+        "de"
+      ],
+      "excerpt": "",
+      "description": "",
+      "hosts": [],
+      "source": "performances"
+    },
+    {
+      "id": 68,
       "title": "A Quarter to Infinity",
       "day": "2026-08-14",
       "day_label": "Freitag",
@@ -1532,7 +1757,7 @@
       "source": "program"
     },
     {
-      "id": 60,
+      "id": 69,
       "title": "ArtEmiss Walking Act",
       "day": "2026-08-14",
       "day_label": "Freitag",
@@ -1557,7 +1782,7 @@
       "source": "performances"
     },
     {
-      "id": 61,
+      "id": 70,
       "title": "Cruel Godess by Vale & Uria von Happy Acro Friends",
       "day": "2026-08-14",
       "day_label": "Freitag",
@@ -1582,7 +1807,7 @@
       "source": "performances"
     },
     {
-      "id": 62,
+      "id": 71,
       "title": "Sober Speed Dating",
       "day": "2026-08-14",
       "day_label": "Freitag",
@@ -1606,7 +1831,7 @@
       "source": "workshops"
     },
     {
-      "id": 63,
+      "id": 72,
       "title": "Pinky Promise Cabaret Show",
       "day": "2026-08-14",
       "day_label": "Freitag",
@@ -1628,7 +1853,29 @@
       "source": "performances"
     },
     {
-      "id": 64,
+      "id": 73,
+      "title": "Sci-Fi Puppet Play",
+      "day": "2026-08-14",
+      "day_label": "Freitag",
+      "time": "FR 23:00",
+      "start_time": "23:00",
+      "end_time": "23:30",
+      "stage": "a-quarter-to-infinity",
+      "stage_label": "a-quarter-to-infinity",
+      "type": "performance",
+      "type_label": "Performance",
+      "category": "Performance",
+      "genre": "Performance",
+      "langs": [
+        "de"
+      ],
+      "excerpt": "",
+      "description": "",
+      "hosts": [],
+      "source": "performances"
+    },
+    {
+      "id": 74,
       "title": "Sober Rave Night",
       "day": "2026-08-14",
       "day_label": "Freitag",
@@ -1654,7 +1901,7 @@
       "source": "program"
     },
     {
-      "id": 65,
+      "id": 75,
       "title": "Schweissperle",
       "day": "2026-08-15",
       "day_label": "Samstag",
@@ -1676,7 +1923,7 @@
       "source": "program"
     },
     {
-      "id": 66,
+      "id": 76,
       "title": "Momentarium",
       "day": "2026-08-15",
       "day_label": "Samstag",
@@ -1698,7 +1945,7 @@
       "source": "program"
     },
     {
-      "id": 67,
+      "id": 77,
       "title": "Morning Yoga – Ground Yourself & Recharge",
       "day": "2026-08-15",
       "day_label": "Samstag",
@@ -1722,7 +1969,7 @@
       "source": "workshops"
     },
     {
-      "id": 68,
+      "id": 78,
       "title": "Cuddle Poodle – Kuscheln, Komfort, Konsens",
       "day": "2026-08-15",
       "day_label": "Samstag",
@@ -1747,7 +1994,7 @@
       "source": "program"
     },
     {
-      "id": 69,
+      "id": 79,
       "title": "Der Weg zu gleichberechtigter Verhütung",
       "day": "2026-08-15",
       "day_label": "Samstag",
@@ -1771,7 +2018,7 @@
       "source": "workshops"
     },
     {
-      "id": 70,
+      "id": 80,
       "title": "De Loite",
       "day": "2026-08-15",
       "day_label": "Samstag",
@@ -1796,7 +2043,7 @@
       "source": "program"
     },
     {
-      "id": 71,
+      "id": 81,
       "title": "This Is your Moment – The Art of being alive",
       "day": "2026-08-15",
       "day_label": "Samstag",
@@ -1820,7 +2067,31 @@
       "source": "workshops"
     },
     {
-      "id": 72,
+      "id": 82,
+      "title": "Gong Bath",
+      "day": "2026-08-15",
+      "day_label": "Samstag",
+      "time": "SA 10:30",
+      "start_time": "10:30",
+      "end_time": "11:30",
+      "stage": "schweissperle",
+      "stage_label": "Schweissperle",
+      "type": "interaktiver-workshop",
+      "type_label": "Workshop",
+      "category": "Workshop",
+      "genre": "Workshop",
+      "langs": [
+        "de"
+      ],
+      "excerpt": "Eine Reise ausgelöst durch Frequenzen, Vibrationen und Klängen, die dir verhelfen in dich selbst und in den Moment einzutauchen.",
+      "description": "Eine Reise ausgelöst durch Frequenzen, Vibrationen und Klängen, die dir verhelfen in dich selbst und in den Moment einzutauchen.",
+      "hosts": [
+        "Melanie Sichardt & André Richter"
+      ],
+      "source": "workshops"
+    },
+    {
+      "id": 83,
       "title": "Pranayama 101",
       "day": "2026-08-15",
       "day_label": "Samstag",
@@ -1844,31 +2115,7 @@
       "source": "workshops"
     },
     {
-      "id": 73,
-      "title": "Gong Bath",
-      "day": "2026-08-15",
-      "day_label": "Samstag",
-      "time": "SA 11:30",
-      "start_time": "11:30",
-      "end_time": "12:30",
-      "stage": "schweissperle",
-      "stage_label": "Schweissperle",
-      "type": "interaktiver-workshop",
-      "type_label": "Workshop",
-      "category": "Workshop",
-      "genre": "Workshop",
-      "langs": [
-        "de"
-      ],
-      "excerpt": "Eine Reise ausgelöst durch Frequenzen, Vibrationen und Klängen, die dir verhelfen in dich selbst und in den Moment einzutauchen.",
-      "description": "Eine Reise ausgelöst durch Frequenzen, Vibrationen und Klängen, die dir verhelfen in dich selbst und in den Moment einzutauchen.",
-      "hosts": [
-        "Melanie Sichardt & André Richter"
-      ],
-      "source": "workshops"
-    },
-    {
-      "id": 74,
+      "id": 84,
       "title": "Decisive is the new Black",
       "day": "2026-08-15",
       "day_label": "Samstag",
@@ -1892,7 +2139,7 @@
       "source": "workshops"
     },
     {
-      "id": 75,
+      "id": 85,
       "title": "Klima- und menschenfreundlich einkaufen – wie kann das gehen? [",
       "day": "2026-08-15",
       "day_label": "Samstag",
@@ -1916,7 +2163,7 @@
       "source": "workshops"
     },
     {
-      "id": 76,
+      "id": 86,
       "title": "Divine Alignment",
       "day": "2026-08-15",
       "day_label": "Samstag",
@@ -1940,7 +2187,7 @@
       "source": "workshops"
     },
     {
-      "id": 77,
+      "id": 87,
       "title": "We are coming out – Free the Nipple",
       "day": "2026-08-15",
       "day_label": "Samstag",
@@ -1964,7 +2211,7 @@
       "source": "workshops"
     },
     {
-      "id": 78,
+      "id": 88,
       "title": "Whacking",
       "day": "2026-08-15",
       "day_label": "Samstag",
@@ -1988,15 +2235,15 @@
       "source": "workshops"
     },
     {
-      "id": 79,
+      "id": 89,
       "title": "Burghain Hüpfburg",
       "day": "2026-08-15",
       "day_label": "Samstag",
       "time": "SA 13:00",
       "start_time": "13:00",
       "end_time": "19:00",
-      "stage": "community-corner",
-      "stage_label": "Community Corner",
+      "stage": "community-corner dezentral",
+      "stage_label": "community-corner dezentral",
       "type": "performance",
       "type_label": "Performance",
       "category": "Performance",
@@ -2013,29 +2260,31 @@
       "source": "performances"
     },
     {
-      "id": 80,
+      "id": 90,
       "title": "Shenanigames",
       "day": "2026-08-15",
       "day_label": "Samstag",
       "time": "SA 13:00",
       "start_time": "13:00",
       "end_time": "19:00",
-      "stage": "walking-act",
-      "stage_label": "Walking Act",
-      "type": "performance",
-      "type_label": "Performance",
-      "category": "Performance",
-      "genre": "Performance",
-      "langs": [],
+      "stage": "community-corner",
+      "stage_label": "Community Corner",
+      "type": "space",
+      "type_label": "Space",
+      "category": "Space",
+      "genre": "Space",
+      "langs": [
+        "de"
+      ],
       "excerpt": "Die Shenanigames sind da! Das brandneue Festival-Highlight. Das Prinzip? Ein gnadenloses Turnier in absurden Spielen aus Legenden umwobenden Landen. Die Teams? Zweier-Duos im Kampfmodus.&hellip;",
       "description": "Die Shenanigames sind da! Das brandneue Festival-Highlight. Das Prinzip? Ein gnadenloses Turnier in absurden Spielen aus Legenden umwobenden Landen. Die Teams? Zweier-Duos im Kampfmodus. Die Disziplinen? Absurd, wild und absolut rufschädigend! Wer hier mitmacht, lässt die Würde direkt am Einlass abgeben. Am Ende wird nur ein einziges Duo gekrönt. Seid ihr dabei?",
       "hosts": [
         "Shenanigames"
       ],
-      "source": "performances"
+      "source": "program"
     },
     {
-      "id": 81,
+      "id": 91,
       "title": "Human Wash",
       "day": "2026-08-15",
       "day_label": "Samstag",
@@ -2057,7 +2306,7 @@
       "source": "program"
     },
     {
-      "id": 82,
+      "id": 92,
       "title": "Self Massage: Shake, Flow, & Release",
       "day": "2026-08-15",
       "day_label": "Samstag",
@@ -2081,7 +2330,7 @@
       "source": "workshops"
     },
     {
-      "id": 83,
+      "id": 93,
       "title": "Song Bingo by Zart Kollektiv",
       "day": "2026-08-15",
       "day_label": "Samstag",
@@ -2105,7 +2354,7 @@
       "source": "performances"
     },
     {
-      "id": 84,
+      "id": 94,
       "title": "Shady Lady Aerobic",
       "day": "2026-08-15",
       "day_label": "Samstag",
@@ -2129,7 +2378,7 @@
       "source": "performances"
     },
     {
-      "id": 85,
+      "id": 95,
       "title": "Trippin' with Cyberdelics — No Substances Required",
       "day": "2026-08-15",
       "day_label": "Samstag",
@@ -2153,7 +2402,7 @@
       "source": "workshops"
     },
     {
-      "id": 86,
+      "id": 96,
       "title": "Panel: Money & Power in Cultural Creation – aktuelle Situation/ Shift in der Kulturszene",
       "day": "2026-08-15",
       "day_label": "Samstag",
@@ -2173,39 +2422,15 @@
       "excerpt": "Wer Kultur finanziert, bestimmt oft auch ihre Handlungsspielräume. In Zeiten von Haushaltskürzungen und wachsender Förderabhängigkeit stellt sich die Frage: Wie frei kann die Kulturszene&hellip;",
       "description": "Lindi Delight ist Transformationsarchitektin und doppelt zertifizierte Coachin, die seit fast zwei Jahrzehnten die Zukunft globaler Musikveranstaltungen und der Musikkultur mitgestaltet. Dank ihrer Erfahrung als Leiterin internationaler Markentourneen für Künstler wie Chris Liebing (CLR), DJ Tennis (Life and Death) und Lee Burridge (All Day I Dream), der Leitung kontinentübergreifender Teams sowie der Steuerung komplexer organisatorischer Veränderungen verfügt sie über eine seltene Kombination aus Kreativität und strategischer Umsetzungsstärke. Zu ihrem Beratungsportfolio zählen Most Wanted: Music, Boiler Room, XP Music Futures und die Beatport Group, wo sie Konferenzen konzipierte, Betriebsabläufe umstrukturierte und eine Kultur der Inklusion und Innovation förderte. Bekannt wurde sie ...",
       "hosts": [
-        "Thomas Scheele",
         "Alexander Krüger",
         "Lindi Delight",
+        "Thomas Scheele (Toomuch)",
         "Emiko Gejic"
       ],
       "source": "program"
     },
     {
-      "id": 87,
-      "title": "Ohrenzirkus, das interaktive Audio Erlebnis",
-      "day": "2026-08-15",
-      "day_label": "Samstag",
-      "time": "SA 14:00",
-      "start_time": "14:00",
-      "end_time": "15:30",
-      "stage": "schweissperle",
-      "stage_label": "Schweissperle",
-      "type": "performance",
-      "type_label": "Performance",
-      "category": "Performance",
-      "genre": "Performance",
-      "langs": [
-        "de"
-      ],
-      "excerpt": "Spaß, Tiefgang und echte Verbindung! Der „Ohrenzirkus“ ist ein interaktives Mitmach-Format für alle Buchtis! Über Funkkopfhörer tauchen zwei Gruppen in immersive Geschichten voller Überraschungen&hellip;",
-      "description": "Spaß, Tiefgang und echte Verbindung! Der „Ohrenzirkus“ ist ein interaktives Mitmach-Format für alle Buchtis! Über Funkkopfhörer tauchen zwei Gruppen in immersive Geschichten voller Überraschungen ein. Wunderbare Gruppenmomente in kindlicher Leichtigkeit treffen auf Raver-Spaß. Die Geschichten machen gesellschaftskritische Themen wie Nachhaltigkeit, Gemeinschaft und Inklusion auf inspirierende, nachdenkliche Weise erlebbar.\n\nTreffpunkt: Betonplatz\n\nFreitag: 14:30 Uhr – 16:00 Uhr\n\nSamstag: 14:00 Uhr – 15:30 Uhr",
-      "hosts": [
-        "Ohrenzirkus"
-      ],
-      "source": "performances"
-    },
-    {
-      "id": 88,
+      "id": 97,
       "title": "Feelings Oasis",
       "day": "2026-08-15",
       "day_label": "Samstag",
@@ -2230,7 +2455,7 @@
       "source": "program"
     },
     {
-      "id": 89,
+      "id": 98,
       "title": "RIGHT HERE – RIGHT NOW: Politische Graffiti als Stimme im öffentlichen Raum",
       "day": "2026-08-15",
       "day_label": "Samstag",
@@ -2254,7 +2479,7 @@
       "source": "workshops"
     },
     {
-      "id": 90,
+      "id": 99,
       "title": "Somatic Dance",
       "day": "2026-08-15",
       "day_label": "Samstag",
@@ -2278,7 +2503,7 @@
       "source": "workshops"
     },
     {
-      "id": 91,
+      "id": 100,
       "title": "B…B…B…Blabla.fm! by Seifentheater",
       "day": "2026-08-15",
       "day_label": "Samstag",
@@ -2295,14 +2520,14 @@
         "de"
       ],
       "excerpt": "B…B…B…Blabla.fm ist die Dauerwelle für die Ohren. Zwischen Glitzer und Staub bringen wir euch live in Farbe und bunt auf der Bucht die verworrensten&hellip;",
-      "description": "B…B…B…Blabla.fm ist die Dauerwelle für die Ohren. Zwischen Glitzer und Staub bringen wir euch live in Farbe und bunt auf der Bucht die verworrensten Umfragen, überdrehte Radiohosts und absolut keine verlässlichen Informationen. Macht euch auf den journalistischen Entertainment-Walking-Act der Sonderklasse gefasst, …wenn zum Beispiel unser Investigativ-Team unterwegs ist und zusammen mit Festivalgästen versucht dieser einen großen Sache auf die Spur zu kommen: „Wann ist auf der Bucht morgen?“, „AkkuHandsauger oder Bodensauger – Was hilft besser gegen den Bucht-Staub?“… …wenn unsere zertifizierte FestivalSoziologin empirischen Studien nachgeht und fragt: „Wie viele Leute wissen gerade, wo ihre Freund*innen sind?“… …wenn unsere Musikredakteure das ultimative Bucht-Musikquiz To Go mit den Gästen machen. Hauptgewinn? Ein XXXXXXL-Free-Ticket für eine Seifentheater-Show und vieles mehr…\n\nFreitag 12:30 Uhr – 14:00 Uhr\n\nSamstag 15:30 Uhr – 16:00 Uhr",
+      "description": "B…B…B…Blabla.fm ist die Dauerwelle für die Ohren. Zwischen Glitzer und Staub bringen wir euch live in Farbe und bunt auf der Bucht die verworrensten Umfragen, überdrehte Radiohosts und absolut keine verlässlichen Informationen. Macht euch auf den journalistischen Entertainment-Walking-Act der Sonderklasse gefasst,   …wenn zum Beispiel unser Investigativ-Team unterwegs ist und zusammen mit Festivalgästen versucht dieser einen großen Sache auf die Spur zu kommen: „Wann ist auf der Bucht morgen?“, „AkkuHandsauger oder Bodensauger – Was hilft besser gegen den Bucht-Staub?“… …wenn unsere zertifizierte FestivalSoziologin empirischen Studien nachgeht und fragt: „Wie viele Leute wissen gerade, wo ihre Freund*innen sind?“… …wenn unsere Musikredakteure das ultimative Bucht-Musikquiz To Go mit den Gästen machen. Hauptgewinn? Ein XXXXXXL-Free-Ticket für eine Seifentheater-Show und vieles mehr…",
       "hosts": [
         "Seifentheater"
       ],
       "source": "performances"
     },
     {
-      "id": 92,
+      "id": 101,
       "title": "Jugger Match – Kampf der Besten",
       "day": "2026-08-15",
       "day_label": "Samstag",
@@ -2327,7 +2552,29 @@
       "source": "performances"
     },
     {
-      "id": 93,
+      "id": 102,
+      "title": "Aquafitness",
+      "day": "2026-08-15",
+      "day_label": "Samstag",
+      "time": "SA 16:00",
+      "start_time": "16:00",
+      "end_time": "16:30",
+      "stage": "the-losers-arcade",
+      "stage_label": "the-losers-arcade",
+      "type": "interaktiver-workshop",
+      "type_label": "Workshop",
+      "category": "Workshop",
+      "genre": "Workshop",
+      "langs": [
+        "de"
+      ],
+      "excerpt": "Spaß am Scheitern – garantiert!",
+      "description": "Spaß am Scheitern – garantiert!",
+      "hosts": [],
+      "source": "workshops"
+    },
+    {
+      "id": 103,
       "title": "Staying present in Conflict",
       "day": "2026-08-15",
       "day_label": "Samstag",
@@ -2351,7 +2598,7 @@
       "source": "workshops"
     },
     {
-      "id": 94,
+      "id": 104,
       "title": "Neurodiversity, Sex and Politics",
       "day": "2026-08-15",
       "day_label": "Samstag",
@@ -2375,7 +2622,29 @@
       "source": "workshops"
     },
     {
-      "id": 95,
+      "id": 105,
+      "title": "Interactive Games",
+      "day": "2026-08-15",
+      "day_label": "Samstag",
+      "time": "SA 16:30",
+      "start_time": "16:30",
+      "end_time": "18:00",
+      "stage": "the-losers-arcade",
+      "stage_label": "the-losers-arcade",
+      "type": "interaktiver-workshop",
+      "type_label": "Workshop",
+      "category": "Workshop",
+      "genre": "Workshop",
+      "langs": [
+        "de"
+      ],
+      "excerpt": "",
+      "description": "",
+      "hosts": [],
+      "source": "workshops"
+    },
+    {
+      "id": 106,
       "title": "Con-Cent Späti",
       "day": "2026-08-15",
       "day_label": "Samstag",
@@ -2400,13 +2669,13 @@
       "source": "performances"
     },
     {
-      "id": 96,
-      "title": "Dance Improvisation Class",
+      "id": 107,
+      "title": "TANZEN3000 FIESTA",
       "day": "2026-08-15",
       "day_label": "Samstag",
-      "time": "SA 17:00",
-      "start_time": "17:00",
-      "end_time": "19:30",
+      "time": "SA 17",
+      "start_time": "17",
+      "end_time": "",
       "stage": "schweissperle",
       "stage_label": "Schweissperle",
       "type": "interaktiver-workshop",
@@ -2416,15 +2685,41 @@
       "langs": [
         "en"
       ],
-      "excerpt": "Ein Tanzworkshop, der von unserer Vorstellungskraft ausgeht! Durch geführte Improvisationsübungen mit Langsamkeit, feinem Lauschen auf Körperempfindungen und Anatomie sowie Partnerarbeit und poetisch-visuelle Impulse führe&hellip;",
-      "description": "Ein Tanzworkshop, der von unserer Vorstellungskraft ausgeht! Durch geführte Improvisationsübungen mit Langsamkeit, feinem Lauschen auf Körperempfindungen und Anatomie sowie Partnerarbeit und poetisch-visuelle Impulse führe ich dich in Tänze, die dich alles sein und werden lassen, was du dir vorstellen kannst. Keine Vortanzerfahrung nötig – wirklich jede:r ist willkommen.",
+      "excerpt": "Diese Tanzfläche ist zum Tanzen da! Das ist das Credo von Tanzen3000 – eine geführte Aktivierung deiner körperlichen und sozialen Muskeln, gepaart mit einem&hellip;",
+      "description": "Tanzen3000 is bringing more dance to the dancefloor. We're a Berlin-based collective with backgrounds in djing, dance, rapping, somatics, and nightlife activism. Our sessions invite everyone, with or without previous dance experience, wanting to create more physical and socially connected parties. In our guided activations, we share free movement concepts that you can instantly play with on the dancefloor, to any style of music. Our DJs mix different genres and bpm, taking you on a trip both physically and emotionally. Sounds keep moving and so do you!",
       "hosts": [
-        "Anuschka Loose"
+        "Tanzen3000",
+        "Zuzu",
+        "Thomas Scheele (Toomuch)"
       ],
       "source": "workshops"
     },
     {
-      "id": 97,
+      "id": 108,
+      "title": "Symbiosis Stretch Dance",
+      "day": "2026-08-15",
+      "day_label": "Samstag",
+      "time": "SA 17:00",
+      "start_time": "17:00",
+      "end_time": "19:00",
+      "stage": "schweissperle",
+      "stage_label": "Schweissperle",
+      "type": "interaktiver-workshop",
+      "type_label": "Workshop",
+      "category": "Workshop",
+      "genre": "Workshop",
+      "langs": [
+        "en"
+      ],
+      "excerpt": "Body pain? Raving too hard? We got solutions. We pair up with a partner to discover relaxing stretches that also build connection and trust&hellip;",
+      "description": "Body pain? Raving too hard? We got solutions. We pair up with a partner to discover relaxing stretches that also build connection and trust in a playful way. These contact partner stretches can transform into new dance moves! We learn to read and co-exist with others physically.",
+      "hosts": [
+        "Kazuma Glen Motomura (Bodypoet)"
+      ],
+      "source": "workshops"
+    },
+    {
+      "id": 109,
       "title": "Männer* zwischen Kritik, Überforderung und positiver Männlichkeit",
       "day": "2026-08-15",
       "day_label": "Samstag",
@@ -2448,7 +2743,7 @@
       "source": "workshops"
     },
     {
-      "id": 98,
+      "id": 110,
       "title": "Planet Atelier",
       "day": "2026-08-15",
       "day_label": "Samstag",
@@ -2473,7 +2768,7 @@
       "source": "workshops"
     },
     {
-      "id": 99,
+      "id": 111,
       "title": "Digital Independence",
       "day": "2026-08-15",
       "day_label": "Samstag",
@@ -2497,7 +2792,7 @@
       "source": "workshops"
     },
     {
-      "id": 100,
+      "id": 112,
       "title": "SingSisySing – Hanna & Aron",
       "day": "2026-08-15",
       "day_label": "Samstag",
@@ -2522,7 +2817,7 @@
       "source": "performances"
     },
     {
-      "id": 101,
+      "id": 113,
       "title": "Weizmann’s Universal-Medikament by Down to Clown",
       "day": "2026-08-15",
       "day_label": "Samstag",
@@ -2546,7 +2841,7 @@
       "source": "performances"
     },
     {
-      "id": 102,
+      "id": 114,
       "title": "The Diaspora Speaks",
       "day": "2026-08-15",
       "day_label": "Samstag",
@@ -2570,7 +2865,7 @@
       "source": "performances"
     },
     {
-      "id": 103,
+      "id": 115,
       "title": "ArtEmiss Walking Act",
       "day": "2026-08-15",
       "day_label": "Samstag",
@@ -2595,7 +2890,7 @@
       "source": "performances"
     },
     {
-      "id": 104,
+      "id": 116,
       "title": "RATTE by Kitty and The Cat",
       "day": "2026-08-15",
       "day_label": "Samstag",
@@ -2619,7 +2914,7 @@
       "source": "performances"
     },
     {
-      "id": 105,
+      "id": 117,
       "title": "Zirkus Mond’s „Circ du Rave“",
       "day": "2026-08-15",
       "day_label": "Samstag",
@@ -2633,15 +2928,15 @@
       "category": "Performance",
       "genre": "Performance",
       "langs": [],
-      "excerpt": "Willkommen bei Zirkus Mond’s „SUMMER HITS“ – die überflüssigste und zugleich unverzichtbarste Zirkusshow des Jahres. Ein schillerndes Chaos aus Pailletten, Beinahe-Abstürzen und zu viel&hellip;",
-      "description": "Willkommen bei Zirkus Mond’s „SUMMER HITS“ – die überflüssigste und zugleich unverzichtbarste Zirkusshow des Jahres. Ein schillerndes Chaos aus Pailletten, Beinahe-Abstürzen und zu viel Sommerhit-Vibe. Von Cyr Wheel bis Karaoke – alles ist möglich, nichts ist sicher. Spontanes Chaos garantiert. Zirkus Mond mixt euch den Sommer zusammen. All-style, no-filter, maximaler Unsinn.",
+      "excerpt": "Zurück zu den absoluten Wurzeln. Der Zirkus Mond kehrt zu seinen Wurzeln zurück: der staubigen, chaotisch schönen Welt der freien Partyszene und Raves. Wir&hellip;",
+      "description": "Zurück zu den absoluten Wurzeln. Der Zirkus Mond kehrt zu seinen Wurzeln zurück: der staubigen, chaotisch schönen Welt der freien Partyszene und Raves. Wir verwandeln das Zirkuszelt in einen klanglichen Tempel, in dem der Beat unser Motor und das Soundsystem unser Glaubensbekenntnis ist. Eine wilde, chaotische Kollision aus absurdem Humor, roher Zirkuskunst und dem Spirit, bei der die Grenze zwischen Publikum und Bühne vollkommen verschwindet. Seid ihr bereit, den Verstand mit uns zu verlieren?",
       "hosts": [
         "Zirkus Mond"
       ],
       "source": "performances"
     },
     {
-      "id": 106,
+      "id": 118,
       "title": "Scham & Sex: Fickfiction schreiben und Widerstände überwinden",
       "day": "2026-08-15",
       "day_label": "Samstag",
@@ -2665,7 +2960,7 @@
       "source": "workshops"
     },
     {
-      "id": 107,
+      "id": 119,
       "title": "A Quarter to Infinity",
       "day": "2026-08-15",
       "day_label": "Samstag",
@@ -2687,7 +2982,7 @@
       "source": "program"
     },
     {
-      "id": 108,
+      "id": 120,
       "title": "Where Fantasies meet We meet",
       "day": "2026-08-15",
       "day_label": "Samstag",
@@ -2712,7 +3007,7 @@
       "source": "workshops"
     },
     {
-      "id": 109,
+      "id": 121,
       "title": "DRÄEMBOT™",
       "day": "2026-08-15",
       "day_label": "Samstag",
@@ -2734,7 +3029,7 @@
       "source": "performances"
     },
     {
-      "id": 110,
+      "id": 122,
       "title": "Pinky Promise Cabaret Show",
       "day": "2026-08-15",
       "day_label": "Samstag",
@@ -2756,7 +3051,29 @@
       "source": "performances"
     },
     {
-      "id": 111,
+      "id": 123,
+      "title": "Sci-Fi Puppet Play",
+      "day": "2026-08-15",
+      "day_label": "Samstag",
+      "time": "SA 23:00",
+      "start_time": "23:00",
+      "end_time": "23:30",
+      "stage": "a-quarter-to-infinity",
+      "stage_label": "a-quarter-to-infinity",
+      "type": "performance",
+      "type_label": "Performance",
+      "category": "Performance",
+      "genre": "Performance",
+      "langs": [
+        "de"
+      ],
+      "excerpt": "",
+      "description": "",
+      "hosts": [],
+      "source": "performances"
+    },
+    {
+      "id": 124,
       "title": "Schweissperle",
       "day": "2026-08-16",
       "day_label": "Sonntag",
@@ -2778,7 +3095,7 @@
       "source": "program"
     },
     {
-      "id": 112,
+      "id": 125,
       "title": "Momentarium",
       "day": "2026-08-16",
       "day_label": "Sonntag",
@@ -2800,7 +3117,7 @@
       "source": "program"
     },
     {
-      "id": 113,
+      "id": 126,
       "title": "Temple of Love",
       "day": "2026-08-16",
       "day_label": "Sonntag",
@@ -2817,14 +3134,14 @@
         "en"
       ],
       "excerpt": "Gibt es etwas Schöneres als das Gefühl von Liebe, Verbindung und Zugehörigkeit? Ein Tempel, in dem ehrliche Kommunikation alte Glaubenssätze aufrüttelt und dich in&hellip;",
-      "description": "Gibt es etwas Schöneres als das Gefühl von Liebe, Verbindung und Zugehörigkeit? Ein Tempel, in dem ehrliche Kommunikation alte Glaubenssätze aufrüttelt und dich in deine Kraft bringt. Wir führen dich auf eine intime, sinnliche Reise zu deinem Potenzial. Mach einen Schritt in deine Neugier, für neue Begegnungen. Wir schaffen einen Raum, in dem alles an dir willkommen ist – höre auf deine innere Stimme und wachse über deine Komfortzone hinaus",
+      "description": "My name is Elise Alma, and I guide people into deeper connection with their bodies through the art of Tantra, Shibari and massage. My practice is rooted in presence, trust, and the transformative power of intentional touch. I create safe, sacred spaces for exploration. Each workshop is a unique journey of surrender, sensation, and self-discovery. I believe that the body holds wisdom we often overlook. My work invites you to slow down, listen inward, and reconnect with the parts of yourself that are waiting to be felt.",
       "hosts": [
         "Elise Alma"
       ],
       "source": "workshops"
     },
     {
-      "id": 114,
+      "id": 127,
       "title": "Right Here, Right Now – Gentle Yoga Flow",
       "day": "2026-08-16",
       "day_label": "Sonntag",
@@ -2848,7 +3165,7 @@
       "source": "workshops"
     },
     {
-      "id": 115,
+      "id": 128,
       "title": "Cuddle Poodle – Kuscheln, Komfort, Konsens",
       "day": "2026-08-16",
       "day_label": "Sonntag",
@@ -2873,7 +3190,7 @@
       "source": "program"
     },
     {
-      "id": 116,
+      "id": 129,
       "title": "Von Ohnmacht zur Selbstwirksamkeit",
       "day": "2026-08-16",
       "day_label": "Sonntag",
@@ -2897,7 +3214,7 @@
       "source": "workshops"
     },
     {
-      "id": 117,
+      "id": 130,
       "title": "De Loite",
       "day": "2026-08-16",
       "day_label": "Sonntag",
@@ -2922,7 +3239,7 @@
       "source": "program"
     },
     {
-      "id": 118,
+      "id": 131,
       "title": "Human Tides: On a cyclical Life in a linear World",
       "day": "2026-08-16",
       "day_label": "Sonntag",
@@ -2946,7 +3263,7 @@
       "source": "workshops"
     },
     {
-      "id": 119,
+      "id": 132,
       "title": "Radical Herbalism",
       "day": "2026-08-16",
       "day_label": "Sonntag",
@@ -2970,7 +3287,7 @@
       "source": "workshops"
     },
     {
-      "id": 120,
+      "id": 133,
       "title": "Toxische Weiblichkeit und echte Begegnung",
       "day": "2026-08-16",
       "day_label": "Sonntag",
@@ -2994,7 +3311,31 @@
       "source": "workshops"
     },
     {
-      "id": 121,
+      "id": 134,
+      "title": "Visceral — Somatic Expression & Release",
+      "day": "2026-08-16",
+      "day_label": "Sonntag",
+      "time": "SO 12:00",
+      "start_time": "12:00",
+      "end_time": "13:30",
+      "stage": "schweissperle",
+      "stage_label": "Schweissperle",
+      "type": "interaktiver-workshop",
+      "type_label": "Workshop",
+      "category": "Workshop",
+      "genre": "Workshop",
+      "langs": [
+        "en"
+      ],
+      "excerpt": "What happens when we give the body permission to express what has been held inside? Visceral is an invitation to meet whatever is present&hellip;",
+      "description": "What happens when we give the body permission to express what has been held inside?\n\nVisceral is an invitation to meet whatever is present in your body – including emotions and sensations that may have remained unfelt or unexpressed for a long time. Inspired by Japanese Butoh dance theatre, fascia release practices and intuitive movement, we will explore the body through movement, shaking, sound, expansion, contraction and free expression.\n\nSomewhere between a somatic release session, dance workshop and Butoh improvisation, this space is about expression rather than performance. What emerges might feel strange, raw, unconventional or unexpected – and that is welcome.\n\nNo dance experience is needed. No need to perform or make anything beautiful. Just come as you are and meet what is already there.",
+      "hosts": [
+        "Natalia Celej"
+      ],
+      "source": "workshops"
+    },
+    {
+      "id": 135,
       "title": "Butoh – Moving from the Inside",
       "day": "2026-08-16",
       "day_label": "Sonntag",
@@ -3018,7 +3359,7 @@
       "source": "workshops"
     },
     {
-      "id": 122,
+      "id": 136,
       "title": "Dein inneres Team auf der Tanzfläche",
       "day": "2026-08-16",
       "day_label": "Sonntag",
@@ -3042,7 +3383,7 @@
       "source": "workshops"
     },
     {
-      "id": 123,
+      "id": 137,
       "title": "Being moved by Music",
       "day": "2026-08-16",
       "day_label": "Sonntag",
@@ -3067,7 +3408,7 @@
       "source": "workshops"
     },
     {
-      "id": 124,
+      "id": 138,
       "title": "Wie geht es weiter im Iran?",
       "day": "2026-08-16",
       "day_label": "Sonntag",
@@ -3091,7 +3432,7 @@
       "source": "program"
     },
     {
-      "id": 125,
+      "id": 139,
       "title": "Landing Softly: A Closing Journey of Reflection & Integration",
       "day": "2026-08-16",
       "day_label": "Sonntag",
@@ -3115,7 +3456,7 @@
       "source": "workshops"
     },
     {
-      "id": 126,
+      "id": 140,
       "title": "Reset & Reconnect – In 90 Minuten zurück ins Hier und Jetzt",
       "day": "2026-08-16",
       "day_label": "Sonntag",
@@ -3139,7 +3480,7 @@
       "source": "workshops"
     },
     {
-      "id": 127,
+      "id": 141,
       "title": "Yin Yoga, Stimme & Breathwork – gemeinsam im Moment",
       "day": "2026-08-16",
       "day_label": "Sonntag",
@@ -3163,7 +3504,7 @@
       "source": "workshops"
     },
     {
-      "id": 128,
+      "id": 142,
       "title": "Deep Landing: Ankommen vor dem Abschied",
       "day": "2026-08-16",
       "day_label": "Sonntag",
@@ -3187,7 +3528,7 @@
       "source": "workshops"
     },
     {
-      "id": 129,
+      "id": 143,
       "title": "Feelings Oasis",
       "day": "2026-08-16",
       "day_label": "Sonntag",
@@ -3212,15 +3553,15 @@
       "source": "program"
     },
     {
-      "id": 130,
-      "title": "The Peepshow",
+      "id": 144,
+      "title": "Tarot Reader",
       "day": "2026-08-16",
       "day_label": "Sonntag",
       "time": "SO 15:00",
       "start_time": "15:00",
       "end_time": "16:00",
-      "stage": "dezentral",
-      "stage_label": "dezentral",
+      "stage": "",
+      "stage_label": "",
       "type": "interaktiver-workshop",
       "type_label": "Workshop",
       "category": "Workshop",
@@ -3236,7 +3577,7 @@
       "source": "workshops"
     },
     {
-      "id": 131,
+      "id": 145,
       "title": "Mad Hatters",
       "day": "2026-08-16",
       "day_label": "Sonntag",
@@ -3261,7 +3602,7 @@
       "source": "workshops"
     },
     {
-      "id": 132,
+      "id": 146,
       "title": "Song Bingo by Zart Kollektiv",
       "day": "2026-08-16",
       "day_label": "Sonntag",
@@ -3285,7 +3626,31 @@
       "source": "performances"
     },
     {
-      "id": 133,
+      "id": 147,
+      "title": "Tarot reader",
+      "day": "2026-08-16",
+      "day_label": "Sonntag",
+      "time": "SO 16:00",
+      "start_time": "16:00",
+      "end_time": "18:00",
+      "stage": "the-peepshow",
+      "stage_label": "the-peepshow",
+      "type": "interaktiver-workshop",
+      "type_label": "Workshop",
+      "category": "Workshop",
+      "genre": "Workshop",
+      "langs": [
+        "en"
+      ],
+      "excerpt": "Tagsüber verwandelt sich die „Peepshow“ in einen Ort für kreative und partizipative Begegnungen, darunter persönliche Tarot-Lesungen und individuelle Interaktionen mit den Festivalbesuchenden.",
+      "description": "Tagsüber verwandelt sich die „Peepshow“ in einen Ort für kreative und partizipative Begegnungen, darunter persönliche Tarot-Lesungen und individuelle Interaktionen mit den Festivalbesuchenden.",
+      "hosts": [
+        "Tarot Reader"
+      ],
+      "source": "workshops"
+    },
+    {
+      "id": 148,
       "title": "After Rave Recovery",
       "day": "2026-08-16",
       "day_label": "Sonntag",
@@ -3309,7 +3674,7 @@
       "source": "workshops"
     },
     {
-      "id": 134,
+      "id": 149,
       "title": "WutKraft : Deine Wut – Deine Kraft",
       "day": "2026-08-16",
       "day_label": "Sonntag",
@@ -3333,7 +3698,53 @@
       "source": "workshops"
     },
     {
-      "id": 135,
+      "id": 150,
+      "title": "Interactive Games",
+      "day": "2026-08-16",
+      "day_label": "Sonntag",
+      "time": "SO 16:30",
+      "start_time": "16:30",
+      "end_time": "18:00",
+      "stage": "the-losers-arcade",
+      "stage_label": "the-losers-arcade",
+      "type": "interaktiver-workshop",
+      "type_label": "Workshop",
+      "category": "Workshop",
+      "genre": "Workshop",
+      "langs": [
+        "de"
+      ],
+      "excerpt": "",
+      "description": "",
+      "hosts": [],
+      "source": "workshops"
+    },
+    {
+      "id": 151,
+      "title": "Was hält uns zusammen? Gemeinsam gegen Queerfeindlichkeit",
+      "day": "2026-08-16",
+      "day_label": "Sonntag",
+      "time": "SO 16:30",
+      "start_time": "16:30",
+      "end_time": "18:00",
+      "stage": "neuro-divers",
+      "stage_label": "Neuro Divers",
+      "type": "interaktiver-workshop",
+      "type_label": "Workshop",
+      "category": "Workshop",
+      "genre": "Workshop",
+      "langs": [
+        "de"
+      ],
+      "excerpt": "Unsere Gesellschaft polarisiert sich zunehmend. Nach Gewalttaten folgen oft Schuldzuweisungen und neue Spaltungen, besonders spürbar für Menschen, die bereits von Queerfeindlichkeit oder Rassismus betroffen&hellip;",
+      "description": "Unsere Gesellschaft polarisiert sich zunehmend. Nach Gewalttaten folgen oft Schuldzuweisungen und neue Spaltungen, besonders spürbar für Menschen, die bereits von Queerfeindlichkeit oder Rassismus betroffen sind.Wie geben wir einander Halt, ohne die Realität auszublenden? Wie bleiben wir verbunden, wenn Angst wächst, ohne unsere eigene Kraft zu verlieren?\n\nMehmed König, queerer Muslim mit Flucht- und Migrationsgeschichte, verbindet persönliche Erfahrung mit politischer Perspektive und lädt zum Austausch ein: Wie stärken wir einander, übernehmen Verantwortung und schaffen Räume, in denen Menschen sich gesehen und getragen fühlen?",
+      "hosts": [
+        "Mehmed König"
+      ],
+      "source": "workshops"
+    },
+    {
+      "id": 152,
       "title": "Schabernack mit Musik",
       "day": "2026-08-16",
       "day_label": "Sonntag",
@@ -3355,31 +3766,7 @@
       "source": "workshops"
     },
     {
-      "id": 136,
-      "title": "The Peepshow",
-      "day": "2026-08-16",
-      "day_label": "Sonntag",
-      "time": "SO 17:00",
-      "start_time": "17:00",
-      "end_time": "18:00",
-      "stage": "dezentral",
-      "stage_label": "dezentral",
-      "type": "interaktiver-workshop",
-      "type_label": "Workshop",
-      "category": "Workshop",
-      "genre": "Workshop",
-      "langs": [
-        "en"
-      ],
-      "excerpt": "Tagsüber verwandelt sich die „Peepshow“ in einen Ort für kreative und partizipative Begegnungen, darunter persönliche Tarot-Lesungen und individuelle Interaktionen mit den Festivalbesuchenden.",
-      "description": "Tagsüber verwandelt sich die „Peepshow“ in einen Ort für kreative und partizipative Begegnungen, darunter persönliche Tarot-Lesungen und individuelle Interaktionen mit den Festivalbesuchenden.",
-      "hosts": [
-        "Tarot Reader"
-      ],
-      "source": "workshops"
-    },
-    {
-      "id": 137,
+      "id": 153,
       "title": "Reclaimed Touch – Flogger DIY",
       "day": "2026-08-16",
       "day_label": "Sonntag",
@@ -3403,7 +3790,29 @@
       "source": "workshops"
     },
     {
-      "id": 138,
+      "id": 154,
+      "title": "Interactive Games",
+      "day": "2026-08-16",
+      "day_label": "Sonntag",
+      "time": "SO 20:00",
+      "start_time": "20:00",
+      "end_time": "22:00",
+      "stage": "the-losers-arcade",
+      "stage_label": "the-losers-arcade",
+      "type": "interaktiver-workshop",
+      "type_label": "Workshop",
+      "category": "Workshop",
+      "genre": "Workshop",
+      "langs": [
+        "de"
+      ],
+      "excerpt": "",
+      "description": "",
+      "hosts": [],
+      "source": "workshops"
+    },
+    {
+      "id": 155,
       "title": "Raxa Drag Show",
       "day": "2026-08-16",
       "day_label": "Sonntag",
@@ -3427,7 +3836,7 @@
       "source": "performances"
     },
     {
-      "id": 139,
+      "id": 156,
       "title": "WIKABARETT",
       "day": "2026-08-16",
       "day_label": "Sonntag",
@@ -3449,7 +3858,7 @@
       "source": "performances"
     },
     {
-      "id": 140,
+      "id": 157,
       "title": "🎬 Cuddle-Kino: Filmnacht Bucht der Träumer ✨",
       "day": "2026-08-16",
       "day_label": "Sonntag",
@@ -3466,15 +3875,15 @@
         "de",
         "en"
       ],
-      "excerpt": "Filme schieben?  Sonntag-Nacht heißt es für alle die entspannen wollen nochmal Flimmern lassen in bester Atmossphäre: Ob es die „10 Jahre Pinky Promise“-Doku ist,&hellip;",
-      "description": "Filme schieben?  Sonntag-Nacht heißt es für alle die entspannen wollen nochmal Flimmern lassen in bester Atmossphäre: Ob es die „10 Jahre Pinky Promise“-Doku ist, eine Ibiza-DJ-Mockumentary über den sagenumwobenen Heimlich Müller, ein exklusives Behind-the-Scenes zum Making-of der Sissy Bravo oder einfach die schönsten Video-Erinnerungen vom allerersten Mal Feiern: Am Sonntagabend läuft mit süßem Popcorn für alle auf Halbmast ausgewählter Stoff aus der Szene über den heißen Beamer!\n\nOpen Call (online only): Wollt ihr noch was einreichen? Wir freuen uns über eure Beiträge. Deadline 30.07: Bucht-Beitrag einreichen",
+      "excerpt": "&#8222;Skurril, silly, absurd. Sonntagnacht heißt es Kuscheln und nochmal Flimmern im Cuddle Poodle: 00:30 – 01:00 | Shenenigames Afterfilm (Shenenigames, 3 Min.) Kurzweiliger Eventtrailer&hellip;",
+      "description": "&#8222;Skurril, silly, absurd. Sonntagnacht heißt es Kuscheln und nochmal Flimmern im Cuddle Poodle:\n\n00:30 – 01:00 | Shenenigames Afterfilm (Shenenigames, 3 Min.) Kurzweiliger Eventtrailer und Ausblick auf das witzigste Mittelalterspiel der Shenenigames Crew.01:00 – 01:30 | Creatures of Life (Alessa Müller, 30 Min.) Wunderschöne Doku über die Berliner Drag-Szene im Porträt von drei Performer:innen.01:30 – 01:50 | Ola Alter – Heinrich Müller in Ibiza (Very Serious Business Agency, 20 Min.) Humorvolle Mockumentary über ein DJ-Duo auf Ibiza und den Kampf mit dem Ruhm.01:50 – 02:00 | 6 Years of Pinky Promise! (Pinky Promise, 10 Min.) Jubiläums-Beitrag zum 6-jährigen Bestehen.02:00 – 02:15 | Bad Break-ups (Anna Gamburg, 15 Min.) Sketch-Serie über die feine Kunst des Schlussmachens.02:15 – 03:00 | Der Weedtrain der Never ancame (WyrdTrainFilms, 45 Min.) Leipzig-West-Mockumentary über Cannabislegalisierung und den Wandel des Stadtteils03:00 – 04:30 | Change Is The Only Constant Thing (Christoph Fleischer, 90 Min.) Dokumentation über eine Künstlerin in Barcelona und Leipzig, die Industriebrachen in kreative Freiräume verwandelt, bevor diese der Gentrifizierung zum Opfer fallen.\"",
       "hosts": [
         "Cuddle Kino"
       ],
       "source": "performances"
     },
     {
-      "id": 141,
+      "id": 158,
       "title": "A Quarter to Infinity",
       "day": "2026-08-16",
       "day_label": "Sonntag",
@@ -3496,7 +3905,7 @@
       "source": "program"
     },
     {
-      "id": 142,
+      "id": 159,
       "title": "Schweissperle",
       "day": "2026-06-15",
       "day_label": "Montag",
@@ -3518,7 +3927,7 @@
       "source": "program"
     },
     {
-      "id": 143,
+      "id": 160,
       "title": "Momentarium",
       "day": "2026-06-15",
       "day_label": "Montag",
@@ -3540,7 +3949,7 @@
       "source": "program"
     },
     {
-      "id": 144,
+      "id": 161,
       "title": "After Rave Care (Movement)",
       "day": "2026-06-15",
       "day_label": "Montag",
@@ -3562,7 +3971,31 @@
       "source": "workshops"
     },
     {
-      "id": 145,
+      "id": 162,
+      "title": "Conscious Shibari – Beginner Basics",
+      "day": "2026-06-15",
+      "day_label": "Montag",
+      "time": "MO 18:00",
+      "start_time": "18:00",
+      "end_time": "19:00",
+      "stage": "",
+      "stage_label": "",
+      "type": "interaktiver-workshop",
+      "type_label": "Workshop",
+      "category": "Workshop",
+      "genre": "Workshop",
+      "langs": [
+        "en"
+      ],
+      "excerpt": "Discover the fundamentals of Shibari in a safe, conscious and playful setting. Designed for complete beginners as well as those looking to refresh their&hellip;",
+      "description": "Discover the fundamentals of Shibari in a safe, conscious and playful setting. Designed for complete beginners as well as those looking to refresh their skills, this workshop introduces basic Japanese rope bondage techniques alongside essential principles of emotional and physical safety, consent and communication.\n\nThrough embodied partner exercises, guided practice and role reversal, you will explore how even simple techniques can create powerful experiences of connection, trust and presence. The focus lies not only on technique, but on developing confidence, awareness and authentic communication between partners.\n\nThe workshop includes basic knots and bondage techniques, partner exercises and small guided sessions in which you can experiment with what you've learned. Practices can be done fully clothed or nude and may include sensuality, but do not involve sexual activity.\n\nYou are welcome to come alone or with a partner. No previous experience is required.\n\nRopes are provided on site free of charge. If you have your own Shibari ropes, you are also welcome to bring them.",
+      "hosts": [
+        "Elise Alma"
+      ],
+      "source": "workshops"
+    },
+    {
+      "id": 163,
       "title": "Cuddle Poodle",
       "day": "2026-06-15",
       "day_label": "Montag",
@@ -3587,7 +4020,29 @@
       "source": "program"
     },
     {
-      "id": 146,
+      "id": 164,
+      "title": "The peep Show",
+      "day": "no-day",
+      "day_label": "Ohne Tag",
+      "time": "",
+      "start_time": "",
+      "end_time": "",
+      "stage": "walking-act",
+      "stage_label": "Walking Act",
+      "type": "space",
+      "type_label": "Space",
+      "category": "Space",
+      "genre": "Space",
+      "langs": [
+        "de"
+      ],
+      "excerpt": "Der Peepshow Wagen lädt dich ein, Begehren zu erkunden und als Quelle für Kreativität, Selbstbewusstsein und Begegnung zu feiern. Tagsüber verwandelt er sich in&hellip;",
+      "description": "Der Peepshow Wagen lädt dich ein, Begehren zu erkunden und als Quelle für Kreativität, Selbstbewusstsein und Begegnung zu feiern. Tagsüber verwandelt er sich in einen Ort für Tarot und persönliche Begegnungen, nachts öffnen sich Gucklöcher zu intimen Performances zwischen Burlesque, Drag und spielerischem Voyeurismus. Dabei schafft die Peepshow einen geschützten Raum für Performer*innen und Publikum, während Walking Acts ihre Welt über das Festivalgelände tragen.The Peepshow wagon invites you to explore desire as a source of creativity, confidence and encounter. By day it becomes a space for tarot and personal encounters, by night tiny peepholes open onto intimate performances of burlesque, drag and playful voyeurism. It creates a protected space for performers and audiences, while walking acts carry its world across the festival.",
+      "hosts": [],
+      "source": "program"
+    },
+    {
+      "id": 165,
       "title": "Sektamt",
       "day": "no-day",
       "day_label": "Ohne Tag",
@@ -3612,7 +4067,7 @@
       "source": "program"
     },
     {
-      "id": 147,
+      "id": 166,
       "title": "NOW.HERE /// NO.WHERE",
       "day": "no-day",
       "day_label": "Ohne Tag",
@@ -3634,7 +4089,7 @@
       "source": "program"
     },
     {
-      "id": 148,
+      "id": 167,
       "title": "Neo:Trash Oasis by Trashi Systers",
       "day": "no-day",
       "day_label": "Ohne Tag",
@@ -3659,7 +4114,7 @@
       "source": "program"
     },
     {
-      "id": 149,
+      "id": 168,
       "title": "Rückenwind Bike Space",
       "day": "no-day",
       "day_label": "Ohne Tag",

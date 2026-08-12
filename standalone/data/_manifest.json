@@ -31,11 +31,26 @@
       "icon": "📄"
     },
     {
+      "slug": "map-search-index",
+      "label": "Map-Search-Index",
+      "icon": "📄"
+    },
+    {
+      "slug": "music",
+      "label": "Music",
+      "icon": "📄"
+    },
+    {
       "slug": "news",
       "label": "News",
+      "icon": "📄"
+    },
+    {
+      "slug": "notifications",
+      "label": "Notifications",
       "icon": "📄"
     }
   ],
   "app_name": "Bucht der Träumer",
-  "synced_at": 1785333148
+  "synced_at": 1786538438
 }

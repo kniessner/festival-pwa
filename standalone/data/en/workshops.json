@@ -22,20 +22,20 @@
       "desc": "Arne is the director and editor-in-chief of FragDenStaat. He is a political scientist and journalist. Through the Freiheitsfonds, he helps free people from prison. His bestseller \"Gegenmacht\" (\"Counterforce\") was published in 2026."
     },
     {
-      "title": "Bianca Nawrath",
-      "points": [
-        "Shame & Sex: Writing Erotic Fiction and Overcoming Resistance"
-      ],
-      "image": "https://i0.wp.com/bucht-der-traeumer.de/wp-content/uploads/2026/06/lena_faye.jpg?resize=600%2C800&amp;ssl=1",
-      "desc": "Bianca Nawrath is an author and actress with Polish roots. Born in Berlin in 1997, she first appeared on camera at the age of 14 as the presenter of a youth programme. She made her acting debut in 2018 and has since appeared alongside Judi Dench and Jürgen Vogel, among others. Her first novel, *Eat This Now, If You Love Me*, was published in 2021, followed most recently by *Beautiful Shame* (2025) with Frankfurter Verlagsanstalt. Bianca Nawrath lives and works in Berlin."
-    },
-    {
       "title": "Vanessa Faloye",
       "points": [
         "Purity Politics & Punishment"
       ],
       "image": "https://i0.wp.com/bucht-der-traeumer.de/wp-content/uploads/2026/06/vanessa_faloye.jpg?resize=600%2C800&amp;ssl=1",
       "desc": "Hosted by Vanessa Faloye (aka DJ inda Flo) who works in anti-oppression, conflict transformation, and movement-building as part of her co-founded collective called Held, based in the UK."
+    },
+    {
+      "title": "Bianca Nawrath",
+      "points": [
+        "Shame & Sex: Writing Erotic Fiction and Overcoming Resistance"
+      ],
+      "image": "https://i0.wp.com/bucht-der-traeumer.de/wp-content/uploads/2026/06/lena_faye.jpg?resize=600%2C800&amp;ssl=1",
+      "desc": "Bianca Nawrath is an author and actress with Polish roots. Born in Berlin in 1997, she first appeared on camera at the age of 14 as the presenter of a youth programme. She made her acting debut in 2018 and has since appeared alongside Judi Dench and Jürgen Vogel, among others. Her first novel, *Eat This Now, If You Love Me*, was published in 2021, followed most recently by *Beautiful Shame* (2025) with Frankfurter Verlagsanstalt. Bianca Nawrath lives and works in Berlin."
     },
     {
       "title": "Melanie Wolfers",
@@ -305,10 +305,11 @@
     {
       "title": "Elise Alma",
       "points": [
-        "Temple of Love"
+        "Temple of Love",
+        "Conscious Shibari – Beginner Basics"
       ],
       "image": "https://i0.wp.com/bucht-der-traeumer.de/wp-content/uploads/2026/07/13-Elise-Alma.jpg?resize=600%2C600&amp;ssl=1",
-      "desc": "Sonja is a sexual and trauma therapist, couples coach, tantric masseuse, and a Bucht floor regular from the very beginning. Anna is a dancer and raver who sings, DJs and accompanies people through transformative processes. Together, the two bring voice, sound, body and play together."
+      "desc": "My name is Elise Alma, and I guide people into deeper connection with their bodies through the art of Tantra, Shibari and massage. My practice is rooted in presence, trust, and the transformative power of intentional touch. I create safe, sacred spaces for exploration. Each workshop is a unique journey of surrender, sensation, and self-discovery. I believe that the body holds wisdom we often overlook. My work invites you to slow down, listen inward, and reconnect with the parts of yourself that are waiting to be felt."
     },
     {
       "title": "Sophie Victoria Lauber",
@@ -319,12 +320,12 @@
       "desc": "Sophie Victoria Lauber is a trauma-informed educator (DeGPT) with many years of experience in psychosocial work. She supports professionals, teams and groups in remaining capable of action even in challenging situations, combining trauma-informed knowledge with body-oriented, practical everyday methods."
     },
     {
-      "title": "Toomuch by Tanzen3000",
+      "title": "Júlia von Montfort & Ashraf Alali",
       "points": [
-        "TANZEN3000 FIESTA"
+        "Slow the F*ck Down: A Restorative Yoga Experience"
       ],
-      "image": "https://i0.wp.com/bucht-der-traeumer.de/wp-content/uploads/2026/07/faf306944bd93c23a1dac9ebd0e9023a.jpg?resize=600%2C900&amp;ssl=1",
-      "desc": "Tanzen3000 is a Berlin-based collective with backgrounds in DJing, dance, rapping, somatics, and nightlife activism. Their sessions invite everyone – with or without dance experience – who wants more physically and socially connected parties. In guided activations, they share free movement concepts you can instantly play with on the dancefloor."
+      "image": "https://i0.wp.com/bucht-der-traeumer.de/wp-content/uploads/2026/07/juliamontfort.jpeg?resize=600%2C600&amp;ssl=1",
+      "desc": "Júlia (Shakti) and Ashrif (Shiva) warmly welcome you to a connective, releasing journey where the energies of Sun (Surya) and Moon (Chandra) meet in sacred union. with practices that will be powerful and strong, elevanting your energy and vibration for the festival in combination with Kundalini Kriyas and Tantric Exercises connection."
     },
     {
       "title": "Simone Burster",
@@ -335,12 +336,12 @@
       "desc": "Before the festival buzz awakens, give yourself a magical start to the day. With mindful flows, grounding standing poses and conscious breath, ..."
     },
     {
-      "title": "Júlia von Montfort & Ashraf Alali",
+      "title": "A Quarter to Infinity",
       "points": [
-        "Slow the F*ck Down: A Restorative Yoga Experience"
+        "Planet Atelier"
       ],
-      "image": "https://i0.wp.com/bucht-der-traeumer.de/wp-content/uploads/2026/07/juliamontfort.jpeg?resize=600%2C600&amp;ssl=1",
-      "desc": "Júlia (Shakti) and Ashrif (Shiva) warmly welcome you to a connective, releasing journey where the energies of Sun (Surya) and Moon (Chandra) meet in sacred union. with practices that will be powerful and strong, elevanting your energy and vibration for the festival in combination with Kundalini Kriyas and Tantric Exercises connection."
+      "image": "https://i0.wp.com/bucht-der-traeumer.de/wp-content/uploads/2026/07/PROJECT-PICTURE-I.jpg?resize=600%2C900&amp;ssl=1",
+      "desc": "A crafty and meditative workshop inviting participants to create their own miniature planets from recycled materials, textures, and found objects. Inspired by"
     },
     {
       "title": "Heidi van de Flausen",
@@ -350,14 +351,6 @@
       ],
       "image": "https://i0.wp.com/bucht-der-traeumer.de/wp-content/uploads/2026/07/cc664ff88cd6b2127053a6aed456fb40.jpeg?resize=600%2C900&amp;ssl=1",
       "desc": "Heidi van de Flausen is a yoga teacher, Reiki master, and somatic facilitator. She helps people reconnect with their bodies, energy, and inner wisdom. Her work is based on somatic embodiment and the chakra system, guiding through movement, breath, and mindfulness"
-    },
-    {
-      "title": "A Quarter to Infinity",
-      "points": [
-        "Planet Atelier"
-      ],
-      "image": "https://i0.wp.com/bucht-der-traeumer.de/wp-content/uploads/2026/07/PROJECT-PICTURE-I.jpg?resize=600%2C900&amp;ssl=1",
-      "desc": "A crafty and meditative workshop inviting participants to create their own miniature planets from recycled materials, textures, and found objects. Inspired by"
     },
     {
       "title": "Emiko Gejic",
@@ -385,6 +378,14 @@
       "desc": "Glitzzy is the creator's creative alter ego, under which she offers hands-on activities and festival workshops for the individual embellishment of headgear. According to the respective personalities! Just for the fun of us all!"
     },
     {
+      "title": "Rückenwind",
+      "points": [
+        "Rückenwind Bike Space"
+      ],
+      "image": "https://i0.wp.com/bucht-der-traeumer.de/wp-content/uploads/2026/07/rhrn_platzhalter_1-1.png?resize=305%2C424&amp;ssl=1",
+      "desc": "Rückenwind e. V. is a Berlin-based nonprofit organization that has been collecting, repairing, and distributing donated bicycles to people who have fled to Berlin since 2015. In open workshops, volunteers and refugees learn bicycle repair together, share knowledge, and create access to sustainable mobility. Rückenwind stands for community, solidarity, integration, and the right to repair"
+    },
+    {
       "title": "Avy",
       "points": [
         "Reclaimed Touch – Flogger DIY",
@@ -394,17 +395,10 @@
       "desc": "Material and sustainability nerd. At the same time, fully in my body. At some point came the question: what if you combine both? Ever since, I've been somewhere in that experiment between material and body."
     },
     {
-      "title": "Rückenwind",
-      "points": [
-        "Rückenwind Bike Space"
-      ],
-      "image": "https://i0.wp.com/bucht-der-traeumer.de/wp-content/uploads/2026/07/rhrn_platzhalter_1-1.png?resize=305%2C424&amp;ssl=1",
-      "desc": "Rückenwind e. V. is a Berlin-based nonprofit organization that has been collecting, repairing, and distributing donated bicycles to people who have fled to Berlin since 2015. In open workshops, volunteers and refugees learn bicycle repair together, share knowledge, and create access to sustainable mobility. Rückenwind stands for community, solidarity, integration, and the right to repair"
-    },
-    {
       "title": "Tarot Reader",
       "points": [
-        "The Peepshow"
+        "Tarot Reader",
+        "Tarot reader"
       ],
       "image": "https://i0.wp.com/bucht-der-traeumer.de/wp-content/uploads/2026/07/rhrn_platzhalter_1-2.png?resize=305%2C424&amp;ssl=1",
       "desc": "During the day, the Peepshow transforms into a space for creative and participatory encounters, including intimate tarot reading experiences and one-to-one interactions with festival visitors."
@@ -414,7 +408,7 @@
       "points": [
         "DIY Fan Upcycling"
       ],
-      "image": "https://i0.wp.com/bucht-der-traeumer.de/wp-content/uploads/2026/07/rhrn_platzhalter_1-1.png?resize=305%2C424&amp;ssl=1",
+      "image": "https://i0.wp.com/bucht-der-traeumer.de/wp-content/uploads/2026/07/2026_Workshop_Introduction_DIY_Faecher_Upcycling.png?resize=600%2C900&amp;ssl=1",
       "desc": ""
     },
     {
@@ -458,14 +452,6 @@
       "desc": "A journey triggered by frequencies, vibrations and sounds that help you dive into yourself and into the present moment"
     },
     {
-      "title": "Svenja Reese",
-      "points": [
-        "Please put your phone away! Swap your screen for the moment."
-      ],
-      "image": "https://i0.wp.com/bucht-der-traeumer.de/wp-content/uploads/2026/07/7d5f6710ff482e39be1df500906503e7.jpg?resize=600%2C900&amp;ssl=1",
-      "desc": "Svenja Reese studierte Digitale Medienkulturen an der Filmuniversität Babelsberg KONRAD WOLF und beschäftigt sich seit vielen Jahren mit der Frage, wie digitale Technologien unser Zusammenleben, unsere Aufmerksamkeit und unsere Kultur prägen."
-    },
-    {
       "title": "Line Kiekbusch & Elias Manzel",
       "points": [
         "RIGHT HERE – RIGHT NOW: Political Graffiti as a Voice in Public Spaces"
@@ -490,14 +476,6 @@
       "desc": "Journey through layers of healing, the spirit and greater consciousness to resolve wounds, access guidance and upgrade your connection to higher dimensions...."
     },
     {
-      "title": "Anuschka Loose",
-      "points": [
-        "Dance Improvisation Class"
-      ],
-      "image": "https://i0.wp.com/bucht-der-traeumer.de/wp-content/uploads/2026/07/rhrn_platzhalter_1-2.png?resize=305%2C424&amp;ssl=1",
-      "desc": "Anuschka Loose (Berlin, 1997) is a performer and maker. Shaped by Fusion Belly Dance, Physical Theatre, the ATE Method and somatic practices, she graduated in 2025 from Fontys Hogeschool voor de Kunsten (NL) with a BA in Dance and Choreography. Her works range from solos to public space interventions"
-    },
-    {
       "title": "Miriam Lütt",
       "points": [
         "Right Here, Right Now – Gentle Yoga Flow",
@@ -505,6 +483,38 @@
       ],
       "image": "https://i0.wp.com/bucht-der-traeumer.de/wp-content/uploads/2026/07/12d27d62b5c861142e73bc7a2729c880.jpg?resize=600%2C854&amp;ssl=1",
       "desc": "Miriam Lütt is a yoga teacher from Berlin, teaching at studios and festivals for more than 6 years. Her classes combine movement, breath, and sound into a vibrant practice. Her goal is to create spaces where connection, balance, and authentic sensation can flourish – right in the midst of the festival."
+    },
+    {
+      "title": "Kazuma Glen Motomura (Bodypoet)",
+      "points": [
+        "Symbiosis Stretch Dance"
+      ],
+      "image": "",
+      "desc": "Kazuma Glen Motomura (Bodypoet) is a Japanese-Zimbabwean performer, choreographer, actor and teacher based in Berlin. Blending dance, martial arts and storytelling, his unique practice explores movement as a universal language that connects people beyond culture and words."
+    },
+    {
+      "title": "Mehmed König",
+      "points": [
+        "Was hält uns zusammen? Gemeinsam gegen Queerfeindlichkeit"
+      ],
+      "image": "https://i0.wp.com/bucht-der-traeumer.de/wp-content/uploads/2026/08/IMG_1760.jpeg?resize=600%2C900&amp;ssl=1",
+      "desc": "Unsere Gesellschaft polarisiert sich zunehmend. Nach Gewalttaten folgen oft Schuldzuweisungen und neue Spaltungen, besonders spürbar für Menschen, die bereits von Queerfeindlichkeit oder Rassismus betroffen&hellip;"
+    },
+    {
+      "title": "Boto",
+      "points": [
+        "Bija Mantra Meditation"
+      ],
+      "image": "https://i0.wp.com/bucht-der-traeumer.de/wp-content/uploads/2026/08/ben.png?resize=600%2C900&amp;ssl=1",
+      "desc": "Boto (Ben Okamoto) is an Australian-born, half-Japanese Kundalini Activator, performer, musician, DJ, Club Kid, drag queen and dancer based in Berlin. Blending ancient practices with the energy of Berlin’s rave scene, his work explores heart-based consciousness, happiness and pleasure through sound, movement, sexuality and the elements. He is the creator of Pyramid Party, Berlin’s first heart-based conscious techno rave, featuring intense, steamy and playful guided experiences led by drag queen shamans."
+    },
+    {
+      "title": "Natalia Celej",
+      "points": [
+        "Visceral — Somatic Expression & Release"
+      ],
+      "image": "https://i0.wp.com/bucht-der-traeumer.de/wp-content/uploads/2026/08/Natalia.jpg?resize=600%2C900&amp;ssl=1",
+      "desc": "Visceral is an invitation to meet whatever is present in your body – including emotions and sensations that may have remained unfelt or unexpressed&hellip;"
     },
     {
       "title": "Pauline Jäckels",
@@ -539,13 +549,13 @@
       "desc": "Alexander Krüger is a cultural entrepreneur, musician and co-founder of the Feel Festival. For over two decades, he has been creating festivals and cultural spaces at the intersection of music, art and community, including Feel Festival, Artlake, Whole Festival and Berlin's Alte Münze. His work explores how culture can create meaningful connections and inspire new ways of living together."
     },
     {
-      "title": "Thomas Scheele",
+      "title": "Thomas Scheele (Toomuch)",
       "points": [
         "Panel: Money & Power in Cultural Creation – aktuelle Situation/ Shift in der Kulturszene",
         "TANZEN3000 FIESTA"
       ],
       "image": "https://i0.wp.com/bucht-der-traeumer.de/wp-content/uploads/2026/07/panel-money-2.png?resize=600%2C600&amp;ssl=1",
-      "desc": "Thomas (he/they) is a Senior Project Manager at VibeLab in Berlin with over 15 years of experience in nightlife as a performer, event host, promoter and venue operator, alongside a decade of work in nightlife advocacy."
+      "desc": "Thomas is a Senior Project Manager at VibeLab in Berlin with over 15 years of experience in nightlife as a performer, event host, promoter and venue operator, alongside a decade of work in nightlife advocacy."
     },
     {
       "title": "Zuzu",
@@ -555,6 +565,14 @@
       ],
       "image": "https://i0.wp.com/bucht-der-traeumer.de/wp-content/uploads/2026/07/dad185a2fe9fbf24a23e7287e3096b4a.jpg?resize=600%2C900&amp;ssl=1",
       "desc": "Zuzu ist DJ und tanzt seit vielen Jahren."
+    },
+    {
+      "title": "Tanzen3000",
+      "points": [
+        "TANZEN3000 FIESTA"
+      ],
+      "image": "https://i0.wp.com/bucht-der-traeumer.de/wp-content/uploads/2026/07/faf306944bd93c23a1dac9ebd0e9023a.jpg?resize=600%2C900&amp;ssl=1",
+      "desc": "Tanzen3000 is bringing more dance to the dancefloor. We're a Berlin-based collective with backgrounds in djing, dance, rapping, somatics, and nightlife activism. Our sessions invite everyone, with or without previous dance experience, wanting to create more physical and socially connected parties. In our guided activations, we share free movement concepts that you can instantly play with on the dancefloor, to any style of music. Our DJs mix different genres and bpm, taking you on a trip both physically and emotionally. Sounds keep moving and so do you!"
     }
   ]
 }

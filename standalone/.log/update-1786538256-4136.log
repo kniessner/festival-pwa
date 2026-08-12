@@ -1,0 +1,355 @@
+[2026-08-12T14:37:36+02:00] [1786538256-4136] [INFO] Starting update — Trace: 1786538256-4136, Mode: source, URL: https://bucht-der-traeumer.de
+[2026-08-12T14:37:36+02:00] [1786538256-4136] [INFO] Dependencies OK: curl ✅, python3 ✅
+[2026-08-12T14:37:36+02:00] [1786538256-4136] [INFO] [de] Expected pages: cashless faqs news programm-2026 performances workshops
+[2026-08-12T14:37:36+02:00] [1786538256-4136] [INFO] [de] Fetching /cashless/ from https://bucht-der-traeumer.de/cashless/
+[2026-08-12T14:37:37+02:00] [1786538256-4136] [INFO] [de] /cashless/ fetched (  173456 bytes, HTTP 200)
+[2026-08-12T14:37:37+02:00] [1786538256-4136] [INFO] [de] Using FAQ extractor for cashless
+Fetching https://bucht-der-traeumer.de/cashless/...
+✅ Extracted 13 FAQ items
+   Saved to: /Users/darius.kniessner/Dev/VaultOS/30-projects-active/2026-festival-pwa/standalone/data/cashless.json
+
+   Sample:
+   Q: Bargeldlos: was heißt das?...
+   A: Bargeldlos heißt, dass weder Bargeld noch Kartenzahlung beim Bezahlen an Bars und Ständen auf dem Fe...
+[2026-08-12T14:37:38+02:00] [1786538256-4136] [OK] [de] /cashless/ FAQ extracted (    8909 bytes)
+[2026-08-12T14:37:38+02:00] [1786538256-4136] [INFO] [de] Fetching /faqs/ from https://bucht-der-traeumer.de/faqs/
+[2026-08-12T14:37:43+02:00] [1786538256-4136] [INFO] [de] /faqs/ fetched (  224930 bytes, HTTP 200)
+[2026-08-12T14:37:43+02:00] [1786538256-4136] [INFO] [de] Using FAQ extractor for faqs
+Fetching https://bucht-der-traeumer.de/faqs/...
+✅ Extracted 25 FAQ items
+   Saved to: /Users/darius.kniessner/Dev/VaultOS/30-projects-active/2026-festival-pwa/standalone/data/faqs.json
+
+   Sample:
+   Q: Achtung: Ticket Betrüger!...
+   A: Alle Online Tickets sind personalisiert. Nur wenn der Name auf dem Ticket mit eurem übereinstimmt, e...
+[2026-08-12T14:37:44+02:00] [1786538256-4136] [OK] [de] /faqs/ FAQ extracted (   11315 bytes)
+[2026-08-12T14:37:44+02:00] [1786538256-4136] [INFO] [de] Fetching /news/ from https://bucht-der-traeumer.de/news/
+[2026-08-12T14:37:45+02:00] [1786538256-4136] [INFO] [de] /news/ fetched (  246723 bytes, HTTP 200)
+[2026-08-12T14:37:45+02:00] [1786538256-4136] [INFO] [de] Using News extractor for news
+Fetching https://bucht-der-traeumer.de/news/...
+✅ Extracted 53 news items
+   Saved to: /Users/darius.kniessner/Dev/VaultOS/30-projects-active/2026-festival-pwa/standalone/data/news.json
+
+   Sample:
+   2026-08-07 — Letzte Infos zur Bucht 2026
+[2026-08-12T14:37:46+02:00] [1786538256-4136] [OK] [de] /news/ news extracted (   26905 bytes)
+[2026-08-12T14:37:46+02:00] [1786538256-4136] [INFO] [de] Fetching /programm-2026/ from https://bucht-der-traeumer.de/programm-2026/
+[2026-08-12T14:37:55+02:00] [1786538256-4136] [INFO] [de] /programm-2026/ fetched ( 1378740 bytes, HTTP 200)
+[2026-08-12T14:37:55+02:00] [1786538256-4136] [INFO] [de] Using Program extractor for programm-2026
+Fetching https://bucht-der-traeumer.de/programm-2026/...
+✅ Extracted 169 events
+   Days: 7, Stages: 15, Types: 4
+   Saved to: /Users/darius.kniessner/Dev/VaultOS/30-projects-active/2026-festival-pwa/standalone/data/programm-2026.json
+
+   Sample:
+    | Schweissperle | Schweissperle | Space
+   Es wird sweaty und zwar nicht nur auf dem Dancefloor. Unser Saunaspace sorgt mit...
+[2026-08-12T14:37:56+02:00] [1786538256-4136] [OK] [de] /programm-2026/ program extracted (  182158 bytes)
+[2026-08-12T14:37:56+02:00] [1786538256-4136] [INFO] [de] Fetching /performances/ from https://bucht-der-traeumer.de/performances/
+[2026-08-12T14:37:59+02:00] [1786538256-4136] [INFO] [de] /performances/ fetched (  190092 bytes, HTTP 200)
+[2026-08-12T14:37:59+02:00] [1786538256-4136] [INFO] [de] Using Grid extractor for performances
+Fetching overview: https://bucht-der-traeumer.de/performances/...
+Found 23 items
+  [6/23] Shenanigames ✅
+  [2/23] Zirkus Mond ✅
+  [4/23] The Naked Tea Party ✅
+  [1/23] Pyramid Party ✅
+  [3/23] Pinky Promise ✅
+  [5/23] WIKABARETT ✅
+  [7/23] Zart Kollektiv ✅
+  [11/23] The Anté Dote ✅
+  [10/23] Down to Clown ✅
+  [8/23] Dräembot™ ✅
+  [9/23] Jugger Match – Kampf der Besten ✅
+  [12/23] Con-Cent Späti ✅
+  [13/23] Raxa ✅
+  [15/23] Kitty and The Cat ✅
+  [14/23] ArtEMiss ✅
+  [16/23] Ohrenzirkus ✅
+  [18/23] Shady Lady ✅
+  [17/23] Seifentheater ✅
+  [19/23] Happy Acro Friends ✅
+  [21/23] Hanna & Aron ✅
+  [20/23] Cuddle Kino ✅
+  [22/23] Vulvaa Power ✅
+  [23/23] Gutter Gucci ✅
+
+✅ Extracted 23 items (23 with descriptions)
+   Saved to: /Users/darius.kniessner/Dev/VaultOS/30-projects-active/2026-festival-pwa/standalone/data/performances.json
+
+   Sample:
+   Pyramid Party
+   Pyramid Party ist eine Sober Rave Drag Zeremonie für Berlin-Nächte: roh, düster, befreiend. Drag Que...
+   Points: Pyramid Party
+[2026-08-12T14:38:15+02:00] [1786538256-4136] [OK] [de] /performances/ grid extracted (   10962 bytes)
+[2026-08-12T14:38:15+02:00] [1786538256-4136] [INFO] [de] Fetching /workshops/ from https://bucht-der-traeumer.de/workshops/
+[2026-08-12T14:38:16+02:00] [1786538256-4136] [INFO] [de] /workshops/ fetched (  291059 bytes, HTTP 200)
+[2026-08-12T14:38:16+02:00] [1786538256-4136] [INFO] [de] Using Grid extractor for workshops
+Fetching overview: https://bucht-der-traeumer.de/workshops/...
+Found 69 items
+  [1/69] Daniela Sepehri ✅
+  [3/69] Vanessa Faloye ✅
+  [4/69] Bianca Nawrath ✅
+  [6/69] Lindi Delight ✅
+  [2/69] Arne Semsrott ✅
+  [5/69] Melanie Wolfers ✅
+  [11/69] Helena Steinhaus ✅
+  [8/69] Laurie Penny ✅
+  [7/69] Sophia Fritz & Christina Lehr ✅
+  [9/69] Friederike von Aderkas ✅
+  [10/69] Goldie ✅
+  [12/69] Sanle Tong ✅
+  [13/69] Noreen Reiter & Samuel Friedl ✅
+  [14/69] Nessa Schnessa ✅
+  [17/69] Johanna Schuck ✅
+  [15/69] Isabelle Dikumbi ✅
+  [16/69] Sascha Möckel ✅
+  [18/69] Toni Kircheis ✅
+  [19/69] Storm Willow Hartley ✅
+  [22/69] Pia Zulauf, Marietta Hollensteiner ✅
+  [23/69] Vanessa Martin ✅
+  [20/69] Anna Gamburg ✅
+  [21/69] Ahmad Dakhnous ✅
+  [27/69] Vulvaa Power ✅
+  [24/69] Pasquale Virginie Rotter ✅
+  [25/69] Christoph Dinkelacker ✅
+  [26/69] Maria Salichow & Theresa Stöhr ✅
+  [28/69] Joy Dorkhom ✅
+  [29/69] Juli Hauser & Natalie Krug ✅
+  [31/69] Alex Cuthbertson & Jo Schubert ✅
+  [30/69] Crispin Bade & Lara Pickener ✅
+  [32/69] Jessie Sonnenschein ✅
+  [33/69] Rita Maglio & Jana Pfenning von Better Birth Control ✅
+  [35/69] celephais & uhuspecht ✅
+  [36/69] Sonja Werner ✅
+  [34/69] Reinhild Benning ✅
+  [37/69] Elise Alma ✅
+  [38/69] Sophie Victoria Lauber ✅
+  [39/69] Júlia von Montfort & Ashraf Alali ✅
+  [42/69] Heidi van de Flausen ✅
+  [41/69] A Quarter to Infinity ✅
+  [43/69] Emiko Gejic ✅
+  [40/69] Simone Burster ✅
+  [44/69] Hannah Pascucci ✅
+  [45/69] Glitzzy Goerlitzzy ✅
+  [46/69] Rückenwind ✅
+  [47/69] Avy ✅
+  [49/69] Florian Henkel & Celine Wulbeck ⚠️
+  [52/69] Nina Javshanashvili & Tekla Tevdorashvili ✅
+  [48/69] Tarot Reader ✅
+  [50/69] Julia Kefer ✅
+  [51/69] Lena Prieß ✅
+  [53/69] Hæppy Änna & Duchesne ✅
+  [54/69] Melanie Sichardt & André Richter ✅
+  [55/69] Line Kiekbusch & Elias Manzel ✅
+  [56/69] Annie Witschas & Valentina Vavalà & Gusztáv Ottrubay ✅
+  [57/69] Annie Strout ✅
+  [58/69] Miriam Lütt ✅
+  [60/69] Mehmed König ✅
+  [61/69] Boto ✅
+  [62/69] Natalia Celej ✅
+  [59/69] Kazuma Glen Motomura (Bodypoet) ✅
+  [63/69] Pauline Jäckels ✅
+  [64/69] Luise Klingma ✅
+  [67/69] Thomas Scheele (Toomuch) ✅
+  [65/69] Zuher Jazmati ✅
+  [68/69] Zuzu ✅
+  [66/69] Alexander Krüger ✅
+  [69/69] Tanzen3000 ✅
+
+✅ Extracted 69 items (68 with descriptions)
+   Saved to: /Users/darius.kniessner/Dev/VaultOS/30-projects-active/2026-festival-pwa/standalone/data/workshops.json
+
+   Sample:
+   Daniela Sepehri
+   Daniela Sepehri ist Journalistin, Aktivistin und Autorin. Sie beschäftigt sich u.a. mit der Menschen...
+   Points: Wie geht es weiter im Iran?
+[2026-08-12T14:38:52+02:00] [1786538256-4136] [OK] [de] /workshops/ grid extracted (   41943 bytes)
+[2026-08-12T14:38:52+02:00] [1786538256-4136] [INFO] [de] Building unified timetable
+✅ Built timetable: 169 events
+   Days: 5, Stages: 15, Categories: 4, Genres: 4
+   Events with descriptions: 156
+   Saved to: /Users/darius.kniessner/Dev/VaultOS/30-projects-active/2026-festival-pwa/standalone/data/timetable.json
+[2026-08-12T14:38:52+02:00] [1786538256-4136] [OK] [de] Timetable built
+[2026-08-12T14:38:52+02:00] [1786538256-4136] [INFO] [de] Building merged info.json
+   ✅ info.json built from: news, cashless, faqs
+[2026-08-12T14:38:52+02:00] [1786538256-4136] [OK] [de] info.json built
+[2026-08-12T14:38:52+02:00] [1786538256-4136] [INFO] [en] Expected pages: cashless faqs news programm-2026 performances workshops
+[2026-08-12T14:38:52+02:00] [1786538256-4136] [INFO] [en] Fetching /cashless/ from https://bucht-der-traeumer.de/en/cashless/
+[2026-08-12T14:38:57+02:00] [1786538256-4136] [INFO] [en] /cashless/ fetched (  176538 bytes, HTTP 200)
+[2026-08-12T14:38:57+02:00] [1786538256-4136] [INFO] [en] Using FAQ extractor for cashless
+Fetching https://bucht-der-traeumer.de/en/cashless/...
+✅ Extracted 13 FAQ items
+   Saved to: /Users/darius.kniessner/Dev/VaultOS/30-projects-active/2026-festival-pwa/standalone/data/en/cashless.json
+
+   Sample:
+   Q: Cashless: what does it mean?...
+   A: Cashless means that neither cash nor card payments are used for transactions at bars and stands with...
+[2026-08-12T14:39:03+02:00] [1786538256-4136] [OK] [en] /cashless/ FAQ extracted (    7986 bytes)
+[2026-08-12T14:39:03+02:00] [1786538256-4136] [INFO] [en] Fetching /faqs/ from https://bucht-der-traeumer.de/en/faqs/
+[2026-08-12T14:39:08+02:00] [1786538256-4136] [INFO] [en] /faqs/ fetched (  228658 bytes, HTTP 200)
+[2026-08-12T14:39:08+02:00] [1786538256-4136] [INFO] [en] Using FAQ extractor for faqs
+Fetching https://bucht-der-traeumer.de/en/faqs/...
+✅ Extracted 23 FAQ items
+   Saved to: /Users/darius.kniessner/Dev/VaultOS/30-projects-active/2026-festival-pwa/standalone/data/en/faqs.json
+
+   Sample:
+   Q: Attention: Ticket scammers!...
+   A: All online tickets are personalized. Only if the name on the ticket matches yours will you be admitt...
+[2026-08-12T14:39:10+02:00] [1786538256-4136] [OK] [en] /faqs/ FAQ extracted (   10777 bytes)
+[2026-08-12T14:39:10+02:00] [1786538256-4136] [INFO] [en] Fetching /news/ from https://bucht-der-traeumer.de/en/news/
+[2026-08-12T14:39:16+02:00] [1786538256-4136] [INFO] [en] /news/ fetched (  250813 bytes, HTTP 200)
+[2026-08-12T14:39:16+02:00] [1786538256-4136] [INFO] [en] Using News extractor for news
+Fetching https://bucht-der-traeumer.de/en/news/...
+✅ Extracted 52 news items
+   Saved to: /Users/darius.kniessner/Dev/VaultOS/30-projects-active/2026-festival-pwa/standalone/data/en/news.json
+
+   Sample:
+   2026-07-29 — Mini Worlds, Peepshows & Champagne Receptions
+[2026-08-12T14:39:23+02:00] [1786538256-4136] [OK] [en] /news/ news extracted (   26330 bytes)
+[2026-08-12T14:39:23+02:00] [1786538256-4136] [INFO] [en] Fetching /programm-2026/ from https://bucht-der-traeumer.de/en/programm-2026/
+[2026-08-12T14:39:35+02:00] [1786538256-4136] [INFO] [en] /programm-2026/ fetched ( 1381921 bytes, HTTP 200)
+[2026-08-12T14:39:35+02:00] [1786538256-4136] [INFO] [en] Using Program extractor for programm-2026
+Fetching https://bucht-der-traeumer.de/en/programm-2026/...
+✅ Extracted 169 events
+   Days: 7, Stages: 15, Types: 4
+   Saved to: /Users/darius.kniessner/Dev/VaultOS/30-projects-active/2026-festival-pwa/standalone/data/en/programm-2026.json
+
+   Sample:
+    | Schweissperle | Schweissperle | Space
+   Wardrobe and sauna towel ready? Throughout the festival, the sauna masters will ...
+[2026-08-12T14:39:37+02:00] [1786538256-4136] [OK] [en] /programm-2026/ program extracted (  173664 bytes)
+[2026-08-12T14:39:37+02:00] [1786538256-4136] [INFO] [en] Fetching /performances/ from https://bucht-der-traeumer.de/en/performances/
+[2026-08-12T14:39:40+02:00] [1786538256-4136] [INFO] [en] /performances/ fetched (  194007 bytes, HTTP 200)
+[2026-08-12T14:39:40+02:00] [1786538256-4136] [INFO] [en] Using Grid extractor for performances
+Fetching overview: https://bucht-der-traeumer.de/en/performances/...
+Found 23 items
+  [5/23] WIKABARETT ✅
+  [3/23] Pinky Promise ✅
+  [1/23] Pyramid Party ✅
+  [2/23] Zirkus Mond ✅
+  [4/23] The Naked Tea Party ✅
+  [6/23] Shenanigames ✅
+  [10/23] Down to Clown ✅
+  [11/23] The Anté Dote ✅
+  [8/23] Dräembot™ ✅
+  [7/23] Zart Kollektiv ✅
+  [9/23] Jugger Match – Battle of the Best ✅
+  [12/23] Con-Cent Späti ✅
+  [13/23] Raxa ✅
+  [15/23] Kitty and The Cat ✅
+  [14/23] ArtEMiss ✅
+  [16/23] Ohrenzirkus ✅
+  [17/23] Seifentheater ✅
+  [18/23] Shady Lady ✅
+  [19/23] Happy Acro Friends ✅
+  [20/23] Cuddle Kino ✅
+  [23/23] Gutter Gucci ✅
+  [21/23] Hanna & Aron ✅
+  [22/23] Vulvaa Power ✅
+
+✅ Extracted 23 items (23 with descriptions)
+   Saved to: /Users/darius.kniessner/Dev/VaultOS/30-projects-active/2026-festival-pwa/standalone/data/en/performances.json
+
+   Sample:
+   Pyramid Party
+   Pyramid Party is a sober rave drag ritual for Berlin nights: raw, dark, liberating. Led by radiant d...
+   Points: Pyramid Party
+[2026-08-12T14:39:55+02:00] [1786538256-4136] [OK] [en] /performances/ grid extracted (   10767 bytes)
+[2026-08-12T14:39:55+02:00] [1786538256-4136] [INFO] [en] Fetching /workshops/ from https://bucht-der-traeumer.de/en/workshops/
+[2026-08-12T14:39:59+02:00] [1786538256-4136] [INFO] [en] /workshops/ fetched (  295170 bytes, HTTP 200)
+[2026-08-12T14:39:59+02:00] [1786538256-4136] [INFO] [en] Using Grid extractor for workshops
+Fetching overview: https://bucht-der-traeumer.de/en/workshops/...
+Found 69 items
+  [6/69] Lindi Delight ✅
+  [5/69] Melanie Wolfers ✅
+  [4/69] Bianca Nawrath ✅
+  [3/69] Vanessa Faloye ✅
+  [2/69] Arne Semsrott ✅
+  [1/69] Daniela Sepehri ✅
+  [7/69] Sophia Fritz & Christina Lehr ✅
+  [8/69] Laurie Penny ✅
+  [12/69] Sanle Tong ✅
+  [10/69] Goldie ✅
+  [9/69] Friederike von Aderkas ✅
+  [11/69] Helena Steinhaus ✅
+  [13/69] Noreen Reiter & Samuel Friedl ✅
+  [14/69] Nessa Schnessa ✅
+  [16/69] Sascha Möckel ✅
+  [15/69] Isabelle Dikumbi ✅
+  [17/69] Johanna Schuck ✅
+  [18/69] Toni Kircheis ✅
+  [19/69] Storm Willow Hartley ✅
+  [20/69] Anna Gamburg ✅
+  [21/69] Ahmad Dakhnous ✅
+  [27/69] Vulvaa Power ✅
+  [24/69] Pasquale Virginie Rotter ✅
+  [22/69] Pia Zulauf, Marietta Hollensteiner ✅
+  [23/69] Vanessa Martin ✅
+  [25/69] Christoph Dinkelacker ✅
+  [30/69] Crispin Bade & Lara Pickener ✅
+  [29/69] Juli Hauser & Natalie Krug ✅
+  [26/69] Maria Salichow & Theresa Stöhr ✅
+  [28/69] Joy Dorkhom ✅
+  [31/69] Alex Cuthbertson & Jo Schubert ✅
+  [32/69] Jessie Sonnenschein ✅
+  [33/69] Rita Maglio & Jana Pfenning von Better Birth Control ✅
+  [34/69] Reinhild Benning ✅
+  [36/69] Sonja Werner ✅
+  [35/69] celephais & uhuspecht ✅
+  [37/69] Elise Alma ✅
+  [38/69] Sophie Victoria Lauber ✅
+  [40/69] Simone Burster ✅
+  [39/69] Júlia von Montfort & Ashraf Alali ✅
+  [41/69] A Quarter to Infinity ✅
+  [42/69] Heidi van de Flausen ✅
+  [43/69] Emiko Gejic ✅
+  [44/69] Hannah Pascucci ✅
+  [46/69] Rückenwind ✅
+  [45/69] Glitzzy Goerlitzzy ✅
+  [47/69] Avy ✅
+  [48/69] Tarot Reader ✅
+  [49/69] Florian Henkel & Celine Wulbeck ⚠️
+  [50/69] Julia Kefer ✅
+  [53/69] Hæppy Änna & Duchesne ✅
+  [52/69] Nina Javshanashvili & Tekla Tevdorashvili ✅
+  [51/69] Lena Prieß ✅
+  [54/69] Melanie Sichardt & André Richter ✅
+  [55/69] Line Kiekbusch & Elias Manzel ✅
+  [56/69] Annie Witschas & Valentina Vavalà & Gusztáv Ottrubay ✅
+  [58/69] Miriam Lütt ✅
+  [57/69] Annie Strout ✅
+  [59/69] Kazuma Glen Motomura (Bodypoet) ✅
+  [60/69] Mehmed König ✅
+  [62/69] Natalia Celej ✅
+  [61/69] Boto ✅
+  [63/69] Pauline Jäckels ✅
+  [64/69] Luise Klingma ✅
+  [65/69] Zuher Jazmati ✅
+  [66/69] Alexander Krüger ✅
+  [69/69] Tanzen3000 ✅
+  [68/69] Zuzu ✅
+  [67/69] Thomas Scheele (Toomuch) ✅
+
+✅ Extracted 69 items (68 with descriptions)
+   Saved to: /Users/darius.kniessner/Dev/VaultOS/30-projects-active/2026-festival-pwa/standalone/data/en/workshops.json
+
+   Sample:
+   Daniela Sepehri
+   Daniela Sepehri is a journalist, activist, and author. Among other things, she focuses on the human ...
+   Points: What does the Future hold for Iran?
+[2026-08-12T14:40:38+02:00] [1786538256-4136] [OK] [en] /workshops/ grid extracted (   40825 bytes)
+[2026-08-12T14:40:38+02:00] [1786538256-4136] [INFO] [en] Building unified timetable
+✅ Built timetable: 169 events
+   Days: 5, Stages: 15, Categories: 4, Genres: 4
+   Events with descriptions: 156
+   Saved to: /Users/darius.kniessner/Dev/VaultOS/30-projects-active/2026-festival-pwa/standalone/data/en/timetable.json
+[2026-08-12T14:40:38+02:00] [1786538256-4136] [OK] [en] Timetable built
+[2026-08-12T14:40:38+02:00] [1786538256-4136] [INFO] [en] Building merged info.json
+   ✅ info.json built from: news, cashless, faqs
+[2026-08-12T14:40:38+02:00] [1786538256-4136] [OK] [en] info.json built
+[2026-08-12T14:40:38+02:00] [1786538256-4136] [INFO] Regenerating manifest
+   ✅ Manifest updated: 7 content pages
+[2026-08-12T14:40:38+02:00] [1786538256-4136] [INFO] Updating standalone.json
+[2026-08-12T14:40:39+02:00] [1786538256-4136] [INFO] Busting Service Worker cache
+[2026-08-12T14:40:39+02:00] [1786538256-4136] [OK] Cache version bumped to 1786538439
