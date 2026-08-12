@@ -173,10 +173,22 @@ function attachPinchZoom(stage, img, hint, gestureState) {
             const dx = p2.x - p1.x, dy = p2.y - p1.y;
             const dist = Math.hypot(dx, dy);
             const newScale = gestureStart.startScale * (dist / gestureStart.startDist);
-            // Restore translation snapshot before applying the anchored zoom
-            // — otherwise successive pointermove events would compound.
+            // Restore the FULL pre-pinch snapshot (tx, ty AND scale)
+            // before calling setScale. setScale's anchor math is
+            // `k = scale / prev`, meaning it computes the translation
+            // shift for the scale change from `prev` to the new value.
+            // If we reset only tx/ty and leave `scale` at whatever the
+            // previous pointermove set it to, `prev` becomes that
+            // intermediate value — so each frame only applies the
+            // incremental anchor offset (last-frame → this-frame) on
+            // top of a zeroed tx, instead of the total offset since
+            // pinch start. Visually that manifests as the image always
+            // zooming towards its centre even when the user is pinching
+            // near an edge. Resetting scale to startScale makes k
+            // equal newScale/startScale, i.e. the correct total shift.
             tx = gestureStart.startTx;
             ty = gestureStart.startTy;
+            scale = gestureStart.startScale;
             setScale(newScale, gestureStart.cx, gestureStart.cy);
             e.preventDefault();
         } else if (pointers.size === 1 && gestureStart?.mode === 'pan' && scale > 1) {

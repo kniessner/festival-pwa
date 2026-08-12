@@ -66,6 +66,28 @@ const SYNONYMS = [
         resolver: (userPos, index) => resolveByTag('shower', userPos, index),
     },
     {
+        // Drinking-water taps (11 total, lives in toilets-showers.geojson
+        // as `text: 'Wasser'`).  Own category so a thirsty guest doesn't
+        // scroll past 30 toilet rows to find one.
+        aliases:  ['water', 'wasser', 'trinkwasser', 'drink water', 'drinking water',
+                   'tap', 'hahn', 'wasserstelle', 'wasserstellen', 'refill', 'bottle refill'],
+        labelKey: 'search.nearestWater',
+        icon:     'images/poi-water.svg',
+        resolver: (userPos, index) => resolveByTag('water', userPos, index),
+    },
+    {
+        // Cashless top-up stations (7 total, data/cashless.geojson).
+        // NOT ATMs — they load your wristband, they don't dispense
+        // cash.  Aliases deliberately exclude 'atm' / 'geldautomat' /
+        // 'bankomat' to avoid sending a broke guest on a wild goose
+        // chase looking for cash they can't get.
+        aliases:  ['cashless', 'cash', 'top-up', 'topup', 'top up', 'automat',
+                   'euro', 'money', 'geld', 'bezahlen', 'pay', 'wristband top-up'],
+        labelKey: 'search.nearestCashless',
+        icon:     'images/poi-cashless.svg',
+        resolver: (userPos, index) => resolveByTag('cashless', userPos, index),
+    },
+    {
         aliases:  ['bar', 'bars', 'drink', 'drinks', 'cocktail', 'bier', 'beer', 'wine'],
         labelKey: 'search.nearestBar',
         icon:     'images/poi-generic.svg',

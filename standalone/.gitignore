@@ -1,1 +1,7 @@
 node_modules/
+
+# Raw Felt extractor output. `data/felt/_extract.py` writes one
+# <slug>.geojson per Felt Group here; we cherry-pick from these into
+# the hand-curated data/*.geojson files. Not source of truth —
+# regeneratable at any time by re-running the extractor.
+data/felt/_all/

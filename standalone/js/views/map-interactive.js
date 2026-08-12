@@ -64,11 +64,11 @@ const PNG_CREAM = PALETTE.cream;
 // slug-based coloring.)
 
 // Default camera state on every fresh /map mount — hand-picked by
-// Jacob (2026-08-08) as the "maximum information on load" framing.
-// Rotate/tilt/zoom-out are allowed within maxBounds; every re-entry
-// to /map resets to these values.
+// Jacob (2026-08-08, re-tuned 2026-08-12 on mobile) as the "maximum
+// information on load" framing. Rotate/tilt/zoom-out are allowed within
+// maxBounds; every re-entry to /map resets to these values.
 const DEFAULT_CAMERA = {
-    center: [14.500466, 52.273857],
+    center: [14.500545, 52.274248],
     zoom: 14.11,
     bearing: -73.1,
     pitch: 30.7,
@@ -304,7 +304,9 @@ function createMap(stage, gestureState) {
     // Camera-state debug helper — commented out but preserved for
     // future rounds of default-tuning. Uncomment, deploy, and every
     // gesture-settle will log the current camera and copy a
-    // paste-ready snippet to the clipboard.
+    // paste-ready snippet to the clipboard. Captures center + zoom
+    // + bearing (orientation) + pitch (tilt) so the string drops
+    // straight into DEFAULT_CAMERA above.
     //
     // map.on('moveend', () => {
     //     const c = map.getCenter();
@@ -324,7 +326,7 @@ function createMap(stage, gestureState) {
     //
     // map.on('click', (e) => {
     //     const { lng, lat } = e.lngLat;
-    //     const line = `longitude: ${lng.toFixed(7)}, latitude: ${lat.toFixed(7)}`;
+    //     const line = `[${lng.toFixed(6)}, ${lat.toFixed(6)}]`;
     //     // eslint-disable-next-line no-console
     //     console.log('[map click]', line);
     //     if (navigator.clipboard && navigator.clipboard.writeText) {
@@ -397,12 +399,13 @@ function buildStyle() {
 
 // ─── Overlay layers (Felt-derived geojsons on top of the basemap) ────
 //
-// Fresh start: five separate sources, one per Felt group. Each renders
-// polygon fills, point circles (for markers/circles from Felt), and a
-// label from the `text` property. No cross-group styling logic yet —
-// Jacob wants to analyze the raw data first, then decide what to keep
-// and how to differentiate visually. See standalone/data/felt/README.md
-// for the schema.
+// Eleven separate sources today, one per FELT_LAYERS entry
+// (produktion-base, camping-areas, stages, food-court, sterne, gastro,
+// produktion, toilets-showers, traffic, security, cashless). Each
+// renders polygon fills, point circles (for markers/circles from Felt), and a label
+// from the `text` property. Per-group styling knobs (colour, point
+// radius, glyph overlays) live in map-layers.js — see that file's
+// FELT_LAYERS docstring for the schema and how to add a new group.
 
 // FELT_LAYERS lives in ./map-layers.js so tent.js can import it too
 // without creating a circular map-interactive.js ↔ tent.js import
@@ -421,7 +424,7 @@ function addOverlayLayers(map) {
     // hide the anchor labels of the previous tier.
     const labelConfigs = [];
 
-    for (const { id, file, color } of FELT_LAYERS) {
+    for (const { id, file, color, pointRadius, pointStrokeWidth, glyphOverlay } of FELT_LAYERS) {
         map.addSource(id, {
             type: 'geojson',
             data: 'data/' + file,
@@ -435,32 +438,211 @@ function addOverlayLayers(map) {
         // git blame for the transparent-baseline version).
         const fillOpacity = 1;
 
-        // Polygon / MultiPolygon fill. Outline layer removed (Jacob's
-         // 2026-08-08 experiment): borderless overlays let the polygon
-         // colour breathe against the base map, and the tent's
-         // dim-during-drag pattern still works because tent.js probes
-         // layers via map.getLayer(id) before touching them.
+        // Polygon / MultiPolygon fill. No generic outline layer:
+        // dropped in Jacob's 2026-08-08 borderless experiment so the
+        // polygon colour breathes against the base map. Two scoped
+        // sterne cluster outlines are added further down (the Porto
+        // Loco + Marktplatz blobs), but everything else stays
+        // borderless. tent.js's dim-during-drag pattern still works
+        // because it probes layers via map.getLayer(id) before
+        // touching them, so a missing -outline is a no-op.
+        // Per-feature colour override:
+        //   - traffic layer default is #2674ba (Felt Auto&ParkKonzept
+        //     blue), used by parking-p*-fill + E3.
+        //   - The Bassliner bus-arrival polygon overrides to a dark
+        //     grey (#3d3d3d) so it reads as "transit infrastructure"
+        //     rather than being confused with the guest parking. One
+        //     slug, one case — no dedicated layer needed.
+        //
+        // Produktion Base intentionally does NOT live here: it sits
+        // in its own `produktion-base` layer at index 0 of
+        // FELT_LAYERS so it renders BELOW every guest overlay
+        // (camping-areas, stages, food-court, sterne, gastro,
+        // produktion, toilets, traffic, security, cashless).  A
+        // slug-override wouldn't work here because a per-feature
+        // colour can't move that one feature's z-order.
+        const fillColorExpr = id === 'traffic'
+            ? ['case', ['==', ['get', 'slug'], 'bassliner'], '#3d3d3d', color]
+            : color;
+
         map.addLayer({
             id: id + '-fill',
             source: id,
             type: 'fill',
             filter: ['==', ['geometry-type'], 'Polygon'],
-            paint: { 'fill-color': color, 'fill-opacity': fillOpacity },
+            paint: { 'fill-color': fillColorExpr, 'fill-opacity': fillOpacity },
         });
 
+        // Experimental: subtle outline on small sterne clusters where
+        // several polygons sit inside / overlap a larger "container"
+        // polygon and the shared #c17d81 fill blends them into one blob.
+        // Border style: darker shade of the sterne fill (#c17d81 ->
+        // #4a2f32) at 0.55 opacity, line-width 1. Kept off every other
+        // sterne polygon so the borderless baseline stands elsewhere.
+        //
+        // Z-order trick: MapLibre draws all fills in a layer first and
+        // all outlines afterwards, so a single outline layer over the
+        // whole cluster would leave the base polygon's outline painted
+        // on top of the smaller polygons where they overlap. Per cluster
+        // we add three layers in order:
+        //   1. base-outline    (line, the containing polygon only)
+        //   2. top-overpaint   (fill, the polygons sitting on top —
+        //                       repaints their interiors, covering
+        //                       step 1 inside them)
+        //   3. top-outline     (line, the polygons on top)
+        // The `top` list is drawn together in one line layer because
+        // its members don't overlap each other; if that changes for a
+        // future cluster, split them into ordered sub-clusters.
+        if (id === 'sterne') {
+            const OUTLINE_PAINT = {
+                'line-color': '#4a2f32',
+                'line-width': 1,
+                'line-opacity': 0.55,
+            };
+            const OUTLINED_CLUSTERS = [
+                // Porto Loco: Sektamt is the big elongated polygon;
+                // Burghain + Shenanigames sit on top of it.
+                { id: 'porto-loco', base: 'sektamt',    top: ['burghain', 'shenanigames'] },
+                // Marktplatz: Marktplatz is the container; The Losers
+                // Arcade + A Quarter to Infinity sit on top of it.
+                // (Losers Arcade extends slightly beyond Marktplatz's
+                // east edge, which is fine — the overpaint only kicks
+                // in inside the overlap.)
+                { id: 'marktplatz', base: 'marktplatz', top: ['the-losers-arcade', 'a-quarter-to-infinity'] },
+            ];
+            for (const cluster of OUTLINED_CLUSTERS) {
+                map.addLayer({
+                    id: `sterne-${cluster.id}-base-outline`,
+                    source: 'sterne',
+                    type: 'line',
+                    filter: ['==', ['get', 'slug'], cluster.base],
+                    paint: OUTLINE_PAINT,
+                });
+                map.addLayer({
+                    id: `sterne-${cluster.id}-overpaint`,
+                    source: 'sterne',
+                    type: 'fill',
+                    filter: ['all',
+                        ['in', ['geometry-type'], ['literal', ['Polygon', 'MultiPolygon']]],
+                        ['in', ['get', 'slug'], ['literal', cluster.top]],
+                    ],
+                    paint: { 'fill-color': color, 'fill-opacity': fillOpacity },
+                });
+                map.addLayer({
+                    id: `sterne-${cluster.id}-top-outline`,
+                    source: 'sterne',
+                    type: 'line',
+                    filter: ['in', ['get', 'slug'], ['literal', cluster.top]],
+                    paint: OUTLINE_PAINT,
+                });
+            }
+        }
+
         // Point features (Felt Markers / Circles come through as Points).
+        // Exclude the Info-point / Lost & Found feature that was
+        // demoted to a Point inside Community Corner (see
+        // produktion.geojson): we want ONLY its label to render, not
+        // a visible circle marker — the polygon it lives inside
+        // (Community Corner) already provides the visual footprint.
+        //
+        // Radius / stroke default to 4 / 1 (small marker); layers can
+        // override via FELT_LAYERS to get a more prominent dot — the
+        // security layer sets radius 6→14 (zoom-interpolated) + stroke
+        // 2 so Sammelstellen read as safety beacons at any zoom.
         map.addLayer({
             id: id + '-point',
             source: id,
             type: 'circle',
-            filter: ['==', ['geometry-type'], 'Point'],
+            filter: ['all',
+                ['==', ['geometry-type'], 'Point'],
+                ['!=', ['get', 'slug'], 'info-point-community-corner'],
+                // Two label-only points inside traffic.geojson: they
+                // exist purely to anchor the 'Parkplatz P4/P5' and
+                // 'Parkplatz P6' labels at the cluster centre. Without
+                // this filter they'd render as small blue circles on
+                // top of the parking-lot fill, which reads as "a
+                // marker here" — confusing next to the actual E3
+                // entrance marker.
+                ['!=', ['get', 'slug'], 'parking-p4-p5-label'],
+                ['!=', ['get', 'slug'], 'parking-p6-label'],
+            ],
             paint: {
-                'circle-color': color,
-                'circle-radius': 4,
+                // Per-slug colour override: a handful of sterne Points near
+                // the Porto Loco / Atlantis corner (Skull, Wasserwand,
+                // Flausch and chill, Raversnacks, PinkPuk Bar,
+                // Grinskäffchen) are the only ones that need to shout
+                // as POIs. The default #c17d81 sterne pink sits too
+                // close to the base-map hue to read even at the bumped
+                // 4 → 10 px radius, so paint these six warm orange
+                // (#ff9540, same shade as the gastro layer). Deliberately
+                // NOT cashless orange (#F49300) so they don't get
+                // confused with payment dots. All other Points on every
+                // layer fall through to the FELT_LAYERS colour.
+                //
+                // Flausch and chill / Raversnacks / PinkPuk Bar /
+                // Grinskäffchen were originally gastro Polygons; they
+                // were migrated into sterne.geojson as Points because
+                // they're really community-run bars, not food stalls.
+                'circle-color': [
+                    'case',
+                    ['in', ['get', 'slug'], ['literal', [
+                        'skull',
+                        'wasserwand-projektion',
+                        'flausch-and-chill',
+                        'raversnacks',
+                        'pinkpuk-bar',
+                        'grinskaeffchen',
+                    ]]], '#ff9540',
+                    color,
+                ],
+                'circle-radius': pointRadius ?? 4,
                 'circle-stroke-color': PNG_MAGENTA_HALO,
-                'circle-stroke-width': 1,
+                'circle-stroke-width': pointStrokeWidth ?? 1,
             },
         });
+
+        // Optional glyph overlay — an always-visible single-glyph
+        // symbol layer stamped on top of the -point circles for
+        // layers that want a persistent identity marker (e.g. an
+        // icon-like character) readable at every zoom. No layer
+        // currently uses this — cashless previously stamped a white
+        // '€' via `glyphOverlay: '€'` but that was dropped in 06467a3
+        // (the tiny € read as noise at overview zoom). The
+        // infrastructure is preserved for future layers.
+        //
+        // Text-size scales with the point radius so the glyph never
+        // outgrows its background.  text-allow-overlap: true so it's
+        // never dropped by collision.
+        if (glyphOverlay) {
+            // Derive a text-size expression that stays proportional
+            // to the circle radius (~1.6× the radius).  When
+            // pointRadius is a MapLibre interpolate expression we
+            // build a matching one for text-size; when it's a
+            // scalar we use a scaled scalar.
+            const glyphTextSize =
+                Array.isArray(pointRadius) && pointRadius[0] === 'interpolate'
+                    ? ['interpolate', ['linear'], ['zoom'], 14, 6, 17, 14]
+                    : (pointRadius ?? 4) * 1.6;
+            map.addLayer({
+                id: id + '-glyph',
+                source: id,
+                type: 'symbol',
+                filter: ['==', ['geometry-type'], 'Point'],
+                layout: {
+                    'text-field': glyphOverlay,
+                    'text-font':  ['Lato Regular'],
+                    'text-size':  glyphTextSize,
+                    'text-allow-overlap':     true,
+                    'text-ignore-placement':  true,
+                    'symbol-placement':       'point',
+                },
+                paint: {
+                    'text-color':      '#ffffff',
+                    'text-halo-color': color,
+                    'text-halo-width': 0.5,
+                },
+            });
+        }
 
         // ---- Label configuration (added in the second pass) ----
 
@@ -514,6 +696,13 @@ function addOverlayLayers(map) {
         // exactly as it was.
         const fadeClose     = ['interpolate', ['linear'], ['zoom'], 16.0, 0, 16.5, 1];
         const fadeVeryClose = ['interpolate', ['linear'], ['zoom'], 17.0, 0, 17.5, 1];
+        // Medium tier — fade in at moderate zoom. Sits between
+        // 'always' (anchor labels) and 'fadeClose' (sterne / gastro).
+        // Used by the security Sammelstelle labels: hidden at
+        // overview (14.11 default cam), fully readable once the user
+        // pinches in even slightly — safety features should surface
+        // BEFORE the fine-grained infrastructure labels do.
+        const fadeMid       = ['interpolate', ['linear'], ['zoom'], 14.5, 0, 15.0, 1];
         // Produktion's per-feature override: Eclipse gets a case-based
         // "low-zoom" value that keeps it at opacity 1 even below the
         // fade-in band. Structured with `interpolate` on top (so the
@@ -559,10 +748,35 @@ function addOverlayLayers(map) {
             textOpacity = campingTextOpacity;
         } else if (id === 'gastro' || id === 'sterne' || id === 'food-court') {
             textOpacity = fadeClose;
-        } else if (id === 'produktion') {
+        } else if (id === 'produktion' || id === 'produktion-base') {
             textOpacity = fadeVeryCloseWithEclipsePriority;
         } else if (id === 'toilets-showers') {
             textOpacity = fadeVeryClose;
+        } else if (id === 'cashless') {
+            // Same tier as toilets: the label 'Cashless top-up' only
+            // fades in at zoom ≥ 17. Below that the orange dot alone
+            // carries the identity — a persistent white '€' glyph
+            // used to sit on top (see glyphOverlay in FELT_LAYERS)
+            // but was dropped in 06467a3 because the tiny character
+            // read as noise at overview zoom.
+            textOpacity = fadeVeryClose;
+        } else if (id === 'security') {
+            // Medium fade — hidden at overview, visible from zoom
+            // ≥ 15. The Sammelstelle DOTS themselves stay visible
+            // at all zooms (see -point layer above, no opacity
+            // expression on it); only the LABEL fades. Rationale:
+            // at overview the 4 mustard dots are readable as "go
+            // there in emergency" without needing text; the wordy
+            // 'Assembly point' label at that scale just clutters.
+            textOpacity = fadeMid;
+        } else if (id === 'traffic') {
+            // Same fadeMid tier as the security layer. Hidden at
+            // overview; visible from zoom ≥ 15. Rationale mirrors
+            // security: the traffic dots/polygons themselves stay
+            // visible at every zoom (colour signals 'car area'), so
+            // the wordy labels only need to appear once the user
+            // pinches in to look at the outer parts of the site.
+            textOpacity = fadeMid;
         } else {
             textOpacity = 1;
         }
@@ -642,25 +856,30 @@ function addOverlayLayers(map) {
         // Property required.
         const textFieldBase = buildLabelTextFieldExpression();
 
-        // For the stages layer only, wrap textFieldBase with a
-        // zoom-step that collapses tight stage clusters to a single
-        // brand label at zoom < 15.5, then splits them back into
-        // their real names at higher zoom. Empty-string text is
-        // MapLibre's convention for "skip this feature entirely", so
-        // the redundant stage disappears at overview zoom and only
-        // the anchor stage's slot (relabelled) is rendered — giving
-        // us exactly one Megan label per cluster.
+        // Two cluster-collapses currently in play. Both use MapLibre's
+        // empty-string-hides convention so the anchor keeps its slot
+        // (relabelled to the brand) and the siblings disappear
+        // entirely at overview zoom — giving us exactly one Megan
+        // label per cluster below the split threshold.
         //
-        // Two clusters currently collapsed:
-        //   Mirage      : Mirage Arco (kept as anchor, relabelled
-        //                              "Mirage") + Mirage Glimmer (hidden)
+        //   Mirage      : Mirage Arco (anchor, relabelled "Mirage")
+        //                 + Mirage Glimmer (hidden)
         //   Zirkus Mond : Zirkus Mond Turmbühnchen (anchor, relabelled
         //                              "Zirkus Mond")
         //                 + Zirkus Mond Zelt (hidden)
+        //   Community   : Community Corner (anchor, relabelled
+        //                              "Community") + Schrottpurri,
+        //                 Neuro Divers, Cuddle Poodle,
+        //                 Schweißperle (all hidden). Note this
+        //                 cluster spans ~80 m end-to-end (Cuddle
+        //                 Poodle is the north-east outlier); the
+        //                 anchor sits over the biggest polygon in
+        //                 the middle so at split zoom the individual
+        //                 names pop in around it.
         //
-        // Anchor pick rule: the physically bigger stage in each pair
-        // keeps its slot (fewer visual jumps when the label finally
-        // splits, and it lands over the more prominent structure).
+        // Anchor pick rule: physically biggest polygon in each cluster
+        // keeps its slot (fewer visual jumps at split zoom, and it
+        // lands over the most prominent structure).
         //
         // Structured as [step, [zoom], low-branch, 15.5, high-branch]
         // so the required "zoom only inside a top-level step or
@@ -674,6 +893,20 @@ function addOverlayLayers(map) {
                     ['==', ['get', 'text'], 'Mirage Glimmer'],           '',
                     ['==', ['get', 'text'], 'Zirkus Mond Turmbühnchen'], 'Zirkus Mond',
                     ['==', ['get', 'text'], 'Zirkus Mond Zelt'],         '',
+                    textFieldBase,
+                ],
+                15.5,
+                textFieldBase,
+            ]
+            : id === 'sterne'
+            ? [
+                'step', ['zoom'],
+                ['case',
+                    ['==', ['get', 'text'], 'Community Corner'], 'Community',
+                    ['==', ['get', 'text'], 'Schrottpurri'],     '',
+                    ['==', ['get', 'text'], 'Neuro Divers'],     '',
+                    ['==', ['get', 'text'], 'Cuddle Poodle'],    '',
+                    ['==', ['get', 'text'], 'Schweißperle'],     '',
                     textFieldBase,
                 ],
                 15.5,
@@ -726,6 +959,54 @@ function addOverlayLayers(map) {
                 // at the tighter 8 em so their collision boxes stay
                 // compact.
                 'text-max-width': isAnchor ? 20 : 8,
+                // label-collision-problem overrides. See docs/
+                // label-collision-problem.md for the pattern. Each
+                // slug listed here nudges that single feature's label
+                // in em-space so it stops sitting on top of a
+                // neighbouring anchor label. Falls through to [0, 0]
+                // for every feature without a matching slug (gastro
+                // features carry a `slug` only when tagged; every
+                // other layer's features either carry an unrelated
+                // slug or none, both of which fall through).
+                //
+                //   bar-neustockland: gastro Bar polygon 5.8 m north
+                //     of the Neustockland stage. Shift the Bar label
+                //     up so it clears the Neustockland stage label.
+                //
+                //   Wasser (water stations): each of the 10 water
+                //     Points sits within a few m of an existing
+                //     WC / Dusche / Urinale Point. Push every Wasser
+                //     label DOWN so it sits below the toilet-family
+                //     label at the same spot rather than colliding
+                //     with it. Matched on 'text' rather than slug
+                //     because we want all 10 water features treated
+                //     uniformly and their text is uniquely 'Wasser'
+                //     (no other feature carries that string).
+                //
+                //   missoir-porto-loco: the Missoir just south of
+                //     Porto Loco sits 3.4 m below a cashless top-up
+                //     Point and 5 m SW of wasser-01. Cashless owns
+                //     the [0,0] slot above, and wasser-01 has already
+                //     been pushed DOWN into the Missoir's slot by the
+                //     rule above. Both south (colliding with wasser)
+                //     and stay-put (colliding with cashless) drop the
+                //     Missoir label on collision. Push it NORTH over
+                //     the cashless label instead. Empirically -1.5 em
+                //     still overlapped the cashless collision box by
+                //     ~2 px (labels are 13 px tall + 2 px padding, so
+                //     each half is ~9 px; -1.5 em = 19.5 px above the
+                //     Missoir point puts the label centre only 16 px
+                //     from the cashless label centre which sits ~3.5 px
+                //     north of the Missoir point). -2.4 em gives ~28 px
+                //     centre-to-centre → ~10 px clear between boxes.
+                //     Slug-matched (there are two Missoirs in the geojson).
+                'text-offset': [
+                    'case',
+                    ['==', ['get', 'text'], 'Wasser'], ['literal', [0, 1.2]],
+                    ['==', ['get', 'slug'], 'bar-neustockland'], ['literal', [0, -1.2]],
+                    ['==', ['get', 'slug'], 'missoir-porto-loco'], ['literal', [0, -2.4]],
+                    ['literal', [0, 0]],
+                ],
                 // Anchor tier (stages + camps) always renders; every
                 // other tier drops on collision (see isAnchor comment
                 // above). symbol-sort-key still gives the anchor tier
@@ -763,11 +1044,46 @@ function addOverlayLayers(map) {
                 type: 'symbol',
                 filter: ['all', ['has', 'text'], ['in', ['get', 'text'], ['literal', STERNE_MAJOR_NAMES]]],
                 layout: {
-                    'text-field': textFieldBase,
+                    // Use the same collapse-at-overview textField as the
+                    // regular sterne-label layer. Without it Community
+                    // Corner would keep its real name at overview zoom
+                    // while the sibling collapses (Schrottpurri, etc.)
+                    // still land on the map — you'd read "Community
+                    // Corner" plus the empty gaps instead of one clean
+                    // "Community" anchor.
+                    'text-field': textField,
                     'text-font': ['Megan Display'],
                     'text-size': campsTextSize,
                     'text-anchor': 'center',
                     'text-max-width': 20,
+                    // Break the Neuro Divers / Cuddle Poodle collision.
+                    // Their polygon centres are only 22 m apart (see
+                    // proximity table in Jacob's map-follow-up-2
+                    // notes), so at any readable zoom their default-
+                    // centred labels physically overlap. Shift each
+                    // one away from the other along the north-south
+                    // axis — Cuddle Poodle (the northern polygon)
+                    // moves further north (-1.2 em), Neuro Divers
+                    // (southern) moves further south (+0.5 em).
+                    // The split is deliberately asymmetric: on-map
+                    // check showed Cuddle Poodle needed the bigger
+                    // nudge (nothing above it), while Neuro Divers
+                    // only needed a small shift to clear both
+                    // Cuddle Poodle above and the food-court labels
+                    // below. Net extra separation ≈ 27 px, enough
+                    // for distinct baselines with no wasted breathing
+                    // room. All other sterne-major members sit ≥ 44 m
+                    // apart so they stay centred (no offset).
+                    //
+                    // MapLibre's y axis points DOWN in text-offset
+                    // (screen coords, not lat/lon), so negative y =
+                    // up on screen = geographic north.
+                    'text-offset': [
+                        'match', ['get', 'text'],
+                        'Cuddle Poodle', ['literal', [0, -1.2]],
+                        'Neuro Divers',  ['literal', [0, 0.5]],
+                        ['literal', [0, 0]],
+                    ],
                     'text-allow-overlap': true,
                     'text-optional': false,
                     'text-padding': 3,

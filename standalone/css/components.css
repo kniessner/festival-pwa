@@ -932,6 +932,21 @@
     line-height: 1.45;
 }
 
+/* Links inside the onboarding / tent-intro modal.
+ * Default UA link color (dark blue ~#0000EE) is unreadable on the
+ * navy --bg (#080943). Use --accent-pink (the same coral already
+ * used for the .onboarding-feature-badge), which gives strong
+ * contrast on the navy panel and matches the modal's accent. */
+.onboarding-modal-panel a {
+    color: var(--accent-pink);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+.onboarding-modal-panel a:hover,
+.onboarding-modal-panel a:focus-visible {
+    color: var(--text-muted);
+}
+
 .onboarding-disclaimer {
     margin: 0;
     font-size: 0.9rem;

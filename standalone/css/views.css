@@ -1695,7 +1695,12 @@ span.tt-event-stage {
    without losing the column. */
 .gtt-stagehead.gtt-current-stage {
     position: relative;
-    color: var(--color-now-indicator);
+    /* Text colour intentionally NOT overridden — the label keeps its
+       original tone so it stays readable against the lavender label
+       background. The 'you are here' signal comes from the red
+       ::before border below + the wash / ring in components.css.
+       (2026-08-12: removing 'color: var(--color-now-indicator)' here
+       fixed the near-illegible dark-red-on-lavender text.) */
 }
 .gtt-stagehead.gtt-current-stage::before {
     content: '';
@@ -1722,7 +1727,11 @@ span.tt-event-stage {
    stagehead. The subtle rgba wash above alone was hidden behind
    .gtt-stagelabel's opaque `background: var(--bg)`. */
 .gtt-stagerow-wrap.gtt-current-stage .gtt-stagelabel {
-    color: var(--color-now-indicator);
+    /* Text colour intentionally NOT overridden — label keeps its
+       original tone (readable white on lavender). The 'you are
+       here' signal comes from the red ::before border below +
+       animations in components.css. Same fix as the vertical-mode
+       .gtt-stagehead rule above (2026-08-12). */
     /* .gtt-stagelabel is already position:sticky; sticky forms its own
        positioning context so the absolute ::before below is scoped to
        it just like the header pseudo. */
@@ -2113,7 +2122,7 @@ span.tt-event-stage {
 .festival-map-compass {
     position: absolute;
     left: 20px;
-    top: 100px;
+    top: 70px;
     z-index: 4;
     width: 56px;
     height: 56px;

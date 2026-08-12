@@ -107,7 +107,7 @@ const HIGHLIGHT_LAYER_ID = 'camping-areas';
 const FADE_LAYERS = [
     ...FELT_LAYERS
         .filter(({ id }) => id !== HIGHLIGHT_LAYER_ID)
-        .flatMap(({ id }) => [id + '-fill', id + '-outline', id + '-point', id + '-label']),
+        .flatMap(({ id }) => [id + '-fill', id + '-outline', id + '-point', id + '-label', id + '-glyph']),
     ...EXTRA_FADE_LAYERS,
 ];
 // Non-camping overlays are hidden completely during a tent drag
@@ -192,6 +192,9 @@ function paintKeyFor(layerId) {
     if (layerId.endsWith('-outline')) return 'line-opacity';
     if (layerId.endsWith('-point')) return 'circle-opacity';
     if (layerId.endsWith('-label')) return 'text-opacity';
+    // -glyph is a symbol layer stamped on top of a -point circle
+    // (see FELT_LAYERS `glyphOverlay`). Same paint key as a label.
+    if (layerId.endsWith('-glyph')) return 'text-opacity';
     return null;
 }
 

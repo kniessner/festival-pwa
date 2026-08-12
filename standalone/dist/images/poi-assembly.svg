@@ -1,0 +1,20 @@
+<!--
+    Assembly-point pictogram — four arrows pointing inward to a
+    center dot. Semantic match for ISO 7010 E007 (evacuation
+    assembly point) without literally copying that copyrighted glyph.
+    Matches the 24×24 grid + stroke language of the other poi-*
+    icons (poi-toilet, poi-info, poi-firstaid, poi-tent).
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Arrow from top-left corner pointing to center -->
+    <path d="M4 4 L10 10 M4 4 L4 8 M4 4 L8 4"/>
+    <!-- Arrow from top-right corner -->
+    <path d="M20 4 L14 10 M20 4 L20 8 M20 4 L16 4"/>
+    <!-- Arrow from bottom-left corner -->
+    <path d="M4 20 L10 14 M4 20 L4 16 M4 20 L8 20"/>
+    <!-- Arrow from bottom-right corner -->
+    <path d="M20 20 L14 14 M20 20 L20 16 M20 20 L16 20"/>
+    <!-- Center gathering dot -->
+    <circle cx="12" cy="12" r="1.8" fill="currentColor"/>
+</svg>

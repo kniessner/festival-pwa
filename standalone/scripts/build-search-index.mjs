@@ -38,8 +38,9 @@ const CATEGORY_BY_FILE = {
     'gastro.geojson':          'gastro',
     'sterne.geojson':          'sterne',
     'produktion.geojson':      'produktion',
-    'toilets-showers.geojson': null,   // split at runtime by name (toilet vs shower)
+    'toilets-showers.geojson': null,   // split at runtime by name (toilet vs shower vs water)
     'landmarks.geojson':       'landmark',
+    'cashless.geojson':        'cashless',
 };
 
 /**
@@ -144,6 +145,13 @@ function centroid(geom) {
 function tagify(fileName, text) {
     const t = text.toLowerCase();
     if (fileName === 'toilets-showers.geojson') {
+        // 'Wasser' features live in the same geojson as toilets and
+        // showers (all sanitation / hydration infra), but they're a
+        // distinct search category so a thirsty guest doesn't have to
+        // wade through 30 toilet rows to find a tap.  Check water
+        // FIRST because 'Wasserwand' / 'Wasserstelle' should never
+        // accidentally be routed to 'toilet'.
+        if (/wasser|water/.test(t))  return { category: 'water',  tags: ['water'] };
         if (/dusche|shower/.test(t)) return { category: 'shower', tags: ['shower'] };
         return { category: 'toilet', tags: ['toilet'] };
     }

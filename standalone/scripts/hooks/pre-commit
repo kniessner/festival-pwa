@@ -1,0 +1,98 @@
+#!/usr/bin/env bash
+# ── Festival PWA pre-commit hook ────────────────────────────────────
+# Runs `npm run predeploy` whenever the staged diff touches any file
+# whose contents feed the deploy pipeline (raw geojson, source JS/CSS,
+# service worker, images, i18n JSON, or the search-index source of
+# truth).  This guarantees the commit ALSO includes:
+#   - sanitized/optimized geojson
+#   - a rebuilt map-search-index.json
+#   - a bumped CACHE_VERSION (sw.js + index.html)
+#   - a fresh dist/ bundle
+#
+# Why: Darius's deploy is a plain rsync of the working tree — it does
+# NOT run npm at all.  If we skip the pipeline, users get stale caches,
+# stale search results, or (worst case) events that reference stages
+# that no longer exist on the map.  Every dirty commit that skips
+# predeploy is a potential production drift.
+#
+# Skip mechanism: `git commit --no-verify` (use sparingly).  Also skipped
+# automatically when only docs/tests/scripts are staged (no shipped code
+# changed).
+#
+# Install: `npm run install:hooks` (or ./scripts/install-hooks.sh).
+
+set -e
+
+# ── Paths ───────────────────────────────────────────────────────────
+STANDALONE_DIR="$(git rev-parse --show-toplevel)/standalone"
+cd "$STANDALONE_DIR"
+
+# Colours (best-effort — plain output if not a TTY)
+if [[ -t 1 ]]; then
+    C_RESET=$'\033[0m'; C_BOLD=$'\033[1m'; C_YELLOW=$'\033[33m'; C_CYAN=$'\033[36m'; C_GREEN=$'\033[32m'
+else
+    C_RESET=; C_BOLD=; C_YELLOW=; C_CYAN=; C_GREEN=
+fi
+
+# ── Detect whether any staged file matters for the pipeline ─────────
+# We inspect *staged* changes (--cached), not the working tree, so
+# `git add somefile.js && git commit -m ...` triggers correctly even
+# when other unrelated changes are also floating around unstaged.
+STAGED="$(git diff --cached --name-only --diff-filter=ACMR)"
+
+if [[ -z "$STAGED" ]]; then
+    exit 0  # nothing staged — nothing to do
+fi
+
+# Regex of paths that mean "this commit ships to users".  Keep in sync
+# with scripts/build.js — anything that ends up in dist/ or that feeds a
+# generator (sanitize / search-index) counts.
+PIPELINE_RE='^standalone/(data/|images/|icons/|css/|js/|vendor/|sw\.js|index\.html|css_manifest\.json)'
+
+if ! echo "$STAGED" | grep -qE "$PIPELINE_RE"; then
+    # Only docs/tests/scripts/config were staged.  Nothing user-facing
+    # to ship, so the pipeline can be skipped cleanly.
+    exit 0
+fi
+
+echo "${C_BOLD}${C_CYAN}▶ pre-commit: staged changes touch the deploy pipeline${C_RESET}"
+echo "${C_CYAN}  running \`npm run predeploy\` to keep dist/ + search-index + cache-version in sync…${C_RESET}"
+echo
+
+# ── Run the pipeline ────────────────────────────────────────────────
+# If any step fails, abort the commit with a clear message.
+if ! npm run predeploy; then
+    echo
+    echo "${C_BOLD}${C_YELLOW}✖ predeploy failed — commit aborted.${C_RESET}"
+    echo "${C_YELLOW}  Fix the errors above, then \`git add\` any newly-changed files and re-commit.${C_RESET}"
+    echo "${C_YELLOW}  Emergency bypass: \`git commit --no-verify\` (skips the pipeline; USE WITH CARE).${C_RESET}"
+    exit 1
+fi
+
+# ── Re-stage any files predeploy modified ───────────────────────────
+# Typical: dist/**, sw.js (cache-version bump), index.html (?v= bump),
+# data/*.geojson (sanitize), data/map-search-index.json.  Anything that
+# was already staged AND got re-touched needs re-adding so the commit
+# reflects reality.
+#
+# `git status --porcelain` returns non-empty as long as anything in the
+# working tree diverges from the index — that's all we need for the
+# yes/no gate.  We deliberately don't parse individual lines: the
+# porcelain format for renames is `R  orig -> new` which trips a naive
+# `awk '{print $2}'`, and we don't need per-path granularity anyway
+# because the `git add` below re-stages by scoped path, not by name.
+if [[ -n "$(git status --porcelain)" ]]; then
+    echo
+    echo "${C_CYAN}▶ pre-commit: re-staging pipeline outputs so they land in this commit…${C_RESET}"
+    # Restrict re-staging to the same pipeline scope, to avoid pulling
+    # unrelated working-tree changes into the commit by surprise.
+    git add -- \
+        "standalone/data" \
+        "standalone/dist" \
+        "standalone/sw.js" \
+        "standalone/index.html" \
+        2>/dev/null || true
+fi
+
+echo "${C_GREEN}✓ predeploy done — proceeding with commit.${C_RESET}"
+exit 0

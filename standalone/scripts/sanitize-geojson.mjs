@@ -69,6 +69,28 @@
  *   2026-08-08  Rename: Skalahara FOH → Skalahara. Preserves the
  *               only Skalahara feature in the geojson; strips the
  *               staff-only FOH suffix.
+ *   2026-11-XX  Spot-rename: the WC polygon between Atlantis and
+ *               Stroboklo (first vertex ~14.484031,52.275528) is
+ *               actually a Missoir. Renamed to 'Missoir' via the new
+ *               coordinate-keyed SPOT_RENAMES table so only that one
+ *               feature is touched, not the ~29 other WCs. Rule 5's
+ *               MISSOIR_RX skip-list keeps the new label as-is.
+ *   2026-11-XX  Remove: 'Hot Unit' (staff-only heated shower/wash
+ *               trailer in toilets-showers, not guest-facing).
+ *   2026-11-XX  Rename: Küche → Crew Catering. Guest-facing label for
+ *               the crew kitchen polygon north of Strandflitzer.
+ *               Same string for EN and DE — map labels aren't
+ *               translated at runtime.
+ *   2026-11-XX  Remove: any text matching /sp[üu]l+mobil/i (the
+ *               dish-washing trailer, staff-only). Pattern tolerates
+ *               the current 'Spüllmobil' double-l typo AND a future
+ *               correctly-spelled 'Spülmobil' re-import.
+ *   2026-11-XX  Remove: any text matching /skalahara/i. Supersedes
+ *               the 2026-08-08 'Skalahara FOH → Skalahara' rename
+ *               (dropped) and the earlier 'blanket /foh/i would kill
+ *               Skalahara' caveat. Jacob's call: drop the feature
+ *               entirely, the polygon south of Community Corner is
+ *               not needed on the guest map.
  *   2026-08-08  Remove: any text containing "Foodcourt" (kills
  *               "Foodcourt tent" + "Foodcourt tent 2"; both were
  *               already blocklisted from search, this drops the
@@ -114,11 +136,6 @@ const RENAMES = {
     'Seeblick indoor':            'Seeblick',
     'Seeblick Stage':             'Seeblick',
     'Seeblick Stage ':            'Seeblick',   // trailing-space variant
-    // Strip FOH suffixes so the venue name stays, the tech tag goes.
-    // Blanket /foh/i removal was avoided because it would kill the
-    // only Skalahara feature in the geojson entirely (Jacob's call
-    // 2026-08-08 after checking with Horst).
-    'Skalahara FOH':              'Skalahara',
     // Shower-family relabels
     'Shower Container':           'Dusche',
     // Casing fixes
@@ -135,13 +152,20 @@ const RENAMES = {
     // Mond, Strandflitzer) so the map reads as multiple identical
     // "Bar" labels rather than a soup of stage-tagged variants.
     // Standalone bar brands with their own identity are left alone:
-    // Bimsbar, Haus of Flausch Teabar, PinkPuk Bar.
+    // Bimsbar. (Haus of Flausch Teabar and PinkPuk Bar used to live
+    // here too, but were migrated into sterne.geojson as Points
+    // — renamed 'Flausch and chill' and kept as 'PinkPuk Bar' —
+    // so they don't need a REMOVE / RENAMES entry either way.)
     'Strandflitzer Bar':          'Bar',
     'Waldtraut Bar':              'Bar',
     'Bar Schlupfloch':            'Bar',
     'Zirkus Mond Bar':            'Bar',
     // Trim redundant prefix
     'Re:set Raversnacks':         'Raversnacks',
+    // Crew kitchen north of Strandflitzer — guest-facing label.
+    // Single string covers both EN and DE (map labels are not
+    // translated at runtime).
+    'Küche':                      'Crew Catering',
     // Correct the previous round's typo. Current source files still
     // have some features with text "Urinate" from that rule run;
     // this line renames them to the proper German plural "Urinale".
@@ -154,10 +178,7 @@ const RENAMES = {
 // ─── Rule 2: exact-text removals ──────────────────────────────────────
 const REMOVE_EXACT = new Set([
     'Technik Lager',
-    // FOH-Seeblick is the sound-mixing position, staff-only. Killed
-    // by name so we don't need a blanket /foh/i rule that would also
-    // hit "Skalahara FOH" — Jacob is asking Horst whether that one
-    // stays or goes.
+    // FOH-Seeblick is the sound-mixing position, staff-only.
     'FOH Seeblick',
     // Staff-only bar / eatery, not part of the guest map.
     'Backstage Bar',
@@ -185,6 +206,8 @@ const REMOVE_EXACT = new Set([
     // Staff-only backstage area for the sterne installations — not
     // a guest destination (Jacob 2026-08-10).
     'Sterne Backstage',
+    // Staff-only heated shower / wash trailer in toilets-showers.
+    'Hot Unit',
 ]);
 
 // ─── Rule 3: pattern removals ─────────────────────────────────────────
@@ -193,11 +216,43 @@ const REMOVE_PATTERNS = [
     { rx: /\?/,                   label: '(?)'                  },
     { rx: /^kühlung$/i,           label: 'kuehlung'             },
     { rx: /foodcourt/i,           label: 'foodcourt'            },
+    // Skalahara: polygon south of Community Corner. Pattern (not
+    // exact) so any future Felt re-import that brings back the
+    // 'Skalahara FOH' variant is killed the same way.
+    { rx: /skalahara/i,           label: 'skalahara'            },
+    // Spüllmobil (sic — the current Felt export has a double-l).
+    // Dish-washing trailer for gastro crew, not a guest feature.
+    // Pattern also catches the correct 'Spülmobil' spelling if a
+    // future re-import fixes the typo.
+    { rx: /sp[üu]l+mobil/i,       label: 'spuellmobil'          },
     // Staff platform / landscape build-out. Pattern also catches
     // the source typo ("Plaform") and any future correctly-spelled
     // "Platform" variant without a config change.
     { rx: /geländegestaltung/i,   label: 'gelaendegestaltung'   },
 ];
+
+// ─── Rule 1b: spot renames by first-vertex coordinate ───────────────
+// Used when a single feature needs a different label than the ~29
+// others that share its text (e.g. one specific 'WC' polygon that is
+// really a Missoir). Keyed by (file, first-vertex [lng, lat]) with a
+// small tolerance so tiny Felt-export jitter doesn't unhook the rule.
+// Runs BEFORE Rule 5's toilet normalisation — renaming to 'Missoir'
+// therefore survives, because MISSOIR_RX is in Rule 5's skip list.
+const SPOT_RENAME_TOL = 0.00002;   // ~2 m at this latitude
+const SPOT_RENAMES = {
+    'toilets-showers.geojson': [
+        {
+            firstVertex: [14.484071, 52.275508],
+            to: 'Missoir',
+            why: 'WC between Atlantis and Stroboklo is actually a Missoir',
+        },
+        {
+            firstVertex: [14.483272, 52.274016],
+            to: 'Missoir',
+            why: 'WC between Sektamt and Porto Loco is actually a Missoir',
+        },
+    ],
+};
 
 // ─── Rule 5: toilet-file label normalisation ──────────────────────────
 const TOILET_FILE     = 'toilets-showers.geojson';
@@ -211,6 +266,32 @@ const TOILET_ANY_RX   = /wc|dixi|urinal|toilet|eco/i;
 
 function textOf(feat) {
     return (feat?.properties?.text || '').trim();
+}
+
+// First vertex of a Polygon / MultiPolygon feature, the coordinate
+// of a Point, or null for any other geometry (LineString,
+// GeometryCollection, malformed).  Used by Rule 1b to key
+// spot-renames off the shape of the feature, so we can retag one
+// specific feature out of many that share the same text.
+//
+// Point support is important now that toilets-showers.geojson was
+// migrated from tiny rectangles to Points (see optimize-geojson.mjs)
+// — without it, every SPOT_RENAMES entry for that file would
+// silently no-op on subsequent sanitize runs and only survive as
+// on-disk state.
+function firstVertex(geom) {
+    if (!geom) return null;
+    const c = geom.coordinates;
+    if (geom.type === 'Point' && Array.isArray(c) && typeof c[0] === 'number') {
+        return c;
+    }
+    if (geom.type === 'Polygon' && Array.isArray(c?.[0]?.[0])) {
+        return c[0][0];
+    }
+    if (geom.type === 'MultiPolygon' && Array.isArray(c?.[0]?.[0]?.[0])) {
+        return c[0][0][0];
+    }
+    return null;
 }
 
 function sanitiseFile(fileName) {
@@ -271,10 +352,42 @@ function sanitiseFile(fileName) {
             renamedFromRules++;
         }
 
+        // Rule 1b: spot rename by first-vertex coordinate. Match a
+        // single feature by geometry so we can retag one 'WC' out
+        // of ~29 without touching the others. `entry._matched` is set
+        // on hit so the run's tail can loud-warn about entries that
+        // silently no-op (e.g. after a Felt re-import that redraws
+        // the polygon and drifts its first vertex out of tolerance).
+        const spotEntries = SPOT_RENAMES[fileName];
+        if (spotEntries) {
+            const fv = firstVertex(feat.geometry);
+            if (fv) {
+                for (const entry of spotEntries) {
+                    if (Math.abs(fv[0] - entry.firstVertex[0]) < SPOT_RENAME_TOL &&
+                        Math.abs(fv[1] - entry.firstVertex[1]) < SPOT_RENAME_TOL) {
+                        if (textOf(feat) !== entry.to) {
+                            feat.properties.text = entry.to;
+                            renamedFromRules++;
+                        }
+                        entry._matched = true;
+                        break;
+                    }
+                }
+            }
+        }
+
         const t = textOf(feat);   // possibly renamed
+        const slug = feat?.properties?.slug;
 
         // Rule 2: exact-text removal.
-        if (t && REMOVE_EXACT.has(t)) {
+        // Slug-aware exemption: features that carry a slug are
+        // "owned" by us (hand-authored in data/*.geojson) rather than
+        // a raw Felt import.  Skip the exact-text kill for those so
+        // authored polygons like `produktion-base` (label
+        // "Produktion", intentionally guest-visible) are not eaten
+        // by the same rule that was written to kill Felt's old
+        // staff-only "Produktion" backstage blob.
+        if (t && REMOVE_EXACT.has(t) && !slug) {
             removed.push(['exact:'+t, t]);
             continue;
         }
@@ -360,4 +473,29 @@ for (const fileName of files) {
 }
 
 console.log(`\n✅ Done. ${totalBefore} → ${totalAfter} across ${files.length} files (${totalRemoved} removed, ${totalRenamed} renamed, ${totalTrimmed} trimmed, ${totalToiletRenamed} toilet-labels normalised).`);
+
+// Loud-warn about any SPOT_RENAMES entry that was declared but never
+// matched a real feature. Silent no-op is the failure mode we care
+// about here: if a Felt re-import redraws a polygon and its first
+// vertex drifts more than SPOT_RENAME_TOL, the rename skips and the
+// label silently reverts to whatever the source geojson said (e.g.
+// the WC → Missoir spot-rename would flip back to "WC" and merge into
+// the ~29 other WCs). Non-fatal — we still ship what we've got — but
+// noisy so a re-import PR won't sail through review unnoticed.
+let unmatched = 0;
+for (const [fileName, entries] of Object.entries(SPOT_RENAMES)) {
+    for (const entry of entries) {
+        if (!entry._matched) {
+            if (unmatched === 0) console.log('\n⚠️  SPOT_RENAMES entries that matched NO feature:');
+            console.log(`   - ${fileName}  firstVertex=[${entry.firstVertex.join(', ')}]  → '${entry.to}'`);
+            console.log(`     (${entry.why})`);
+            unmatched++;
+        }
+    }
+}
+if (unmatched) {
+    console.log(`   Likely cause: a Felt re-import moved the polygon's first vertex past SPOT_RENAME_TOL (${SPOT_RENAME_TOL}).`);
+    console.log('   Fix: open the geojson, find the feature, update firstVertex in SPOT_RENAMES.');
+}
+
 console.log('   Next step: `npm run build:search-index` to refresh the index.');
