@@ -359,9 +359,17 @@ function sanitiseFile(fileName) {
         }
 
         const t = textOf(feat);   // possibly renamed
+        const slug = feat?.properties?.slug;
 
         // Rule 2: exact-text removal.
-        if (t && REMOVE_EXACT.has(t)) {
+        // Slug-aware exemption: features that carry a slug are
+        // "owned" by us (hand-authored in data/*.geojson) rather than
+        // a raw Felt import.  Skip the exact-text kill for those so
+        // authored polygons like `produktion-base` (label
+        // "Produktion", intentionally guest-visible) are not eaten
+        // by the same rule that was written to kill Felt's old
+        // staff-only "Produktion" backstage blob.
+        if (t && REMOVE_EXACT.has(t) && !slug) {
             removed.push(['exact:'+t, t]);
             continue;
         }

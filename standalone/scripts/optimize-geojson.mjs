@@ -94,7 +94,7 @@ const COORD_PRECISION = 6;
 // short-circuits the pass on subsequent runs (sanitize-geojson only
 // touches feature props, not FC-level fields, so the sentinel survives
 // a full pipeline rerun).
-const BORDER_RADIUS_METRES = 2;
+export const BORDER_RADIUS_METRES = 2;
 const TURN_ANGLE_THRESHOLD_DEG = 8;   // straighter than this = leave alone
 const BEZIER_STEPS = [0.25, 0.5, 0.75];
 
@@ -156,7 +156,11 @@ function bezier(p0, p1, p2, t) {
 }
 
 // Round every sharp corner in a single ring (closed, first === last).
-function roundRing(ring, radiusDeg) {
+// Exported so a one-off script (or a future selective re-smooth) can
+// call it on a single feature without the whole-file sentinel gate
+// short-circuiting a per-feature refresh.  See
+// tests/optimize-geojson.test.mjs when we add coverage.
+export function roundRing(ring, radiusDeg) {
     // Strip the duplicate closing vertex; we'll re-add it at the end.
     const pts = ring.slice(0, -1);
     const n = pts.length;
@@ -199,7 +203,7 @@ function roundRing(ring, radiusDeg) {
     return out;
 }
 
-function roundGeometry(geom, radiusMetres) {
+export function roundGeometry(geom, radiusMetres) {
     const radiusDeg = radiusMetres * METRES_TO_DEG;
     if (geom.type === 'Polygon') {
         return {
