@@ -11,6 +11,8 @@
     "build:search-index": "node scripts/build-search-index.mjs",
     "sanitize:geojson": "node scripts/sanitize-geojson.mjs",
     "optimize:geojson": "node scripts/optimize-geojson.mjs",
+    "predeploy": "npm run sanitize:geojson && npm run optimize:geojson && npm run build:search-index && npm run build",
+    "install:hooks": "bash scripts/install-hooks.sh",
     "test": "node --test tests/*.mjs"
   },
   "engines": {

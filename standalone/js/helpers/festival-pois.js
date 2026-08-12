@@ -108,7 +108,6 @@ const WATER_COORDS = [
     [14.499212, 52.276295],   // Momentarium / Peepshow
     [14.502954, 52.277897],   // Camp Stille Fische / NE
     [14.503148, 52.276092],   // Mirage
-    [14.501556, 52.275672],   // Marktplatz — secondary (5m from index 0)
 ];
 
 // ─── Entry catalogue ────────────────────────────────────────────────
