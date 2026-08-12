@@ -19,20 +19,26 @@
 //          zoom and grow when the user pinches in.
 // - `glyphOverlay` (optional) renders a small always-visible white
 //          text glyph centred on each Point at every zoom level (an
-//          extra symbol layer, id `${id}-glyph`). Used by cashless to
-//          stamp a white € on the orange dot so the payment identity
-//          is legible before the label fades in. text-size is
-//          proportional to pointRadius; text-allow-overlap: true so
-//          the glyph never gets dropped by collision.
+//          extra symbol layer, id `${id}-glyph`). No layer currently
+//          uses this — cashless previously stamped a white € on each
+//          orange dot via `glyphOverlay: '€'` but that was dropped in
+//          06467a3 (the tiny € read as noise at overview zoom). The
+//          infrastructure is preserved for future layers that want a
+//          persistent identity marker. text-size is proportional to
+//          pointRadius; text-allow-overlap: true so the glyph never
+//          gets dropped by collision.
 //
 // Order = z-order (first = bottom). Explicit "bigger underneath,
 // smaller on top" policy so a small feature that sits inside a
 // larger one is never occluded by it. Concrete calls this fixes:
-//   - produktion Info-point / Crew-Bar Kiosk (a=1.8 / 0.3) sit inside
-//     sterne Community Corner (a=8.7). produktion moved above sterne.
-//   - gastro Communitea / De Loite / FanMan / Moving Cafe / Bitte
-//     Drehen Sie durch (all a<1) sit inside sterne Marktplatz (a=26.8)
-//     and Cuddle Poodle (a=6.9). gastro moved above sterne.
+//   - produktion Info-point (a=1.8) sits inside sterne Community
+//     Corner (a=8.7). produktion moved above sterne. (Crew-Bar Kiosk
+//     used to also sit here at a=0.3 but was dropped in 01f1a21's
+//     produktion cleanup.)
+//   - gastro De Loite / FanMan / Moving Cafe / Bitte Drehen Sie durch
+//     (all a<1) sit inside sterne Marktplatz (a=26.8) and Cuddle
+//     Poodle (a=6.9). gastro moved above sterne. (Communitea was in
+//     this list too but has since been dropped from gastro.geojson.)
 //
 // General rule for anyone editing this list: if you add a new
 // overlay whose polygons visually contain another overlay's polygons,
@@ -62,7 +68,7 @@ export const FELT_LAYERS = [
     // by it. Same color as sterne so it visually reads as "a sterne
     // area we happen to render out-of-band for z-order reasons".
     { id: 'food-court',      file: 'food-court.geojson',      color: '#c17d81' },
-    // sterne Point features (~11 of them: Skull, Wasserwand, Momentarium,
+    // sterne Point features (13 of them: Skull, Wasserwand, Momentarium,
     // KuschelMuschel, Kollektiv Sonnenallee, 2× Müllstation, Flausch
     // and chill, Raversnacks, PinkPuk Bar, Grinskäffchen, The Peepshow,
     // Human Wash) were rendering at the default 4 px in the sterne fill
@@ -81,9 +87,9 @@ export const FELT_LAYERS = [
     // ~3.4 KB (46% of file) and 144 vertex slots. Every feature was
     // a 5-vertex rectangle (4-30 m²) whose exact shape carried no
     // signal beyond "toilet is here". Point radius interpolates on
-    // zoom (5 px overview → 8 px close), a subtler version of the
-    // security-layer curve — the dots need to stay visually
-    // secondary to the Sammelstellen (which peak at 14 px).
+    // zoom (4 px overview → 10 px close, tightened from the initial
+    // 5→8 curve in commit 55b42cb) so the dots stay readable at
+    // pinch-in without shouting at overview.
     {
         id: 'toilets-showers',
         file: 'toilets-showers.geojson',
@@ -100,7 +106,7 @@ export const FELT_LAYERS = [
     { id: 'traffic',         file: 'traffic.geojson',         color: '#2674ba' },
     // security — Sammelstellen (emergency assembly points). Mustard
     // yellow, safety-signage convention. Point radius interpolates on
-    // zoom (8 px at overview, 12 px when pinched in) so the dots don't
+    // zoom (6 px at overview, 14 px when pinched in) so the dots don't
     // shout at low zoom but still read as safety beacons up close.
     // Kept at the top of the paint stack (last entry) so nothing
     // occludes them.

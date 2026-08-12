@@ -399,12 +399,13 @@ function buildStyle() {
 
 // ─── Overlay layers (Felt-derived geojsons on top of the basemap) ────
 //
-// Fresh start: five separate sources, one per Felt group. Each renders
-// polygon fills, point circles (for markers/circles from Felt), and a
-// label from the `text` property. No cross-group styling logic yet —
-// Jacob wants to analyze the raw data first, then decide what to keep
-// and how to differentiate visually. See standalone/data/felt/README.md
-// for the schema.
+// Eleven separate sources today, one per FELT_LAYERS entry
+// (produktion-base, camping-areas, stages, food-court, sterne, gastro,
+// produktion, toilets-showers, traffic, security, cashless). Each
+// renders polygon fills, point circles (for markers/circles from Felt), and a label
+// from the `text` property. Per-group styling knobs (colour, point
+// radius, glyph overlays) live in map-layers.js — see that file's
+// FELT_LAYERS docstring for the schema and how to add a new group.
 
 // FELT_LAYERS lives in ./map-layers.js so tent.js can import it too
 // without creating a circular map-interactive.js ↔ tent.js import
@@ -437,11 +438,14 @@ function addOverlayLayers(map) {
         // git blame for the transparent-baseline version).
         const fillOpacity = 1;
 
-        // Polygon / MultiPolygon fill. Outline layer removed (Jacob's
-         // 2026-08-08 experiment): borderless overlays let the polygon
-         // colour breathe against the base map, and the tent's
-         // dim-during-drag pattern still works because tent.js probes
-         // layers via map.getLayer(id) before touching them.
+        // Polygon / MultiPolygon fill. No generic outline layer:
+        // dropped in Jacob's 2026-08-08 borderless experiment so the
+        // polygon colour breathes against the base map. Two scoped
+        // sterne cluster outlines are added further down (the Porto
+        // Loco + Marktplatz blobs), but everything else stays
+        // borderless. tent.js's dim-during-drag pattern still works
+        // because it probes layers via map.getLayer(id) before
+        // touching them, so a missing -outline is a no-op.
         // Per-feature colour override:
         //   - traffic layer default is #2674ba (Felt Auto&ParkKonzept
         //     blue), used by parking-p*-fill + E3.
@@ -543,8 +547,8 @@ function addOverlayLayers(map) {
         //
         // Radius / stroke default to 4 / 1 (small marker); layers can
         // override via FELT_LAYERS to get a more prominent dot — the
-        // security layer sets 12 / 2 so Sammelstellen read as safety
-        // beacons at any zoom.
+        // security layer sets radius 6→14 (zoom-interpolated) + stroke
+        // 2 so Sammelstellen read as safety beacons at any zoom.
         map.addLayer({
             id: id + '-point',
             source: id,
@@ -599,13 +603,16 @@ function addOverlayLayers(map) {
 
         // Optional glyph overlay — an always-visible single-glyph
         // symbol layer stamped on top of the -point circles for
-        // layers that want a payment / identity marker readable at
-        // every zoom (cashless: white '€' on the orange dot).
+        // layers that want a persistent identity marker (e.g. an
+        // icon-like character) readable at every zoom. No layer
+        // currently uses this — cashless previously stamped a white
+        // '€' via `glyphOverlay: '€'` but that was dropped in 06467a3
+        // (the tiny € read as noise at overview zoom). The
+        // infrastructure is preserved for future layers.
+        //
         // Text-size scales with the point radius so the glyph never
         // outgrows its background.  text-allow-overlap: true so it's
-        // never dropped by collision — a naked orange circle with
-        // no € would be worse than a slight overlap with a nearby
-        // label.
+        // never dropped by collision.
         if (glyphOverlay) {
             // Derive a text-size expression that stays proportional
             // to the circle radius (~1.6× the radius).  When
@@ -747,9 +754,11 @@ function addOverlayLayers(map) {
             textOpacity = fadeVeryClose;
         } else if (id === 'cashless') {
             // Same tier as toilets: the label 'Cashless top-up' only
-            // fades in at zoom ≥ 17. Below that the white € glyph on
-            // the orange dot is enough identity — the label at
-            // overview would just clutter the site.
+            // fades in at zoom ≥ 17. Below that the orange dot alone
+            // carries the identity — a persistent white '€' glyph
+            // used to sit on top (see glyphOverlay in FELT_LAYERS)
+            // but was dropped in 06467a3 because the tiny character
+            // read as noise at overview zoom.
             textOpacity = fadeVeryClose;
         } else if (id === 'security') {
             // Medium fade — hidden at overview, visible from zoom
