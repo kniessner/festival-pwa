@@ -49,10 +49,6 @@
         "label": "Schweissperle"
       },
       {
-        "value": "skalahara",
-        "label": "Skalahara"
-      },
-      {
         "value": "strandflitzer",
         "label": "Strandflitzer"
       },
@@ -1098,30 +1094,6 @@
         "Feelings Oasis"
       ],
       "source": "program"
-    },
-    {
-      "id": 42,
-      "title": "DIY Fan Upcycling",
-      "day": "2026-08-14",
-      "day_label": "Friday",
-      "time": "FRI 15:00",
-      "start_time": "15:00",
-      "end_time": "18:00",
-      "stage": "skalahara",
-      "stage_label": "Skalahara",
-      "type": "interaktiver-workshop",
-      "type_label": "Workshop",
-      "category": "Workshop",
-      "genre": "Workshop",
-      "langs": [
-        "de"
-      ],
-      "excerpt": "",
-      "description": "",
-      "hosts": [
-        "Florian Henkel & Celine Wulbeck"
-      ],
-      "source": "workshops"
     },
     {
       "id": 43,
@@ -2230,30 +2202,6 @@
       "source": "program"
     },
     {
-      "id": 89,
-      "title": "RIGHT HERE – RIGHT NOW: Political Graffiti as a Voice in Public Spaces",
-      "day": "2026-08-15",
-      "day_label": "Saturday",
-      "time": "SAT 15:00",
-      "start_time": "15:00",
-      "end_time": "18:00",
-      "stage": "skalahara",
-      "stage_label": "Skalahara",
-      "type": "interaktiver-workshop",
-      "type_label": "Workshop",
-      "category": "Workshop",
-      "genre": "Workshop",
-      "langs": [
-        "de"
-      ],
-      "excerpt": "The workshop combines graffiti, political expression and collaborative work. After a joint introduction, we’ll discuss the significance of street art and social issues...",
-      "description": "The workshop combines graffiti, political expression and collaborative work. After a joint introduction, we’ll discuss the significance of street art and social issues. Afterwards, all participants will work together to design a wall on which individual messages are creatively brought to life. The focus is on expression, interaction and collective creativity – not perfection.",
-      "hosts": [
-        "Line Kiekbusch & Elias Manzel"
-      ],
-      "source": "workshops"
-    },
-    {
       "id": 90,
       "title": "Somatic Dance",
       "day": "2026-08-15",
@@ -3232,31 +3180,6 @@
       "description": "During the day, the Peepshow transforms into a space for creative and participatory encounters, including intimate tarot reading experiences and one-to-one interactions with festival visitors.",
       "hosts": [
         "Tarot Reader"
-      ],
-      "source": "workshops"
-    },
-    {
-      "id": 131,
-      "title": "Mad Hatters",
-      "day": "2026-08-16",
-      "day_label": "Sunday",
-      "time": "SUN 15:00",
-      "start_time": "15:00",
-      "end_time": "18:00",
-      "stage": "skalahara",
-      "stage_label": "Skalahara",
-      "type": "interaktiver-workshop",
-      "type_label": "Workshop",
-      "category": "Workshop",
-      "genre": "Workshop",
-      "langs": [
-        "de",
-        "en"
-      ],
-      "excerpt": "Bring along your hats so we can personalise them together! Using feathers, fabric, ribbons, glue and stickers, we’ll decorate and add some sparkle to your favourite hats ...",
-      "description": "Glitzzy is the creator's creative alter ego, under which she offers hands-on activities and festival workshops for the individual embellishment of headgear. According to the respective personalities! Just for the fun of us all!",
-      "hosts": [
-        "Glitzzy Goerlitzzy"
       ],
       "source": "workshops"
     },

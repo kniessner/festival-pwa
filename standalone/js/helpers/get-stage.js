@@ -68,7 +68,19 @@ export async function loadStages() {
                 const res = await fetch(path);
                 if (!res.ok) throw new Error(`HTTP ${res.status}`);
                 const geojson = await res.json();
-                for (const feat of geojson.features || []) collected.push(feat);
+                for (const feat of geojson.features || []) {
+                    // Tag source file so warnStageNameMismatches can
+                    // narrow the "orphan polygon" diagnostic to ONLY
+                    // programming polygons (stages.geojson). sterne
+                    // and food-court polygons are structurally
+                    // non-programming (art installations, services) so
+                    // listing them as orphans is permanent noise.
+                    if (feat && typeof feat === 'object') {
+                        feat.properties = feat.properties || {};
+                        feat.properties._sourceFile = path;
+                    }
+                    collected.push(feat);
+                }
             } catch (e) {
                 // Non-fatal: if one file fails to load the rest still work,
                 // and getStage() just returns false for any missed polygons
@@ -114,15 +126,32 @@ export function getLoadedStages() {
 export function warnStageNameMismatches(usedSlugs) {
     if (!usedSlugs || typeof usedSlugs.has !== 'function' || usedSlugs.size === 0) return;
 
+    const loaded = getLoadedStages();
+    // ALL polygons (any source) count for the "missing polygon" check
+    // — a timetable slug like `burghain` legitimately maps to a sterne
+    // polygon, we must not flag that as a miss.
     const polygonSlugs = new Set(
-        getLoadedStages()
+        loaded
+            .map(f => f.properties?.slug)
+            .filter(Boolean),
+    );
+    // ONLY stages.geojson polygons count for the "orphan polygon"
+    // check. sterne (art) + food-court (services) polygons are
+    // structurally never programming venues, so listing them is noise
+    // that trains devs to ignore the whole warning family. Narrowing
+    // here makes the orphan log fire only for real bugs (a stage
+    // polygon was added to the map but its timetable rows are
+    // missing).
+    const programmingPolygonSlugs = new Set(
+        loaded
+            .filter(f => f.properties?._sourceFile === 'data/stages.geojson')
             .map(f => f.properties?.slug)
             .filter(Boolean),
     );
     const nonGenericUsed = [...usedSlugs].filter(v => v && !GENERIC_TIMETABLE_SLUGS.has(v));
 
     const missingPolygons = nonGenericUsed.filter(s => !polygonSlugs.has(s)).sort();
-    const orphanPolygons  = [...polygonSlugs].filter(p => !usedSlugs.has(p)).sort();
+    const orphanPolygons  = [...programmingPolygonSlugs].filter(p => !usedSlugs.has(p)).sort();
 
     if (missingPolygons.length) {
         // Real bug: a slug the timetable renders as a row / references

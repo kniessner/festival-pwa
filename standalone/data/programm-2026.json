@@ -64,10 +64,6 @@
         "label": "Schweissperle"
       },
       {
-        "value": "skalahara",
-        "label": "Skalahara"
-      },
-      {
         "value": "strandflitzer",
         "label": "Strandflitzer"
       },
@@ -930,26 +926,6 @@
       "description": "Die Feelings Oasis ist ein sicherer, nüchterner und einladender Raum, in dem Festivalbesucherinnen, Künstlerinnen und Crewmitglieder während der Intensität des Festivallebens innehalten, neue Verbindung zu sich selbst finden und emotionale Unterstützung erhalten können. In kurzen erfahrungsbasierten Workshops, durch Grounding Praktiken, Werkzeuge für authentische Kommunikation und 1:1 Unterstützung vermitteln die Feelings Rangers praktische Möglichkeiten, mit Emotionen, Grenzen, Konflikten und Verbindung klarer, präsenter und selbstverantwortlicher umzugehen.\n\nBlitz Workshops täglich um 16:00 & 18:00",
       "hosts": [
         "Feelings Oasis"
-      ]
-    },
-    {
-      "title": "DIY Fächer Upcycling",
-      "day": "2026-08-14",
-      "day_label": "Freitag",
-      "time": "FR 15:00",
-      "start_time": "15:00",
-      "end_time": "18:00",
-      "stage": "skalahara",
-      "stage_label": "Skalahara",
-      "type": "interaktiver-workshop",
-      "type_label": "Workshop",
-      "langs": [
-        "de"
-      ],
-      "excerpt": "",
-      "description": "",
-      "hosts": [
-        "Florian Henkel & Celine Wulbeck"
       ]
     },
     {
@@ -1875,26 +1851,6 @@
       ]
     },
     {
-      "title": "RIGHT HERE – RIGHT NOW: Politische Graffiti als Stimme im öffentlichen Raum",
-      "day": "2026-08-15",
-      "day_label": "Samstag",
-      "time": "SA 15:00",
-      "start_time": "15:00",
-      "end_time": "18:00",
-      "stage": "skalahara",
-      "stage_label": "Skalahara",
-      "type": "interaktiver-workshop",
-      "type_label": "Workshop",
-      "langs": [
-        "de"
-      ],
-      "excerpt": "Der Workshop verbindet Graffiti, politischen Ausdruck und gemeinschaftliches Arbeiten. Nach einem gemeinsamen Einstieg tauschen wir uns über die Bedeutung von Street Art und gesellschaftliche&hellip;",
-      "description": "Der Workshop verbindet Graffiti, politischen Ausdruck und gemeinschaftliches Arbeiten. Nach einem gemeinsamen Einstieg tauschen wir uns über die Bedeutung von Street Art und gesellschaftliche Anliegen aus. Anschließend gestalten alle Teilnehmenden gemeinsam eine Wand, auf der individuelle Botschaften kreativ sichtbar werden. Im Mittelpunkt stehen Ausdruck, Begegnung und kollektive Kreativität – nicht Perfektion.",
-      "hosts": [
-        "Line Kiekbusch & Elias Manzel"
-      ]
-    },
-    {
       "title": "Somatic Dance",
       "day": "2026-08-15",
       "day_label": "Samstag",
@@ -2710,27 +2666,6 @@
       "description": "",
       "hosts": [
         "Tarot Reader"
-      ]
-    },
-    {
-      "title": "Mad Hatters",
-      "day": "2026-08-16",
-      "day_label": "Sonntag",
-      "time": "SO 15:00",
-      "start_time": "15:00",
-      "end_time": "18:00",
-      "stage": "skalahara",
-      "stage_label": "Skalahara",
-      "type": "interaktiver-workshop",
-      "type_label": "Workshop",
-      "langs": [
-        "de",
-        "en"
-      ],
-      "excerpt": "Bringt Eure Kopfbedeckungen damit wir sie gemeinsam individualisieren! Mit Federn, Stoffen, Bändern, Kleber und Stickern verschönern / verglitzern wir eure selbst mitgebrachten Lieblingshüte und&hellip;",
-      "description": "Bringt Eure Kopfbedeckungen damit wir sie gemeinsam individualisieren! Mit Federn, Stoffen, Bändern, Kleber und Stickern verschönern / verglitzern wir eure selbst mitgebrachten Lieblingshüte und Käppis!",
-      "hosts": [
-        "Glitzzy Goerlitzzy"
       ]
     },
     {
