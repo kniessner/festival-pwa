@@ -62,7 +62,16 @@ export const FELT_LAYERS = [
     // by it. Same color as sterne so it visually reads as "a sterne
     // area we happen to render out-of-band for z-order reasons".
     { id: 'food-court',      file: 'food-court.geojson',      color: '#c17d81' },
-    { id: 'sterne',          file: 'sterne.geojson',          color: '#c17d81' },
+    // sterne Point features (Skull, Wasserwand Projektion, Momentarium,
+    // KuschelMuschel, Kollektiv Sonnenallee, 2× Müllstation) were
+    // rendering at the default 4 px in the sterne fill colour #c17d81,
+    // which sits close to the base map's mauve/magenta hues — Skull
+    // in particular was invisible against the background near Porto
+    // Loco. Match the toilets / cashless recipe (interpolate 4 px at
+    // overview → 10 px pinched-in) so the dots read as utility markers
+    // without shouting at low zoom.
+    { id: 'sterne',          file: 'sterne.geojson',          color: '#c17d81',
+      pointRadius: ['interpolate', ['linear'], ['zoom'], 14, 4, 17, 10] },
     { id: 'gastro',          file: 'gastro.geojson',          color: '#ff9540' },
     { id: 'produktion',      file: 'produktion.geojson',      color: '#8b7fa8' },
     // toilets-showers: converted from polygons to Points to save
