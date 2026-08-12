@@ -766,8 +766,8 @@ function addOverlayLayers(map) {
         //                 + Zirkus Mond Zelt (hidden)
         //   Community   : Community Corner (anchor, relabelled
         //                              "Community") + Schrottpurri,
-        //                 Skalahara, Neuro Divers, Cuddle Poodle,
-        //                 Schweissperle (all hidden). Note this
+        //                 Neuro Divers, Cuddle Poodle,
+        //                 Schweißperle (all hidden). Note this
         //                 cluster spans ~80 m end-to-end (Cuddle
         //                 Poodle is the north-east outlier); the
         //                 anchor sits over the biggest polygon in
@@ -801,7 +801,6 @@ function addOverlayLayers(map) {
                 ['case',
                     ['==', ['get', 'text'], 'Community Corner'], 'Community',
                     ['==', ['get', 'text'], 'Schrottpurri'],     '',
-                    ['==', ['get', 'text'], 'Skalahara'],        '',
                     ['==', ['get', 'text'], 'Neuro Divers'],     '',
                     ['==', ['get', 'text'], 'Cuddle Poodle'],    '',
                     ['==', ['get', 'text'], 'Schweißperle'],     '',
@@ -871,13 +870,13 @@ function addOverlayLayers(map) {
                 //     of the Neustockland stage. Shift the Bar label
                 //     up so it clears the Neustockland stage label.
                 //
-                //   Wasser (water stations): each of the 11 water
+                //   Wasser (water stations): each of the 10 water
                 //     Points sits within a few m of an existing
                 //     WC / Dusche / Urinale Point. Push every Wasser
                 //     label DOWN so it sits below the toilet-family
                 //     label at the same spot rather than colliding
                 //     with it. Matched on 'text' rather than slug
-                //     because we want all 11 water features treated
+                //     because we want all 10 water features treated
                 //     uniformly and their text is uniquely 'Wasser'
                 //     (no other feature carries that string).
                 'text-offset': [
@@ -926,10 +925,10 @@ function addOverlayLayers(map) {
                     // Use the same collapse-at-overview textField as the
                     // regular sterne-label layer. Without it Community
                     // Corner would keep its real name at overview zoom
-                    // while the sibling collapses (Schrottpurri,
-                    // Skalahara, etc.) still land on the map — you'd
-                    // read "Community Corner" plus three empty gaps
-                    // instead of one clean "Community" anchor.
+                    // while the sibling collapses (Schrottpurri, etc.)
+                    // still land on the map — you'd read "Community
+                    // Corner" plus the empty gaps instead of one clean
+                    // "Community" anchor.
                     'text-field': textField,
                     'text-font': ['Megan Display'],
                     'text-size': campsTextSize,
