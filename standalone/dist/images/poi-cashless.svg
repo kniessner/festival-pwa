@@ -1,0 +1,18 @@
+<!--
+    Cashless-top-up pictogram — Euro sign inside a circle.
+    Matches the 24×24 grid + stroke language of the other poi-*
+    icons (poi-toilet, poi-info, poi-firstaid, poi-tent, poi-water,
+    poi-assembly) so the fly-to / search-dropdown menu still reads
+    as one family. The Euro sign carries the "you can pay here"
+    identity even at small icon sizes.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Outer circle: matches the map dot's silhouette -->
+    <circle cx="12" cy="12" r="9"/>
+    <!-- Euro sign: C-curve on the right (glyph reads left-to-right) -->
+    <path d="M15.5 8.5 a 4.5 4.5 0 1 0 0 7"/>
+    <!-- Two horizontal bars of the € — slightly staggered like the real glyph -->
+    <path d="M7.5 11 h 6" stroke-width="1.6"/>
+    <path d="M7.5 13.5 h 6" stroke-width="1.6"/>
+</svg>

@@ -17,6 +17,13 @@
 //          circle size. Used by the security layer to render
 //          prominent Assembly-point dots that shrink at overview
 //          zoom and grow when the user pinches in.
+// - `glyphOverlay` (optional) renders a small always-visible white
+//          text glyph centred on each Point at every zoom level (an
+//          extra symbol layer, id `${id}-glyph`). Used by cashless to
+//          stamp a white € on the orange dot so the payment identity
+//          is legible before the label fades in. text-size is
+//          proportional to pointRadius; text-allow-overlap: true so
+//          the glyph never gets dropped by collision.
 //
 // Order = z-order (first = bottom). Explicit "bigger underneath,
 // smaller on top" policy so a small feature that sits inside a
@@ -79,5 +86,20 @@ export const FELT_LAYERS = [
         color: '#c9a227',
         pointRadius: ['interpolate', ['linear'], ['zoom'], 14, 6, 17, 14],
         pointStrokeWidth: 2,
+    },
+    // cashless — wristband top-up stations (7 across the site). Same
+    // #F49300 orange as the printed static map. Point radius matches
+    // the toilet tier (4 → 10 px) so they read as "utility
+    // infrastructure", not safety. glyphOverlay: '€' stamps a white
+    // Euro sign on every dot at all zooms so the payment identity is
+    // legible before the 'Cashless top-up' label fades in at close
+    // zoom.  Kept at the top of the paint stack so an unrelated
+    // future overlay can't accidentally occlude the payment dots.
+    {
+        id: 'cashless',
+        file: 'cashless.geojson',
+        color: '#F49300',
+        pointRadius: ['interpolate', ['linear'], ['zoom'], 14, 4, 17, 10],
+        glyphOverlay: '€',
     },
 ];

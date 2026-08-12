@@ -28,6 +28,7 @@ export const LABEL_TRANSLATIONS = {
         'Check-in Autos':       'Car check-in',
         'Sammelstelle':         'Assembly point',
         'Wasser':               'Water',
+        'Cashless Automat':     'Cashless top-up',
     },
 };
 

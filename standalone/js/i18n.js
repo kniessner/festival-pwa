@@ -62,6 +62,10 @@ const STRINGS = {
         'search.category.toilet': 'Toilette',
         'search.category.shower': 'Dusche',
         'search.category.landmark': 'Ort',
+        'search.category.water': 'Wasser',
+        'search.category.cashless': 'Cashless',
+        'search.nearestWater': 'Nächste Wasserstelle',
+        'search.nearestCashless': 'Nächster Cashless-Automat',
         // Map search: dropdown chrome.
         'search.noMatches': 'Keine Treffer',
         'search.moreResults': '+{{n}} weitere …',
@@ -217,6 +221,10 @@ const STRINGS = {
         'search.category.toilet': 'Toilet',
         'search.category.shower': 'Shower',
         'search.category.landmark': 'Landmark',
+        'search.category.water': 'Water',
+        'search.category.cashless': 'Cashless',
+        'search.nearestWater': 'Nearest water',
+        'search.nearestCashless': 'Nearest cashless top-up',
         // Map search: dropdown chrome.
         'search.noMatches': 'No matches',
         'search.moreResults': '+{{n}} more …',

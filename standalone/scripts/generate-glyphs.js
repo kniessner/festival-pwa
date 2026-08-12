@@ -36,8 +36,12 @@ const FONTS = [
     { file: 'fonts/InstrumentSans-Variable.ttf', stack: 'Instrument Sans' },
 ];
 
-// Unicode ranges we ship. Latin-1 covers everything the labels need.
-const RANGES = [[0, 255], [256, 511]];
+// Unicode ranges we ship. Latin-1 covers every letter in the German +
+// English labels; the 8192-8447 range is added so the Cashless € glyph
+// overlay (see FELT_LAYERS `glyphOverlay` in map-layers.js) renders —
+// without it MapLibre logs a 404 and the whole overlay symbol layer
+// silently drops out.  U+20AC (€) lives at decimal 8364.
+const RANGES = [[0, 255], [256, 511], [8192, 8447]];
 
 function generate({ file, stack }) {
     const buf = fs.readFileSync(path.join(ROOT, file));

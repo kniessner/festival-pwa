@@ -324,7 +324,7 @@ function createMap(stage, gestureState) {
     //
     // map.on('click', (e) => {
     //     const { lng, lat } = e.lngLat;
-    //     const line = `longitude: ${lng.toFixed(7)}, latitude: ${lat.toFixed(7)}`;
+    //     const line = `[${lng.toFixed(6)}, ${lat.toFixed(6)}]`;
     //     // eslint-disable-next-line no-console
     //     console.log('[map click]', line);
     //     if (navigator.clipboard && navigator.clipboard.writeText) {
@@ -421,7 +421,7 @@ function addOverlayLayers(map) {
     // hide the anchor labels of the previous tier.
     const labelConfigs = [];
 
-    for (const { id, file, color, pointRadius, pointStrokeWidth } of FELT_LAYERS) {
+    for (const { id, file, color, pointRadius, pointStrokeWidth, glyphOverlay } of FELT_LAYERS) {
         map.addSource(id, {
             type: 'geojson',
             data: 'data/' + file,
@@ -494,6 +494,46 @@ function addOverlayLayers(map) {
                 'circle-stroke-width': pointStrokeWidth ?? 1,
             },
         });
+
+        // Optional glyph overlay — an always-visible single-glyph
+        // symbol layer stamped on top of the -point circles for
+        // layers that want a payment / identity marker readable at
+        // every zoom (cashless: white '€' on the orange dot).
+        // Text-size scales with the point radius so the glyph never
+        // outgrows its background.  text-allow-overlap: true so it's
+        // never dropped by collision — a naked orange circle with
+        // no € would be worse than a slight overlap with a nearby
+        // label.
+        if (glyphOverlay) {
+            // Derive a text-size expression that stays proportional
+            // to the circle radius (~1.6× the radius).  When
+            // pointRadius is a MapLibre interpolate expression we
+            // build a matching one for text-size; when it's a
+            // scalar we use a scaled scalar.
+            const glyphTextSize =
+                Array.isArray(pointRadius) && pointRadius[0] === 'interpolate'
+                    ? ['interpolate', ['linear'], ['zoom'], 14, 6, 17, 14]
+                    : (pointRadius ?? 4) * 1.6;
+            map.addLayer({
+                id: id + '-glyph',
+                source: id,
+                type: 'symbol',
+                filter: ['==', ['geometry-type'], 'Point'],
+                layout: {
+                    'text-field': glyphOverlay,
+                    'text-font':  ['Lato Regular'],
+                    'text-size':  glyphTextSize,
+                    'text-allow-overlap':     true,
+                    'text-ignore-placement':  true,
+                    'symbol-placement':       'point',
+                },
+                paint: {
+                    'text-color':      '#ffffff',
+                    'text-halo-color': color,
+                    'text-halo-width': 0.5,
+                },
+            });
+        }
 
         // ---- Label configuration (added in the second pass) ----
 
@@ -602,6 +642,12 @@ function addOverlayLayers(map) {
         } else if (id === 'produktion') {
             textOpacity = fadeVeryCloseWithEclipsePriority;
         } else if (id === 'toilets-showers') {
+            textOpacity = fadeVeryClose;
+        } else if (id === 'cashless') {
+            // Same tier as toilets: the label 'Cashless top-up' only
+            // fades in at zoom ≥ 17. Below that the white € glyph on
+            // the orange dot is enough identity — the label at
+            // overview would just clutter the site.
             textOpacity = fadeVeryClose;
         } else if (id === 'security') {
             // Medium fade — hidden at overview, visible from zoom
