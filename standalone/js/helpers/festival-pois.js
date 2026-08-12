@@ -89,6 +89,28 @@ const ASSEMBLY_COORDS = [
     [14.479336, 52.270342],   // SW
 ];
 
+// Drinking-water stations. Curated by Jacob 2026-08-12 by clicking
+// physical taps on the interactive map. Each coord is a drinkable-
+// water source guests can refill bottles at — not to be confused with
+// the toilet-family Points nearby (some water stations sit right
+// next to a WC, but they're semantically distinct: safety-adjacent
+// hydration infrastructure, referenced by the 'Water' fly-to entry).
+// Off-site / null-GPS fallback is the Marktplatz cluster point
+// (index 0), the most central and highest-traffic water source.
+const WATER_COORDS = [
+    [14.501610, 52.275641],   // Marktplatz — central (off-site fallback)
+    [14.483340, 52.274040],   // Porto Loco / south
+    [14.484062, 52.275466],   // Atlantis / Stroboklo
+    [14.489587, 52.276544],   // DRK area
+    [14.494918, 52.276348],   // Community Corner
+    [14.491874, 52.276614],   // Strandflitzer NW
+    [14.496785, 52.278121],   // Camp Taucher / N infrastructure row
+    [14.499212, 52.276295],   // Momentarium / Peepshow
+    [14.502954, 52.277897],   // Camp Stille Fische / NE
+    [14.503148, 52.276092],   // Mirage
+    [14.501556, 52.275672],   // Marktplatz — secondary (5m from index 0)
+];
+
 // ─── Entry catalogue ────────────────────────────────────────────────
 
 /**
@@ -120,12 +142,6 @@ export const POI_LIST = [
         resolve: nearestOr(ASSEMBLY_COORDS),
     },
     {
-        id: 'toilet',
-        labelKey: 'map.flyto.toilet',
-        icon: 'images/poi-toilet.svg',
-        resolve: nearestOr(TOILET_COORDS),
-    },
-    {
         id: 'first-aid',
         labelKey: 'map.flyto.firstAid',
         icon: 'images/poi-firstaid.svg',
@@ -134,6 +150,23 @@ export const POI_LIST = [
         // may already be in distress. Off-site / null-GPS falls back
         // to the main DRK / Secu Base (DRK_COORDS[0]).
         resolve: nearestOr(DRK_COORDS),
+    },
+    {
+        // Water stations — refill points scattered across the site.
+        // Inserted between First aid and Toilet: hydration is safety-
+        // adjacent (heatstroke is a real risk on hot festival days).
+        // Off-site / null-GPS falls back to the Marktplatz central
+        // station (WATER_COORDS[0]).
+        id: 'water',
+        labelKey: 'map.flyto.water',
+        icon: 'images/poi-water.svg',
+        resolve: nearestOr(WATER_COORDS),
+    },
+    {
+        id: 'toilet',
+        labelKey: 'map.flyto.toilet',
+        icon: 'images/poi-toilet.svg',
+        resolve: nearestOr(TOILET_COORDS),
     },
     {
         id: 'info',

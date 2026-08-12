@@ -816,9 +816,20 @@ function addOverlayLayers(map) {
                 //   bar-neustockland: gastro Bar polygon 5.8 m north
                 //     of the Neustockland stage. Shift the Bar label
                 //     up so it clears the Neustockland stage label.
+                //
+                //   Wasser (water stations): each of the 11 water
+                //     Points sits within a few m of an existing
+                //     WC / Dusche / Urinale Point. Push every Wasser
+                //     label DOWN so it sits below the toilet-family
+                //     label at the same spot rather than colliding
+                //     with it. Matched on 'text' rather than slug
+                //     because we want all 11 water features treated
+                //     uniformly and their text is uniquely 'Wasser'
+                //     (no other feature carries that string).
                 'text-offset': [
-                    'match', ['get', 'slug'],
-                    'bar-neustockland', ['literal', [0, -1.2]],
+                    'case',
+                    ['==', ['get', 'text'], 'Wasser'], ['literal', [0, 1.2]],
+                    ['==', ['get', 'slug'], 'bar-neustockland'], ['literal', [0, -1.2]],
                     ['literal', [0, 0]],
                 ],
                 // Anchor tier (stages + camps) always renders; every

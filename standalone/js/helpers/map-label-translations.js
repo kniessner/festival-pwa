@@ -27,6 +27,7 @@ export const LABEL_TRANSLATIONS = {
         'Urinale':              'Urinals',
         'Check-in Autos':       'Car check-in',
         'Sammelstelle':         'Assembly point',
+        'Wasser':               'Water',
     },
 };
 

@@ -1,0 +1,15 @@
+<!--
+    Water-station pictogram — droplet outline with a highlight inside.
+    Semantic match for "drinkable water refill" without leaning on a
+    specific pictogram standard. Matches the 24×24 grid + stroke
+    language of the other poi-* icons (poi-toilet, poi-info,
+    poi-firstaid, poi-tent, poi-assembly) so the fly-to menu still
+    reads as one family.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Main droplet outline: teardrop shape, point at top, rounded base -->
+    <path d="M12 3 C 7 10 6 14 6 16 a 6 6 0 0 0 12 0 c 0 -2 -1 -6 -6 -13 z"/>
+    <!-- Small highlight arc inside the droplet -->
+    <path d="M9 15 a 3 3 0 0 0 3 3" stroke-width="1.5"/>
+</svg>
