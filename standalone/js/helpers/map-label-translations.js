@@ -30,6 +30,7 @@ export const LABEL_TRANSLATIONS = {
         'Wasser':               'Water',
         'Cashless Automat':     'Cashless top-up',
         'Produktion':           'Production Base',
+        'Künstlerbereich':       'Artist Office',
     },
 };
 
