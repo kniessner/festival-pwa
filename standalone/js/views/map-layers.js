@@ -90,16 +90,21 @@ export const FELT_LAYERS = [
     // cashless — wristband top-up stations (7 across the site). Same
     // #F49300 orange as the printed static map. Point radius matches
     // the toilet tier (4 → 10 px) so they read as "utility
-    // infrastructure", not safety. glyphOverlay: '€' stamps a white
-    // Euro sign on every dot at all zooms so the payment identity is
-    // legible before the 'Cashless top-up' label fades in at close
-    // zoom.  Kept at the top of the paint stack so an unrelated
-    // future overlay can't accidentally occlude the payment dots.
+    // infrastructure", not safety.  Label 'Cashless top-up' fades in
+    // at zoom ≥ 17 (fadeVeryClose tier); at overview the orange
+    // colour alone carries the identity.  Kept at the top of the
+    // paint stack so an unrelated future overlay can't accidentally
+    // occlude the payment dots.
+    //
+    // Previously stamped a white '€' glyph on every dot via
+    // `glyphOverlay: '€'`. Removed 2026-08-12: the tiny € at overview
+    // zoom read as noise on the small dot. The infrastructure for
+    // glyphOverlay is preserved (see FELT_LAYERS docstring) in case a
+    // future layer wants it.
     {
         id: 'cashless',
         file: 'cashless.geojson',
         color: '#F49300',
         pointRadius: ['interpolate', ['linear'], ['zoom'], 14, 4, 17, 10],
-        glyphOverlay: '€',
     },
 ];
