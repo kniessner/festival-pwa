@@ -35,7 +35,7 @@ export function renderNav() {
 
     const cashlessRow = `<a class="menu-item-link" href="${CASHLESS_URL}" target="_blank" rel="noopener noreferrer">
         <span class="menu-item-label">${t('nav.cashless')}</span>
-        <span class="menu-item-external" aria-hidden="true">↗</span>
+        <span class="menu-item-external" aria-hidden="true"></span>
     </a>`;
 
     // Not every browser/platform supports Web Push (notably Safari on iOS

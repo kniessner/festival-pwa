@@ -26,7 +26,7 @@ const LANG_LABELS = { de: 'De', en: 'Eng' };
 async function init() {
     // Temporary pre-launch gate — see password-gate.js for removal steps
     // once the festival is live.
-    if (!passwordGateOK()) await showPasswordGate();
+    // if (!passwordGateOK()) await showPasswordGate();
 
     document.documentElement.lang = store.lang;
     document.getElementById('searchInput').placeholder = t('search.placeholder');
