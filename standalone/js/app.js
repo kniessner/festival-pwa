@@ -18,6 +18,7 @@ import { mergeMusicIntoTimetable, refreshMusic } from './music.js';
 import { showLocationPromptIfNeeded, onboardingAllow, onboardingNotNow, showPushPromptIfNeeded, pushOnboardingAllow, pushOnboardingNotNow } from './onboarding.js';
 import { dismissTentIntro } from './views/tent-intro.js';
 import { loadStages, warnStageNameMismatches } from './helpers/get-stage.js';
+import { getEffectiveFestivalDay } from './festival.js';
 import { passwordGateOK, showPasswordGate } from './password-gate.js';
 import { togglePush } from './push.js';
 
@@ -93,25 +94,25 @@ async function init() {
 // change independently and mergeMusicIntoTimetable() needs a fresh
 // store.pageData.timetable as its base or a stale one gets re-merged.
 function setupTimetableRefresh() {
+    // Track the effective festival day at last visibility-refresh.  The
+    // handler forces a re-render when either the JSON changed OR the
+    // wall-clock day has advanced (the reported stale-tab overnight
+    // bug).  Everything else (phone lock → unlock, tab switch, pull-
+    // down notification tray) leaves the page alone — previously we
+    // re-mounted unconditionally, which was noisy and clobbered manual
+    // day picks.  renderGridTimetable's own guard handles the actual
+    // day-swap when we do re-mount (see store.gridDayIsAuto).
+    let lastRefocusDay = getEffectiveFestivalDay();
+
     document.addEventListener('visibilitychange', () => {
         if (document.visibilityState !== 'visible') return;
         Promise.all([refreshTimetableData(), refreshMusic()]).then(([ttOk, musicOk]) => {
             mergeMusicIntoTimetable();
-            // Re-render whenever we're on a data-driven page (Program
-            // list or grid Timetable), regardless of whether the JSON
-            // actually changed.  Two reasons:
-            //   (a) fresh data arrived and we should show it, OR
-            //   (b) the wall-clock day may have advanced since the last
-            //       render.  Without (b), a PWA left in the background
-            //       overnight keeps the previous day's tab active and
-            //       the user has to manually tap today — the bug Jacob's
-            //       users reported at Sat 00:00 ("still shows Friday").
-            //       goToPage() re-mounts the view, which now
-            //       unconditionally snaps store.gridDay to today.
-            // ttOk / musicOk are kept in the destructure so any future
-            // additive logic (e.g. toast on new data) can consume them.
-            void ttOk; void musicOk;
-            if (['timetable', 'grid'].includes(PAGES[store.currentPage]?.slug)) {
+            const today = getEffectiveFestivalDay();
+            const dayAdvanced = today !== lastRefocusDay;
+            lastRefocusDay = today;
+            const onTimetablePage = ['timetable', 'grid'].includes(PAGES[store.currentPage]?.slug);
+            if ((ttOk || musicOk || dayAdvanced) && onTimetablePage) {
                 goToPage(store.currentPage);
             }
         });

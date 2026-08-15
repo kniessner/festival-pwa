@@ -12,6 +12,12 @@ export const store = {
     eventTypeFilter: 'music',
     ttPendingDay: null,
     gridDay: null,
+    // True while gridDay was auto-assigned (from getEffectiveFestivalDay
+    // on mount).  Flipped to false by setGridDay() the moment the user
+    // taps a day pill.  renderGridTimetable only auto-advances to
+    // today if this flag is still true, so a manual pick survives
+    // background/foreground cycles.
+    gridDayIsAuto: true,
     gridScrollMode: 'horizontal',
     favTab: 'program',
     // Populated by js/location.js after the user grants location permission.

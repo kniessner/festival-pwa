@@ -205,18 +205,28 @@ export function renderGridTimetable(container) {
         return;
     }
 
-    // Always snap to today's effective festival day on mount.  Rationale:
-    //   - Fixes a stale-state bug where a PWA opened on Friday evening
-    //     and left in the background kept the Friday day-pill active
-    //     even after wall-clock Saturday rolled around (Jacob 2026-08-13,
-    //     users reported it).  The old guard `if (!store.gridDay)` only
-    //     initialised on first render; visibilitychange → goToPage →
-    //     re-render skipped the assignment because gridDay was truthy.
-    //   - Intra-session day-pill clicks still stick: setGridDay() updates
-    //     store.gridDay directly and calls refreshGridTimetable() (not
-    //     renderGridTimetable()), so this reset only fires when the
-    //     grid is mounted (page navigation) or explicitly re-rendered.
-    store.gridDay = getEffectiveFestivalDay();
+    // Snap store.gridDay to today's effective festival day when either:
+    //   (a) it's unset (first mount of the session), OR
+    //   (b) it was auto-set on a previous mount AND the wall-clock day
+    //       has since advanced past what we picked back then.
+    //
+    // Rationale:
+    //   - Fixes the reported stale-tab bug: PWA opened Friday evening,
+    //     left in the background, wall-clock rolls to Saturday. When
+    //     the user re-opens, the visibilitychange handler triggers a
+    //     re-render; this guard sees gridDay is auto and stale, snaps
+    //     to Saturday.
+    //   - Preserves manual picks: once the user taps a specific day
+    //     pill (setGridDay clears gridDayIsAuto), we never stomp their
+    //     choice again — even across re-focus, phone lock, or navigating
+    //     away and back. Reviewer flagged the naive "always snap"
+    //     version as breaking the browse-past-days workflow (Sat 15:00,
+    //     looking at Friday's line-up, phone lock → stomped).
+    const today = getEffectiveFestivalDay();
+    if (!store.gridDay || (store.gridDayIsAuto && store.gridDay !== today)) {
+        store.gridDay = today;
+        store.gridDayIsAuto = true;
+    }
 
     // Same day set as the existing Programm list view (incl. Monday's closing acts).
     const days = data.filters.days;
@@ -277,6 +287,11 @@ function updateScrollToggleButton() {
 // one day at a time, so it re-renders as before.
 export function setGridDay(dayValue) {
     store.gridDay = dayValue;
+    // Manual pick — kill the auto-advance behaviour so a subsequent
+    // visibility flicker (phone lock / notification / tab switch)
+    // doesn't stomp this choice back to today.  Cleared naturally on
+    // the next fresh session or when the user explicitly picks a day.
+    store.gridDayIsAuto = false;
     if (store.gridScrollMode === 'horizontal') {
         const target = gridDayOffsets.find(o => o.day === dayValue);
         const scroll = document.getElementById('gttScroll');
@@ -651,13 +666,15 @@ function currentContinuousMinutes() {
 // True iff the given event is happening RIGHT NOW.  Used to mark event
 // blocks with .gtt-event-now so the vibrate animation lands only on the
 // currently-playing act (rather than every event in the user's stage
-// row/column).  Relies on ev._start / ev._end being populated by
-// buildDayBlock — always true for anything we actually render.
+// row/column).
 //
-// Also requires the event's tagged day to match the currently-viewed day
-// block: without this filter, a Friday event still playing at wall-clock
-// Saturday 02:00 (e.g. Body of Pleasure, day=Friday, 00:00-01:30) would
-// pulse in Saturday's grid too — which is the wrong block for it.
+// Delegates to isEventPlayingAt for the actual wall-clock check (which
+// handles ev.day + start_time + end_time, including midnight-crossing).
+// Also requires the event's tagged day to match the currently-viewed
+// day block: without this filter, a Friday event still playing at
+// wall-clock Saturday 02:00 (e.g. Body of Pleasure, day=Friday,
+// 00:00-01:30) would pulse in Saturday's grid too — which is the wrong
+// block for it.
 function isEventPlayingNow(ev) {
     if (ev.day !== store.gridDay) return false;
     return isEventPlayingAt(ev);
