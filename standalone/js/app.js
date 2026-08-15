@@ -97,7 +97,21 @@ function setupTimetableRefresh() {
         if (document.visibilityState !== 'visible') return;
         Promise.all([refreshTimetableData(), refreshMusic()]).then(([ttOk, musicOk]) => {
             mergeMusicIntoTimetable();
-            if ((ttOk || musicOk) && ['timetable', 'grid'].includes(PAGES[store.currentPage]?.slug)) {
+            // Re-render whenever we're on a data-driven page (Program
+            // list or grid Timetable), regardless of whether the JSON
+            // actually changed.  Two reasons:
+            //   (a) fresh data arrived and we should show it, OR
+            //   (b) the wall-clock day may have advanced since the last
+            //       render.  Without (b), a PWA left in the background
+            //       overnight keeps the previous day's tab active and
+            //       the user has to manually tap today — the bug Jacob's
+            //       users reported at Sat 00:00 ("still shows Friday").
+            //       goToPage() re-mounts the view, which now
+            //       unconditionally snaps store.gridDay to today.
+            // ttOk / musicOk are kept in the destructure so any future
+            // additive logic (e.g. toast on new data) can consume them.
+            void ttOk; void musicOk;
+            if (['timetable', 'grid'].includes(PAGES[store.currentPage]?.slug)) {
                 goToPage(store.currentPage);
             }
         });

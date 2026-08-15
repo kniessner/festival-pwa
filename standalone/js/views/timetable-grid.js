@@ -1,6 +1,6 @@
 import { store } from '../store.js';
 import { favButton } from '../ui.js';
-import { getEffectiveFestivalDay, dayAbbrev, toDayTabValue, toRealDate } from '../festival.js';
+import { getEffectiveFestivalDay, dayAbbrev, toDayTabValue, toRealDate, isEventPlayingAt } from '../festival.js';
 import { t } from '../i18n.js';
 import { isFavorite } from '../favorites.js';
 import { getStage } from '../helpers/get-stage.js';
@@ -205,7 +205,18 @@ export function renderGridTimetable(container) {
         return;
     }
 
-    if (!store.gridDay) store.gridDay = getEffectiveFestivalDay();
+    // Always snap to today's effective festival day on mount.  Rationale:
+    //   - Fixes a stale-state bug where a PWA opened on Friday evening
+    //     and left in the background kept the Friday day-pill active
+    //     even after wall-clock Saturday rolled around (Jacob 2026-08-13,
+    //     users reported it).  The old guard `if (!store.gridDay)` only
+    //     initialised on first render; visibilitychange → goToPage →
+    //     re-render skipped the assignment because gridDay was truthy.
+    //   - Intra-session day-pill clicks still stick: setGridDay() updates
+    //     store.gridDay directly and calls refreshGridTimetable() (not
+    //     renderGridTimetable()), so this reset only fires when the
+    //     grid is mounted (page navigation) or explicitly re-rendered.
+    store.gridDay = getEffectiveFestivalDay();
 
     // Same day set as the existing Programm list view (incl. Monday's closing acts).
     const days = data.filters.days;
@@ -637,16 +648,19 @@ function currentContinuousMinutes() {
     return nowMin;
 }
 
-// True iff the given event is happening RIGHT NOW on today's festival
-// day. Used to mark event blocks with .gtt-event-now so the vibrate
-// animation lands only on the currently-playing act (rather than every
-// event in the user's stage row/column). Relies on ev._start / ev._end
-// being populated by buildDayBlock — always true for anything we
-// actually render.
+// True iff the given event is happening RIGHT NOW.  Used to mark event
+// blocks with .gtt-event-now so the vibrate animation lands only on the
+// currently-playing act (rather than every event in the user's stage
+// row/column).  Relies on ev._start / ev._end being populated by
+// buildDayBlock — always true for anything we actually render.
+//
+// Also requires the event's tagged day to match the currently-viewed day
+// block: without this filter, a Friday event still playing at wall-clock
+// Saturday 02:00 (e.g. Body of Pleasure, day=Friday, 00:00-01:30) would
+// pulse in Saturday's grid too — which is the wrong block for it.
 function isEventPlayingNow(ev) {
-    if (ev.day !== getEffectiveFestivalDay()) return false;
-    const nowMin = currentContinuousMinutes();
-    return nowMin >= ev._start && nowMin <= ev._end;
+    if (ev.day !== store.gridDay) return false;
+    return isEventPlayingAt(ev);
 }
 
 // (Previously: NARROW_BOX_WIDTH_PX + .gtt-event-narrow class dispatch
