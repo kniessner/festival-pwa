@@ -18,6 +18,7 @@ import { mergeMusicIntoTimetable, refreshMusic } from './music.js';
 import { showLocationPromptIfNeeded, onboardingAllow, onboardingNotNow, showPushPromptIfNeeded, pushOnboardingAllow, pushOnboardingNotNow } from './onboarding.js';
 import { dismissTentIntro } from './views/tent-intro.js';
 import { loadStages, warnStageNameMismatches } from './helpers/get-stage.js';
+import { getEffectiveFestivalDay } from './festival.js';
 import { passwordGateOK, showPasswordGate } from './password-gate.js';
 import { togglePush } from './push.js';
 
@@ -93,11 +94,25 @@ async function init() {
 // change independently and mergeMusicIntoTimetable() needs a fresh
 // store.pageData.timetable as its base or a stale one gets re-merged.
 function setupTimetableRefresh() {
+    // Track the effective festival day at last visibility-refresh.  The
+    // handler forces a re-render when either the JSON changed OR the
+    // wall-clock day has advanced (the reported stale-tab overnight
+    // bug).  Everything else (phone lock → unlock, tab switch, pull-
+    // down notification tray) leaves the page alone — previously we
+    // re-mounted unconditionally, which was noisy and clobbered manual
+    // day picks.  renderGridTimetable's own guard handles the actual
+    // day-swap when we do re-mount (see store.gridDayIsAuto).
+    let lastRefocusDay = getEffectiveFestivalDay();
+
     document.addEventListener('visibilitychange', () => {
         if (document.visibilityState !== 'visible') return;
         Promise.all([refreshTimetableData(), refreshMusic()]).then(([ttOk, musicOk]) => {
             mergeMusicIntoTimetable();
-            if ((ttOk || musicOk) && ['timetable', 'grid'].includes(PAGES[store.currentPage]?.slug)) {
+            const today = getEffectiveFestivalDay();
+            const dayAdvanced = today !== lastRefocusDay;
+            lastRefocusDay = today;
+            const onTimetablePage = ['timetable', 'grid'].includes(PAGES[store.currentPage]?.slug);
+            if ((ttOk || musicOk || dayAdvanced) && onTimetablePage) {
                 goToPage(store.currentPage);
             }
         });
